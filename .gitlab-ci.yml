@@ -32,7 +32,7 @@ build:
 pages:
   stage: deploy
   script:
-    - mv dist/storybook/ public/
+    - mv dist/storybook public
   artifacts:
     paths:
       - public
