@@ -1,0 +1,38 @@
+image: node:11.9
+
+cache:
+  key: ${CI_COMMIT_REF_SLUG}
+  paths:
+  - node_modules/
+
+stages:
+  - review
+  - test
+  - build
+  - deploy
+
+before_script:
+  - npm install
+
+lint:
+  stage: review
+  script:
+    - npm run lint
+
+test:
+  stage: test
+  script:
+    - npm test
+
+build:
+  stage: build
+  script:
+    - npm run build
+
+pages:
+  stage: deploy
+  script:
+    - mv dist/storybook/ public/
+  artifacts:
+    paths:
+      - public
