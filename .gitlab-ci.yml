@@ -9,6 +9,7 @@ stages:
   - review
   - test
   - build
+  - deploy
 
 before_script:
   - npm install
@@ -27,6 +28,13 @@ build:
   stage: build
   script:
     - npm run build
+  artifacts:
+    paths:
+      - dist/storybook
+
+pages:
+  stage: deploy
+  script:
     - mv dist/storybook public
   artifacts:
     paths:
