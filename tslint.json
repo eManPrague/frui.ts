@@ -4,7 +4,12 @@
         "tslint:recommended",
         "tslint-react"
     ],
-    "jsRules": {},
-    "rules": {},
-    "rulesDirectory": []
+    "rules": {
+        "max-line-length": {
+            "options": [140]
+        },
+        "object-literal-sort-keys": {
+            "severity": "off"
+        }
+    }
 }

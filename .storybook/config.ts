@@ -1,4 +1,4 @@
-import { configure } from "@storybook/react";
+import { configure, setAddon } from "@storybook/react";
 
 const req = require.context("../stories", true, /.stories.tsx$/);
 

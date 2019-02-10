@@ -1,0 +1,6 @@
+// Workspace settings
+{
+  "files.exclude": {
+    "node_modules": true
+  }
+}
