@@ -5,9 +5,13 @@ import { observable } from "mobx";
 import { Observer } from "mobx-react-lite";
 import * as React from "react";
 
-const targetObject = observable({
+const observableTarget = observable({
   name: "John",
 });
+
+const nonObservableTarget = {
+  name: "John",
+};
 
 function dumpTargetObject() {
   return (
@@ -15,7 +19,7 @@ function dumpTargetObject() {
     <Observer>{() =>
       <dl>
         <dt>Name</dt>
-        <dd>{targetObject.name}</dd>
+        <dd>{observableTarget.name}</dd>
       </dl>}
     </Observer>
   );
@@ -32,4 +36,5 @@ storiesOf("TextBox", module)
       {dumpTargetObject()}
     </div>
   ))
-  .add("Bound to property", () => <TextBox target={targetObject} property="name" {...actionLogger} />);
+  .add("Bound to property", () => <TextBox target={observableTarget} property="name" {...actionLogger} />)
+  .add("Bound to non-observable", () => <TextBox target={nonObservableTarget} property="name" {...actionLogger} />);

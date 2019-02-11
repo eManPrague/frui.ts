@@ -13,6 +13,11 @@ TODO
 * [BindingComponent](docs/binding/bindingComponent.md)
 * [Creating custom bindable components](docs/binding/customComponent.md)
 
+### Validation
+
+* [Validation overview](docs/validation/overview.md)
+* [Custom validators](docs/validation/customValidators.md)
+
 ## Examples
 
 TODO

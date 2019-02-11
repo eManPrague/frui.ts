@@ -30,6 +30,17 @@ describe("BindingComponent", () => {
       expect(result).toBe("John");
     });
 
+    it("reads target property value from a non-observable entity", () => {
+      const entity = {
+        firstName: "John",
+      };
+
+      const control = new TestControl({ target: entity, property: "firstName" });
+
+      const result = control.readValue();
+      expect(result).toBe("John");
+    });
+
     it("reads undefined target property value", () => {
       const entity = observable({
         firstName: "John",
@@ -64,6 +75,17 @@ describe("BindingComponent", () => {
 
       expect((entity as any).lastName).toBe("Doe");
       expect(isObservableProp(entity, "lastName")).toBeTruthy();
+    });
+
+    it("sets value on non-observable", () => {
+      const entity = {
+        firstName: "John",
+      };
+
+      const control = new TestControl({ target: entity, property: "firstName" });
+      control.writeValue("Peter");
+
+      expect(entity.firstName).toBe("Peter");
     });
   });
 

@@ -6,9 +6,15 @@
     ],
     "rules": {
         "max-line-length": {
-            "options": [140]
+            "options": [ 160 ]
+        },
+        "one-line": {
+            "options": [ "check-open-brace", "check-whitespace" ]
         },
         "object-literal-sort-keys": {
+            "severity": "off"
+        },
+        "arrow-parens": {
             "severity": "off"
         }
     }
