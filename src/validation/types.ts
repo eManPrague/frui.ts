@@ -1,16 +1,29 @@
-export interface IEntityValidator {
+export type ValidationErrors<TTarget> = { [T in keyof TTarget]?: string };
+
+export interface IEntityValidator<TTarget> {
   isValid: boolean;
   errorsVisible: boolean;
-  errors: { [propertyName: string]: string };
+  errors: Readonly<ValidationErrors<TTarget>>;
 }
 
-export interface IHasValidation {
-  __validation: IEntityValidator;
+export interface IManualEntityValidator<TTarget> extends IEntityValidator<TTarget> {
+  addError(propertyName: string & keyof TTarget, message: string): void;
+  removeError(propertyName: string & keyof TTarget): void;
+  clearErrors(): void;
 }
 
-export interface IPropertyValidationDescriptor {
-  propertyName: string;
-  validator: IPropertyBoundValidator;
+export type IEntityValidationRules<TTarget> = {
+  [K in keyof TTarget]?: IPropertyValidationRules;
+};
+
+export interface IPropertyValidationRules {
+  [ruleName: string]: any;
 }
 
-export type IPropertyBoundValidator = (propertyValue: any, entity: any) => string;
+export interface IHasValidation<TTarget> {
+  __validation: IEntityValidator<TTarget>;
+}
+
+export interface IHasManualValidation<TTarget> extends IHasValidation<TTarget> {
+  __validation: IManualEntityValidator<TTarget>;
+}
