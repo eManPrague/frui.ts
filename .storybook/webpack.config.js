@@ -1,10 +1,10 @@
 const path = require('path');
 
 module.exports = (baseConfig, env, config) => {
-  config.module.rules.push({
+  config.module.rules = [{
     test: /\.(ts|tsx)$/,
     use: ['ts-loader', 'react-docgen-typescript-loader']
-  });
+  }];
   config.resolve.extensions.push('.ts', '.tsx');
   config.resolve.alias['@src'] = path.resolve(__dirname, '../src')
 

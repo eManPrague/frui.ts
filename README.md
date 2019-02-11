@@ -10,13 +10,15 @@ TODO
 
 ### Two-way binding
 
-* [BindingComponent](docs/binding/bindingComponent.md)
-* [Creating custom bindable components](docs/binding/customComponent.md)
+TODO Binding overview, role of `BindingComponent`
+
+TODO How to create a custom bindable control
 
 ### Validation
 
-* [Validation overview](docs/validation/overview.md)
-* [Custom validators](docs/validation/customValidators.md)
+TODO Validation overview
+
+TODO How to create and register a custom validator
 
 ## Examples
 

@@ -31,11 +31,12 @@ build:
   artifacts:
     paths:
       - dist/storybook
+      - dist/docs
 
 pages:
   stage: deploy
   script:
-    - mv dist/storybook public
+    - mv dist/docs public
   artifacts:
     paths:
       - public

@@ -1,6 +1,7 @@
 import { action, computed, get, observable, remove, set } from "mobx";
 import { IManualEntityValidator, ValidationErrors } from "./types";
 
+/** Entity validator implementation acting as a simple validation errors list that needs to be manually maintained */
 export default class ManualEntityValidator<TTarget> implements IManualEntityValidator<TTarget> {
   @observable public errorsVisible: boolean;
   @observable public errors: ValidationErrors<TTarget> = {};

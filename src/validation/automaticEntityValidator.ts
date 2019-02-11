@@ -3,6 +3,7 @@ import { computed, extendObservable, get, observable } from "mobx";
 import { IEntityValidationRules, IEntityValidator, IPropertyValidationRules, ValidationErrors } from "./types";
 import validatorsRepository from "./validatorsRepository";
 
+/** Entity validator implementation that automatically observes validated entity's properties and maintains validation errors */
 export default class AutomaticEntityValidator<TTarget extends {}> implements IEntityValidator<TTarget> {
   @observable public errorsVisible: boolean;
 
@@ -39,6 +40,7 @@ export default class AutomaticEntityValidator<TTarget extends {}> implements IEn
 type IPropertyBoundValidator = (propertyValue: any, entity: any) => string;
 const TrueValidator: IPropertyBoundValidator = _ => null;
 
+/** Creates actual validator function for a particular property based on the provided validation rules */
 export function createPropertyValidatorFromRules(propertyName: string, propertyRules: IPropertyValidationRules) {
   let finalValidator: IPropertyBoundValidator;
 
