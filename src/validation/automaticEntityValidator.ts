@@ -5,13 +5,13 @@ import validatorsRepository from "./validatorsRepository";
 
 /** Entity validator implementation that automatically observes validated entity's properties and maintains validation errors */
 export default class AutomaticEntityValidator<TTarget extends {}> implements IEntityValidator<TTarget> {
-  @observable public errorsVisible: boolean;
+  @observable public isErrorsVisible: boolean;
 
-  public errors: ValidationErrors<TTarget> = {};
+  @observable public errors: ValidationErrors<TTarget> = {};
   private validatedProperties: string[] = [];
 
-  constructor(target: TTarget, entityValidationRules: IEntityValidationRules<TTarget>, errorsVisible: boolean) {
-    this.errorsVisible = errorsVisible;
+  constructor(target: TTarget, entityValidationRules: IEntityValidationRules<TTarget>, isErrorsVisible: boolean) {
+    this.isErrorsVisible = isErrorsVisible;
 
     for (const propertyName in entityValidationRules) {
       if (entityValidationRules.hasOwnProperty(propertyName)) {

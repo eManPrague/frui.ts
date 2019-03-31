@@ -7,7 +7,7 @@ import { IEntityValidationRules, IHasManualValidation, IHasValidation } from "./
  * @returns The target entity instance with `IHasValidation` implemented with the attached validator
  */
 // tslint:disable-next-line: max-line-length
-export function attachAutomaticValidator<TTarget>(target: TTarget, entityValidationRules: IEntityValidationRules<TTarget>, errorsImmediatelyVisible: boolean = false) {
+export function attachAutomaticValidator<TTarget>(target: TTarget, entityValidationRules: IEntityValidationRules<TTarget>, errorsImmediatelyVisible = false) {
   const typedTarget = target as TTarget & IHasValidation<TTarget>;
   typedTarget.__validation = new AutomaticEntityValidator(target, entityValidationRules, errorsImmediatelyVisible);
   return typedTarget;
@@ -17,7 +17,7 @@ export function attachAutomaticValidator<TTarget>(target: TTarget, entityValidat
  * Attaches a new [[ManualEntityValidator]] to the entity and returns the entity typed as [[IHasManualValidation]]
  * @returns The target entity instance with `IHasManualValidation` implemented with the attached validator
  */
-export function attachManualValidator<TTarget>(target: TTarget, errorsImmediatelyVisible: boolean = false) {
+export function attachManualValidator<TTarget>(target: TTarget, errorsImmediatelyVisible = false) {
   const typedTarget = target as TTarget & IHasManualValidation<TTarget>;
   typedTarget.__validation = new ManualEntityValidator(target, errorsImmediatelyVisible);
   return typedTarget;

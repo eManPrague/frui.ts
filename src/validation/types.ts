@@ -18,7 +18,7 @@ export interface IEntityValidator<TTarget> {
   isValid: boolean;
 
   /** Indicates whether existing validation errors should be displayed to the user */
-  errorsVisible: boolean;
+  isErrorsVisible: boolean;
 
   /** Validation errors for the validated entity */
   errors: Readonly<ValidationErrors<TTarget>>;
