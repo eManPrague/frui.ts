@@ -37,6 +37,7 @@ pages:
   stage: deploy
   script:
     - mv dist/docs public
+    - mv dist/storybook public/storybook
   artifacts:
     paths:
       - public
