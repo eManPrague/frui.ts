@@ -1,3 +1,5 @@
+export type PropertyName<TTarget> = string & keyof TTarget;
+
 /**
  * Contains validation errors for an entity.
  * Each key is a property name and value is error message for the respective property.
@@ -10,7 +12,7 @@
  * }
  * ```
  */
-export type ValidationErrors<TTarget> = { [T in keyof TTarget]?: string };
+export type ValidationErrors<TTarget> = Partial<Record<PropertyName<TTarget>, string>>;
 
 /** Validator attached to an entity reponsible for maintaining validation errors */
 export interface IEntityValidator<TTarget> {
@@ -26,8 +28,8 @@ export interface IEntityValidator<TTarget> {
 
 /** Validator with manually maintained validation errors */
 export interface IManualEntityValidator<TTarget> extends IEntityValidator<TTarget> {
-  addError(propertyName: string & keyof TTarget, message: string): void;
-  removeError(propertyName: string & keyof TTarget): void;
+  addError(propertyName: PropertyName<TTarget>, message: string): void;
+  removeError(propertyName: PropertyName<TTarget>): void;
   clearErrors(): void;
 }
 
@@ -48,9 +50,8 @@ export interface IManualEntityValidator<TTarget> extends IEntityValidator<TTarge
  * }
  * ```
  */
-export type IEntityValidationRules<TTarget> = {
-  [K in keyof TTarget]?: IPropertyValidationRules;
-};
+export type IEntityValidationRules<TTarget> =
+  Partial<Record<PropertyName<TTarget>, IPropertyValidationRules>> & { [propertyName: string]: IPropertyValidationRules };
 
 /**
  * Contains validation rules for a single property.

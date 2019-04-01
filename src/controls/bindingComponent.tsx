@@ -1,6 +1,6 @@
 import { ensureObservableProperty } from "@src/helpers/observableHelpers";
-import { action, decorate, extendObservable, get, isObservable, isObservableProp, observable, set } from "mobx";
-import React = require("react");
+import { action, get, isObservable } from "mobx";
+import * as React from "react";
 
 /**
  * Base props required for two-way binding.

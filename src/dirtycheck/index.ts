@@ -1,3 +1,4 @@
+import { PropertyName } from "@src/validation/types";
 import AutomaticDirtyWatcher from "./automaticDirtyWatcher";
 import ManualDirtyWatcher from "./manualDirtyWatcher";
 import { IHasDirtyWatcher, IHasManualDirtyWatcher } from "./types";
@@ -20,4 +21,15 @@ export function attachManualDirtyWatcher<TTarget>(target: TTarget, dirtyFlagsImm
   const typedTarget = target as TTarget & IHasManualDirtyWatcher<TTarget>;
   typedTarget.__dirtycheck = new ManualDirtyWatcher(target, dirtyFlagsImmediatelyVisible);
   return typedTarget;
+}
+
+export function hasDirtyWatcher<TTarget>(target: any): target is IHasDirtyWatcher<TTarget> {
+  return (target as IHasDirtyWatcher<TTarget>).__dirtycheck !== undefined;
+}
+
+export function getDirtyFlag<TTarget>(target: TTarget, propertyName: PropertyName<TTarget>) {
+  if (hasDirtyWatcher<TTarget>(target) && target.__dirtycheck.isDirtyFlagVisible) {
+    return !!target.__dirtycheck.dirtyProperties[propertyName];
+  }
+  return null;
 }

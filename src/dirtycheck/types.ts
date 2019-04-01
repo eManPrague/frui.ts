@@ -1,3 +1,5 @@
+type PropertyName<TTarget> = string & keyof TTarget;
+
 /**
  * Contains dirty flags for an entity.
  * Each key is a property name and value is a flag indicating whether the property is dirty
@@ -10,7 +12,7 @@
  * }
  * ```
  */
-export type DirtyPropertiesList<TTarget> = { [T in keyof TTarget]?: boolean };
+export type DirtyPropertiesList<TTarget> = Partial<Record<PropertyName<TTarget>, boolean>>;
 
 /** Dirty values watcher attached to an entity reponsible for maintaining dirty flags */
 export interface IDirtyWatcher<TTarget> {
@@ -29,7 +31,7 @@ export interface IDirtyWatcher<TTarget> {
 
 /** Dirty values watcher with manually maintained dirty flags */
 export interface IManualDirtyWatcher<TTarget> extends IDirtyWatcher<TTarget> {
-  setDirty(propertyName: string & keyof TTarget): void;
+  setDirty(propertyName: PropertyName<TTarget>): void;
 }
 
 /** Represents an entity with attached dirty watcher */

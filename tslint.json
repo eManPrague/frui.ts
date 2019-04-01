@@ -16,6 +16,9 @@
         },
         "arrow-parens": {
             "severity": "off"
+        },
+        "jsx-no-multiline-js": {
+            "severity": "off"
         }
     }
 }

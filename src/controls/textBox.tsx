@@ -1,6 +1,6 @@
 import bind from "bind-decorator";
 import { Observer } from "mobx-react-lite";
-import React = require("react");
+import * as React from "react";
 import { BindingComponent, IBindingProps } from "./bindingComponent";
 
 export class TextBox extends BindingComponent<IBindingProps<any>, any> {

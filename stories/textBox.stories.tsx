@@ -15,7 +15,6 @@ const nonObservableTarget = {
 
 function dumpTargetObject() {
   return (
-    // tslint:disable-next-line: jsx-no-multiline-js
     <Observer>{() =>
       <dl>
         <dt>Name</dt>
