@@ -40,6 +40,7 @@
     "@types/storybook__addon-actions": "^3.4.2",
     "@types/storybook__react": "^4.0.1",
     "@types/typescript": "^2.0.0",
+    "fetch-with-proxy": "^1.1.0",
     "jest": "^24.5.0",
     "react-docgen-typescript-loader": "^3.0.1",
     "ts-jest": "^24.0.1",

@@ -6,6 +6,7 @@ module.exports = {
   testRegex: '(/test/.*|\\.(test|spec))\\.(ts|tsx|js)$',
   moduleFileExtensions: ['ts', 'tsx', 'js', 'json'],
   moduleNameMapper: {
-    "src/(.*)": "<rootDir>/src/$1" // jest ignores tsconfig/paths, so it must be configured here again
+    "src/(.*)": "<rootDir>/src/$1", // jest ignores tsconfig/paths, so it must be configured here again
+    "demo/(.*)": "<rootDir>/demo/$1"
   }
 };
