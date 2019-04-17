@@ -1,7 +1,10 @@
 export interface IFieldProps {
   label: string;
+  controlId?: string;
 }
 
 export interface IChildProps {
-  borderColor: string;
+  id: string;
+  className: string;
+  placeholder: string;
 }

@@ -1,7 +1,8 @@
 import { IApiConnector } from "@src/communication/types";
+import { bind } from "@src/helpers/functionHelpers";
 
 export class FetchApiConnector implements IApiConnector {
-  constructor(private fetchFunction = fetch) {
+  constructor(private fetchFunction = bind(window.fetch, window)) {
   }
 
   public getText(url: string, params?: RequestInit) {

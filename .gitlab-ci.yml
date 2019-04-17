@@ -32,12 +32,14 @@ build:
     paths:
       - dist/storybook
       - dist/docs
+      - dist/demo
 
 pages:
   stage: deploy
   script:
     - mv dist/docs public
     - mv dist/storybook public/storybook
+    - mv dist/demo public/demo
   artifacts:
     paths:
       - public
