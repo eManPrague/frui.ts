@@ -2,17 +2,22 @@ import { autorun, observable } from "mobx";
 
 export default class ConfigViewModel {
     @observable public configuration: IConfigurationModel = {
-        accessToken: "",
-        url: "https://redmine.dev.eman.cz",
+        url: localStorage.getItem("apiUrl") || "https://redmine.dev.eman.cz",
+        accessToken: localStorage.getItem("apiToken") || "",
     };
 
     private disposeAutorun = autorun(() => {
-        (window as any).apiToken = this.configuration.accessToken;
-        (window as any).apiUrl = this.configuration.url;
+        const { url, accessToken } = this.configuration;
+
+        localStorage.setItem("apiUrl", url);
+        localStorage.setItem("apiToken", accessToken);
+
+        (window as any).apiUrl = url;
+        (window as any).apiToken = accessToken;
     });
 
     public dispose() {
-// tslint:disable-next-line: no-console
+        // tslint:disable-next-line: no-console
         console.log("disposing configViewModel");
         this.disposeAutorun();
     }

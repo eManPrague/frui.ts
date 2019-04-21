@@ -1,4 +1,4 @@
-export interface IPageRequest {
+export interface IRedminePageRequest {
   offset?: number;
   limit?: number;
   sort?: string;

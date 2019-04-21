@@ -1,6 +1,5 @@
-import { FormField } from "@demo/controls/formField";
+import FormField from "@demo/controls/formField";
 import { TextBox } from "@src/controls/textBox";
-import { Observer } from "mobx-react-lite";
 import * as React from "react";
 import ConfigViewModel from "./configViewModel";
 

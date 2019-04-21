@@ -1,6 +1,6 @@
-import { FetchApiConnector } from "@demo/communication/fetchApiConnector";
 import { IssuesRepository } from "@demo/dataAccess/issuesRepository";
 import { RedmineRequestBuilder } from "@demo/dataAccess/redmineRequestBuilder";
+import { FetchApiConnector } from "@src/communication/fetchApiConnector";
 import * as React from "react";
 import IssuesView from "./issuesView";
 import IssuesViewModel from "./issuesViewModel";

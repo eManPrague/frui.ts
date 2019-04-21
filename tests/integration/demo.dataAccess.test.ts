@@ -1,6 +1,6 @@
-import { FetchApiConnector } from "@demo/communication/fetchApiConnector";
 import { IssuesRepository } from "@demo/dataAccess/issuesRepository";
 import { RedmineRequestBuilder } from "@demo/dataAccess/redmineRequestBuilder";
+import { FetchApiConnector } from "@src/communication/fetchApiConnector";
 import fetch from "fetch-with-proxy";
 
 const apiFactory = () => {
@@ -15,11 +15,11 @@ describe.skip("IssuesRepository", () => {
   test("getAllIssues", async () => {
     const repository = new IssuesRepository(apiFactory);
 
-    const issues = await repository.getAllIssues({ offset: 1, limit: 2 });
+    const [issues, page] = await repository.getAllIssues({ offset: 1, limit: 2 });
 
     expect(issues).toBeDefined();
-    expect(issues.offset).toBe(1);
-    expect(issues.limit).toBe(2);
+    expect(page.offset).toBe(1);
+    expect(page.limit).toBe(2);
   });
 
   test("getIssueDetail", async () => {

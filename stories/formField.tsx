@@ -1,7 +1,7 @@
 import { getInnerComponent, IFormFieldProps } from "@src/controls/fieldHelpers";
 import { getDirtyFlag } from "@src/dirtycheck";
 import { getValidationMessage } from "@src/validation";
-import { useObserver } from "mobx-react-lite";
+import { observer } from "mobx-react-lite";
 import * as React from "react";
 
 export interface IFieldProps {
@@ -12,7 +12,7 @@ export interface IChildProps {
   bordercolor: string;
 }
 
-export const FormField: React.FunctionComponent<IFormFieldProps<any, IChildProps> & IFieldProps> = (props) => useObserver(() => {
+export const FormField: React.FunctionComponent<IFormFieldProps<any, IChildProps> & IFieldProps> = observer((props) => {
   const validationMessage = getValidationMessage(props.target, props.property);
   const isDirty = getDirtyFlag(props.target, props.property);
   const bordercolor = !!validationMessage ? "red" : (isDirty ? "green" : "black");

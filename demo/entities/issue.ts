@@ -1,6 +1,7 @@
 import { ItemLink } from "./itemLink";
-import { IPageInfo } from "./pageInfo";
+import { IRedminePageInfo } from "./redminePageInfo";
 
+// tslint:disable-next-line: interface-name
 export interface Issue {
   id: number;
   project: ItemLink;
@@ -17,6 +18,7 @@ export interface Issue {
   updated_on: Date;
 }
 
-export interface IssuesQuery extends IPageInfo {
+// tslint:disable-next-line: interface-name
+export interface IssuesQuery extends IRedminePageInfo {
   issues: Issue[];
 }
