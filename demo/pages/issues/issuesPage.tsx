@@ -12,7 +12,7 @@ const apiFactory = () => {
     const apiConnector = new FetchApiConnector();
     const params: RequestInit = {
         headers: {
-            "X-Redmine-API-Key": token,
+            Authorization: `Basic ${btoa(`${token}:pass`)}`,
         },
     };
     return new RedmineRequestBuilder(apiConnector, url, params);
