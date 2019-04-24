@@ -2,11 +2,11 @@ import { Issue, IssuesQuery } from "@demo/entities/issue";
 import { IRedminePageInfo } from "@demo/entities/redminePageInfo";
 import { IRedminePageRequest } from "@demo/entities/redminePageRequest";
 import { SortingDirection } from "@src/data/sortingDirection";
-import { IPagingInfo } from "@src/data/types";
+import { IPagingFilter, IPagingInfo } from "@src/data/types";
 import { extractPagingInfo, RepositoryBase } from "./repositoryBase";
 
 // tslint:disable-next-line: interface-name
-interface IssuesFilter extends IRedminePageRequest {
+export interface IssuesFilter extends IPagingFilter {
   issue_id?: number | string;
   project_id?: number;
   subproject_id?: number;
@@ -16,13 +16,17 @@ interface IssuesFilter extends IRedminePageRequest {
   parent_id?: number;
   created_on?: string;
   updated_on?: string;
+  subject?: string;
 }
 
 type AsyncQueryResult<T> = Promise<[T[], IPagingInfo]>;
 
 export class IssuesRepository extends RepositoryBase {
   public getAllIssues(filter?: IssuesFilter): AsyncQueryResult<Issue> {
-    return this.apiFactory().all("issues").get<IssuesQuery>(getFilterQuery(filter)).then(data => [data.issues, extractPagingInfo(data)]);
+    const requestFilter = getFilter(filter) as any;
+    requestFilter.subject = filter.subject && ("~" + filter.subject.trim());
+
+    return this.apiFactory().all("issues").get<IssuesQuery>(requestFilter).then(data => [data.issues, extractPagingInfo(data)]);
   }
 
   public getIssueDetail(id: number) {
@@ -30,10 +34,10 @@ export class IssuesRepository extends RepositoryBase {
   }
 }
 
-function getFilterQuery(filter: any) {
-  const { sortColumn, sortDirection, ...rest } = filter;
+function getFilter(inputFilter: any): IRedminePageRequest {
+  const { sortColumn, sortDirection, ...rest } = inputFilter;
 
-  if (sortColumn && !filter.sort) {
+  if (sortColumn) {
     rest.sort = `${sortColumn}:${sortDirection === SortingDirection.Descending ? "desc" : "asc"}`;
   }
 

@@ -9,6 +9,6 @@ export interface IPagingInfo {
 export interface IPagingFilter {
   offset: number;
   limit: number;
-  sortColumn: string;
-  sortDirection: SortingDirection;
+  sortColumn?: string;
+  sortDirection?: SortingDirection;
 }

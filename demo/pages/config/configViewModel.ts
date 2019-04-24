@@ -2,7 +2,7 @@ import { autorun, observable } from "mobx";
 
 export default class ConfigViewModel {
     @observable public configuration: IConfigurationModel = {
-        url: localStorage.getItem("apiUrl") || "https://redmine.dev.eman.cz",
+        url: localStorage.getItem("apiUrl") || "https://redmine.anon.eman.cz",
         accessToken: localStorage.getItem("apiToken") || "",
     };
 
