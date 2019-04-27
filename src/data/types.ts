@@ -12,3 +12,9 @@ export interface IPagingFilter {
   sortColumn?: string;
   sortDirection?: SortingDirection;
 }
+
+export interface IBusyWatcher {
+  readonly isBusy: boolean;
+}
+
+export type PagedQueryResult<TEntity> = [TEntity[], IPagingInfo];

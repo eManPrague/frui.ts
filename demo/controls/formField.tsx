@@ -37,7 +37,7 @@ function getControlClassName(isValid: boolean, isDirty: boolean) {
     return "is-valid";
   }
   else {
-    return null;
+    return "";
   }
 }
 

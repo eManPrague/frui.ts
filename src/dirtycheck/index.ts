@@ -24,7 +24,7 @@ export function attachManualDirtyWatcher<TTarget>(target: TTarget, dirtyFlagsImm
 }
 
 export function hasDirtyWatcher<TTarget>(target: any): target is IHasDirtyWatcher<TTarget> {
-  return (target as IHasDirtyWatcher<TTarget>).__dirtycheck !== undefined;
+  return !!target && (target as IHasDirtyWatcher<TTarget>).__dirtycheck !== undefined;
 }
 
 export function getDirtyFlag<TTarget>(target: TTarget, propertyName: PropertyName<TTarget>) {

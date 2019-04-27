@@ -1,12 +1,12 @@
 import { Issue, IssuesQuery } from "@demo/entities/issue";
-import { IRedminePageInfo } from "@demo/entities/redminePageInfo";
+import { Project, ProjectsQuery } from "@demo/entities/project";
 import { IRedminePageRequest } from "@demo/entities/redminePageRequest";
 import { SortingDirection } from "@src/data/sortingDirection";
-import { IPagingFilter, IPagingInfo } from "@src/data/types";
+import { IPagingFilter, PagedQueryResult } from "@src/data/types";
 import { extractPagingInfo, RepositoryBase } from "./repositoryBase";
 
 // tslint:disable-next-line: interface-name
-export interface IssuesFilter extends IPagingFilter {
+export interface IssuesFilter {
   issue_id?: number | string;
   project_id?: number;
   subproject_id?: number;
@@ -19,11 +19,16 @@ export interface IssuesFilter extends IPagingFilter {
   subject?: string;
 }
 
-type AsyncQueryResult<T> = Promise<[T[], IPagingInfo]>;
+type AsyncQueryResult<T> = Promise<PagedQueryResult<T>>;
 
 export class IssuesRepository extends RepositoryBase {
-  public getAllIssues(filter?: IssuesFilter): AsyncQueryResult<Issue> {
-    const requestFilter = getFilter(filter) as any;
+  public getAllProjects(paging: IPagingFilter): AsyncQueryResult<Project> {
+    const requestFilter = createRequestFilter(null, paging) as any;
+    return this.apiFactory().all("projects").get<ProjectsQuery>(requestFilter).then(data => [data.projects, extractPagingInfo(data)]);
+  }
+
+  public getAllIssues(filter: IssuesFilter, paging: IPagingFilter): AsyncQueryResult<Issue> {
+    const requestFilter = createRequestFilter(filter, paging) as any;
     requestFilter.subject = filter.subject && ("~" + filter.subject.trim());
 
     return this.apiFactory().all("issues").get<IssuesQuery>(requestFilter).then(data => [data.issues, extractPagingInfo(data)]);
@@ -34,12 +39,13 @@ export class IssuesRepository extends RepositoryBase {
   }
 }
 
-function getFilter(inputFilter: any): IRedminePageRequest {
-  const { sortColumn, sortDirection, ...rest } = inputFilter;
+function createRequestFilter(inputFilter: any, paging: IPagingFilter): IRedminePageRequest {
+  const { sortColumn, sortDirection, ...restPaging } = paging;
+  const resultFilter = Object.assign({}, inputFilter, restPaging);
 
   if (sortColumn) {
-    rest.sort = `${sortColumn}:${sortDirection === SortingDirection.Descending ? "desc" : "asc"}`;
+    resultFilter.sort = `${sortColumn}:${sortDirection === SortingDirection.Descending ? "desc" : "asc"}`;
   }
 
-  return rest;
+  return resultFilter;
 }

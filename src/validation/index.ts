@@ -24,7 +24,7 @@ export function attachManualValidator<TTarget>(target: TTarget, errorsImmediatel
 }
 
 export function hasValidation<TTarget>(target: any): target is IHasValidation<TTarget> {
-  return (target as IHasValidation<TTarget>).__validation !== undefined;
+  return !!target && (target as IHasValidation<TTarget>).__validation !== undefined;
 }
 
 export function getValidationMessage<TTarget>(target: TTarget, propertyName: PropertyName<TTarget>) {

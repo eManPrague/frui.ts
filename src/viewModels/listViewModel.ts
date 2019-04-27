@@ -1,12 +1,12 @@
-import { IPagingInfo } from "@src/data/types";
+import { IPagingInfo, PagedQueryResult } from "@src/data/types";
 import { action, observable } from "mobx";
 
 export default abstract class ListViewModel<TEntity> {
   @observable public items: TEntity[];
-  @observable public pageInfo: IPagingInfo;
+  @observable public currentPaging: IPagingInfo;
 
-  @action.bound protected setData(data: [TEntity[], IPagingInfo]) {
+  @action.bound protected setData(data: PagedQueryResult<TEntity>) {
       this.items = data[0];
-      this.pageInfo = data[1];
+      this.currentPaging = data[1];
   }
 }
