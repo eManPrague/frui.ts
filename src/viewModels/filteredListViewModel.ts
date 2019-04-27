@@ -43,7 +43,7 @@ export default abstract class FilteredListViewModel<TEntity, TFilter> extends Li
     this.loadData();
   }
 
-  protected abstract loadData(): void;
+  protected abstract loadData(): void | Promise<any>;
   protected abstract resetFilterValues(filter: TFilter): void;
 
   private initFilter() {

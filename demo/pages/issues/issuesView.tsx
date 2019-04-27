@@ -1,6 +1,8 @@
 import FormField from "@demo/controls/formField";
 import Pager from "@demo/controls/pager";
 import SortingHeader from "@demo/controls/sortingHeader";
+import { BindingComponent } from "@src/controls/bindingComponent";
+import BusyWatcher from "@src/controls/busyWatcher";
 import { DropDown } from "@src/controls/dropDown";
 import { TextBox } from "@src/controls/textBox";
 import { Observer, observer } from "mobx-react-lite";
@@ -57,13 +59,39 @@ const DataTable: React.FunctionComponent<{ vm: IssuesViewModel }> = observer(({ 
     )
 ));
 
+const LoadingOverlay: React.FunctionComponent<{ busyWatcher: BusyWatcher }> = observer(({ busyWatcher }) => (
+    !busyWatcher.isBusy ? null : (
+        <div className="text-center position-absolute w-100 h-100" style={{ backgroundColor: "rgba(100, 100, 100, .2)", zIndex: 2 }}>
+            <div className="spinner-border m-5" role="status">
+                <span className="sr-only">Loading...</span>
+            </div>
+        </div>
+    )
+));
+
+const LoadingIndicator: React.FunctionComponent<{ busyWatcher: BusyWatcher }> = observer(({ busyWatcher }) => (
+    !busyWatcher.isBusy ? null : (
+        <div className="fixed-top text-right">
+            <div className="spinner-border m-2" role="status">
+                <span className="sr-only">Loading...</span>
+            </div>
+        </div>
+    )
+));
+
 const IssuesView: React.FunctionComponent<{ vm: IssuesViewModel }> = ({ vm }) => (
     <div>
         <h1>Redmine Issues</h1>
 
         <Filter vm={vm} />
-        <Pagination vm={vm} />
-        <DataTable vm={vm} />
+
+        <div className="position-relative">
+            <LoadingOverlay busyWatcher={vm.busyWatcher} />
+            <Pagination vm={vm} />
+            <DataTable vm={vm} />
+        </div>
+
+        <LoadingIndicator busyWatcher={vm.busyWatcher} />
     </div>
 );
 export default IssuesView;

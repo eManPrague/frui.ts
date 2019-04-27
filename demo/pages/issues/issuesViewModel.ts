@@ -1,17 +1,15 @@
 import { IssuesFilter, IssuesRepository } from "@demo/dataAccess/issuesRepository";
-import { Issue, IssuesQuery } from "@demo/entities/issue";
+import { Issue } from "@demo/entities/issue";
 import { Project } from "@demo/entities/project";
+import BusyWatcher from "@src/controls/busyWatcher";
 import { ISelectItem } from "@src/controls/types";
-import { SortingDirection } from "@src/data/sortingDirection";
-import { IPagingFilter, PagedQueryResult } from "@src/data/types";
-import { attachAutomaticDirtyWatcher } from "@src/dirtycheck";
-import { IHasDirtyWatcher } from "@src/dirtycheck/types";
+import { PagedQueryResult } from "@src/data/types";
 import FilteredListViewModel from "@src/viewModels/filteredListViewModel";
-import ListViewModel from "@src/viewModels/listViewModel";
 import { action, observable, toJS } from "mobx";
 
 export default class IssuesViewModel extends FilteredListViewModel<Issue, IssuesFilter> {
     @observable public projects: ISelectItem[];
+    public busyWatcher = new BusyWatcher();
 
     constructor(private issuesRepository: IssuesRepository) {
         super();
@@ -21,7 +19,8 @@ export default class IssuesViewModel extends FilteredListViewModel<Issue, Issues
     }
 
     @action.bound public loadData() {
-        this.issuesRepository.getAllIssues(this.appliedFilter, this.pagingFilter).then(this.setData);
+        return this.busyWatcher.watch(
+            this.issuesRepository.getAllIssues(this.appliedFilter, this.pagingFilter).then(this.setData));
     }
 
     protected resetFilterValues(filter: IssuesFilter) {
@@ -31,7 +30,8 @@ export default class IssuesViewModel extends FilteredListViewModel<Issue, Issues
     }
 
     private loadCodebooks() {
-        return this.issuesRepository.getAllProjects({ sortColumn: "name", limit: 999, offset: 0 }).then(this.setProjects);
+        return this.busyWatcher.watch(
+            this.issuesRepository.getAllProjects({ sortColumn: "name", limit: 999, offset: 0 }).then(this.setProjects));
     }
 
     @action.bound private setProjects(data: PagedQueryResult<Project>) {
