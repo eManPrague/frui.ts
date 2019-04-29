@@ -1,8 +1,9 @@
 import { IssuesRepository } from "@demo/dataAccess/issuesRepository";
 import { RedmineRequestBuilder } from "@demo/dataAccess/redmineRequestBuilder";
 import { FetchApiConnector } from "@src/communication/fetchApiConnector";
+import View from "@src/views/view";
 import * as React from "react";
-import IssuesView from "./issuesView";
+import "./issuesView"; // needed to register views. TODO
 import IssuesViewModel from "./issuesViewModel";
 
 const apiFactory = () => {
@@ -18,10 +19,11 @@ const apiFactory = () => {
     return new RedmineRequestBuilder(apiConnector, url, params);
 };
 
-const IssuesPage: React.FunctionComponent = (props) => {
+const IssuesPage: React.FunctionComponent =props => {
     const issuesRepository = new IssuesRepository(apiFactory);
     const viewModel = new IssuesViewModel(issuesRepository);
-    return <IssuesView vm={viewModel} />;
+
+    return <View vm={viewModel} />;
 };
 
 export default IssuesPage;

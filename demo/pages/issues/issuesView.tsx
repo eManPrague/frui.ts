@@ -5,6 +5,8 @@ import { BindingComponent } from "@src/controls/bindingComponent";
 import BusyWatcher from "@src/controls/busyWatcher";
 import { DropDown } from "@src/controls/dropDown";
 import { TextBox } from "@src/controls/textBox";
+import dataIdHandler from "@src/helpers/dataIdHandler";
+import { registerView } from "@src/views/viewLocator";
 import { Observer, observer } from "mobx-react-lite";
 import * as React from "react";
 import IssuesViewModel from "./issuesViewModel";
@@ -45,6 +47,7 @@ const DataTable: React.FunctionComponent<{ vm: IssuesViewModel }> = observer(({ 
                     <SortingHeader column="id" filter={vm.pagingFilter} onSortChanged={vm.loadData}>ID</SortingHeader>
                     <SortingHeader column="project" filter={vm.pagingFilter} onSortChanged={vm.loadData}>Project</SortingHeader>
                     <SortingHeader column="subject" filter={vm.pagingFilter} onSortChanged={vm.loadData}>Subject</SortingHeader>
+                    <th>&nbsp;</th>
                 </tr>
             </thead>
             <tbody>
@@ -53,6 +56,7 @@ const DataTable: React.FunctionComponent<{ vm: IssuesViewModel }> = observer(({ 
                         <th scope="row">{issue.id}</th>
                         <td>{issue.project.name}</td>
                         <td>{issue.subject}</td>
+                        <td><button className="btn btn-link p-0" data-id={issue.id} onClick={dataIdHandler(vm.openDetail)}>Open</button> </td>
                     </tr>)}
             </tbody>
         </table>
@@ -94,4 +98,4 @@ const IssuesView: React.FunctionComponent<{ vm: IssuesViewModel }> = ({ vm }) =>
         <LoadingIndicator busyWatcher={vm.busyWatcher} />
     </div>
 );
-export default IssuesView;
+export default registerView(IssuesView, IssuesViewModel);

@@ -4,10 +4,11 @@ import { Project } from "@demo/entities/project";
 import BusyWatcher from "@src/controls/busyWatcher";
 import { ISelectItem } from "@src/controls/types";
 import { PagedQueryResult } from "@src/data/types";
-import FilteredListViewModel from "@src/viewModels/filteredListViewModel";
+import ListDetailViewModel from "@src/viewModels/listDetailViewModel";
 import { action, observable, toJS } from "mobx";
+import IssueDetailViewModel from "./issueDetailViewModel";
 
-export default class IssuesViewModel extends FilteredListViewModel<Issue, IssuesFilter> {
+export default class IssuesViewModel extends ListDetailViewModel<Issue, IssuesFilter, IssueDetailViewModel> {
     @observable public projects: ISelectItem[];
     public busyWatcher = new BusyWatcher();
 
@@ -21,6 +22,10 @@ export default class IssuesViewModel extends FilteredListViewModel<Issue, Issues
     @action.bound public loadData() {
         return this.busyWatcher.watch(
             this.issuesRepository.getAllIssues(this.appliedFilter, this.pagingFilter).then(this.setData));
+    }
+
+    public openDetail(id: number) {
+        alert(id);
     }
 
     protected resetFilterValues(filter: IssuesFilter) {
