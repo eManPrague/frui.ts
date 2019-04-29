@@ -1,7 +1,6 @@
 import { IssuesRepository } from "@demo/dataAccess/issuesRepository";
 import { RedmineRequestBuilder } from "@demo/dataAccess/redmineRequestBuilder";
 import { FetchApiConnector } from "@src/communication/fetchApiConnector";
-import { SortingDirection } from "@src/data/sortingDirection";
 import fetch from "fetch-with-proxy";
 
 const apiFactory = () => {

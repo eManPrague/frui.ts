@@ -28,7 +28,7 @@ describe("ensureObservableProperty", () => {
 
     ensureObservableProperty(target, "firstName", "Peter");
     expect(target.firstName).toBe("Peter");
-    // expect(isObservableProp(target, "firstName")).toBeTruthy();
+    expect(isObservableProp(target, "firstName")).toBeTruthy();
   });
 
   it("creates new property on a non-observable object", () => {

@@ -4,15 +4,15 @@ import { isObservableProp, observable } from "mobx";
 type TestControlProps = IBindingProps<any> & { otherText?: string, otherValue?: any };
 
 class TestControl extends BindingComponent<TestControlProps, any> {
-  public readValue() {
+  readValue() {
     return this.value;
   }
 
-  public writeValue(value: any) {
+  writeValue(value: any) {
     this.setValue(value);
   }
 
-  public getInheritedProps() {
+  getInheritedProps() {
     return this.inheritedProps;
   }
 }

@@ -3,25 +3,25 @@ import { IManualEntityValidator, ValidationErrors } from "./types";
 
 /** Entity validator implementation acting as a simple validation errors list that needs to be manually maintained */
 export default class ManualEntityValidator<TTarget> implements IManualEntityValidator<TTarget> {
-  @observable public isErrorsVisible: boolean;
-  @observable public errors: ValidationErrors<TTarget> = {};
+  @observable isErrorsVisible: boolean;
+  @observable errors: ValidationErrors<TTarget> = {};
 
   constructor(target: TTarget, isErrorsVisible: boolean) {
     this.isErrorsVisible = isErrorsVisible;
   }
 
   @action
-  public clearErrors() {
+  clearErrors() {
     Object.keys(this.errors).forEach(prop => remove(this.errors, prop));
   }
 
   @action
-  public addError(propertyName: string & keyof TTarget, message: string) {
+  addError(propertyName: string & keyof TTarget, message: string) {
     set(this.errors, propertyName, message);
   }
 
   @action
-  public removeError(propertyName: string & keyof TTarget) {
+  removeError(propertyName: string & keyof TTarget) {
     remove(this.errors, propertyName);
   }
 

@@ -3,12 +3,13 @@ import validatorsRepository from "@src/validation/validatorsRepository";
 import { observable } from "mobx";
 
 class TestEntity {
-  @observable public firstName: string;
-  @observable public lastName: string;
+  @observable firstName: string;
+  @observable lastName: string;
 }
 
 beforeAll(() => {
-  validatorsRepository.set("required", (value, propertyName, entity, params) => (!params || value) ? undefined : `${propertyName} is required.`);
+  validatorsRepository.set("required", (value, propertyName, entity, params) => 
+    (!params || value) ? undefined : `${propertyName} is required.`);
   validatorsRepository.set("equals", (value, propertyName, entity, params) =>
     (value === params.expectedValue) ? undefined : `${propertyName} should be '${params.expectedValue}'.`);
 });

@@ -13,13 +13,13 @@ const apiFactory = () => {
     const apiConnector = new FetchApiConnector();
     const params: RequestInit = {
         headers: {
-            Authorization: `Basic ${btoa(`${token}:pass`)}`,
+            "X-Redmine-API-Key": token,
         },
     };
     return new RedmineRequestBuilder(apiConnector, url, params);
 };
 
-const IssuesPage: React.FunctionComponent =props => {
+const IssuesPage: React.FunctionComponent = props => {
     const issuesRepository = new IssuesRepository(apiFactory);
     const viewModel = new IssuesViewModel(issuesRepository);
 

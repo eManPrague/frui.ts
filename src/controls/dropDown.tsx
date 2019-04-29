@@ -11,7 +11,7 @@ interface IDropDownProps<T> extends IBindingProps<T> {
 }
 
 export class DropDown extends BindingComponent<IDropDownProps<any>, any> {
-  public render() {
+  render() {
     return (
       <Observer>
         {() => <select className={this.props.className} value={cleanupValue(this.value)} onChange={this.handleValueChanged}>

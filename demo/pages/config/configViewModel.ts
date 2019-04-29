@@ -1,7 +1,7 @@
 import { autorun, observable } from "mobx";
 
 export default class ConfigViewModel {
-    @observable public configuration: IConfigurationModel = {
+    @observable configuration: IConfigurationModel = {
         url: localStorage.getItem("apiUrl") || "https://redmine.anon.eman.cz",
         accessToken: localStorage.getItem("apiToken") || "",
     };
@@ -16,7 +16,7 @@ export default class ConfigViewModel {
         (window as any).apiToken = accessToken;
     });
 
-    public dispose() {
+    dispose() {
         // tslint:disable-next-line: no-console
         console.log("disposing configViewModel");
         this.disposeAutorun();

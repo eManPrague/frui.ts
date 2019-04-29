@@ -3,20 +3,20 @@ import { DirtyPropertiesList, IManualDirtyWatcher } from "./types";
 
 /** Dirty watcher implementation acting as a simple dirty flags list that needs to be manually maintained */
 export default class ManualDirtyWatcher<TTarget> implements IManualDirtyWatcher<TTarget> {
-  @observable public isDirtyFlagVisible: boolean;
-  @observable public dirtyProperties: DirtyPropertiesList<TTarget> = {};
+  @observable isDirtyFlagVisible: boolean;
+  @observable dirtyProperties: DirtyPropertiesList<TTarget> = {};
 
   constructor(target: TTarget, isDirtyFlagVisible: boolean) {
     this.isDirtyFlagVisible = isDirtyFlagVisible;
   }
 
   @action
-  public setDirty(propertyName: string & keyof TTarget) {
+  setDirty(propertyName: string & keyof TTarget) {
     set(this.dirtyProperties, propertyName, true);
   }
 
   @action
-  public reset() {
+  reset() {
     this.dirtyProperties = {};
   }
 

@@ -5,7 +5,7 @@ import { observer } from "mobx-react-lite";
 import * as React from "react";
 import { IChildProps, IFieldProps } from "./types";
 
-const FormField: React.FunctionComponent<IFormFieldProps<any, IChildProps> & IFieldProps> = observer((props) => {
+const FormField: React.FunctionComponent<IFormFieldProps<any, IChildProps> & IFieldProps> = observer(props => {
   const validationMessage = getValidationMessage(props.target, props.property);
   const isDirty = getDirtyFlag(props.target, props.property);
 

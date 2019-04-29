@@ -65,10 +65,10 @@ export abstract class BindingComponent<TProps extends IBindingProps<TTarget>, TT
     const { target, property } = this.props;
 
     if (!target) {
+      //// throw new Error("'target' prop has not been set");
       // tslint:disable-next-line: no-console
       console.warn("'target' prop has not been set");
       return undefined;
-      // throw new Error("'target' prop has not been set");
     }
     if (!property) {
       throw new Error("'property' prop has not been set");

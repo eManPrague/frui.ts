@@ -5,9 +5,9 @@ import validatorsRepository from "./validatorsRepository";
 
 /** Entity validator implementation that automatically observes validated entity's properties and maintains validation errors */
 export default class AutomaticEntityValidator<TTarget extends {}> implements IEntityValidator<TTarget> {
-  @observable public isErrorsVisible: boolean;
+  @observable isErrorsVisible: boolean;
 
-  @observable public errors: ValidationErrors<TTarget> = {};
+  @observable errors: ValidationErrors<TTarget> = {};
   private validatedProperties: string[] = [];
 
   constructor(target: TTarget, entityValidationRules: IEntityValidationRules<TTarget>, isErrorsVisible: boolean) {

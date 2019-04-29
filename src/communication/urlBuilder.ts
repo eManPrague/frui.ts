@@ -1,7 +1,7 @@
 const cleanupRegex = /\/+$/g;
 
 export class UrlBuilder {
-  public url: string;
+  url: string;
 
   constructor(baseUrl: string, ...otherSegments: any[]) {
     this.url = baseUrl.replace(cleanupRegex, "");
@@ -10,11 +10,11 @@ export class UrlBuilder {
     });
   }
 
-  public all(path: string) {
+  all(path: string) {
     return this.appendUrl(path);
   }
 
-  public one(path: string, id?: any) {
+  one(path: string, id?: any) {
     return id !== undefined ? this.appendUrl(path, id) : this.appendUrl(path);
   }
 

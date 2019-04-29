@@ -134,7 +134,7 @@ describe("createPropertyValidatorFromRules()", () => {
       firstName: "John",
     };
 
-    const validator = createPropertyValidatorFromRules("firstName", { mock1: true, mock2: true});
+    const validator = createPropertyValidatorFromRules("firstName", { mock1: true, mock2: true });
     const validationResult = validator(entity.firstName, entity);
 
     expect(mockValidator1.mock.calls.length).toBe(1);
@@ -150,7 +150,7 @@ describe("createPropertyValidatorFromRules()", () => {
     };
 
     const params = { value: "val" };
-    const validator = createPropertyValidatorFromRules("firstName", { mock: params});
+    const validator = createPropertyValidatorFromRules("firstName", { mock: params });
     const validationResult = validator(entity.firstName, entity);
 
     const calledParameters = mockValidator.mock.calls[0] as any[];

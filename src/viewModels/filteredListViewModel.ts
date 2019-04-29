@@ -8,8 +8,8 @@ import { action, observable } from "mobx";
 import ListViewModel from "./listViewModel";
 
 export default abstract class FilteredListViewModel<TEntity, TFilter> extends ListViewModel<TEntity> {
-  @observable public filter: TFilter & IHasDirtyWatcher<TFilter>;
-  @observable public pagingFilter: IPagingFilter;
+  @observable filter: TFilter & IHasDirtyWatcher<TFilter>;
+  @observable pagingFilter: IPagingFilter;
 
   // we need to cache applied filter so that when the user changes filter but does not Load and changes page instead, the original filter is used
   protected appliedFilter: Omit<TFilter, keyof IHasDirtyWatcher<TFilter>>;
@@ -20,7 +20,7 @@ export default abstract class FilteredListViewModel<TEntity, TFilter> extends Li
     this.initFilter();
   }
 
-  @action.bound public applyFilter() {
+  @action.bound applyFilter() {
     const { __dirtycheck, ...actualFilter } = this.filter;
     __dirtycheck.reset();
 
@@ -28,17 +28,17 @@ export default abstract class FilteredListViewModel<TEntity, TFilter> extends Li
     this.pagingFilter.offset = 0;
   }
 
-  @bound public applyFilterAndLoad() {
+  @bound applyFilterAndLoad() {
     this.applyFilter();
     this.loadData();
   }
 
-  @action.bound public resetFilter() {
+  @action.bound resetFilter() {
     this.resetFilterValues(this.filter);
     this.applyFilter();
   }
 
-  @bound public resetFilterAndLoad() {
+  @bound resetFilterAndLoad() {
     this.resetFilter();
     this.loadData();
   }

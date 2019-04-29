@@ -4,20 +4,20 @@ import { getValidationMessage } from "@src/validation";
 import { observer } from "mobx-react-lite";
 import * as React from "react";
 
-export interface IFieldProps {
+export interface FieldProps {
   label: string;
 }
 
-export interface IChildProps {
+export interface ChildProps {
   bordercolor: string;
 }
 
-export const FormField: React.FunctionComponent<IFormFieldProps<any, IChildProps> & IFieldProps> = observer((props) => {
+export const FormField: React.FunctionComponent<IFormFieldProps<any, ChildProps> & FieldProps> = observer(props => {
   const validationMessage = getValidationMessage(props.target, props.property);
   const isDirty = getDirtyFlag(props.target, props.property);
   const bordercolor = !!validationMessage ? "red" : (isDirty ? "green" : "black");
 
-  const childProps: IChildProps = {
+  const childProps: ChildProps = {
     bordercolor,
   };
 
@@ -34,9 +34,9 @@ export const FormField: React.FunctionComponent<IFormFieldProps<any, IChildProps
 });
 
 export function fieldForType<TTarget>(target: TTarget) {
-  return FormField as React.FunctionComponent<IFormFieldProps<TTarget, IChildProps> & IFieldProps>;
+  return FormField as React.FunctionComponent<IFormFieldProps<TTarget, ChildProps> & FieldProps>;
 }
 
-export function fieldForTarget<TTarget>(target: TTarget): React.FunctionComponent<IFormFieldProps<TTarget, IChildProps> & IFieldProps> {
+export function fieldForTarget<TTarget>(target: TTarget): React.FunctionComponent<IFormFieldProps<TTarget, ChildProps> & FieldProps> {
   return props => <FormField {...props} target={target} />;
 }

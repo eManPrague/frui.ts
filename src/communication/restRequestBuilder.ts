@@ -9,12 +9,12 @@ export class RestRequestBuilder implements IRequestBuilder {
     this.url = baseUrl.replace(cleanupRegex, "");
   }
 
-  public all(path: string) {
+  all(path: string) {
     this.url += "/" + path;
     return this;
   }
 
-  public one(path: string, id?: any) {
+  one(path: string, id?: any) {
     this.url += "/" + path;
     if (id !== undefined) {
       this.url += "/" + id;
@@ -22,7 +22,7 @@ export class RestRequestBuilder implements IRequestBuilder {
     return this;
   }
 
-  public get<T>() {
+  get<T>() {
     return this.apiConnector.getJson<T>(this.url, this.params);
   }
 

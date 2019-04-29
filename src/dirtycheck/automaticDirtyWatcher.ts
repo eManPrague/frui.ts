@@ -4,8 +4,8 @@ import { action, computed, extendObservable, get, observable } from "mobx";
 
 /** Dirty watcher implementation that automatically observes watched entity's properties and maintains dirty flags */
 export default class AutomaticDirtyWatcher<TTarget extends {}> implements IDirtyWatcher<TTarget> {
-  @observable public isDirtyFlagVisible: boolean;
-  @observable public dirtyProperties: DirtyPropertiesList<TTarget>;
+  @observable isDirtyFlagVisible: boolean;
+  @observable dirtyProperties: DirtyPropertiesList<TTarget>;
   private checkedProperties: string[];
 
   constructor(private target: TTarget, isDirtyFlagVisible: boolean) {
@@ -18,7 +18,7 @@ export default class AutomaticDirtyWatcher<TTarget extends {}> implements IDirty
   }
 
   @action
-  public reset() {
+  reset() {
     this.dirtyProperties = {};
     this.checkedProperties = [];
 

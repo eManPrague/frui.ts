@@ -29,7 +29,7 @@ const actionLogger = {
 };
 
 storiesOf("TextBox", module)
-  .addDecorator((story) => (
+  .addDecorator(story => (
     <div>
       {story()}
       {dumpTargetObject()}

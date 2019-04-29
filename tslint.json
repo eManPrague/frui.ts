@@ -1,24 +1,27 @@
 {
-    "defaultSeverity": "error",
     "extends": [
-        "tslint:recommended",
-        "tslint-react"
+        "@eman/tslint-config"
     ],
     "rules": {
         "max-line-length": {
-            "options": [ 160 ]
+            "options": {
+                "ignore-pattern": "class [a-zA-Z]+ implements |^export {(.*?)}"
+            }
         },
-        "one-line": {
-            "options": [ "check-open-brace", "check-whitespace" ]
+        "quotemark": {
+            "options": [ "double" ]
         },
-        "object-literal-sort-keys": {
-            "severity": "off"
+        "variable-name": {
+            "options": [
+                "ban-keywords",
+                "check-format",
+                "allow-pascal-case"
+            ]
         },
-        "arrow-parens": {
-            "severity": "off"
-        },
-        "jsx-no-multiline-js": {
-            "severity": "off"
-        }
+        "interface-name": { "severity": "off" },
+        "no-unused-variable": { "severity": "off" },
+        "no-null-keyword": { "severity": "off" },
+        "eofline": { "severity": "default" },
+        "no-consecutive-blank-lines": { "severity": "default"}
     }
 }

@@ -22,19 +22,19 @@ export interface IssuesFilter {
 type AsyncQueryResult<T> = Promise<PagedQueryResult<T>>;
 
 export class IssuesRepository extends RepositoryBase {
-  public getAllProjects(paging: IPagingFilter): AsyncQueryResult<Project> {
+  getAllProjects(paging: IPagingFilter): AsyncQueryResult<Project> {
     const requestFilter = createRequestFilter(null, paging) as any;
     return this.apiFactory().all("projects").get<ProjectsQuery>(requestFilter).then(data => [data.projects, extractPagingInfo(data)]);
   }
 
-  public getAllIssues(filter: IssuesFilter, paging: IPagingFilter): AsyncQueryResult<Issue> {
+  getAllIssues(filter: IssuesFilter, paging: IPagingFilter): AsyncQueryResult<Issue> {
     const requestFilter = createRequestFilter(filter, paging) as any;
     requestFilter.subject = filter.subject && ("~" + filter.subject.trim());
 
     return this.apiFactory().all("issues").get<IssuesQuery>(requestFilter).then(data => [data.issues, extractPagingInfo(data)]);
   }
 
-  public getIssueDetail(id: number) {
+  getIssueDetail(id: number) {
     return this.apiFactory().one("issues", id).get<{ issue: Issue }>().then(x => x.issue);
   }
 }

@@ -9,8 +9,8 @@ import { action, observable, toJS } from "mobx";
 import IssueDetailViewModel from "./issueDetailViewModel";
 
 export default class IssuesViewModel extends ListDetailViewModel<Issue, IssuesFilter, IssueDetailViewModel> {
-    @observable public projects: ISelectItem[];
-    public busyWatcher = new BusyWatcher();
+    @observable projects: ISelectItem[];
+    busyWatcher = new BusyWatcher();
 
     constructor(private issuesRepository: IssuesRepository) {
         super();
@@ -19,12 +19,12 @@ export default class IssuesViewModel extends ListDetailViewModel<Issue, IssuesFi
         this.applyFilterAndLoad();
     }
 
-    @action.bound public loadData() {
+    @action.bound loadData() {
         return this.busyWatcher.watch(
             this.issuesRepository.getAllIssues(this.appliedFilter, this.pagingFilter).then(this.setData));
     }
 
-    public openDetail(id: number) {
+    openDetail(id: number) {
         alert(id);
     }
 
