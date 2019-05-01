@@ -1,7 +1,6 @@
 import FormField from "@demo/controls/formField";
 import Pager from "@demo/controls/pager";
 import SortingHeader from "@demo/controls/sortingHeader";
-import { BindingComponent } from "@src/controls/bindingComponent";
 import BusyWatcher from "@src/controls/busyWatcher";
 import { DropDown } from "@src/controls/dropDown";
 import { TextBox } from "@src/controls/textBox";

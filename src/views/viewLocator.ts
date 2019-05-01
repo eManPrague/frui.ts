@@ -3,10 +3,12 @@ import { FunctionComponent } from "react";
 type constructor<T> = new (...args: any[]) => T;
 type functionalView<TViewModel> = FunctionComponent<{ vm: TViewModel }>;
 
+const DEFAULT_CONTEXT = "default";
+
 // viewsRegistry is singleton
 const viewsRegistry = new Map<constructor<{}>, Record<string, functionalView<any>>>();
 
-export function registerView<TViewModel>(view: functionalView<TViewModel>, viewModelConstructor: constructor<TViewModel>, context = "default") {
+export function registerView<TViewModel>(view: functionalView<TViewModel>, viewModelConstructor: constructor<TViewModel>, context = DEFAULT_CONTEXT) {
   const currentViewModelViews = viewsRegistry.get(viewModelConstructor);
   if (currentViewModelViews) {
     currentViewModelViews[context] = view;
@@ -18,7 +20,7 @@ export function registerView<TViewModel>(view: functionalView<TViewModel>, viewM
 }
 
 // todo memoize
-export function getView(viewModelConstructor: constructor<{}>, context = "default") {
+export function getView(viewModelConstructor: constructor<{}>, context = DEFAULT_CONTEXT) {
   const currentViewModelViews = viewsRegistry.get(viewModelConstructor);
 
   if (!currentViewModelViews) {
