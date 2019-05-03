@@ -1,9 +1,10 @@
 // tslint:disable: max-classes-per-file member-ordering no-identical-functions
-import { IScreen } from "./types";
+import { IChild, IScreen } from "./types";
 
-export abstract class Screen implements IScreen {
+export default abstract class Screen implements IScreen, IChild<any> {
   // TODO view aware
-  // TODO ichild?
+
+  parent: any;
 
   private isInitialized = false;
   protected isActiveValue = false;
@@ -55,6 +56,10 @@ export abstract class Screen implements IScreen {
 
   protected onDeactivate(close: boolean): Promise<any> | void {
     return;
+  }
+
+  canClose() {
+    return Promise.resolve(true);
   }
 }
 
@@ -116,13 +121,13 @@ export function screen<T extends constructor<{}>>(base: T) {
 }
 
 function canInitialize(target: any): target is { onInitialize(): Promise<any> | void } {
-  return target.onInitialize && target.onInitialize instanceof Function;
+  return target.onInitialize && typeof target.onInitialize === "function";
 }
 
 function canActivate(target: any): target is { onActivate(): Promise<any> | void } {
-  return target.onActivate && target.onActivate instanceof Function;
+  return target.onActivate && typeof target.onActivate === "function";
 }
 
 function canDeactivate(target: any): target is { onDeactivate(close: boolean): Promise<any> | void } {
-  return target.onDeactivate && target.onDeactivate instanceof Function;
+  return target.onDeactivate && typeof target.onDeactivate === "function";
 }

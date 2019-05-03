@@ -1,4 +1,4 @@
-import { Screen } from "@src/lifecycle/screen";
+import Screen from "@src/lifecycle/screen";
 
 // tslint:disable: no-console
 export default class InheritedTestViewModel extends Screen {

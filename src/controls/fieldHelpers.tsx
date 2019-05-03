@@ -36,7 +36,7 @@ export function extractBindingProps<TTarget>(props: IBindingProps<TTarget>): IBi
 }
 
 function hasComponentInChildren<TTarget, TChildProps>(object: any): object is IComponentInChildrenProps<TTarget, TChildProps> {
-  return !!object.children && object.children instanceof Function;
+  return !!object.children && typeof object.children === "function";
 }
 function hasComponentInAttribute<TTarget>(object: any): object is IComponentInAttributeProps<TTarget> {
   return !!object.component;

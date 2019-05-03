@@ -2,13 +2,15 @@ import * as React from "react";
 import useScreenLifecycle from "./useScreenLifecycle";
 import { getView } from "./viewLocator";
 
-const View: React.FunctionComponent<{ vm: any, context?: string }> = ({ vm, context }) => {
+const View: React.FunctionComponent<{ vm: any, context?: string, ignoreLifecycle?: boolean }> = ({ vm, context, ignoreLifecycle }) => {
   if (!vm) {
     return <React.Fragment />;
   }
   const FoundView = getView(vm.constructor, context);
 
-  useScreenLifecycle(vm);
+  if (!ignoreLifecycle) {
+    useScreenLifecycle(vm);
+  }
   return <FoundView vm={vm} />;
 };
 export default View;
