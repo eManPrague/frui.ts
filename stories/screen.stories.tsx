@@ -4,8 +4,8 @@ import { storiesOf } from "@storybook/react";
 import { observable, runInAction } from "mobx";
 import { Observer } from "mobx-react-lite";
 import * as React from "react";
-import DecoratedViewModel from "./decoratedTestViewModel";
-import InheritedTestViewModel from "./inheritedTestViewModel";
+import DecoratedViewModel from "./controls/decoratedTestViewModel";
+import InheritedTestViewModel from "./controls/inheritedTestViewModel";
 
 const config = observable({
   display: false,

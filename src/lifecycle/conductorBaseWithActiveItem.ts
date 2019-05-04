@@ -23,7 +23,7 @@ export default abstract class ConductorBaseWithActiveItem<TChild extends IChild<
         this.activeItemValue = newItem;
       });
 
-      if (this.isActive && isActivatable(newItem)) {
+      if (this.isActive && newItem && isActivatable(newItem)) {
         await newItem.activate();
       }
     }

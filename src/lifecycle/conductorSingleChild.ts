@@ -2,7 +2,7 @@ import ConductorBaseWithActiveItem from "./conductorBaseWithActiveItem";
 import { isActivatable, isDeactivatable } from "./helpers";
 import { IChild } from "./types";
 
-export default class Conductor<TChild extends IChild<any>> extends ConductorBaseWithActiveItem<TChild> {
+export default class ConductorSingleChild<TChild extends IChild<any>> extends ConductorBaseWithActiveItem<TChild> {
   async activateItem(item: TChild) {
     if (item && this.activeItem === item) {
       if (this.isActive && isActivatable(item)) {

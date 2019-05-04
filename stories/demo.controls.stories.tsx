@@ -5,7 +5,7 @@ import validatorsRepository from "@src/validation/validatorsRepository";
 import { storiesOf } from "@storybook/react";
 import { observable } from "mobx";
 import * as React from "react";
-import { fieldForType } from "./formField";
+import { fieldForType } from "./controls/formField";
 
 const observableTarget = observable({
   name: "John",

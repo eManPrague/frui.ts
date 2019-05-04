@@ -1,5 +1,5 @@
 // tslint:disable: max-classes-per-file
-import Conductor from "@src/lifecycle/conductor";
+import Conductor from "@src/lifecycle/conductorSingleChild";
 import ChildMock from "./childMock";
 
 describe("conductor", () => {

@@ -20,7 +20,7 @@ export default class ConductorOneChildActive<TChild extends IChild<any>> extends
       return;
     }
 
-    await this.changeActiveItem(item, true);
+    await this.changeActiveItem(item, false);
   }
 
   async deactivateItem(item: TChild, close: boolean) {
@@ -75,10 +75,12 @@ export default class ConductorOneChildActive<TChild extends IChild<any>> extends
   }
 
   protected ensureChildItem(item: TChild) {
-    const currentIndex = this.items.indexOf(item);
-    if (currentIndex === -1) {
-      runInAction(() => this.items.push(item));
-      super.ensureChildItem(item);
+    if (item) {
+      const currentIndex = this.items.indexOf(item);
+      if (currentIndex === -1) {
+        runInAction(() => this.items.push(item));
+        super.ensureChildItem(item);
+      }
     }
   }
 

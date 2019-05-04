@@ -1,6 +1,6 @@
 const path = require('path');
 
-module.exports = ({ config  }) => {
+module.exports = ({ config }) => {
   config.module.rules = [{
     test: /\.(ts|tsx)$/,
     use: ['ts-loader', 'react-docgen-typescript-loader']
@@ -10,7 +10,10 @@ module.exports = ({ config  }) => {
 
   config.module.rules.push({
     test: /\.stories\.tsx?$/,
-    loaders: [require.resolve('@storybook/addon-storysource/loader')],
+    loaders: [{
+      loader: require.resolve('@storybook/addon-storysource/loader'),
+      options: { parser: 'typescript' },
+    }],
     enforce: 'pre',
   });
 
