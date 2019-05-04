@@ -3,18 +3,20 @@ import { observable } from "mobx";
 
 // tslint:disable: no-console
 export default class ChildViewModel extends Screen {
-  @observable title: string;
   @observable text: string;
 
   protected onInitialize() {
-    console.log(this.title, "onInitialize");
+    console.log(this.name, "onInitialize");
   }
 
   protected onActivate() {
-    console.log(this.title, "onActivate");
+    console.log(this.name, "onActivate");
+
+    const navigationPath = this.parent.getNavigationPath(this);
+    console.log("navigation", navigationPath.path, navigationPath.isClosed);
   }
 
   protected onDeactivate(close: boolean) {
-    console.log(this.title, "onDeactivate", close);
+    console.log(this.name, "onDeactivate", close);
   }
 }

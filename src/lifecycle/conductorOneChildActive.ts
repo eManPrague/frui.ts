@@ -5,7 +5,7 @@ import { isActivatable, isDeactivatable } from "./helpers";
 import { IChild } from "./types";
 
 export default class ConductorOneChildActive<TChild extends IChild<any>> extends ConductorBaseWithActiveItem<TChild> {
-  readonly items = observable.array();
+  readonly items = observable.array<TChild>();
 
   constructor() {
     super();

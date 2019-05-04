@@ -5,7 +5,8 @@ import { IChild, IConductor, IScreen } from "./types";
 
 export default abstract class Screen implements IScreen, IChild<IConductor<Screen>> {
   // TODO view aware
-
+  navigationName: string;
+  name: string;
   parent: IConductor<Screen>;
 
   private isInitialized = false;
@@ -74,7 +75,7 @@ type constructor<T> = new (...args: any[]) => T;
 // decorator
 export function screen<T extends constructor<{}>>(base: T) {
   // TODO can we reuse functions from Screen class?
-  return class DecoratedScreen extends base implements IScreen {
+  return class DecoratedScreen extends base {
     constructor(...args: any[]) {
       super(args);
       this.requestClose = this.requestClose.bind(this);

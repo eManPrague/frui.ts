@@ -10,11 +10,13 @@ export default class SingleChildViewModel extends ConductorSingleChild<ChildView
     super();
 
     this.child1 = new ChildViewModel();
-    this.child1.title = "One";
+    this.child1.navigationName = "One";
+    this.child1.name = "One";
     this.child1.text = "View Model One";
 
     this.child2 = new ChildViewModel();
-    this.child2.title = "Two";
+    this.child2.navigationName = "Two";
+    this.child2.name = "Two";
     this.child2.text = "View Model Two";
   }
 
@@ -26,5 +28,14 @@ export default class SingleChildViewModel extends ConductorSingleChild<ChildView
   @action.bound
   selectChild2() {
     this.activateItem(this.child2);
+  }
+
+  protected onActivate() {
+    if (!this.activeItem) {
+      const navigationPath = this.parent.getNavigationPath(this);
+      // tslint:disable-next-line: no-console
+      console.log("navigation", navigationPath.path, navigationPath.isClosed);
+    }
+    return super.onActivate();
   }
 }

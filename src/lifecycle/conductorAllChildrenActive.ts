@@ -2,10 +2,11 @@ import bound from "@src/helpers/bound";
 import { IArraySplice, IArrayWillChange, intercept, observable, runInAction } from "mobx";
 import ConductorBase from "./conductorBase";
 import { isActivatable, isDeactivatable } from "./helpers";
-import { IChild } from "./types";
+import { IActivate, IChild } from "./types";
 
 export default class ConductorAllChildrenActive<TChild extends IChild<any>> extends ConductorBase<TChild> {
-  readonly items = observable.array();
+  readonly items = observable.array<TChild>();
+  protected childNavigationPathClosed = true;
 
   constructor() {
     super();
@@ -60,7 +61,7 @@ export default class ConductorAllChildrenActive<TChild extends IChild<any>> exte
   }
 
   protected onActivate() {
-    const itemsToActivate = this.items.filter(isActivatable);
+    const itemsToActivate = this.items.filter(isActivatable) as any as IActivate[];
     return Promise.all(itemsToActivate.map(x => x.activate()));
   }
 
