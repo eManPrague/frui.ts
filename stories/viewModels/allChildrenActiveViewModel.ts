@@ -1,6 +1,7 @@
 import ConductorAllChildrenActive from "@src/lifecycle/conductorAllChildrenActive";
 import { action } from "mobx";
 import ChildViewModel from "./childViewModel";
+import { notifyRoutePathChanged } from "./helpers";
 
 export default class AllChildrenActiveViewModel extends ConductorAllChildrenActive<ChildViewModel>
 {
@@ -14,14 +15,25 @@ export default class AllChildrenActiveViewModel extends ConductorAllChildrenActi
     this.items.push(newChild);
 
     this.childCounter++;
+    return newChild;
   }
 
   protected onActivate() {
     if (!this.items.length) {
-      const navigationPath = this.parent.getNavigationPath(this);
-      // tslint:disable-next-line: no-console
-      console.log("navigation", navigationPath.path, navigationPath.isClosed);
+      notifyRoutePathChanged(this);
     }
     return super.onActivate();
+  }
+
+  protected getChild(name: string) {
+    const child = this.items.find(x => x.navigationName === name);
+    if (child) {
+      return Promise.resolve(child);
+    }
+    else {
+      this.childCounter = parseInt(name, 0);
+      const newChild = this.addChild();
+      return Promise.resolve(newChild);
+    }
   }
 }

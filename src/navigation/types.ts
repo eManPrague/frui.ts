@@ -1,8 +1,10 @@
-export interface NavigationPath {
-  readonly path: string;
-  readonly isClosed: boolean;
-}
+import NavigationPath from "./navigationPath";
 
 export interface IHasNavigationName {
-  navigationName: string;
+  readonly navigationName: string;
+}
+
+export interface ICanNavigate {
+  navigate(path: string): Promise<any>;
+  getNavigationPath(item: IHasNavigationName): NavigationPath;
 }

@@ -1,5 +1,6 @@
 import Screen from "@src/lifecycle/screen";
 import { observable } from "mobx";
+import { notifyRoutePathChanged } from "./helpers";
 
 // tslint:disable: no-console
 export default class ChildViewModel extends Screen {
@@ -11,9 +12,7 @@ export default class ChildViewModel extends Screen {
 
   protected onActivate() {
     console.log(this.name, "onActivate");
-
-    const navigationPath = this.parent.getNavigationPath(this);
-    console.log("navigation", navigationPath.path, navigationPath.isClosed);
+    notifyRoutePathChanged(this);
   }
 
   protected onDeactivate(close: boolean) {

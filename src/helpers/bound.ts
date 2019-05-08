@@ -1,3 +1,7 @@
+/**
+ * Decorator applicable to class functions causing the functions to be bound to their class instance.
+ * This ensures that 'this' within the decorated function will always be the class instance.
+ */
 export default function bound(target: any, propertyKey: string, descriptor: PropertyDescriptor) {
   const fn = descriptor.value;
 

@@ -1,4 +1,4 @@
-import { useDisposable } from "@src/helpers/reactHelpers";
+import useDisposable from "@src/lifecycle/useDisposable";
 import * as React from "react";
 import ConfigView from "./configView";
 import ConfigViewModel from "./configViewModel";

@@ -1,8 +1,17 @@
 // tslint:disable: max-classes-per-file
-import Conductor from "@src/lifecycle/conductorSingleChild";
+import ConductorSingleChild from "@src/lifecycle/conductorSingleChild";
+import { IChild } from "@src/lifecycle/types";
+import { IHasNavigationName } from "@src/navigation/types";
 import ChildMock from "./childMock";
 
-describe("conductor", () => {
+class Conductor<TChild extends IChild<any> & IHasNavigationName> extends ConductorSingleChild<TChild>
+{
+  protected getChild(navigationName: string) {
+    return Promise.resolve(null);
+  }
+}
+
+describe("ConductorSingleChild", () => {
   describe("activate", () => {
     it("activates existing activeItem", async () => {
       const child = new ChildMock();

@@ -1,7 +1,7 @@
 import ConductorOneChildActive from "@src/lifecycle/conductorOneChildActive";
 import ChildMock from "./childMock";
 
-describe("conductorOneChildActive", () => {
+describe("ConductorOneChildActive", () => {
   describe("items", () => {
     test("adding a new child sets parent link", () => {
       const child = new ChildMock();

@@ -1,7 +1,7 @@
 import ConductorAllChildrenActive from "@src/lifecycle/conductorAllChildrenActive";
 import ChildMock from "./childMock";
 
-describe("conductorAllChildrenActive", () => {
+describe("ConductorAllChildrenActive", () => {
   describe("activate", () => {
     it("activates existing items", async () => {
       const child1 = new ChildMock();

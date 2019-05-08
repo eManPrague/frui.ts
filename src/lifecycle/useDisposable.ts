@@ -4,7 +4,7 @@ interface IDisposable {
     dispose(): void;
 }
 
-export function useDisposable(...dependencies: IDisposable[]) {
+export default function useDisposable(...dependencies: IDisposable[]) {
     useEffect(() => () => {
         dependencies.forEach(x => x.dispose());
     }, []);

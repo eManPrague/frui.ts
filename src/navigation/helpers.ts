@@ -1,16 +1,9 @@
-import { IHasNavigationName } from "./types";
+import { ICanNavigate, IHasNavigationName } from "./types";
 
 export function hasNavigationName(item: any): item is IHasNavigationName {
   return item.navigationName !== undefined;
 }
 
-export function combine(base: string, path: string)  {
-  if (base)
-  {
-    return path ? base + "/" + path : base;
-  }
-  else
-  {
-    return path;
-  }
+export function canNavigate(item: any): item is ICanNavigate {
+  return item.navigate && typeof item.navigate === "function";
 }

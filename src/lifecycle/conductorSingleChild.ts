@@ -1,8 +1,9 @@
+import { IHasNavigationName } from "@src/navigation/types";
 import ConductorBaseWithActiveItem from "./conductorBaseWithActiveItem";
 import { isActivatable, isDeactivatable } from "./helpers";
 import { IChild } from "./types";
 
-export default class ConductorSingleChild<TChild extends IChild<any>> extends ConductorBaseWithActiveItem<TChild> {
+export default abstract class ConductorSingleChild<TChild extends IChild<any> & IHasNavigationName> extends ConductorBaseWithActiveItem<TChild> {
   async activateItem(item: TChild) {
     if (item && this.activeItem === item) {
       if (this.isActive && isActivatable(item)) {

@@ -1,11 +1,12 @@
 // tslint:disable: max-classes-per-file member-ordering no-identical-functions
 import bound from "@src/helpers/bound";
+import { IHasNavigationName } from "@src/navigation/types";
 import { computed, observable } from "mobx";
 import { IChild, IConductor, IScreen } from "./types";
 
-export default abstract class Screen implements IScreen, IChild<IConductor<Screen>> {
+export default abstract class Screen implements IScreen, IChild<IConductor<Screen>>, IHasNavigationName {
   // TODO view aware
-  navigationName: string;
+  navigationName: string = this.constructor.name.replace("ViewModel", "");
   name: string;
   parent: IConductor<Screen>;
 
@@ -69,6 +70,8 @@ export default abstract class Screen implements IScreen, IChild<IConductor<Scree
     return this.parent ? this.parent.deactivateItem(this, true) : Promise.resolve();
   }
 }
+
+// TODO remove screen decorator
 
 type constructor<T> = new (...args: any[]) => T;
 

@@ -1,9 +1,10 @@
+import { IHasNavigationName } from "@src/navigation/types";
 import { computed, observable, runInAction } from "mobx";
 import ConductorBase from "./conductorBase";
 import { isActivatable, isDeactivatable } from "./helpers";
 import { IChild, IHasActiveItem } from "./types";
 
-export default abstract class ConductorBaseWithActiveItem<TChild extends IChild<any>>
+export default abstract class ConductorBaseWithActiveItem<TChild extends IChild<any> & IHasNavigationName>
   extends ConductorBase<TChild> implements IHasActiveItem<TChild> {
 
     @observable private activeItemValue: TChild;

@@ -1,10 +1,11 @@
 import bound from "@src/helpers/bound";
+import { IHasNavigationName } from "@src/navigation/types";
 import { IArraySplice, IArrayWillChange, intercept, observable, runInAction } from "mobx";
 import ConductorBase from "./conductorBase";
 import { isActivatable, isDeactivatable } from "./helpers";
 import { IActivate, IChild } from "./types";
 
-export default class ConductorAllChildrenActive<TChild extends IChild<any>> extends ConductorBase<TChild> {
+export default class ConductorAllChildrenActive<TChild extends IChild<any> & IHasNavigationName> extends ConductorBase<TChild> {
   readonly items = observable.array<TChild>();
   protected childNavigationPathClosed = true;
 
@@ -58,6 +59,11 @@ export default class ConductorAllChildrenActive<TChild extends IChild<any>> exte
     }
 
     return canCloseSelf;
+  }
+
+  protected getChild(name: string) {
+    const child = this.items.find(x => x.navigationName === name);
+    return Promise.resolve(child);
   }
 
   protected onActivate() {

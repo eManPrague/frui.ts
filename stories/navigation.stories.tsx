@@ -1,33 +1,25 @@
-import ConductorOneChildActive from "@src/lifecycle/conductorOneChildActive";
 import View from "@src/views/view";
 import { storiesOf } from "@storybook/react";
 import { Observer } from "mobx-react-lite";
 import * as React from "react";
-import AllChildrenActiveViewModel from "./viewModels/allChildrenActiveViewModel";
-import OneChildActiveViewModel from "./viewModels/oneChildActiveViewModel";
-import SingleChildViewModel from "./viewModels/singleChildViewModel";
+import RootViewModel from "./viewModels/rootViewModel";
 import "./views/childView";
 
 // tslint:disable: jsx-no-lambda
 storiesOf("Navigation", module)
   .add("Path", () => {
-    const rootViewModel = new ConductorOneChildActive<any>();
-    rootViewModel.navigationName = "";
-
-    const module1 = new SingleChildViewModel();
-    module1.name = "Module 1";
-    module1.navigationName = "ModuleOne";
-    const module2 = new OneChildActiveViewModel();
-    module2.name = "Module 2";
-    module2.navigationName = "ModuleTwo";
-    const module3 = new AllChildrenActiveViewModel();
-    module3.name = "Module 3";
-    module3.navigationName = "ModuleThree";
-
-    rootViewModel.items.push(module1, module2, module3);
+    const rootViewModel = new RootViewModel();
     rootViewModel.activate();
 
     return <div>
+      <Observer>{() =>
+        <div>
+          Path:
+          <input value={rootViewModel.navigationPath} onChange={e => rootViewModel.setNavigationPath(e.currentTarget.value)} />
+          <button onClick={rootViewModel.startNavigation}>Go</button>
+        </div>}
+      </Observer>
+
       <h2>Demo navigation</h2>
       <Observer>{() =>
         <React.Fragment>
