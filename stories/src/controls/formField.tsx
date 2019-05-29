@@ -33,8 +33,8 @@ export const FormField: React.FunctionComponent<IFormFieldProps<any, ChildProps>
   );
 });
 
-export function fieldForType<TTarget>(target: TTarget) {
-  return FormField as React.FunctionComponent<IFormFieldProps<TTarget, ChildProps> & FieldProps>;
+export function fieldForType<TTarget>(target: TTarget): React.FunctionComponent<IFormFieldProps<TTarget, ChildProps> & FieldProps> {
+  return FormField;
 }
 
 export function fieldForTarget<TTarget>(target: TTarget): React.FunctionComponent<IFormFieldProps<TTarget, ChildProps> & FieldProps> {

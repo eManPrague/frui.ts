@@ -41,8 +41,8 @@ function getControlClassName(isValid: boolean, isDirty: boolean) {
   }
 }
 
-export function fieldForType<TTarget>(target: TTarget) {
-  return FormField as React.FunctionComponent<IFormFieldProps<TTarget, IChildProps> & IFieldProps>;
+export function fieldForType<TTarget>(target: TTarget): React.FunctionComponent<IFormFieldProps<TTarget, IChildProps> & IFieldProps> {
+  return FormField;
 }
 
 export function fieldForTarget<TTarget>(target: TTarget): React.FunctionComponent<IFormFieldProps<TTarget, IChildProps> & IFieldProps> {
