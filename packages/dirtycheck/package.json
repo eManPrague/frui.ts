@@ -1,0 +1,26 @@
+{
+  "name": "@frui.ts/dirtycheck",
+  "version": "0.0.0",
+  "description": "Observable dirty checking",
+  "author": "Augustin Šulc <sulc.gusta@gmail.com>",
+  "license": "ISC",
+  "main": "lib/index.js",
+  "directories": {
+    "lib": "lib",
+    "test": "__tests__"
+  },
+  "files": [
+    "lib"
+  ],
+  "repository": {
+    "type": "git",
+    "url": "git@gitlab.eman.cz:frui.ts/frui.ts-fe.git"
+  },
+  "scripts": {
+    "prebuild": "rimraf lib",
+    "build": "tsc"
+  },
+  "dependencies": {
+    "@frui.ts/helpers": "^0.0.0"
+  }
+}

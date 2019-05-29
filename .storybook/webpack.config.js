@@ -6,7 +6,6 @@ module.exports = ({ config }) => {
     use: ['ts-loader', 'react-docgen-typescript-loader']
   }];
   config.resolve.extensions.push('.ts', '.tsx');
-  config.resolve.alias['@src'] = path.resolve(__dirname, '../src')
 
   config.module.rules.push({
     test: /\.stories\.tsx?$/,

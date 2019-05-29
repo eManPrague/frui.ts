@@ -1,10 +1,12 @@
 {
   "compilerOptions": {
+    "module": "commonjs",
+    "declaration": true,
     "noImplicitAny": true,
+    "removeComments": true,
     "experimentalDecorators": true,
     "emitDecoratorMetadata": true,
     "sourceMap": true,
-    "module": "commonjs",
     "target": "es5",
     "jsx": "react",
     "lib": [
@@ -14,20 +16,15 @@
     "types": [
       "jest"
     ],
-    "outDir": "./dist/",
     "baseUrl": "./",
     "paths": {
-      "*": ["types/*"],
-      "@src/*": [
-        "./src/*"
-      ],
-      "@demo/*": [
-        "./demo/*"
-      ]
+      "*": ["types/*"]
     }
   },
   "exclude": [
     "node_modules",
-    "dist"
+    "**/*.spec.ts",
+    "dist",
+    "lib"
   ]
 }

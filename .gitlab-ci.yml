@@ -13,6 +13,7 @@ stages:
 
 before_script:
   - npm install
+  - npx lerna bootstrap
 
 lint:
   stage: review
@@ -22,24 +23,26 @@ lint:
 test:
   stage: test
   script:
+    - npm run build
     - npm test
 
-build:
+publish:
   stage: build
   script:
     - npm run build
+    - npm run publish
   artifacts:
     paths:
+      - demo/dist
       - dist/storybook
       - dist/docs
-      - dist/demo
 
 pages:
   stage: deploy
   script:
     - mv dist/docs public
     - mv dist/storybook public/storybook
-    - mv dist/demo public/demo
+    - mv demo/dist public/demo
   artifacts:
     paths:
       - public

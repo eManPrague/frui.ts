@@ -1,9 +1,0 @@
-{
-    "extends": [
-        "../tslint.json"
-    ],
-    "rules": {
-        "no-dead-store": { "severity": "off" },
-        "no-duplicate-string": { "severity": "off" }
-    }
-}

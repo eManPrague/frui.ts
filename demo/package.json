@@ -1,0 +1,34 @@
+{
+  "name": "@frui.ts/demo",
+  "version": "0.0.0",
+  "description": "> TODO: description",
+  "author": "Augustin Šulc <sulc.gusta@gmail.com>",
+  "license": "ISC",
+  "main": "lib/index.html",
+  "directories": {
+    "lib": "lib",
+    "test": "__tests__"
+  },
+  "files": [
+    "lib"
+  ],
+  "repository": {
+    "type": "git",
+    "url": "git@gitlab.eman.cz:frui.ts/frui.ts-fe.git"
+  },
+  "scripts": {
+    "prebuild": "rimraf dist",
+    "build": "webpack",
+    "start": "webpack-dev-server",
+    "proxy": "lcp --proxyUrl https://redmine.dev.eman.cz"
+  },
+  "dependencies": {
+    "@frui.ts/apiclient": "^0.0.0",
+    "@frui.ts/data": "^0.0.0",
+    "@frui.ts/datascreens": "^0.0.0",
+    "@frui.ts/dirtycheck": "^0.0.0",
+    "@frui.ts/screens": "^0.0.0",
+    "@frui.ts/validation": "^0.0.0",
+    "@frui.ts/views": "^0.0.0"
+  }
+}
