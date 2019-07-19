@@ -1,22 +1,23 @@
 {
   "name": "@frui.ts/stories",
+  "private": true,
   "version": "0.0.0",
   "description": "> TODO: description",
   "author": "Augustin Šulc <sulc.gusta@gmail.com>",
   "license": "ISC",
   "directories": {
-    "lib": "lib",
+    "lib": "dist",
     "test": "__tests__"
   },
   "files": [
-    "lib"
+    "dist"
   ],
   "repository": {
     "type": "git",
     "url": "git@gitlab.eman.cz:frui.ts/frui.ts-fe.git"
   },
   "scripts": {
-    "prebuild": "rimraf lib"
+    "prebuild": "rimraf dist"
   },
   "dependencies": {
     "@frui.ts/dirtycheck": "^0.0.0",

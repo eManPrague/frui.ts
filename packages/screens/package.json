@@ -1,23 +1,26 @@
 {
   "name": "@frui.ts/screens",
+  "publishConfig": {
+    "registry": "https://nexus.eman.cz/repository/eman-npm/"
+  },
   "version": "0.0.0",
   "description": "Frui.ts screens",
   "author": "Augustin Šulc <sulc.gusta@gmail.com>",
   "license": "ISC",
-  "main": "lib/index.js",
+  "main": "dist/index.js",
   "directories": {
-    "lib": "lib",
+    "lib": "dist",
     "test": "__tests__"
   },
   "files": [
-    "lib"
+    "dist"
   ],
   "repository": {
     "type": "git",
     "url": "git@gitlab.eman.cz:frui.ts/frui.ts-fe.git"
   },
   "scripts": {
-    "prebuild": "rimraf lib",
+    "prebuild": "rimraf dist",
     "build": "tsc"
   },
   "dependencies": {

@@ -1,5 +1,6 @@
 {
   "name": "@frui.ts/demo",
+  "private": true,
   "version": "0.0.0",
   "description": "> TODO: description",
   "author": "Augustin Šulc <sulc.gusta@gmail.com>",
@@ -10,7 +11,7 @@
     "test": "__tests__"
   },
   "files": [
-    "lib"
+    "dist"
   ],
   "repository": {
     "type": "git",
