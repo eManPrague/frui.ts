@@ -52,5 +52,4 @@ deploy_to_nexus:
   script:
   - npm run build
   - npm config set $REPO_URL:_authToken=$NPM_AUTH_TOKEN
-  - git checkout -- package-lock.json # lerna complains about local changes in this file
-  - npx lerna publish from-package --yes --no-git-reset --no-verify-access --registry $REPO_URL
+  - npx lerna publish from-package --registry $REPO_URL --yes

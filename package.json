@@ -12,6 +12,7 @@
   },
   "scripts": {
     "lerna": "lerna link",
+    "version": "lerna version -y --no-push --no-git-tag-version",
     "publish:storybook": "build-storybook -c .storybook -o dist/storybook",
     "publish:docs": "typedoc packages --out dist/docs --hideGenerator",
     "publish": "rimraf dist && npm run publish:storybook && npm run publish:docs",

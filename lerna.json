@@ -1,13 +1,16 @@
 {
   "version": "0.0.1",
   "packages": [
+    "demo",
     "packages/*",
-    "stories",
-    "demo"
+    "stories"
   ],
   "command": {
     "publish": {
-      "ignoreChanges": ["ignored-file", "*.md"]
+      "ignoreChanges": [
+        "ignored-file",
+        "*.md"
+      ]
     }
   }
 }
