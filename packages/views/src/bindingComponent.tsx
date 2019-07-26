@@ -40,7 +40,7 @@ export interface IBindingProps<TTarget> {
  * @typeparam TProps Type of the props. Should implement [[IBindingProps]] with information required for binding.
  * @typeparam TTarget Type of the targete entity for binding
  */
-export abstract class BindingComponent<TProps extends IBindingProps<TTarget>, TTarget> extends React.Component<TProps, undefined> {
+export abstract class BindingComponent<TProps extends IBindingProps<TTarget>, TTarget> extends React.Component<TProps> {
   /**
    * Returns `props` excluding properties required for binding.
    *
@@ -82,7 +82,7 @@ export abstract class BindingComponent<TProps extends IBindingProps<TTarget>, TT
   }
 
   /** Sets the provided value to the bound property  */
-  @action protected setValue(value: any) {
+  @action.bound protected setValue(value: any) {
     const { target, property, onValueChanged } = this.props;
 
     ensureObservableProperty(target, property, value);
