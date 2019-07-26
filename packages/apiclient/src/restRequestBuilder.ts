@@ -5,7 +5,7 @@ const cleanupRegex = /\/+$/g; // removes trailing slash
 export class RestRequestBuilder implements IRequestBuilder {
   protected url: string;
 
-  constructor(protected apiConnector: IApiConnector, baseUrl: string, protected params: RequestInit) {
+  constructor(protected apiConnector: IApiConnector, baseUrl: string, protected params?: RequestInit) {
     this.url = baseUrl.replace(cleanupRegex, "");
   }
 
@@ -24,6 +24,18 @@ export class RestRequestBuilder implements IRequestBuilder {
 
   get<T>() {
     return this.apiConnector.getJson<T>(this.url, this.params);
+  }
+
+  post<T>(content: any) {
+    return this.apiConnector.postJson(this.url, content, this.params);
+  }
+
+  put<T>(content: any) {
+    return this.apiConnector.putJson(this.url, content, this.params);
+  }
+
+  delete() {
+    return this.apiConnector.delete(this.url, this.params);
   }
 
   protected combineUrl(url: string, query?: any) {

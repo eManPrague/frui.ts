@@ -1,12 +1,24 @@
 import * as React from "react";
 import useScreenLifecycle from "./useScreenLifecycle";
-import { getView } from "./viewLocator";
+import { getView, tryGetView } from "./viewLocator";
 
-const View: React.FunctionComponent<{ vm: any, context?: string, ignoreLifecycle?: boolean }> = ({ vm, context, ignoreLifecycle }) => {
+interface ViewProps {
+  vm: any;
+  context?: string;
+  ignoreLifecycle?: boolean;
+  enableFallback?: boolean;
+}
+
+const View: React.FunctionComponent<ViewProps> = ({ vm, context, ignoreLifecycle, enableFallback }) => {
   if (!vm) {
     return <React.Fragment />;
   }
-  const FoundView = getView(vm.constructor, context);
+
+  const FoundView = enableFallback ? tryGetView(vm.constructor, context) : getView(vm.constructor, context);
+
+  if (!FoundView) {
+    return <span>Could not find a view for {vm.constructor.name} </span>;
+  }
 
   if (!ignoreLifecycle) {
     useScreenLifecycle(vm);

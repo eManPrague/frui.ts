@@ -34,3 +34,18 @@ export function getView(viewModelConstructor: constructor<{}>, context = DEFAULT
 
   return view;
 }
+
+export function tryGetView(viewModelConstructor: constructor<{}>, context = DEFAULT_CONTEXT) {
+  const currentViewModelViews = viewsRegistry.get(viewModelConstructor);
+
+  if (!currentViewModelViews) {
+    return null;
+  }
+
+  const view = currentViewModelViews[context];
+  if (!view) {
+    return null;
+  }
+
+  return view;
+}

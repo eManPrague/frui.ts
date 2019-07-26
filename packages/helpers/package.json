@@ -3,7 +3,7 @@
   "publishConfig": {
     "registry": "https://nexus.eman.cz/repository/eman-npm/"
   },
-  "version": "0.0.2",
+  "version": "0.0.3",
   "description": "Frui.ts helper functions",
   "keywords": [
     "frui.ts"

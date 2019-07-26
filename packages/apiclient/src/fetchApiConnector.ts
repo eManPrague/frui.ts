@@ -24,9 +24,18 @@ export class FetchApiConnector implements IApiConnector {
     return this.fetchFunction(url, { ...params, method: "post", body: text })
       .then(checkStatus);
   }
+  postJson<TResult>(url: string, content: any, params?: RequestInit): Promise<TResult> {
+    return this.postText(url, JSON.stringify(content), params)
+      .then(x => x.json());
+  }
   postFormData(url: string, data: FormData, params?: RequestInit): Promise<Response> {
     return this.fetchFunction(url, { ...params, method: "post", body: data })
       .then(checkStatus);
+  }
+  putJson<TResult>(url: string, content: any, params?: RequestInit): Promise<TResult>
+  {
+    return this.putText(url, JSON.stringify(content), params)
+      .then(x => x.json());
   }
   putText(url: string, text: string, params?: RequestInit): Promise<Response> {
     return this.fetchFunction(url, { ...params, method: "put", body: text })
