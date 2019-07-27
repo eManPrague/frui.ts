@@ -8,7 +8,7 @@
  *
  * @returns A `string` with validation error message when the validation fails, otherwise `undefined`
  */
-type IValidator = (propertyValue: any, propertyName: string, entity: any, params: any) => string;
+type IValidator = (propertyValue: any, propertyName: string, entity: any, params: any) => string | undefined;
 
 const validatorsRepository = new Map<string, IValidator>();
 

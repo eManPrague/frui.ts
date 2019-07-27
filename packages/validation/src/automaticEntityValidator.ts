@@ -22,7 +22,7 @@ export default class AutomaticEntityValidator<TTarget extends {}> implements IEn
           continue;
         }
 
-        ensureObservableProperty(target, propertyName, (target as any)[propertyName] || null);
+        ensureObservableProperty(target, propertyName, (target as any)[propertyName]);
         this.validatedProperties.push(propertyName);
 
         extendObservable(this.errors, {
@@ -38,7 +38,7 @@ export default class AutomaticEntityValidator<TTarget extends {}> implements IEn
 }
 
 type IPropertyBoundValidator = (propertyValue: any, entity: any) => string;
-const TrueValidator: IPropertyBoundValidator = _ => null;
+const TrueValidator: IPropertyBoundValidator = _ => undefined;
 
 /** Creates actual validator function for a particular property based on the provided validation rules */
 export function createPropertyValidatorFromRules(propertyName: string, propertyRules: IPropertyValidationRules) {

@@ -3,8 +3,10 @@ import AutomaticEntityValidator, { createPropertyValidatorFromRules } from "../s
 import validatorsRepository from "../src/validatorsRepository";
 
 beforeAll(() => {
-  validatorsRepository.set("required", value => !!value ? null : "Value is required");
-  validatorsRepository.set("mustBeJohn", (value, propertyName) => value === "John" ? null : `${propertyName} must be John`);
+  validatorsRepository.set("required", value => (!!value ? undefined : "Value is required"));
+  validatorsRepository.set("mustBeJohn", (value, propertyName) =>
+    value === "John" ? undefined : `${propertyName} must be John`
+  );
 });
 
 describe("AutomaticEntityValidator", () => {
@@ -24,6 +26,22 @@ describe("AutomaticEntityValidator", () => {
     expect(validator.errors.firstName).toBeUndefined();
   });
 
+  it("maintains value on empty string", () => {
+    const target = observable({
+      firstName: "",
+    });
+
+    const validationRules = {
+      firstName: {
+        mustBeJohn: true,
+      },
+    };
+
+    const validator = new AutomaticEntityValidator(target, validationRules, false);
+
+    expect(target.firstName).toBe("");
+  });
+
   it("evaluates validation on value change", () => {
     const target = observable({
       firstName: "John",
@@ -38,7 +56,7 @@ describe("AutomaticEntityValidator", () => {
     const validator = new AutomaticEntityValidator(target, validationRules, false);
 
     expect(validator.isValid).toBeTruthy();
-    expect(validator.errors.firstName).toBeNull();
+    expect(validator.errors.firstName).toBeUndefined();
 
     target.firstName = "Peter";
 
@@ -47,8 +65,7 @@ describe("AutomaticEntityValidator", () => {
   });
 
   it("initializes validation on empty field", () => {
-    const target = observable({
-    }) as any;
+    const target = observable({}) as any;
 
     const validationRules = {
       firstName: {
@@ -64,12 +81,11 @@ describe("AutomaticEntityValidator", () => {
     target.firstName = "John";
 
     expect(validator.isValid).toBeTruthy();
-    expect(validator.errors.firstName).toBeNull();
+    expect(validator.errors.firstName).toBeUndefined();
   });
 
   it("initializes validation on a non-observable entity", () => {
-    const target = {
-    } as any;
+    const target = {} as any;
 
     const validationRules = {
       firstName: {
@@ -85,7 +101,7 @@ describe("AutomaticEntityValidator", () => {
     target.firstName = "John";
 
     expect(validator.isValid).toBeTruthy();
-    expect(validator.errors.firstName).toBeNull();
+    expect(validator.errors.firstName).toBeUndefined();
   });
 });
 
@@ -98,7 +114,7 @@ describe("createPropertyValidatorFromRules()", () => {
     const validator = createPropertyValidatorFromRules("firstName", {});
     const validationResult = validator(entity.firstName, entity);
 
-    expect(validationResult).toBeNull();
+    expect(validationResult).toBeUndefined();
   });
 
   test("validation error", () => {
@@ -120,7 +136,7 @@ describe("createPropertyValidatorFromRules()", () => {
     const validator = createPropertyValidatorFromRules("firstName", { required: true });
     const validationResult = validator(entity.firstName, entity);
 
-    expect(validationResult).toBeNull();
+    expect(validationResult).toBeUndefined();
   });
 
   test("all validators are called", () => {

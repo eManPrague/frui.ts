@@ -7,12 +7,10 @@ import { extendObservable, isObservable, set } from "mobx";
  * @param property Name of the property to set
  * @param value Value of the property to set
  */
-export function ensureObservableProperty(target: any, property: string, value?: any) {
-    if (!isObservable(target)) {
-        extendObservable(target, {});
-    }
+export function ensureObservableProperty(target: any, property: string, value: any) {
+  if (!isObservable(target)) {
+    extendObservable(target, {});
+  }
 
-    if (value !== undefined) {
-        set(target, property, value);
-    }
+  set(target, property, value !== undefined ? value : null);
 }

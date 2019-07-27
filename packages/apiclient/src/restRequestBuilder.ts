@@ -27,11 +27,11 @@ export class RestRequestBuilder implements IRequestBuilder {
   }
 
   post<T>(content: any) {
-    return this.apiConnector.postJson(this.url, content, this.params);
+    return this.apiConnector.postJson<T>(this.url, content, this.params);
   }
 
   put<T>(content: any) {
-    return this.apiConnector.putJson(this.url, content, this.params);
+    return this.apiConnector.putJson<T>(this.url, content, this.params);
   }
 
   delete() {
