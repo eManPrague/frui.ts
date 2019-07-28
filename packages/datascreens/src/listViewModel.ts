@@ -1,7 +1,8 @@
 import { IPagingInfo, PagedQueryResult } from "@frui.ts/data";
+import { Screen } from "@frui.ts/screens";
 import { action, observable } from "mobx";
 
-export default abstract class ListViewModel<TEntity> {
+export default abstract class ListViewModel<TEntity> extends Screen {
   @observable items: TEntity[];
   @observable currentPaging: IPagingInfo;
 
