@@ -16,7 +16,6 @@
     "no-unused-variable": { "severity": "off" },
     "no-null-keyword": { "severity": "off" },
     "eofline": { "severity": "default" },
-    "no-consecutive-blank-lines": { "severity": "default" },
-    "no-empty": [true, "allow-empty-catch"]
+    "no-consecutive-blank-lines": { "severity": "default" }
   }
 }
