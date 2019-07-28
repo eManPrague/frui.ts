@@ -1,27 +1,22 @@
 {
-    "extends": [
-        "@eman/tslint-config"
-    ],
-    "rules": {
-        "max-line-length": {
-            "options": {
-                "ignore-pattern": "class [a-zA-Z]+ implements |^export {(.*?)}"
-            }
-        },
-        "quotemark": {
-            "options": [ "double" ]
-        },
-        "variable-name": {
-            "options": [
-                "ban-keywords",
-                "check-format",
-                "allow-pascal-case"
-            ]
-        },
-        "interface-name": { "severity": "off" },
-        "no-unused-variable": { "severity": "off" },
-        "no-null-keyword": { "severity": "off" },
-        "eofline": { "severity": "default" },
-        "no-consecutive-blank-lines": { "severity": "default"}
-    }
+  "extends": ["@eman/tslint-config"],
+  "rules": {
+    "max-line-length": {
+      "options": {
+        "ignore-pattern": "class [a-zA-Z]+ implements |^export {(.*?)}"
+      }
+    },
+    "quotemark": {
+      "options": ["double"]
+    },
+    "variable-name": {
+      "options": ["ban-keywords", "check-format", "allow-pascal-case"]
+    },
+    "interface-name": { "severity": "off" },
+    "no-unused-variable": { "severity": "off" },
+    "no-null-keyword": { "severity": "off" },
+    "eofline": { "severity": "default" },
+    "no-consecutive-blank-lines": { "severity": "default" },
+    "no-empty": [true, "allow-empty-catch"]
+  }
 }
