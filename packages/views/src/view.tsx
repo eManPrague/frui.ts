@@ -6,18 +6,18 @@ interface ViewProps {
   vm: any;
   context?: string;
   ignoreLifecycle?: boolean;
-  enableFallback?: boolean;
+  fallbackMode?: "message" | "empty";
 }
 
-const View: React.FunctionComponent<ViewProps> = ({ vm, context, ignoreLifecycle, enableFallback }) => {
+const View: React.FunctionComponent<ViewProps> = ({ vm, context, ignoreLifecycle, fallbackMode }) => {
   if (!vm) {
     return <React.Fragment />;
   }
 
-  const FoundView = enableFallback ? tryGetView(vm.constructor, context) : getView(vm.constructor, context);
+  const FoundView = fallbackMode ? tryGetView(vm.constructor, context) : getView(vm.constructor, context);
 
   if (!FoundView) {
-    return <span>Could not find a view for {vm.constructor.name} </span>;
+    return fallbackMode === "message" ? <span>Could not find a view for {vm.constructor.name}</span> : null;
   }
 
   if (!ignoreLifecycle) {
