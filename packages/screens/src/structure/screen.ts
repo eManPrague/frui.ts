@@ -16,8 +16,14 @@ export default abstract class Screen implements IScreen, IChild<IConductor<Scree
     return this.isActiveValue;
   }
 
-  async activate() {
-    if (this.isActive) {
+  // this ensures that activateInner will be called only once
+  private activatePromise: Promise<void>;
+  activate() {
+    return this.activatePromise || (this.activatePromise = this.activateInner());
+  }
+
+  private async activateInner() {
+    if (this.isActiveValue) {
       return;
     }
 
@@ -28,9 +34,10 @@ export default abstract class Screen implements IScreen, IChild<IConductor<Scree
       await activateResult;
     }
     this.isActiveValue = true;
+    this.activatePromise = null;
   }
 
-  protected async initialize() {
+  private async initialize() {
     if (!this.isInitialized) {
       const initializeResult = this.onInitialize();
       if (initializeResult) {
@@ -40,14 +47,20 @@ export default abstract class Screen implements IScreen, IChild<IConductor<Scree
     }
   }
 
-  async deactivate(close: boolean) {
-    if (this.isActive || (this.isInitialized && close)) {
+  // this ensures that deactivateInner will be called only once
+  private deactivatePromise: Promise<void>;
+  deactivate(close: boolean) {
+    return this.deactivatePromise || (this.deactivatePromise = this.deactivateInner(close));
+  }
+  private async deactivateInner(close: boolean) {
+    if (this.isActiveValue || (this.isInitialized && close)) {
       const deactivateResult = this.onDeactivate(close);
       if (deactivateResult) {
         await deactivateResult;
       }
       this.isActiveValue = false;
     }
+    this.deactivatePromise = null;
   }
 
   protected onInitialize(): Promise<any> | void {

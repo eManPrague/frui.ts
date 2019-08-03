@@ -1,7 +1,8 @@
 // Workspace settings
 {
   "files.exclude": {
-    "**/node_modules": true
+    "**/node_modules": true,
+    "**/dist": true
   },
   "prettier.printWidth": 120
 }
