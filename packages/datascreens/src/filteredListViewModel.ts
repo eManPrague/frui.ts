@@ -41,7 +41,7 @@ export default abstract class FilteredListViewModel<TEntity, TFilter, TDetail ex
     this.loadData();
   }
 
-  protected abstract loadData(): void | Promise<any>;
+  abstract loadData(): void | Promise<any>;
   protected abstract resetFilterValues(filter: TFilter): void;
 
   private initFilter() {
