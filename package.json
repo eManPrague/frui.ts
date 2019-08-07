@@ -16,6 +16,7 @@
     "publish:storybook": "build-storybook -c .storybook -o dist/storybook",
     "publish:docs": "typedoc packages --out dist/docs --hideGenerator",
     "publish": "rimraf dist && npm run publish:storybook && npm run publish:docs",
+    "cleanbuild": "lerna run clean && lerna run build",
     "build": "lerna run build",
     "test": "jest",
     "storybook": "start-storybook -p 9001 -c .storybook",

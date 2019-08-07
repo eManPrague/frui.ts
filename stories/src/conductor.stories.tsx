@@ -13,19 +13,16 @@ import "./views/singleChildView";
 storiesOf("Conductor", module)
   .add("Single child", () => {
     const conductor = new SingleChildViewModel();
-    conductor.activate();
 
-    return <View vm={conductor} />;
+    return <View vm={conductor} useLifecycle={true} />;
   })
   .add("Children with one active", () => {
     const conductor = new OneChildActiveViewModel();
-    conductor.activate();
 
-    return <View vm={conductor} />;
+    return <View vm={conductor} useLifecycle={true} />;
   })
   .add("Children with all active", () => {
     const conductor = new AllChildrenActiveViewModel();
-    conductor.activate();
 
-    return <View vm={conductor} />;
+    return <View vm={conductor} useLifecycle={true} />;
   });

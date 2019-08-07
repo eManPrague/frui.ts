@@ -3,7 +3,7 @@
   "publishConfig": {
     "registry": "https://nexus.eman.cz/repository/eman-npm/"
   },
-  "version": "0.0.13",
+  "version": "0.0.14",
   "description": "Frui.ts helper functions",
   "keywords": [
     "frui.ts"
@@ -23,7 +23,7 @@
     "url": "git@gitlab.eman.cz:frui.ts/frui.ts-fe.git"
   },
   "scripts": {
-    "prebuild": "rimraf dist",
+    "clean": "rimraf dist",
     "build": "tsc"
   }
 }

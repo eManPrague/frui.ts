@@ -16,10 +16,14 @@ export default abstract class Screen implements IScreen, IChild<IConductor<Scree
     return this.isActiveValue;
   }
 
-  // this ensures that activateInner will be called only once
+  // this ensures that activateInner will be called only once even if it takes longer time
   private activatePromise: Promise<void>;
+  private clearActivatePromise: () => void = () => (this.activatePromise = undefined);
   activate() {
-    return this.activatePromise || (this.activatePromise = this.activateInner());
+    return (
+      this.activatePromise ||
+      (this.activatePromise = this.activateInner().then(this.clearActivatePromise, this.clearActivatePromise))
+    );
   }
 
   private async activateInner() {
@@ -34,7 +38,6 @@ export default abstract class Screen implements IScreen, IChild<IConductor<Scree
       await activateResult;
     }
     this.isActiveValue = true;
-    this.activatePromise = null;
   }
 
   private async initialize() {
@@ -47,10 +50,14 @@ export default abstract class Screen implements IScreen, IChild<IConductor<Scree
     }
   }
 
-  // this ensures that deactivateInner will be called only once
+  // this ensures that deactivateInner will be called only once even if it takes a longer time
   private deactivatePromise: Promise<void>;
+  private clearDeactivatePromise: () => void = () => (this.deactivatePromise = undefined);
   deactivate(close: boolean) {
-    return this.deactivatePromise || (this.deactivatePromise = this.deactivateInner(close));
+    return (
+      this.deactivatePromise ||
+      (this.deactivatePromise = this.deactivateInner(close).then(this.clearDeactivatePromise, this.clearDeactivatePromise))
+    );
   }
   private async deactivateInner(close: boolean) {
     if (this.isActiveValue || (this.isInitialized && close)) {
@@ -60,7 +67,6 @@ export default abstract class Screen implements IScreen, IChild<IConductor<Scree
       }
       this.isActiveValue = false;
     }
-    this.deactivatePromise = null;
   }
 
   protected onInitialize(): Promise<any> | void {

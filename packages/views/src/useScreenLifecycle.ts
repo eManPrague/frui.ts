@@ -8,7 +8,9 @@ export default function useScreenLifecycle(vm: any) {
     }
 
     if (isDeactivatable(vm)) {
-      return () => vm.deactivate(false);
+      return () => {
+        vm.deactivate(false);
+      };
     }
-  }, []);
+  }, [vm]);
 }

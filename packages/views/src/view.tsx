@@ -5,11 +5,11 @@ import { getView, tryGetView } from "./viewLocator";
 interface ViewProps {
   vm: any;
   context?: string;
-  ignoreLifecycle?: boolean;
+  useLifecycle?: boolean;
   fallbackMode?: "message" | "empty";
 }
 
-const View: React.FunctionComponent<ViewProps> = ({ vm, context, ignoreLifecycle, fallbackMode }) => {
+const View: React.FunctionComponent<ViewProps> = ({ vm, context, useLifecycle, fallbackMode }) => {
   if (!vm) {
     return <React.Fragment />;
   }
@@ -20,7 +20,7 @@ const View: React.FunctionComponent<ViewProps> = ({ vm, context, ignoreLifecycle
     return fallbackMode === "message" ? <span>Could not find a view for {vm.constructor.name}</span> : null;
   }
 
-  if (!ignoreLifecycle) {
+  if (!!useLifecycle) {
     useScreenLifecycle(vm);
   }
   return <FoundView vm={vm} />;

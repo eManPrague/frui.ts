@@ -3,7 +3,7 @@
   "publishConfig": {
     "registry": "https://nexus.eman.cz/repository/eman-npm/"
   },
-  "version": "0.0.13",
+  "version": "0.0.14",
   "description": "> TODO: description",
   "author": "Augustin Šulc <sulc.gusta@gmail.com>",
   "homepage": "",
@@ -21,13 +21,13 @@
     "url": "git@gitlab.eman.cz:frui.ts/frui.ts-fe.git"
   },
   "scripts": {
-    "prebuild": "rimraf dist",
+    "clean": "rimraf dist",
     "build": "tsc"
   },
   "dependencies": {
-    "@frui.ts/data": "^0.0.13",
-    "@frui.ts/dirtycheck": "^0.0.13",
-    "@frui.ts/helpers": "^0.0.13",
-    "@frui.ts/screens": "^0.0.13"
+    "@frui.ts/data": "^0.0.14",
+    "@frui.ts/dirtycheck": "^0.0.14",
+    "@frui.ts/helpers": "^0.0.14",
+    "@frui.ts/screens": "^0.0.14"
   }
 }

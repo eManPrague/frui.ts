@@ -3,7 +3,7 @@
   "publishConfig": {
     "registry": "https://nexus.eman.cz/repository/eman-npm/"
   },
-  "version": "0.0.13",
+  "version": "0.0.14",
   "description": "Observable validation",
   "keywords": [
     "mobx",
@@ -24,10 +24,10 @@
     "url": "git@gitlab.eman.cz:frui.ts/frui.ts-fe.git"
   },
   "scripts": {
-    "prebuild": "rimraf dist",
+    "clean": "rimraf dist",
     "build": "tsc"
   },
   "dependencies": {
-    "@frui.ts/helpers": "^0.0.13"
+    "@frui.ts/helpers": "^0.0.14"
   }
 }

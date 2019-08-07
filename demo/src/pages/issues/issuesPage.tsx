@@ -23,7 +23,7 @@ const IssuesPage: React.FunctionComponent = props => {
     const issuesRepository = new IssuesRepository(apiFactory);
     const viewModel = new IssuesViewModel(issuesRepository);
 
-    return <View vm={viewModel} />;
+    return <View vm={viewModel} useLifecycle={true} />;
 };
 
 export default IssuesPage;
