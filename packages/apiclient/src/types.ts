@@ -18,5 +18,9 @@ export interface IApiConnector {
   putText(url: string, text: string, params?: RequestInit): Promise<Response>;
   putFormData(url: string, data: FormData, params?: RequestInit): Promise<Response>;
 
+  patchJson<TResult>(url: string, content: any, params?: RequestInit): Promise<TResult>;
+  patchText(url: string, text: string, params?: RequestInit): Promise<Response>;
+  patchFormData(url: string, data: FormData, params?: RequestInit): Promise<Response>;
+
   delete(url: string, params?: RequestInit): Promise<Response>;
 }

@@ -52,12 +52,9 @@ export abstract class BindingComponent<TProps extends IBindingProps<TTarget>, TT
    * ```
    */
   protected get inheritedProps() {
-    const cloned = Object.assign({}, this.props) as TProps;
-    delete cloned.target;
-    delete cloned.property;
-    delete cloned.onValueChanged;
+    const { target, property, onValueChanged, ...otherProps } = this.props;
 
-    return cloned;
+    return otherProps as TProps;
   }
 
   /** Returns value of the bound property */

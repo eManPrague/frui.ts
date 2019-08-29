@@ -38,6 +38,15 @@ export class FetchApiConnector implements IApiConnector {
   putFormData(url: string, data: FormData, params?: RequestInit): Promise<Response> {
     return this.fetchFunction(url, { ...params, method: "put", body: data }).then(this.handleError);
   }
+  patchJson<TResult>(url: string, content: any, params?: RequestInit): Promise<TResult> {
+    return this.patchText(url, JSON.stringify(content), params).then(x => x.json());
+  }
+  patchText(url: string, text: string, params?: RequestInit): Promise<Response> {
+    return this.fetchFunction(url, { ...params, method: "patch", body: text }).then(this.handleError);
+  }
+  patchFormData(url: string, data: FormData, params?: RequestInit): Promise<Response> {
+    return this.fetchFunction(url, { ...params, method: "patch", body: data }).then(this.handleError);
+  }
   delete(url: string, params?: RequestInit): Promise<Response> {
     return this.fetchFunction(url, { ...params, method: "delete" }).then(this.handleError);
   }

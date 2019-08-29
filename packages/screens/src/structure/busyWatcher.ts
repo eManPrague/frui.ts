@@ -20,7 +20,7 @@ export default class BusyWatcher implements IBusyWatcher {
     };
   }
 
-  @action.bound watch(watchedAction: Promise<any>) {
+  @action.bound watch<T>(watchedAction: Promise<T>) {
     this.counter++;
     watchedAction.then(this.decrement, this.decrement);
     return watchedAction;

@@ -22,8 +22,9 @@ export class RestRequestBuilder implements IRequestBuilder {
     return this;
   }
 
-  get<T>() {
-    return this.apiConnector.getJson<T>(this.url, this.params);
+  get<T>(queryParams?: any) {
+    const requestUrl = this.appendQuery(this.url, queryParams);
+    return this.apiConnector.getJson<T>(requestUrl, this.params);
   }
 
   post<T>(content: any) {
@@ -34,11 +35,15 @@ export class RestRequestBuilder implements IRequestBuilder {
     return this.apiConnector.putJson<T>(this.url, content, this.params);
   }
 
+  patch<T>(content: any) {
+    return this.apiConnector.patchJson<T>(this.url, content, this.params);
+  }
+
   delete() {
     return this.apiConnector.delete(this.url, this.params);
   }
 
-  protected combineUrl(url: string, query?: any) {
+  protected appendQuery(url: string, query?: any) {
     return query ? `${url}?${getQueryString(query)}` : url;
   }
 }
@@ -53,8 +58,7 @@ function getQueryString(query: any) {
 function getValueForUri(input: any) {
   if (input instanceof Date) {
     return input.toISOString();
-  }
-  else {
+  } else {
     return input;
   }
 }

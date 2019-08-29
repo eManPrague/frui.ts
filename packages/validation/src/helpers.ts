@@ -1,3 +1,4 @@
+import { runInAction } from "mobx";
 import AutomaticEntityValidator from "./automaticEntityValidator";
 import ManualEntityValidator from "./manualEntityValidator";
 import { IEntityValidationRules, IHasManualValidation, IHasValidation, PropertyName } from "./types";
@@ -7,7 +8,11 @@ import { IEntityValidationRules, IHasManualValidation, IHasValidation, PropertyN
  * @returns The target entity instance with `IHasValidation` implemented with the attached validator
  */
 // tslint:disable-next-line: max-line-length
-export function attachAutomaticValidator<TTarget>(target: TTarget, entityValidationRules: IEntityValidationRules<TTarget>, errorsImmediatelyVisible = false) {
+export function attachAutomaticValidator<TTarget>(
+  target: TTarget,
+  entityValidationRules: IEntityValidationRules<TTarget>,
+  errorsImmediatelyVisible = false
+) {
   const typedTarget = target as TTarget & IHasValidation<TTarget>;
   typedTarget.__validation = new AutomaticEntityValidator(target, entityValidationRules, errorsImmediatelyVisible);
   return typedTarget;
@@ -32,4 +37,29 @@ export function getValidationMessage<TTarget>(target: TTarget, propertyName: Pro
     return target.__validation.errors[propertyName];
   }
   return null;
+}
+
+export function isValid<TTarget>(target: any) {
+  if (hasValidation(target)) {
+    return target.__validation.isValid;
+  } else {
+    return true;
+  }
+}
+
+export function hasVisibleErrors<TTarget>(target: any) {
+  if (hasValidation(target)) {
+    return target.__validation.isErrorsVisible && !target.__validation.isValid;
+  } else {
+    return false;
+  }
+}
+
+export function validate<TTarget>(target: any) {
+  if (hasValidation(target)) {
+    runInAction(() => (target.__validation.isErrorsVisible = true));
+    return target.__validation.isValid;
+  } else {
+    return true;
+  }
 }
