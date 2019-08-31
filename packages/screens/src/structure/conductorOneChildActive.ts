@@ -1,56 +1,56 @@
 import { bound } from "@frui.ts/helpers";
 import { IArraySplice, IArrayWillChange, intercept, IObservableArray, observable, runInAction } from "mobx";
 import { IHasNavigationName } from "../navigation/types";
-import ConductorBaseWithActiveItem from "./conductorBaseWithActiveItem";
+import ConductorBaseWithActiveChild from "./conductorBaseWithActiveChild";
 import { isActivatable, isDeactivatable } from "./helpers";
 import { IChild } from "./types";
 
-export default class ConductorOneChildActive<TChild extends IChild<any> & IHasNavigationName> extends ConductorBaseWithActiveItem<TChild> {
-  readonly items = observable.array<TChild>(undefined, { deep: false });
+export default class ConductorOneChildActive<TChild extends IChild<any> & IHasNavigationName> extends ConductorBaseWithActiveChild<TChild> {
+  readonly children = observable.array<TChild>(undefined, { deep: false });
 
   constructor() {
     super();
-    intercept(this.items, this.handleItemsChanged);
+    intercept(this.children, this.handleChildrenChanged);
   }
 
-  async activateItem(item: TChild) {
-    if (item && this.activeItem === item) {
-      if (this.isActive && isActivatable(item)) {
-        await item.activate();
+  async activateChild(child: TChild) {
+    if (child && this.activeChild === child) {
+      if (this.isActive && isActivatable(child)) {
+        await child.activate();
       }
       return;
     }
 
-    await this.changeActiveItem(item, false);
+    await this.changeActiveChild(child, false);
   }
 
-  async deactivateItem(item: TChild, close: boolean) {
-    if (!item) {
+  async deactivateChild(child: TChild, close: boolean) {
+    if (!child) {
       return;
     }
 
     if (!close) {
-      if (isDeactivatable(item)) {
-        await item.deactivate(false);
+      if (isDeactivatable(child)) {
+        await child.deactivate(false);
       }
       return;
     }
     else {
-      const canClose = await item.canClose();
+      const canClose = await child.canClose();
       if (canClose) {
-        await this.closeItemCore(item);
-        runInAction(() => this.items.remove(item));
+        await this.closeChildCore(child);
+        runInAction(() => this.children.remove(child));
       }
     }
   }
 
   async canClose() {
     let canCloseSelf = true;
-    for (const item of this.items.slice()) {
-      const canClose = await item.canClose();
+    for (const child of this.children.slice()) {
+      const canClose = await child.canClose();
       if (canClose) {
-        await this.closeItemCore(item);
-        runInAction(() => this.items.remove(item));
+        await this.closeChildCore(child);
+        runInAction(() => this.children.remove(child));
       }
       else {
         canCloseSelf = false;
@@ -60,71 +60,71 @@ export default class ConductorOneChildActive<TChild extends IChild<any> & IHasNa
     return canCloseSelf;
   }
 
-  protected getChild(name: string) {
-    const child = this.items.find(x => x.navigationName === name);
+  protected findChild(name: string) {
+    const child = this.children.find(x => x.navigationName === name);
     return Promise.resolve(child);
   }
 
   protected async onDeactivate(close: boolean) {
     if (close) {
-      for (const item of this.items) {
-        if (isDeactivatable(item)) {
-          await item.deactivate(true);
+      for (const child of this.children) {
+        if (isDeactivatable(child)) {
+          await child.deactivate(true);
         }
       }
 
-      this.items.clear();
+      this.children.clear();
     }
     else {
-      await this.deactivateItem(this.activeItem, false);
+      await this.deactivateChild(this.activeChild, false);
     }
   }
 
-  protected ensureChildItem(item: TChild) {
-    if (item) {
-      const currentIndex = this.items.indexOf(item);
+  protected connectChild(child: TChild) {
+    if (child) {
+      const currentIndex = this.children.indexOf(child);
       if (currentIndex === -1) {
-        runInAction(() => this.items.push(item));
-        super.ensureChildItem(item);
+        runInAction(() => this.children.push(child));
+        super.connectChild(child);
       }
     }
   }
 
-  private async closeItemCore(item: TChild) {
-    if (this.activeItem === item) {
-      const currentItemIndex = this.items.indexOf(item);
-      const nextItem = this.determineNextItemToActivate(this.items, currentItemIndex);
+  private async closeChildCore(child: TChild) {
+    if (this.activeChild === child) {
+      const currentChildIndex = this.children.indexOf(child);
+      const nextChild = this.determineNextChildToActivate(this.children, currentChildIndex);
 
-      await this.changeActiveItem(nextItem, true);
+      await this.changeActiveChild(nextChild, true);
     }
     else {
-      if (isDeactivatable(item)) {
-        await item.deactivate(true);
+      if (isDeactivatable(child)) {
+        await child.deactivate(true);
       }
     }
   }
 
-  private determineNextItemToActivate(items: IObservableArray<TChild>, lastIndex: number) {
+  private determineNextChildToActivate(children: IObservableArray<TChild>, lastIndex: number) {
     if (lastIndex > 0) {
-      return items[lastIndex - 1];
+      return children[lastIndex - 1];
     }
-    else if (items.length > 1) {
-      return items[1];
+    else if (children.length > 1) {
+      return children[1];
     }
     else {
       return null;
     }
   }
 
-  @bound private handleItemsChanged(change: IArrayWillChange<any> | IArraySplice<any>) {
+  @bound private handleChildrenChanged(change: IArrayWillChange<any> | IArraySplice<any>) {
     switch (change.type) {
       case "splice":
         for (const newItem of change.added) {
-          super.ensureChildItem(newItem);
+          super.connectChild(newItem);
         }
         break;
       case "update":
-        super.ensureChildItem(change.newValue);
+        super.connectChild(change.newValue);
         break;
     }
     return change;

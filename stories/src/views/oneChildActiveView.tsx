@@ -9,13 +9,13 @@ const oneChildActiveView: React.FunctionComponent<{ vm: OneChildActiveViewModel 
     Choose view model: &nbsp;
     <Observer>{() =>
       <React.Fragment>
-        {vm.items.map(x => <button key={x.name} onClick={() => vm.activateItem(x)}>{x.name}</button>)}
+        {vm.children.map(x => <button key={x.name} onClick={() => vm.activateChild(x)}>{x.name}</button>)}
       </React.Fragment>}
     </Observer>
     &nbsp;
     <button onClick={vm.addChild}>+</button>
 
-    <Observer>{() => <View vm={vm.activeItem} />}</Observer>
+    <Observer>{() => <View vm={vm.activeChild} />}</Observer>
   </div>);
 registerView(oneChildActiveView, OneChildActiveViewModel);
 export default oneChildActiveView;

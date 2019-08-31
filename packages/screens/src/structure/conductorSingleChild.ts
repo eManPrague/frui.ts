@@ -1,50 +1,51 @@
 import { IHasNavigationName } from "../navigation/types";
-import ConductorBaseWithActiveItem from "./conductorBaseWithActiveItem";
+import ConductorBaseWithActiveChild from "./conductorBaseWithActiveChild";
 import { isActivatable, isDeactivatable } from "./helpers";
 import { IChild } from "./types";
 
-export default abstract class ConductorSingleChild<TChild extends IChild<any> & IHasNavigationName> extends ConductorBaseWithActiveItem<TChild> {
-  async activateItem(item: TChild) {
-    if (item && this.activeItem === item) {
-      if (this.isActive && isActivatable(item)) {
-        await item.activate();
+export default abstract class ConductorSingleChild<
+  TChild extends IChild<any> & IHasNavigationName
+> extends ConductorBaseWithActiveChild<TChild> {
+  async activateChild(child: TChild) {
+    if (child && this.activeChild === child) {
+      if (this.isActive && isActivatable(child)) {
+        await child.activate();
       }
       return;
     }
 
-    if (this.activeItem) {
-      const canCloseCurrentItem = await this.activeItem.canClose();
-      if (!canCloseCurrentItem) {
+    if (this.activeChild) {
+      const canCloseCurrentChild = await this.activeChild.canClose();
+      if (!canCloseCurrentChild) {
         return;
       }
     }
 
-    if (this.activeItem !== item) {
-      await this.changeActiveItem(item, true);
+    if (this.activeChild !== child) {
+      await this.changeActiveChild(child, true);
     }
   }
 
-  async deactivateItem(item: TChild, close: boolean) {
-    if (!item || this.activeItem !== item) {
+  async deactivateChild(child: TChild, close: boolean) {
+    if (!child || this.activeChild !== child) {
       return;
     }
 
     if (close) {
-      const canCloseCurrentItem = await this.activeItem.canClose();
-      if (!canCloseCurrentItem) {
+      const canCloseCurrentChild = await this.activeChild.canClose();
+      if (!canCloseCurrentChild) {
         return;
       }
 
-      await this.changeActiveItem(null, close);
-    }
-    else {
-      if (isDeactivatable(item)) {
-        await item.deactivate(false);
+      await this.changeActiveChild(null, close);
+    } else {
+      if (isDeactivatable(child)) {
+        await child.deactivate(false);
       }
     }
   }
 
   protected async onDeactivate(close: boolean) {
-    await this.deactivateItem(this.activeItem, close);
+    await this.deactivateChild(this.activeChild, close);
   }
 }

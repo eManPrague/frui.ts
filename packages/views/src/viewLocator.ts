@@ -8,12 +8,15 @@ const DEFAULT_CONTEXT = "default";
 // viewsRegistry is singleton
 const viewsRegistry = new Map<constructor<{}>, Record<string, functionalView<any>>>();
 
-export function registerView<TViewModel>(view: functionalView<TViewModel>, viewModelConstructor: constructor<TViewModel>, context = DEFAULT_CONTEXT) {
+export function registerView<TViewModel>(
+  view: functionalView<TViewModel>,
+  viewModelConstructor: constructor<TViewModel>,
+  context = DEFAULT_CONTEXT
+) {
   const currentViewModelViews = viewsRegistry.get(viewModelConstructor);
   if (currentViewModelViews) {
     currentViewModelViews[context] = view;
-  }
-  else {
+  } else {
     viewsRegistry.set(viewModelConstructor, { [context]: view });
   }
   return view;

@@ -1,6 +1,6 @@
-import Screen from "../../src/structure/screen";
+import ScreenBase from "../../src/structure/screenBase";
 
-export default class ChildMock extends Screen {
+export default class ChildMock extends ScreenBase {
   calls: Record<string, number> = {};
   isCloseAllowed = true;
 

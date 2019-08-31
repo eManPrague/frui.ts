@@ -11,7 +11,7 @@
     "test": "tests"
   },
   "scripts": {
-    "lerna": "lerna link",
+    "lerna": "lerna bootstrap",
     "version": "lerna version -y --no-push --no-git-tag-version",
     "publish:storybook": "build-storybook -c .storybook -o dist/storybook",
     "publish:docs": "typedoc packages --out dist/docs --hideGenerator",
@@ -42,8 +42,10 @@
     "@storybook/react": "^5.1.9",
     "@types/html-webpack-plugin": "^3.2.1",
     "@types/jest": "^24.0.15",
+    "@types/lodash": "^4.14.136",
     "@types/react": "^16.8.23",
     "@types/react-dom": "^16.8.5",
+    "@types/reflect-metadata": "^0.1.0",
     "@types/storybook__addon-actions": "^3.4.3",
     "@types/storybook__react": "^4.0.2",
     "@types/typescript": "^2.0.0",
@@ -63,12 +65,10 @@
     "typedoc": "^0.15.0",
     "typedoc-plugin-no-inherit": "^1.1.9",
     "typescript": "^3.5.3",
-    "webpack-cli": "^3.3.6",
-    "webpack-dev-server": "^3.7.2"
+    "webpack-cli": "^3.3.7",
+    "webpack-dev-server": "^3.8.0"
   },
   "dependencies": {
-    "@types/lodash": "^4.14.136",
-    "@types/reflect-metadata": "^0.1.0",
     "bind-decorator": "^1.0.11",
     "lodash": "^4.17.15",
     "mobx": "^4.9.4",

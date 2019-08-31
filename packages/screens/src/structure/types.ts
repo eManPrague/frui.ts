@@ -12,12 +12,12 @@ export interface IScreen extends IActivatable, IDeactivatable {
 }
 
 export interface IConductor<TChild> {
-  activateItem(item: TChild): Promise<any>;
-  deactivateItem(item: TChild, close: boolean): Promise<any>;
+  activateChild(child: TChild): Promise<any>;
+  deactivateChild(child: TChild, close: boolean): Promise<any>;
 }
 
-export interface IHasActiveItem<TChild> {
-  activeItem: TChild;
+export interface IHasActiveChild<TChild> {
+  activeChild: TChild;
 }
 
 export interface IChild<TParent> {

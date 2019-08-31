@@ -1,8 +1,8 @@
-import Screen from "../../src/structure/screen";
+import ScreenBase from "../../src/structure/screenBase";
 
 type func = () => void;
 
-export default class TestScreen extends Screen {
+export default class TestScreen extends ScreenBase {
   activated = 0;
   initialized = 0;
   deactivated = 0;

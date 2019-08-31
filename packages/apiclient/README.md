@@ -1,11 +1,14 @@
-# `apiclient`
+# `@frui.ts/apiclient`
 
-> TODO: description
+Fruits provides a simple abstraction for issuing backend calls.
+
+`IRequestBuilder` and its default implementation `RestRequestBuilder` help to compose URLs in a fluent way.
+
+
+`IApiConnector` and its default implementation `FetchApiConnector` are meant to make the actual network calls.
 
 ## Usage
 
 ```
-const apiclient = require('apiclient');
-
 // TODO: DEMONSTRATE API
 ```

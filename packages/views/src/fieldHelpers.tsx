@@ -15,14 +15,15 @@ export type IFormFieldProps<TTarget, TChildProps> = IBindingProps<TTarget> &
 
 export function getInnerComponent<TTarget, TChildProps>(
   props: IFormFieldProps<TTarget, TChildProps>,
-  childProps: TChildProps) {
+  childProps: TChildProps
+) {
   const bindingProps = extractBindingProps<TTarget>(props);
 
   if (hasComponentInAttribute<TTarget>(props)) {
     const Component = props.component as React.ComponentType;
     return <Component {...props.componentprops} {...childProps} {...bindingProps} />;
-  }
-  else if (hasComponentInChildren<TTarget, TChildProps>(props)) { // TODO why the check (and function hasComponentInChildren) is needed here?
+  } else if (hasComponentInChildren<TTarget, TChildProps>(props)) {
+    // TODO why the check (and function hasComponentInChildren) is needed here?
     return props.children(bindingProps, childProps);
   }
 }
@@ -35,7 +36,9 @@ export function extractBindingProps<TTarget>(props: IBindingProps<TTarget>): IBi
   };
 }
 
-function hasComponentInChildren<TTarget, TChildProps>(object: any): object is IComponentInChildrenProps<TTarget, TChildProps> {
+function hasComponentInChildren<TTarget, TChildProps>(
+  object: any
+): object is IComponentInChildrenProps<TTarget, TChildProps> {
   return !!object.children && typeof object.children === "function";
 }
 function hasComponentInAttribute<TTarget>(object: any): object is IComponentInAttributeProps<TTarget> {

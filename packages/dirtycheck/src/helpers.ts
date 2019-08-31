@@ -1,7 +1,7 @@
+import { runInAction } from "mobx";
 import AutomaticDirtyWatcher from "./automaticDirtyWatcher";
 import ManualDirtyWatcher from "./manualDirtyWatcher";
-import { PropertyName } from "./types";
-import { IHasDirtyWatcher, IHasManualDirtyWatcher } from "./types";
+import { IHasDirtyWatcher, IHasManualDirtyWatcher, PropertyName } from "./types";
 
 /**
  * Attaches a new [[AutomaticDirtyWatcher]] to the entity and returns the entity typed as [[IHasDirtyWatcher]]
@@ -32,4 +32,29 @@ export function getDirtyFlag<TTarget>(target: TTarget, propertyName: PropertyNam
     return !!target.__dirtycheck.dirtyProperties[propertyName];
   }
   return null;
+}
+
+export function isDirty<TTarget>(target: any) {
+  if (hasDirtyWatcher(target)) {
+    return target.__dirtycheck.isDirty;
+  } else {
+    return true;
+  }
+}
+
+export function hasVisibleDirtyChanges<TTarget>(target: any) {
+  if (hasDirtyWatcher(target)) {
+    return target.__dirtycheck.isDirtyFlagVisible && !target.__dirtycheck.isDirty;
+  } else {
+    return false;
+  }
+}
+
+export function checkDirtyChanges<TTarget>(target: any) {
+  if (hasDirtyWatcher(target)) {
+    runInAction(() => (target.__dirtycheck.isDirtyFlagVisible = true));
+    return target.__dirtycheck.isDirty;
+  } else {
+    return true;
+  }
 }

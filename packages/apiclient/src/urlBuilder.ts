@@ -1,5 +1,6 @@
 const cleanupRegex = /\/+$/g;
 
+// TODO is this class really useful? Can we remove it?
 export class UrlBuilder {
   url: string;
 

@@ -5,7 +5,10 @@ import { Screen } from "@frui.ts/screens";
 import { action, observable } from "mobx";
 import ListViewModel from "./listViewModel";
 
-export default abstract class FilteredListViewModel<TEntity, TFilter, TDetail extends Screen> extends ListViewModel<TEntity, TDetail> {
+export default abstract class FilteredListViewModel<TEntity, TFilter, TDetail extends Screen> extends ListViewModel<
+  TEntity,
+  TDetail
+> {
   @observable filter: TFilter & IHasDirtyWatcher<TFilter>;
   @observable pagingFilter: IPagingFilter;
 

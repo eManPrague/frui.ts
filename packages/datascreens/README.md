@@ -1,11 +1,13 @@
-# `datascreens`
+# `@frui.ts/datascreens`
 
-> TODO: description
+This package contains base classes for data-centric view models.
+
+ - `FilteredListViewModel`
+ - `ListViewModel`
+ - `DetailViewModel`
 
 ## Usage
 
 ```
-const datascreens = require('datascreens');
-
 // TODO: DEMONSTRATE API
 ```

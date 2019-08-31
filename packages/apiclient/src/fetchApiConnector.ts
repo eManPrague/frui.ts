@@ -1,5 +1,5 @@
 import { bind } from "@frui.ts/helpers";
-import FetchError from "./FetchError";
+import FetchError from "./fetchError";
 import { IApiConnector } from "./types";
 
 export class FetchApiConnector implements IApiConnector {

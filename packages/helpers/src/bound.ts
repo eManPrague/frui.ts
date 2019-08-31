@@ -6,7 +6,7 @@ export default function bound(target: any, propertyKey: string, descriptor: Prop
   const fn = descriptor.value;
 
   if (typeof fn !== "function") {
-      throw new Error(`@bound decorator can only be applied to methods not: ${typeof fn}`);
+    throw new Error(`@bound decorator can only be applied to methods not: ${typeof fn}`);
   }
 
   // In IE11 calling Object.defineProperty has a side-effect of evaluating the
@@ -15,21 +15,21 @@ export default function bound(target: any, propertyKey: string, descriptor: Prop
   let definingProperty = false;
 
   return {
-      configurable: true,
-      get() {
-          if (definingProperty || this === target.prototype || this.hasOwnProperty(propertyKey)) {
-              return fn;
-          }
+    configurable: true,
+    get() {
+      if (definingProperty || this === target.prototype || this.hasOwnProperty(propertyKey)) {
+        return fn;
+      }
 
-          const boundFn = fn.bind(this);
-          definingProperty = true;
-          Object.defineProperty(this, propertyKey, {
-              value: boundFn,
-              configurable: true,
-              writable: true,
-          });
-          definingProperty = false;
-          return boundFn;
-      },
+      const boundFn = fn.bind(this);
+      definingProperty = true;
+      Object.defineProperty(this, propertyKey, {
+        value: boundFn,
+        configurable: true,
+        writable: true,
+      });
+      definingProperty = false;
+      return boundFn;
+    },
   };
 }

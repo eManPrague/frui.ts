@@ -22,7 +22,7 @@ export default class RootViewModel extends ConductorOneChildActive<any> {
     module3.name = "Module 3";
     module3.navigationName = "ModuleThree";
 
-    this.items.push(module1, module2, module3);
+    this.children.push(module1, module2, module3);
 
     window.addEventListener("navigated", (e: any) => {
       this.setNavigationPath(e.detail.path);

@@ -5,55 +5,55 @@ import ConductorBase from "./conductorBase";
 import { isActivatable, isDeactivatable } from "./helpers";
 import { IActivatable, IChild } from "./types";
 
-export default class ConductorAllChildrenActive<TChild extends IChild<any> & IHasNavigationName> extends ConductorBase<TChild> {
-  readonly items = observable.array<TChild>(undefined, { deep: false });
+export default class ConductorAllChildrenActive<TChild extends IChild<any> & IHasNavigationName> extends ConductorBase<
+  TChild
+> {
+  readonly children = observable.array<TChild>(undefined, { deep: false });
   protected childNavigationPathClosed = true;
 
   constructor() {
     super();
-    intercept(this.items, this.handleItemsChanged);
+    intercept(this.children, this.handleChildrenChanged);
   }
 
-  async activateItem(item: TChild) {
-    if (!item) {
+  async activateChild(child: TChild) {
+    if (!child) {
       return;
     }
 
-    const currentIndex = this.items.indexOf(item);
+    const currentIndex = this.children.indexOf(child);
     if (currentIndex === -1) {
-      runInAction(() => this.items.push(item));
+      runInAction(() => this.children.push(child));
     }
   }
 
-  async deactivateItem(item: TChild, close: boolean) {
-    if (!item) {
+  async deactivateChild(child: TChild, close: boolean) {
+    if (!child) {
       return;
     }
 
     if (!close) {
-      if (isDeactivatable(item)) {
-        await item.deactivate(false);
+      if (isDeactivatable(child)) {
+        await child.deactivate(false);
       }
       return;
-    }
-    else {
-      const canClose = await item.canClose();
+    } else {
+      const canClose = await child.canClose();
       if (canClose) {
-        await this.closeItemCore(item);
-        runInAction(() => this.items.remove(item));
+        await this.closeChildCore(child);
+        runInAction(() => this.children.remove(child));
       }
     }
   }
 
   async canClose() {
     let canCloseSelf = true;
-    for (const item of this.items.slice()) {
-      const canClose = await item.canClose();
+    for (const child of this.children.slice()) {
+      const canClose = await child.canClose();
       if (canClose) {
-        this.closeItemCore(item);
-        runInAction(() => this.items.remove(item));
-      }
-      else {
+        this.closeChildCore(child);
+        runInAction(() => this.children.remove(child));
+      } else {
         canCloseSelf = false;
       }
     }
@@ -61,46 +61,46 @@ export default class ConductorAllChildrenActive<TChild extends IChild<any> & IHa
     return canCloseSelf;
   }
 
-  protected getChild(name: string) {
-    const child = this.items.find(x => x.navigationName === name);
+  protected findChild(name: string) {
+    const child = this.children.find(x => x.navigationName === name);
     return Promise.resolve(child);
   }
 
   protected onActivate() {
-    const itemsToActivate = this.items.filter(isActivatable) as any as IActivatable[];
-    return Promise.all(itemsToActivate.map(x => x.activate()));
+    const childrenToActivate = (this.children.filter(isActivatable) as any) as IActivatable[];
+    return Promise.all(childrenToActivate.map(x => x.activate()));
   }
 
   protected async onDeactivate(close: boolean) {
-    for (const item of this.items) {
-      if (isDeactivatable(item)) {
-        await item.deactivate(close);
+    for (const child of this.children) {
+      if (isDeactivatable(child)) {
+        await child.deactivate(close);
       }
     }
 
     if (close) {
-      this.items.clear();
+      this.children.clear();
     }
   }
 
-  private async closeItemCore(item: TChild) {
-    if (isDeactivatable(item)) {
-      await item.deactivate(true);
+  private async closeChildCore(child: TChild) {
+    if (isDeactivatable(child)) {
+      await child.deactivate(true);
     }
   }
 
-  @bound private handleItemsChanged(change: IArrayWillChange<any> | IArraySplice<any>) {
+  @bound private handleChildrenChanged(change: IArrayWillChange<any> | IArraySplice<any>) {
     switch (change.type) {
       case "splice":
         for (const newItem of change.added) {
-          super.ensureChildItem(newItem);
+          super.connectChild(newItem);
           if (this.isActive && isActivatable(newItem)) {
             newItem.activate();
           }
         }
         break;
       case "update":
-        super.ensureChildItem(change.newValue);
+        super.connectChild(change.newValue);
         if (this.isActive && isActivatable(change.newValue)) {
           change.newValue.activate();
         }

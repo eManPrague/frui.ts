@@ -11,21 +11,21 @@ export default class OneChildActiveViewModel extends ConductorOneChildActive<Chi
     newChild.navigationName = this.childCounter.toString();
     newChild.name = `Child ${this.childCounter}`;
     newChild.text = `This is content of child #${this.childCounter}`;
-    this.items.push(newChild);
+    this.children.push(newChild);
 
     this.childCounter++;
     return newChild;
   }
 
   protected onActivate() {
-    if (!this.activeItem) {
+    if (!this.activeChild) {
       notifyRoutePathChanged(this);
     }
     return super.onActivate();
   }
 
-  protected getChild(name: string) {
-    const child = this.items.find(x => x.navigationName === name);
+  protected findChild(name: string) {
+    const child = this.children.find(x => x.navigationName === name);
     if (child) {
       return Promise.resolve(child);
     }

@@ -2,24 +2,24 @@ import ConductorOneChildActive from "../src/structure/conductorOneChildActive";
 import ChildMock from "./mocks/childMock";
 
 describe("ConductorOneChildActive", () => {
-  describe("items", () => {
+  describe("children", () => {
     test("adding a new child sets parent link", () => {
       const child = new ChildMock();
       const conductor = new ConductorOneChildActive<ChildMock>();
 
-      conductor.items.push(child);
+      conductor.children.push(child);
       expect(child.parent).toBe(conductor);
     });
   });
 
   describe("deactivate", () => {
-    it("deactivates activeItem", async () => {
+    it("deactivates activeChild", async () => {
       const child = new ChildMock();
       const conductor = new ConductorOneChildActive<ChildMock>();
 
-      conductor.items.push(child);
+      conductor.children.push(child);
       await conductor.activate();
-      await conductor.activateItem(child);
+      await conductor.activateChild(child);
       expect(child.isActive).toBeTruthy();
 
       await conductor.deactivate(false);
@@ -31,27 +31,27 @@ describe("ConductorOneChildActive", () => {
 
       const conductor = new ConductorOneChildActive<ChildMock>();
       await conductor.activate();
-      conductor.items.push(child1, child2);
+      conductor.children.push(child1, child2);
 
       await conductor.deactivate(true);
       expect(child1.calls.deactivate).toBe(1);
       expect(child2.calls.deactivate).toBe(1);
-      expect(conductor.items.length).toBe(0);
+      expect(conductor.children.length).toBe(0);
     });
   });
 
-  describe("deactivateItem", () => {
+  describe("deactivateChild", () => {
     it("opens another child when closing", async () => {
       const child1 = new ChildMock();
       const child2 = new ChildMock();
 
       const conductor = new ConductorOneChildActive<ChildMock>();
-      conductor.items.push(child1, child2);
+      conductor.children.push(child1, child2);
 
-      await conductor.activateItem(child1);
-      await conductor.deactivateItem(child1, true);
+      await conductor.activateChild(child1);
+      await conductor.deactivateChild(child1, true);
 
-      expect(conductor.activeItem).toBe(child2);
+      expect(conductor.activeChild).toBe(child2);
     });
   });
 
@@ -62,12 +62,12 @@ describe("ConductorOneChildActive", () => {
       child2.isCloseAllowed = false;
 
       const conductor = new ConductorOneChildActive<ChildMock>();
-      conductor.items.push(child1, child2);
+      conductor.children.push(child1, child2);
 
       const canClose = await conductor.canClose();
       expect(canClose).toBeFalsy();
-      expect(conductor.items).not.toContain(child1);
-      expect(conductor.items).toContain(child2);
+      expect(conductor.children).not.toContain(child1);
+      expect(conductor.children).toContain(child2);
     });
   });
 });

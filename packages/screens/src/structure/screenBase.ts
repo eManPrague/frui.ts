@@ -4,11 +4,11 @@ import { computed, observable } from "mobx";
 import { IHasNavigationName } from "../navigation/types";
 import { IChild, IConductor, IScreen } from "./types";
 
-export default abstract class Screen implements IScreen, IChild<IConductor<Screen>>, IHasNavigationName {
+export default abstract class ScreenBase implements IScreen, IChild<IConductor<ScreenBase>>, IHasNavigationName {
   // TODO view aware?
   navigationName: string = this.constructor.name.replace("ViewModel", "");
   name: string;
-  parent: IConductor<Screen>;
+  parent: IConductor<ScreenBase>;
 
   private isInitialized = false;
   @observable protected isActiveValue = false;
@@ -56,7 +56,10 @@ export default abstract class Screen implements IScreen, IChild<IConductor<Scree
   deactivate(close: boolean) {
     return (
       this.deactivatePromise ||
-      (this.deactivatePromise = this.deactivateInner(close).then(this.clearDeactivatePromise, this.clearDeactivatePromise))
+      (this.deactivatePromise = this.deactivateInner(close).then(
+        this.clearDeactivatePromise,
+        this.clearDeactivatePromise
+      ))
     );
   }
   private async deactivateInner(close: boolean) {
@@ -86,6 +89,6 @@ export default abstract class Screen implements IScreen, IChild<IConductor<Scree
   }
 
   @bound requestClose() {
-    return this.parent ? this.parent.deactivateItem(this, true) : Promise.resolve();
+    return this.parent ? this.parent.deactivateChild(this, true) : Promise.resolve();
   }
 }
