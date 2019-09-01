@@ -1,11 +1,11 @@
-import { BusyWatcher, IConductor, Screen } from "@frui.ts/screens";
+import { BusyWatcher, IConductor, ScreenBase } from "@frui.ts/screens";
 import { action, observable } from "mobx";
 
-export default abstract class DetailViewModel<TDetail> extends Screen {
+export default abstract class DetailViewModel<TDetail> extends ScreenBase {
   busyWatcher = new BusyWatcher();
   @observable item: TDetail = undefined as any;
 
-  constructor(parent: IConductor<Screen>) {
+  constructor(parent: IConductor<ScreenBase>) {
     super();
     this.parent = parent;
   }

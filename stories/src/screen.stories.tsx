@@ -21,7 +21,7 @@ const testView: React.FunctionComponent<{ vm: InheritedTestViewModel }> = ({ vm 
 );
 registerView(testView, InheritedTestViewModel);
 
-storiesOf("Screen", module)
+storiesOf("ScreenBase", module)
   .addDecorator(story => (
     <Observer>
       {() => (

@@ -1,7 +1,7 @@
-import { Screen } from "@frui.ts/screens";
+import { ScreenBase } from "@frui.ts/screens";
 
 // tslint:disable: no-console
-export default class InheritedTestViewModel extends Screen {
+export default class InheritedTestViewModel extends ScreenBase {
   constructor(public name = "InheritedTestViewModel") {
     super();
   }

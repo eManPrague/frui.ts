@@ -1,11 +1,11 @@
 import { IPagingFilter, SortingDirection } from "@frui.ts/data";
 import { attachAutomaticDirtyWatcher, IHasDirtyWatcher } from "@frui.ts/dirtycheck";
 import { bound, Omit } from "@frui.ts/helpers";
-import { Screen } from "@frui.ts/screens";
+import { ScreenBase } from "@frui.ts/screens";
 import { action, observable } from "mobx";
 import ListViewModel from "./listViewModel";
 
-export default abstract class FilteredListViewModel<TEntity, TFilter, TDetail extends Screen> extends ListViewModel<
+export default abstract class FilteredListViewModel<TEntity, TFilter, TDetail extends ScreenBase> extends ListViewModel<
   TEntity,
   TDetail
 > {
