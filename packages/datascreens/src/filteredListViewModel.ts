@@ -9,6 +9,8 @@ export default abstract class FilteredListViewModel<TEntity, TFilter, TDetail ex
   TEntity,
   TDetail
 > {
+  static defaultPageSize: 30;
+
   @observable filter: TFilter & IHasDirtyWatcher<TFilter>;
   @observable pagingFilter: IPagingFilter;
 
@@ -31,7 +33,7 @@ export default abstract class FilteredListViewModel<TEntity, TFilter, TDetail ex
 
   @bound applyFilterAndLoad() {
     this.applyFilter();
-    this.loadData();
+    return this.loadData();
   }
 
   @action.bound resetFilter() {
@@ -41,7 +43,7 @@ export default abstract class FilteredListViewModel<TEntity, TFilter, TDetail ex
 
   @bound resetFilterAndLoad() {
     this.resetFilter();
-    this.loadData();
+    return this.loadData();
   }
 
   abstract loadData(): void | Promise<any>;
@@ -50,7 +52,7 @@ export default abstract class FilteredListViewModel<TEntity, TFilter, TDetail ex
   private initFilter() {
     this.pagingFilter = {
       offset: 0,
-      limit: 30,
+      limit: FilteredListViewModel.defaultPageSize,
       sortColumn: null,
       sortDirection: SortingDirection.Ascending,
     };
