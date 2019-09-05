@@ -30,3 +30,23 @@ export default class BusyWatcher implements IBusyWatcher {
     this.counter--;
   }
 }
+
+export function watchBusy(target: any, propertyKey: string, descriptor: PropertyDescriptor) {
+  const originalFunction = descriptor.value;
+
+  descriptor.value = function(this: any, ...args: any[]) {
+    const result = originalFunction.apply(this, args);
+
+    if (
+      result &&
+      result.then &&
+      typeof result.then === "function" &&
+      this.busyWatcher &&
+      typeof this.busyWatcher.watch === "function"
+    ) {
+      this.busyWatcher.watch(result);
+    }
+
+    return result;
+  };
+}

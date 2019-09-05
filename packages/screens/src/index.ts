@@ -1,4 +1,4 @@
-export { default as BusyWatcher } from "./structure/busyWatcher";
+export { default as BusyWatcher, watchBusy } from "./structure/busyWatcher";
 export { default as ConductorAllChildrenActive } from "./structure/conductorAllChildrenActive";
 export { default as ConductorBase } from "./structure/conductorBase";
 export { default as ConductorBaseWithActiveItem } from "./structure/conductorBaseWithActiveChild";
