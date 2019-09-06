@@ -18,6 +18,8 @@ These components are heavily inspired by the Caliburn.Micro framework from .NET 
 
 `Busywatcher` is a simple counter of currently running processes that need to display a loading progress. You can either manually increment and decrement the counter, get a disposable ticket with `getBusyTicket()`, or use its `watch()` function to watch over a promise.
 
+You can also use function decorator `@watchBusy`. It automates the use of `busyWatcher.watch()` - if the function the decorator is applied to is async or returns a promise, and the parent class also contains a property named `busyWatcher`, the function is automatically watched by the busyWatcher.
+
 ## TODO navigation
 
 ## Usage
