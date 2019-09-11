@@ -1,2 +1,2 @@
-// TODO add exports for all controls here
-// check demo/src/controls
+export { Input } from "./controls/input";
+export { Check } from "./controls/check";

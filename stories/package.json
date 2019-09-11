@@ -20,9 +20,12 @@
     "prebuild": "rimraf dist"
   },
   "dependencies": {
+    "@frui.ts/bootstrap": "^0.1.2",
     "@frui.ts/dirtycheck": "^0.1.2",
     "@frui.ts/screens": "^0.1.2",
     "@frui.ts/validation": "^0.1.2",
-    "@frui.ts/views": "^0.1.2"
+    "@frui.ts/views": "^0.1.2",
+    "bootstrap": "^4.3.1",
+    "react-bootstrap": "^1.0.0-beta.12"
   }
 }
