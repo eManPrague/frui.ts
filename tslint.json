@@ -1,6 +1,7 @@
 {
   "extends": ["@eman/tslint-config"],
   "rules": {
+    "no-unused-variable": { "severity": "off" },
     "max-line-length": {
       "options": {
         "ignore-pattern": "class [a-zA-Z]+ implements |^export {(.*?)}"
@@ -12,8 +13,8 @@
     "variable-name": {
       "options": ["ban-keywords", "check-format", "allow-pascal-case"]
     },
+    "triple-equals": [true, "allow-undefined-check"],
     "interface-name": { "severity": "off" },
-    "no-unused-variable": { "severity": "off" },
     "no-null-keyword": { "severity": "off" },
     "eofline": { "severity": "default" },
     "no-consecutive-blank-lines": { "severity": "default" }

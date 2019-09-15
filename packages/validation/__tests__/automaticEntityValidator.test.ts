@@ -38,7 +38,6 @@ describe("AutomaticEntityValidator", () => {
     };
 
     const validator = new AutomaticEntityValidator(target, validationRules, false);
-
     expect(target.firstName).toBe("");
   });
 
@@ -151,7 +150,7 @@ describe("createPropertyValidatorFromRules()", () => {
     };
 
     const validator = createPropertyValidatorFromRules("firstName", { mock1: true, mock2: true });
-    const validationResult = validator(entity.firstName, entity);
+    validator(entity.firstName, entity);
 
     expect(mockValidator1.mock.calls.length).toBe(1);
     expect(mockValidator2.mock.calls.length).toBe(1);
@@ -167,7 +166,7 @@ describe("createPropertyValidatorFromRules()", () => {
 
     const params = { value: "val" };
     const validator = createPropertyValidatorFromRules("firstName", { mock: params });
-    const validationResult = validator(entity.firstName, entity);
+    validator(entity.firstName, entity);
 
     const calledParameters = mockValidator.mock.calls[0] as any[];
     expect(calledParameters[0]).toBe("John");

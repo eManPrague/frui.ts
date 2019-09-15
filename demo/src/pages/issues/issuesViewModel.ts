@@ -2,7 +2,7 @@ import { PagedQueryResult } from "@frui.ts/data";
 import { FilteredListViewModel } from "@frui.ts/datascreens";
 import { BusyWatcher } from "@frui.ts/screens";
 import { ISelectItem } from "@frui.ts/views";
-import { action, observable, toJS } from "mobx";
+import { action, observable } from "mobx";
 import { IssuesFilter, IssuesRepository } from "../../dataAccess/issuesRepository";
 import { Issue } from "../../entities/issue";
 import { Project } from "../../entities/project";

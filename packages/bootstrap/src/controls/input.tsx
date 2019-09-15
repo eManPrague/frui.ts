@@ -14,7 +14,7 @@ export class Input<TTarget> extends BindingComponent<
     return <Observer render={this.renderInner} />;
   }
 
-  @bind private renderInner() {
+  @bind protected renderInner() {
     const { noValidation, errorMessage, ...otherProps } = this.inheritedProps;
     const validationError =
       noValidation !== true && (errorMessage || getValidationMessage(this.props.target, this.props.property));
@@ -23,6 +23,7 @@ export class Input<TTarget> extends BindingComponent<
       <>
         <Form.Control
           {...otherProps}
+          // tslint:disable-next-line:
           value={this.value == undefined ? "" : this.value}
           onChange={this.handleValueChanged}
           isInvalid={!!validationError}
