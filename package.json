@@ -14,7 +14,7 @@
     "lerna": "lerna bootstrap",
     "version": "lerna version -y --no-push --no-git-tag-version",
     "publish:storybook": "build-storybook -c .storybook -o dist/storybook",
-    "publish:docs": "typedoc packages --out dist/docs --hideGenerator",
+    "publish:docs": "typedoc packages --out dist/docs --hideGenerator --exclude **/node_modules",
     "publish": "rimraf dist && npm run publish:storybook && npm run publish:docs",
     "cleanbuild": "lerna run clean && lerna run build",
     "build": "lerna run build",

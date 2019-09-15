@@ -39,6 +39,8 @@ publish:
 
 pages:
   stage: deploy
+  except:
+    - /^feature/.*/
   script:
     - mv dist/docs public
     - mv dist/storybook public/storybook
@@ -49,8 +51,10 @@ pages:
 
 deploy_to_nexus:
   stage: deploy
+  except:
+    - /^feature/.*/
   script:
-  - npm run build
-  - npm config set $REPO_URL:_authToken=$NPM_AUTH_TOKEN
-  - git checkout package-lock.json # --no-git-reset does not work
-  - npx lerna publish from-package --registry $REPO_URL --yes
+    - npm run build
+    - npm config set $REPO_URL:_authToken=$NPM_AUTH_TOKEN
+    - git checkout package-lock.json # --no-git-reset does not work
+    - npx lerna publish from-package --registry $REPO_URL --yes

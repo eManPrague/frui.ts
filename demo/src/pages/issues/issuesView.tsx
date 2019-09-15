@@ -1,6 +1,6 @@
 import { BusyWatcher } from "@frui.ts/screens";
 import { createDataIdHandler, registerView } from "@frui.ts/views";
-import { Observer, observer } from "mobx-react-lite";
+import { observer } from "mobx-react-lite";
 import * as React from "react";
 import { DropDown } from "../../controls/dropDown";
 import FormField from "../../controls/formField";
