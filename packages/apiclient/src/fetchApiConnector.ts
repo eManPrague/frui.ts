@@ -5,32 +5,22 @@ import { IApiConnector } from "./types";
 export class FetchApiConnector implements IApiConnector {
   constructor(private fetchFunction = bind(window.fetch, window), private handleError = defaultHandleError) {}
 
-  getText(url: string, params?: RequestInit) {
-    return this.fetchFunction(url, { ...params, method: "get" })
-      .then(this.handleError)
-      .then(x => x.text());
+  get(url: string, params?: RequestInit): Promise<Response> {
+    return this.fetchFunction(url, { ...params, method: "get" }).then(this.handleError);
   }
-  getJson<T>(url: string, params?: RequestInit): Promise<T> {
-    return this.fetchFunction(url, { ...params, method: "get" })
-      .then(this.handleError)
-      .then(x => x.json());
-  }
-  getBlob(url: string, params?: RequestInit) {
-    return this.fetchFunction(url, { ...params, method: "get" })
-      .then(this.handleError)
-      .then(x => x.blob());
-  }
+
   postText(url: string, text: string, params?: RequestInit): Promise<Response> {
     return this.fetchFunction(url, { ...params, method: "post", body: text }).then(this.handleError);
   }
-  postJson<TResult>(url: string, content: any, params?: RequestInit): Promise<TResult> {
-    return this.postText(url, JSON.stringify(content), params).then(x => x.json());
+
+  postJson(url: string, content: any, params?: RequestInit): Promise<Response> {
+    return this.postText(url, JSON.stringify(content), appendJsonHeader(params));
   }
   postFormData(url: string, data: FormData, params?: RequestInit): Promise<Response> {
     return this.fetchFunction(url, { ...params, method: "post", body: data }).then(this.handleError);
   }
-  putJson<TResult>(url: string, content: any, params?: RequestInit): Promise<TResult> {
-    return this.putText(url, JSON.stringify(content), params).then(x => x.json());
+  putJson(url: string, content: any, params?: RequestInit): Promise<Response> {
+    return this.putText(url, JSON.stringify(content), appendJsonHeader(params));
   }
   putText(url: string, text: string, params?: RequestInit): Promise<Response> {
     return this.fetchFunction(url, { ...params, method: "put", body: text }).then(this.handleError);
@@ -38,8 +28,8 @@ export class FetchApiConnector implements IApiConnector {
   putFormData(url: string, data: FormData, params?: RequestInit): Promise<Response> {
     return this.fetchFunction(url, { ...params, method: "put", body: data }).then(this.handleError);
   }
-  patchJson<TResult>(url: string, content: any, params?: RequestInit): Promise<TResult> {
-    return this.patchText(url, JSON.stringify(content), params).then(x => x.json());
+  patchJson(url: string, content: any, params?: RequestInit): Promise<Response> {
+    return this.patchText(url, JSON.stringify(content), appendJsonHeader(params));
   }
   patchText(url: string, text: string, params?: RequestInit): Promise<Response> {
     return this.fetchFunction(url, { ...params, method: "patch", body: text }).then(this.handleError);
@@ -64,4 +54,16 @@ async function defaultHandleError(response: Response) {
     throw new FetchError(response);
   }
   throw new FetchError(response, content);
+}
+
+const jsonContentType = "application/json";
+
+export function appendJsonHeader(params?: RequestInit) {
+  return {
+    ...params,
+    headers: {
+      ...(params || {}).headers,
+      "Content-Type": jsonContentType,
+    },
+  };
 }

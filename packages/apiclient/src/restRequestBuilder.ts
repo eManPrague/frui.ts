@@ -1,8 +1,8 @@
-import { IApiConnector, IRequestBuilder } from "./types";
+import { IApiConnector } from "./types";
 
 const cleanupRegex = /\/+$/g; // removes trailing slash
 
-export class RestRequestBuilder implements IRequestBuilder {
+export class RestRequestBuilder {
   protected url: string;
 
   constructor(protected apiConnector: IApiConnector, baseUrl: string, protected params?: RequestInit) {
@@ -24,19 +24,35 @@ export class RestRequestBuilder implements IRequestBuilder {
 
   get<T>(queryParams?: any) {
     const requestUrl = this.appendQuery(this.url, queryParams);
-    return this.apiConnector.getJson<T>(requestUrl, this.params);
+    const params = appendAcceptJsonHeader(this.params);
+    return this.apiConnector.get(requestUrl, params).then(x => x.json());
   }
 
-  post<T>(content: any) {
-    return this.apiConnector.postJson<T>(this.url, content, this.params);
+  post<T>(content: any): Promise<T> {
+    const params = appendAcceptJsonHeader(this.params);
+    return this.apiConnector.postJson(this.url, content, params).then(x => x.json());
   }
 
-  put<T>(content: any) {
-    return this.apiConnector.putJson<T>(this.url, content, this.params);
+  postOnly(content: any) {
+    return this.apiConnector.postJson(this.url, content, this.params);
   }
 
-  patch<T>(content: any) {
-    return this.apiConnector.patchJson<T>(this.url, content, this.params);
+  put<T>(content: any): Promise<T> {
+    const params = appendAcceptJsonHeader(this.params);
+    return this.apiConnector.putJson(this.url, content, params).then(x => x.json());
+  }
+
+  putOnly(content: any) {
+    return this.apiConnector.putJson(this.url, content, this.params);
+  }
+
+  patch<T>(content: any): Promise<T> {
+    const params = appendAcceptJsonHeader(this.params);
+    return this.apiConnector.patchJson(this.url, content, params).then(x => x.json());
+  }
+
+  patchOnly(content: any) {
+    return this.apiConnector.patchJson(this.url, content, this.params);
   }
 
   delete() {
@@ -61,4 +77,16 @@ function getValueForUri(input: any) {
   } else {
     return input;
   }
+}
+
+const jsonContentType = "application/json,text/json";
+
+function appendAcceptJsonHeader(params?: RequestInit) {
+  return {
+    ...params,
+    headers: {
+      ...(params || {}).headers,
+      Accept: jsonContentType,
+    },
+  };
 }

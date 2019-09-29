@@ -3,7 +3,7 @@
   "publishConfig": {
     "registry": "https://nexus.eman.cz/repository/eman-npm/"
   },
-  "version": "0.1.5",
+  "version": "0.1.6",
   "description": "Frui.ts screens",
   "author": "Augustin Šulc <sulc.gusta@gmail.com>",
   "license": "ISC",
@@ -24,6 +24,6 @@
     "build": "tsc"
   },
   "dependencies": {
-    "@frui.ts/helpers": "^0.1.5"
+    "@frui.ts/helpers": "^0.1.6"
   }
 }
