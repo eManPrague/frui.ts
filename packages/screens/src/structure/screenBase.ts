@@ -1,6 +1,7 @@
 // tslint:disable: member-ordering
 import { bound } from "@frui.ts/helpers";
 import { computed, observable } from "mobx";
+import navigationManager from "../navigation/navigationManager";
 import { IHasNavigationName } from "../navigation/types";
 import { IChild, IConductor, IScreen } from "./types";
 
@@ -9,6 +10,10 @@ export default abstract class ScreenBase implements IScreen, IChild<IConductor<S
   navigationName: string = this.constructor.name.replace("ViewModel", "");
   name: string;
   parent: IConductor<ScreenBase>;
+
+  protected get notifyOnActivate() {
+    return true;
+  }
 
   private isInitialized = false;
   @observable protected isActiveValue = false;
@@ -38,6 +43,10 @@ export default abstract class ScreenBase implements IScreen, IChild<IConductor<S
       await activateResult;
     }
     this.isActiveValue = true;
+
+    if (this.notifyOnActivate && navigationManager.onScreenActivated) {
+      navigationManager.onScreenActivated(this);
+    }
   }
 
   private async initialize() {

@@ -60,7 +60,7 @@ export default class ConductorOneChildActive<TChild extends IChild<any> & IHasNa
     return canCloseSelf;
   }
 
-  protected findChild(name: string) {
+  protected findChild(name: string): Promise<TChild | undefined> {
     const child = this.children.find(x => x.navigationName === name);
     return Promise.resolve(child);
   }

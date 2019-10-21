@@ -27,4 +27,14 @@ describe("splitNavigationPath", () => {
     const result = splitNavigationPath("basePath");
     expect(result).toEqual(["basePath", undefined]);
   });
+
+  it("skips leading slash", () => {
+    const result = splitNavigationPath("/basePath");
+    expect(result).toEqual(["basePath", undefined]);
+  });
+
+  it("returns first navigation element and the rest if leading slash present", () => {
+    const result = splitNavigationPath("/basePath/childPath/foo");
+    expect(result).toEqual(["basePath", "childPath/foo"]);
+  });
 });

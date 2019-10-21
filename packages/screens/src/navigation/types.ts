@@ -6,5 +6,5 @@ export interface IHasNavigationName {
 
 export interface ICanNavigate {
   navigate(path: string): Promise<any>;
-  getNavigationPath(item: IHasNavigationName): NavigationPath;
+  getChildNavigationPath(item: IHasNavigationName): NavigationPath;
 }

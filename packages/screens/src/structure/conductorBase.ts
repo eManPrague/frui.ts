@@ -11,16 +11,28 @@ export default abstract class ConductorBase<TChild extends IChild<any> & IHasNav
   abstract activateChild(child: TChild): Promise<any>;
   abstract deactivateChild(child: TChild, close: boolean): Promise<any>;
 
-  getNavigationPath(child: TChild): NavigationPath {
+  getCurrentNavigationPath(): NavigationPath {
     // TODO cache currentNavigationPath
-    const currentNavigationPath = this.parent && canNavigate(this.parent) && this.parent.getNavigationPath(this);
-    const pathBase = currentNavigationPath ? currentNavigationPath.path : this.navigationName;
-    const isPathClosed = currentNavigationPath ? currentNavigationPath.isClosed : this.childNavigationPathClosed;
+    const pathFromParent = this.parent && canNavigate(this.parent) && this.parent.getChildNavigationPath(this);
+    const path = pathFromParent ? pathFromParent.path : this.navigationName;
+    const isPathClosed = pathFromParent ? pathFromParent.isClosed : this.childNavigationPathClosed;
 
     return {
-      path: isPathClosed ? pathBase : combineNavigationPath(pathBase, child.navigationName),
+      path,
       isClosed: isPathClosed,
     };
+  }
+
+  getChildNavigationPath(child: TChild): NavigationPath {
+    const currentPath = this.getCurrentNavigationPath();
+    if (currentPath.isClosed) {
+      return currentPath;
+    } else {
+      return {
+        path: combineNavigationPath(currentPath.path, child.navigationName),
+        isClosed: false,
+      };
+    }
   }
 
   async navigate(path: string) {
@@ -28,13 +40,13 @@ export default abstract class ConductorBase<TChild extends IChild<any> & IHasNav
     const childToActivate = await this.findChild(segments[0]);
     if (childToActivate) {
       await this.activateChild(childToActivate);
-      if (canNavigate(childToActivate)) {
+      if (segments[1] && canNavigate(childToActivate)) {
         await childToActivate.navigate(segments[1]);
       }
     }
   }
 
-  protected abstract findChild(navigationName: string): Promise<TChild>;
+  protected abstract findChild(navigationName: string): Promise<TChild | undefined>;
 
   protected connectChild(item: TChild) {
     if (item) {

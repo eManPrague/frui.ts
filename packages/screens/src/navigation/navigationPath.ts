@@ -1,25 +1,27 @@
+import NavigationManager from "./navigationManager";
+
 export interface NavigationPath {
   readonly path: string;
   readonly isClosed: boolean;
 }
 
-const pathDelimiter = "/";
-
-export function combineNavigationPath(base: string, path: string) {
+export function combineNavigationPath(base: string | undefined, path: string) {
   if (base) {
-    return path ? base + pathDelimiter + path : base;
-  }
-  else {
+    return path ? base + NavigationManager.pathDelimiter + path : base;
+  } else {
     return path;
   }
 }
 
 export function splitNavigationPath(path: string): [string, string] {
-  const delimiterIndex = path.indexOf(pathDelimiter);
+  if (path.startsWith(NavigationManager.pathDelimiter)) {
+    path = path.substr(1);
+  }
+
+  const delimiterIndex = path.indexOf(NavigationManager.pathDelimiter);
   if (delimiterIndex < 0 || delimiterIndex === path.length - 1) {
     return [path, undefined];
-  }
-  else {
+  } else {
     return [path.substring(0, delimiterIndex), path.substring(delimiterIndex + 1)];
   }
 }

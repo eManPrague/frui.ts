@@ -12,6 +12,10 @@ export default abstract class ConductorBaseWithActiveChild<TChild extends IChild
     return this.activeChildValue;
   }
 
+  get notifyOnActivate() {
+    return !this.activeChildValue;
+  }
+
   protected async changeActiveChild(newChild: TChild, closePrevious: boolean) {
     const currentChild = this.activeChild;
     if (currentChild && isDeactivatable(currentChild)) {
