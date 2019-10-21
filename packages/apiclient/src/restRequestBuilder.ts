@@ -22,7 +22,7 @@ export class RestRequestBuilder {
     return this;
   }
 
-  get<T>(queryParams?: any) {
+  get<T>(queryParams?: any): Promise<T> {
     const requestUrl = this.appendQuery(this.url, queryParams);
     const params = appendAcceptJsonHeader(this.params);
     return this.apiConnector.get(requestUrl, params).then(x => x.json());
