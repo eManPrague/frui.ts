@@ -25,6 +25,7 @@ describe("ConductorOneChildActive", () => {
       await conductor.deactivate(false);
       expect(child.isActive).toBeFalsy();
     });
+
     it("closes all children", async () => {
       const child1 = new ChildMock();
       const child2 = new ChildMock();
@@ -68,6 +69,29 @@ describe("ConductorOneChildActive", () => {
       expect(canClose).toBeFalsy();
       expect(conductor.children).not.toContain(child1);
       expect(conductor.children).toContain(child2);
+    });
+
+    it("does not activate other children when closing", async () => {
+      const child1 = new ChildMock();
+      const child2 = new ChildMock();
+
+      const conductor = new ConductorOneChildActive<ChildMock>();
+      await conductor.activate();
+      conductor.children.push(child1, child2);
+
+      await conductor.activateChild(child1);
+      expect(child1.calls.activate).toBe(1);
+
+      await conductor.activateChild(child2);
+      expect(child1.calls.deactivate).toBe(1);
+      expect(child2.calls.activate).toBe(1);
+
+      await conductor.canClose();
+      expect(child1.calls.activate).toBe(1);
+      expect(child1.calls.deactivate).toBe(2);
+      expect(child2.calls.activate).toBe(1);
+      expect(child2.calls.deactivate).toBe(1);
+      expect(conductor.children.length).toBe(0);
     });
   });
 });

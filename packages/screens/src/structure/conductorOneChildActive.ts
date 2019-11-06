@@ -5,7 +5,9 @@ import ConductorBaseWithActiveChild from "./conductorBaseWithActiveChild";
 import { isActivatable, isDeactivatable } from "./helpers";
 import { IChild } from "./types";
 
-export default class ConductorOneChildActive<TChild extends IChild<any> & IHasNavigationName> extends ConductorBaseWithActiveChild<TChild> {
+export default class ConductorOneChildActive<
+  TChild extends IChild<any> & IHasNavigationName
+> extends ConductorBaseWithActiveChild<TChild> {
   readonly children = observable.array<TChild>(undefined, { deep: false });
 
   constructor() {
@@ -34,8 +36,7 @@ export default class ConductorOneChildActive<TChild extends IChild<any> & IHasNa
         await child.deactivate(false);
       }
       return;
-    }
-    else {
+    } else {
       const canClose = await child.canClose();
       if (canClose) {
         await this.closeChildCore(child);
@@ -46,15 +47,33 @@ export default class ConductorOneChildActive<TChild extends IChild<any> & IHasNa
 
   async canClose() {
     let canCloseSelf = true;
-    for (const child of this.children.slice()) {
+    const childrenToClose = [] as TChild[];
+
+    for (const child of this.children) {
       const canClose = await child.canClose();
       if (canClose) {
-        await this.closeChildCore(child);
-        runInAction(() => this.children.remove(child));
-      }
-      else {
+        childrenToClose.push(child);
+      } else {
         canCloseSelf = false;
       }
+    }
+
+    for (const child of childrenToClose) {
+      if (isDeactivatable(child)) {
+        await child.deactivate(true);
+      }
+    }
+
+    if (childrenToClose.length !== this.children.length) {
+      runInAction(() => {
+        for (const child of childrenToClose) {
+          this.children.remove(child);
+        }
+      });
+
+      this.activateChild(this.children[0]);
+    } else {
+      runInAction(() => this.children.clear());
     }
 
     return canCloseSelf;
@@ -74,8 +93,7 @@ export default class ConductorOneChildActive<TChild extends IChild<any> & IHasNa
       }
 
       this.children.clear();
-    }
-    else {
+    } else {
       await this.deactivateChild(this.activeChild, false);
     }
   }
@@ -96,8 +114,7 @@ export default class ConductorOneChildActive<TChild extends IChild<any> & IHasNa
       const nextChild = this.determineNextChildToActivate(this.children, currentChildIndex);
 
       await this.changeActiveChild(nextChild, true);
-    }
-    else {
+    } else {
       if (isDeactivatable(child)) {
         await child.deactivate(true);
       }
@@ -107,11 +124,9 @@ export default class ConductorOneChildActive<TChild extends IChild<any> & IHasNa
   private determineNextChildToActivate(children: IObservableArray<TChild>, lastIndex: number) {
     if (lastIndex > 0) {
       return children[lastIndex - 1];
-    }
-    else if (children.length > 1) {
+    } else if (children.length > 1) {
       return children[1];
-    }
-    else {
+    } else {
       return null;
     }
   }
