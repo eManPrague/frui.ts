@@ -1,4 +1,5 @@
 import { computed, observable, runInAction } from "mobx";
+import navigationManager from "../navigation/navigationManager";
 import { IHasNavigationName } from "../navigation/types";
 import ConductorBase from "./conductorBase";
 import { isActivatable, isDeactivatable } from "./helpers";
@@ -29,6 +30,10 @@ export default abstract class ConductorBaseWithActiveChild<TChild extends IChild
 
     if (this.isActive && newChild && isActivatable(newChild)) {
       await newChild.activate();
+    }
+
+    if (this.isActive && !newChild && navigationManager.onScreenActivated) {
+      navigationManager.onScreenActivated(this);
     }
   }
 

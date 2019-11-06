@@ -3,8 +3,7 @@ import ConductorSingleChild from "../src/structure/conductorSingleChild";
 import { IChild } from "../src/structure/types";
 import ChildMock from "./mocks/childMock";
 
-class Conductor<TChild extends IChild<any> & IHasNavigationName> extends ConductorSingleChild<TChild>
-{
+class Conductor<TChild extends IChild<any> & IHasNavigationName> extends ConductorSingleChild<TChild> {
   protected findChild(navigationName: string) {
     return Promise.resolve(undefined);
   }
@@ -53,6 +52,7 @@ describe("ConductorSingleChild", () => {
       expect(conductor.activeChild).toBe(child);
       expect(child.calls.activate).toBeUndefined();
     });
+
     it("activates the new child if active itsef", async () => {
       const child = new ChildMock();
       const conductor = new Conductor<ChildMock>();
@@ -65,6 +65,7 @@ describe("ConductorSingleChild", () => {
       expect(conductor.activeChild).toBe(child);
       expect(child.calls.activate).toBe(1);
     });
+
     it("closes the current activeChild", async () => {
       const child1 = new ChildMock();
       const conductor = new Conductor<ChildMock>();
@@ -89,6 +90,7 @@ describe("ConductorSingleChild", () => {
       expect(child.calls.canClose).toBeUndefined();
       expect(child.calls.deactivate).toBe(1);
     });
+
     it("closes the current activeChild if possible", async () => {
       const child = new ChildMock();
       child.isCloseAllowed = true;
@@ -100,6 +102,7 @@ describe("ConductorSingleChild", () => {
       expect(child.calls.canClose).toBe(1);
       expect(child.calls.deactivate).toBe(1);
     });
+
     it("does not close the current activeChild if not allowed to close", async () => {
       const child = new ChildMock();
       child.isCloseAllowed = false;
