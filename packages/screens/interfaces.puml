@@ -1,0 +1,42 @@
+@startuml
+
+title Frui.ts screen interfaces
+
+interface IActivatable {
+  +isActive: boolean
+
+  +activate(): Promise<any>
+}
+
+interface IDeactivatable {
+  +deactivate(boolean close): Promise<any>
+}
+
+interface IScreen {
+  +name: string
+}
+
+IScreen ..|> IActivatable
+IScreen ..|> IDeactivatable
+
+interface IConductor<TChild> {
+  +activateChild(TChild child): Promise<any>
+  +deactivateChild(TChild child, boolean close): Promise<any>
+}
+
+interface IHasActiveChild<TChild> {
+  +activeChild: TChild
+}
+
+interface IChild<TParent> {
+  +parent: TParent
+  +canClose(): Promise<boolean>
+  +requestClose(): Promise<any>
+}
+
+interface ICanNavigate {
+  +navigate(path: string): Promise
+  +getChildNavigationPath(item: IHasNavigationName): NavigationPath
+}
+
+@enduml

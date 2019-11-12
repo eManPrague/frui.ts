@@ -1,0 +1,91 @@
+@startuml
+
+title Frui.ts screens
+
+class ScreenBase {
+  +parent: IConductor<ScreenBase>
+  +requestClose(): Promise
+
+  __ Activation logic __
+  +isActive: boolean
+  +activate(): Promise
+  +deactivate(close: boolean): Promise
+  +canClose(): Promise<boolean>
+
+  .. Activation hooks ..
+  #onInitialize(): Promise
+  #onActivate(): Promise
+  #onDeactivate(boolean close): Promise
+}
+note right
+  Use this if there are no child view models
+  or you want to manage their activation
+  and navigation cycle manually
+end note
+
+IScreen ()- ScreenBase
+ScreenBase -() IChild
+
+abstract class ConductorBase {
+  #activateChild(child: TChild): Promise
+
+  __ Navigation functions __
+  +navigate(path: string): Promise
+  +getChildNavigationPath(child: TChild): NavigationPath
+
+  .. Abstract functions ..
+  #{abstract} findChild(navigationName: string): Promise<TChild>
+}
+
+ConductorBase --|> ScreenBase
+ConductorBase -() IConductor
+ICanNavigate ()- ConductorBase
+
+abstract class ConductorBaseWithActiveChild {
+  +activeChild: TChild
+
+  #changeActiveChild(newChild: TChild, closePrevious: boolean): Promise
+}
+
+ConductorBaseWithActiveChild --|> ConductorBase
+IHasActiveChild ()- ConductorBaseWithActiveChild
+
+class ConductorSingleChild {
+  +activateChild(child: TChild): Promise
+  +deactivateChild(child: TChild, close: boolean): Promise
+}
+note left
+  Use this if there is no finite list of children
+  that the user might choose from such as ad-hoc opened children
+end note
+
+ConductorSingleChild --|> ConductorBaseWithActiveChild
+
+class ConductorOneChildActive {
+  +children: TChild[]
+
+  +activateChild(child: TChild): Promise
+  +deactivateChild(child: TChild, close: boolean): Promise
+}
+note right
+  Use this if there is a finite list of potential children
+  where only one can be active at a time such as module with sub-pages.
+end note
+
+ConductorOneChildActive --|> ConductorBaseWithActiveChild
+
+class ConductorAllChildrenActive {
+  +children: TChild[]
+
+  +activateChild(child: TChild): Promise
+  +deactivateChild(child: TChild, close: boolean): Promise
+}
+note right
+  Use this if there is a finite list of potential children
+  where all can be active at the same time
+  such as MDI (multiple document interface).
+end note
+
+ConductorAllChildrenActive --|> ConductorBase
+
+@enduml
