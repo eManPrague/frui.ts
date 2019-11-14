@@ -35,8 +35,8 @@ interface IChild<TParent> {
 }
 
 interface ICanNavigate {
-  +navigate(path: string): Promise
-  +getChildNavigationPath(item: IHasNavigationName): NavigationPath
+  +navigate(path: string, params: any): Promise
+  +getChildNavigationPath(item: IHasNavigationName, params: any): NavigationPath
 }
 
 @enduml

@@ -11,7 +11,7 @@ export default abstract class ScreenBase implements IScreen, IChild<IConductor<S
   name: string;
   parent: IConductor<ScreenBase>;
 
-  protected get notifyOnActivate() {
+  protected get canBeNavigationActiveScreen() {
     return true;
   }
 
@@ -36,16 +36,20 @@ export default abstract class ScreenBase implements IScreen, IChild<IConductor<S
       return;
     }
 
-    await this.initialize();
+    try {
+      await this.initialize();
 
-    const activateResult = this.onActivate();
-    if (activateResult) {
-      await activateResult;
-    }
-    this.isActiveValue = true;
+      const activateResult = this.onActivate();
+      if (activateResult) {
+        await activateResult;
+      }
 
-    if (this.notifyOnActivate && navigationManager.onScreenActivated) {
-      navigationManager.onScreenActivated(this);
+      this.isActiveValue = true;
+      this.notifyNavigationChanged();
+    } catch (error) {
+      // tslint:disable-next-line: no-console
+      console.error(error);
+      throw error;
     }
   }
 
@@ -72,12 +76,18 @@ export default abstract class ScreenBase implements IScreen, IChild<IConductor<S
     );
   }
   private async deactivateInner(close: boolean) {
-    if (this.isActiveValue || (this.isInitialized && close)) {
-      const deactivateResult = this.onDeactivate(close);
-      if (deactivateResult) {
-        await deactivateResult;
+    try {
+      if (this.isActiveValue || (this.isInitialized && close)) {
+        const deactivateResult = this.onDeactivate(close);
+        if (deactivateResult) {
+          await deactivateResult;
+        }
+        this.isActiveValue = false;
       }
-      this.isActiveValue = false;
+    } catch (error) {
+      // tslint:disable-next-line: no-console
+      console.error(error);
+      throw error;
     }
   }
 
@@ -99,5 +109,11 @@ export default abstract class ScreenBase implements IScreen, IChild<IConductor<S
 
   @bound requestClose() {
     return this.parent ? this.parent.deactivateChild(this, true) : Promise.resolve();
+  }
+
+  protected notifyNavigationChanged() {
+    if (this.canBeNavigationActiveScreen && navigationManager.onActiveScreenChanged) {
+      navigationManager.onActiveScreenChanged(this);
+    }
   }
 }

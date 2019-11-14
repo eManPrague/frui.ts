@@ -25,7 +25,7 @@ export default class AllChildrenActiveViewModel extends ConductorAllChildrenActi
     return super.onActivate();
   }
 
-  protected findChild(name: string) {
+  protected getChildForNavigation(name: string) {
     const child = this.children.find(x => x.navigationName === name);
     if (child) {
       return Promise.resolve(child);

@@ -35,7 +35,7 @@ export default class IssuesViewModel extends FilteredListViewModel<Issue, Issues
     filter.subject = null;
   }
 
-  protected findChild(navigationName: string) {
+  protected getChildForNavigation(navigationName: string) {
     return Promise.resolve(undefined);
   }
 

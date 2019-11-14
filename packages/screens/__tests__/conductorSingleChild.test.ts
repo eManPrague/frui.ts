@@ -4,7 +4,7 @@ import { IChild } from "../src/structure/types";
 import ChildMock from "./mocks/childMock";
 
 class Conductor<TChild extends IChild<any> & IHasNavigationName> extends ConductorSingleChild<TChild> {
-  protected findChild(navigationName: string) {
+  protected getChildForNavigation(navigationName: string) {
     return Promise.resolve(undefined);
   }
 }

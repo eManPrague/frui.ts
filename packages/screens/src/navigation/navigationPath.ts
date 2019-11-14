@@ -2,6 +2,7 @@ import NavigationManager from "./navigationManager";
 
 export interface NavigationPath {
   readonly path: string;
+  readonly params: any;
   readonly isClosed: boolean;
 }
 

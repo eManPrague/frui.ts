@@ -13,7 +13,7 @@ export default abstract class ConductorBaseWithActiveChild<TChild extends IChild
     return this.activeChildValue;
   }
 
-  get notifyOnActivate() {
+  get canBeNavigationActiveScreen() {
     return !this.activeChildValue;
   }
 
@@ -32,8 +32,8 @@ export default abstract class ConductorBaseWithActiveChild<TChild extends IChild
       await newChild.activate();
     }
 
-    if (this.isActive && !newChild && navigationManager.onScreenActivated) {
-      navigationManager.onScreenActivated(this);
+    if (this.isActive && !newChild && navigationManager.onActiveScreenChanged) {
+      navigationManager.onActiveScreenChanged(this);
     }
   }
 

@@ -34,6 +34,6 @@ export default class RootViewModel extends ConductorOneChildActive<any> {
   }
 
   @action.bound startNavigation() {
-    return this.navigate(this.navigationPath);
+    return this.navigate(this.navigationPath, undefined);
   }
 }

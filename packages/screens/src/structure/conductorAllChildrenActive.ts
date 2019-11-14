@@ -61,7 +61,7 @@ export default class ConductorAllChildrenActive<TChild extends IChild<any> & IHa
     return canCloseSelf;
   }
 
-  protected findChild(name: string): Promise<TChild | undefined> {
+  protected getChildForNavigation(name: string): Promise<TChild | undefined> {
     const child = this.children.find(x => x.navigationName === name);
     return Promise.resolve(child);
   }

@@ -24,7 +24,7 @@ export default class OneChildActiveViewModel extends ConductorOneChildActive<Chi
     return super.onActivate();
   }
 
-  protected findChild(name: string) {
+  protected getChildForNavigation(name: string) {
     const child = this.children.find(x => x.navigationName === name);
     if (child) {
       return Promise.resolve(child);

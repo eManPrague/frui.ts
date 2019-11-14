@@ -5,5 +5,5 @@ type ScreenActivatedHandler = (screen: IScreen & IChild<IConductor<IScreen>> & I
 
 export default {
   pathDelimiter: "/",
-  onScreenActivated: undefined as ScreenActivatedHandler | undefined,
+  onActiveScreenChanged: undefined as ScreenActivatedHandler | undefined,
 };

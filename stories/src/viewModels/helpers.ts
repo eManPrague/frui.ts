@@ -5,7 +5,7 @@ export function notifyRoutePathChanged(source: IChild<IConductor<any>> & IHasNav
     return;
   }
 
-  const navigationPath = source.parent.getChildNavigationPath(source);
+  const navigationPath = source.parent.getChildNavigationPath(source, undefined);
   window.dispatchEvent(new CustomEvent("navigated", {
     detail: navigationPath,
   }));
