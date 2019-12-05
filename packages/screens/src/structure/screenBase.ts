@@ -36,29 +36,34 @@ export default abstract class ScreenBase implements IScreen, IChild<IConductor<S
       return;
     }
 
-    try {
-      await this.initialize();
+    await this.initialize();
 
+    try {
       const activateResult = this.onActivate();
       if (activateResult) {
         await activateResult;
       }
-
-      this.isActiveValue = true;
-      this.notifyNavigationChanged();
     } catch (error) {
       // tslint:disable-next-line: no-console
       console.error(error);
-      throw error;
     }
+
+    this.isActiveValue = true;
+    this.notifyNavigationChanged();
   }
 
   private async initialize() {
     if (!this.isInitialized) {
-      const initializeResult = this.onInitialize();
-      if (initializeResult) {
-        await initializeResult;
+      try {
+        const initializeResult = this.onInitialize();
+        if (initializeResult) {
+          await initializeResult;
+        }
+      } catch (error) {
+        // tslint:disable-next-line: no-console
+        console.error(error);
       }
+
       this.isInitialized = true;
     }
   }
@@ -76,18 +81,18 @@ export default abstract class ScreenBase implements IScreen, IChild<IConductor<S
     );
   }
   private async deactivateInner(close: boolean) {
-    try {
-      if (this.isActiveValue || (this.isInitialized && close)) {
+    if (this.isActiveValue || (this.isInitialized && close)) {
+      try {
         const deactivateResult = this.onDeactivate(close);
         if (deactivateResult) {
           await deactivateResult;
         }
-        this.isActiveValue = false;
+      } catch (error) {
+        // tslint:disable-next-line: no-console
+        console.error(error);
       }
-    } catch (error) {
-      // tslint:disable-next-line: no-console
-      console.error(error);
-      throw error;
+
+      this.isActiveValue = false;
     }
   }
 

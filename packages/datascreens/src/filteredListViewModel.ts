@@ -9,7 +9,7 @@ export default abstract class FilteredListViewModel<TEntity, TFilter, TDetail ex
   TEntity,
   TDetail
 > {
-  static defaultPageSize: 30;
+  static defaultPageSize = 30;
 
   @observable filter: TFilter & IHasDirtyWatcher<TFilter>;
   @observable pagingFilter: IPagingFilter;

@@ -1,6 +1,6 @@
 # Frui.ts
 
-Frui.ts is a UI MVVM library for React, based on Mobx, and written in TypeScript.
+Frui.ts is a frontend framework using MVVM design pattern for clean separation of concerns and long-term maintainability. It is built on top of the popular React library with MobX and modern TypeScript language. Frui.ts uses ViewModel-first approach which enables automated testing of complex workflow on the ViewModel level with no need
 
 ## Installation
 
