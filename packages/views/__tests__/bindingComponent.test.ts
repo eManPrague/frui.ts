@@ -41,7 +41,7 @@ describe("BindingComponent", () => {
       expect(result).toBe("John");
     });
 
-    it("reads undefined target property value", () => {
+    it("reads undefined target property value as null", () => {
       const entity = observable({
         firstName: "John",
       });
@@ -49,7 +49,7 @@ describe("BindingComponent", () => {
       const control = new TestControl({ target: entity, property: "lastName" });
 
       const result = control.readValue();
-      expect(result).toBeUndefined();
+      expect(result).toBeNull();
     });
   });
 
