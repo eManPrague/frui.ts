@@ -13,6 +13,20 @@ export function pageChangedHandler(newPageNumber: number, filter: IPagingFilter,
   return () => handlePageChanged(newPageNumber, filter, onPageChanged);
 }
 
+export function handlePageSizeChanged(newPageSize: number, filter?: IPagingFilter, onPageChanged?: onPageChangedHandler) {
+  const pageSize = newPageSize;
+  const offset =  0;
+
+  if (filter) {
+    filter.offset = offset;
+    filter.limit = pageSize;
+  }
+
+  if (onPageChanged) {
+    onPageChanged(offset, pageSize);
+  }
+}
+
 export function handlePageChanged(newPageNumber: number, filter?: IPagingFilter, onPageChanged?: onPageChangedHandler) {
   const pageSize = (filter && filter.limit) || defaultPageSize;
   const offset = (newPageNumber - 1) * pageSize;
