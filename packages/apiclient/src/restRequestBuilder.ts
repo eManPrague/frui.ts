@@ -28,12 +28,17 @@ export class RestRequestBuilder {
     return this.apiConnector.get(requestUrl, params).then(x => x.json());
   }
 
+  getRaw(queryParams?: any) {
+    const requestUrl = this.appendQuery(this.url, queryParams);
+    return this.apiConnector.get(requestUrl, this.params);
+  }
+
   post<T>(content: any): Promise<T> {
     const params = appendAcceptJsonHeader(this.params);
     return this.apiConnector.postJson(this.url, content, params).then(x => x.json());
   }
 
-  postOnly(content: any) {
+  postRaw(content: any) {
     return this.apiConnector.postJson(this.url, content, this.params);
   }
 
@@ -42,7 +47,7 @@ export class RestRequestBuilder {
     return this.apiConnector.putJson(this.url, content, params).then(x => x.json());
   }
 
-  putOnly(content: any) {
+  putRaw(content: any) {
     return this.apiConnector.putJson(this.url, content, this.params);
   }
 
@@ -51,7 +56,7 @@ export class RestRequestBuilder {
     return this.apiConnector.patchJson(this.url, content, params).then(x => x.json());
   }
 
-  patchOnly(content: any) {
+  patchRaw(content: any) {
     return this.apiConnector.patchJson(this.url, content, this.params);
   }
 
