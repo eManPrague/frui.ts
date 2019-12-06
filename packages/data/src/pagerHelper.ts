@@ -17,12 +17,29 @@ export function handlePageChanged(newPageNumber: number, filter?: IPagingFilter,
   const pageSize = (filter && filter.limit) || defaultPageSize;
   const offset = (newPageNumber - 1) * pageSize;
 
+  handlePagingChanged(offset, pageSize, filter, onPageChanged);
+}
+
+export function handlePageSizeChanged(
+  newPageSize: number,
+  filter?: IPagingFilter,
+  onPageChanged?: onPageChangedHandler
+) {
+  handlePagingChanged(0, newPageSize, filter, onPageChanged);
+}
+
+export function handlePagingChanged(
+  offset: number,
+  limit: number,
+  filter?: IPagingFilter,
+  onPageChanged?: onPageChangedHandler
+) {
   if (filter) {
     filter.offset = offset;
-    filter.limit = pageSize;
+    filter.limit = limit;
   }
 
   if (onPageChanged) {
-    onPageChanged(offset, pageSize);
+    onPageChanged(offset, limit);
   }
 }
