@@ -38,8 +38,12 @@ export class RestRequestBuilder {
     return this.apiConnector.postJson(this.url, content, params).then(x => x.json());
   }
 
-  postRaw(content: any) {
+  postOnly(content: any) {
     return this.apiConnector.postJson(this.url, content, this.params);
+  }
+
+  postFormData(data: FormData) {
+    return this.apiConnector.postFormData(this.url, data, this.params);
   }
 
   put<T>(content: any): Promise<T> {
@@ -47,8 +51,12 @@ export class RestRequestBuilder {
     return this.apiConnector.putJson(this.url, content, params).then(x => x.json());
   }
 
-  putRaw(content: any) {
+  putOnly(content: any) {
     return this.apiConnector.putJson(this.url, content, this.params);
+  }
+
+  putFormData(data: FormData) {
+    return this.apiConnector.putFormData(this.url, data, this.params);
   }
 
   patch<T>(content: any): Promise<T> {
@@ -56,12 +64,17 @@ export class RestRequestBuilder {
     return this.apiConnector.patchJson(this.url, content, params).then(x => x.json());
   }
 
-  patchRaw(content: any) {
+  patchOnly(content: any) {
     return this.apiConnector.patchJson(this.url, content, this.params);
   }
 
   delete() {
     return this.apiConnector.delete(this.url, this.params);
+  }
+
+  withBaseUrl(url: string) {
+    this.url = url;
+    return this;
   }
 
   protected appendQuery(url: string, query?: any) {
