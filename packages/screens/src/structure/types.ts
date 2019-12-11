@@ -1,19 +1,16 @@
 export interface IActivatable {
   isActive: boolean;
   activate(): Promise<any>;
-}
-
-export interface IDeactivatable {
   deactivate(close: boolean): Promise<any>;
 }
 
-export interface IScreen extends IActivatable, IDeactivatable {
+export interface IScreen extends IActivatable {
   readonly name: string;
 }
 
 export interface IConductor<TChild> {
   activateChild(child: TChild): Promise<any>;
-  deactivateChild(child: TChild, close: boolean): Promise<any>;
+  closeChild(child: TChild): Promise<any>;
 }
 
 export interface IHasActiveChild<TChild> {

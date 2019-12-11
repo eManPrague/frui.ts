@@ -13,19 +13,29 @@ test("attachManualDirtyWatcher", () => {
   };
   const typedEntity = DirtyCheck.attachManualDirtyWatcher(entity, false);
 
-  expect(typedEntity.__dirtycheck.isDirty).toBeFalsy();
-  expect(typedEntity.__dirtycheck.dirtyProperties.firstName).toBeFalsy();
-  expect(typedEntity.__dirtycheck.dirtyProperties.lastName).toBeFalsy();
+  expect(DirtyCheck.isDirty(typedEntity)).toBeFalsy();
+  expect(DirtyCheck.isDirty(typedEntity, "firstName")).toBeFalsy();
+  expect(DirtyCheck.isDirty(typedEntity, "lastName")).toBeFalsy();
 
-  typedEntity.__dirtycheck.setDirty("firstName");
-  expect(typedEntity.__dirtycheck.isDirty).toBeTruthy();
-  expect(typedEntity.__dirtycheck.dirtyProperties.firstName).toBeTruthy();
-  expect(typedEntity.__dirtycheck.dirtyProperties.lastName).toBeFalsy();
+  DirtyCheck.setDirty(typedEntity, "firstName");
+  expect(DirtyCheck.isDirty(typedEntity)).toBeTruthy();
+  expect(DirtyCheck.isDirty(typedEntity, "firstName")).toBeTruthy();
+  expect(DirtyCheck.isDirty(typedEntity, "lastName")).toBeFalsy();
 
-  typedEntity.__dirtycheck.reset();
-  expect(typedEntity.__dirtycheck.isDirty).toBeFalsy();
-  expect(typedEntity.__dirtycheck.dirtyProperties.firstName).toBeFalsy();
-  expect(typedEntity.__dirtycheck.dirtyProperties.lastName).toBeFalsy();
+  DirtyCheck.setDirty(typedEntity, "lastName");
+  expect(DirtyCheck.isDirty(typedEntity)).toBeTruthy();
+  expect(DirtyCheck.isDirty(typedEntity, "firstName")).toBeTruthy();
+  expect(DirtyCheck.isDirty(typedEntity, "lastName")).toBeTruthy();
+
+  DirtyCheck.setDirty(typedEntity, "firstName", false);
+  expect(DirtyCheck.isDirty(typedEntity)).toBeTruthy();
+  expect(DirtyCheck.isDirty(typedEntity, "firstName")).toBeFalsy();
+  expect(DirtyCheck.isDirty(typedEntity, "lastName")).toBeTruthy();
+
+  DirtyCheck.resetDirty(typedEntity);
+  expect(DirtyCheck.isDirty(typedEntity)).toBeFalsy();
+  expect(DirtyCheck.isDirty(typedEntity, "firstName")).toBeFalsy();
+  expect(DirtyCheck.isDirty(typedEntity, "lastName")).toBeFalsy();
 });
 
 test("attachAutomaticDirtyWatcher", () => {
@@ -35,17 +45,17 @@ test("attachAutomaticDirtyWatcher", () => {
   };
   const typedEntity = DirtyCheck.attachAutomaticDirtyWatcher(entity, false);
 
-  expect(typedEntity.__dirtycheck.isDirty).toBeFalsy();
-  expect(typedEntity.__dirtycheck.dirtyProperties.firstName).toBeFalsy();
-  expect(typedEntity.__dirtycheck.dirtyProperties.lastName).toBeFalsy();
+  expect(DirtyCheck.isDirty(typedEntity)).toBeFalsy();
+  expect(DirtyCheck.isDirty(typedEntity, "firstName")).toBeFalsy();
+  expect(DirtyCheck.isDirty(typedEntity, "lastName")).toBeFalsy();
 
   entity.firstName = "Tom";
-  expect(typedEntity.__dirtycheck.isDirty).toBeTruthy();
-  expect(typedEntity.__dirtycheck.dirtyProperties.firstName).toBeTruthy();
-  expect(typedEntity.__dirtycheck.dirtyProperties.lastName).toBeFalsy();
+  expect(DirtyCheck.isDirty(typedEntity)).toBeTruthy();
+  expect(DirtyCheck.isDirty(typedEntity, "firstName")).toBeTruthy();
+  expect(DirtyCheck.isDirty(typedEntity, "lastName")).toBeFalsy();
 
-  typedEntity.__dirtycheck.reset();
-  expect(typedEntity.__dirtycheck.isDirty).toBeFalsy();
-  expect(typedEntity.__dirtycheck.dirtyProperties.firstName).toBeFalsy();
-  expect(typedEntity.__dirtycheck.dirtyProperties.lastName).toBeFalsy();
+  DirtyCheck.resetDirty(typedEntity);
+  expect(DirtyCheck.isDirty(typedEntity)).toBeFalsy();
+  expect(DirtyCheck.isDirty(typedEntity, "firstName")).toBeFalsy();
+  expect(DirtyCheck.isDirty(typedEntity, "lastName")).toBeFalsy();
 });

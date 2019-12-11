@@ -6,10 +6,7 @@ export interface IHasNavigationName {
 
 export interface IHasNavigationParams {
   navigationParams: any;
-}
-
-export interface ICanApplyNavigationParams {
-  applyNavigationParams(params: any): Promise<any> | void;
+  applyNavigationParams?: (params: any) => Promise<any> | void;
 }
 
 export interface ICanNavigate {

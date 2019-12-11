@@ -2,11 +2,16 @@ import { IApiConnector } from "./types";
 
 const cleanupRegex = /\/+$/g; // removes trailing slash
 
+/** Fluent URL builder that makes the network call with the underlying IApiConnector */
 export class RestRequestBuilder {
   protected url: string;
 
-  constructor(protected apiConnector: IApiConnector, baseUrl: string, protected params?: RequestInit) {
-    this.url = baseUrl.replace(cleanupRegex, "");
+  constructor(protected apiConnector: IApiConnector, private baseUrl: string, protected params?: RequestInit) {
+    this.reset();
+  }
+
+  reset() {
+    this.url = this.baseUrl.replace(cleanupRegex, "");
   }
 
   all(path: string) {
@@ -80,6 +85,14 @@ export class RestRequestBuilder {
   protected appendQuery(url: string, query?: any) {
     return query ? `${url}?${getQueryString(query)}` : url;
   }
+}
+
+export function appendUrl(base: string, ...segments: any[]) {
+  let result = base.replace(cleanupRegex, "");
+  segments.forEach(x => {
+    result += "/" + x;
+  });
+  return result;
 }
 
 function getQueryString(query: any) {

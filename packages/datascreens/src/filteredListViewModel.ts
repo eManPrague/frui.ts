@@ -1,9 +1,12 @@
 import { IPagingFilter, SortingDirection } from "@frui.ts/data";
 import { attachAutomaticDirtyWatcher, IHasDirtyWatcher } from "@frui.ts/dirtycheck";
-import { bound, Omit } from "@frui.ts/helpers";
+import { bound } from "@frui.ts/helpers";
 import { ScreenBase } from "@frui.ts/screens";
+import { IHasValidation, validate } from "@frui.ts/validation";
 import { action, observable } from "mobx";
 import ListViewModel from "./listViewModel";
+
+type OmitValidationAndDirtyWatcher<T> = Omit<T, keyof IHasDirtyWatcher<T> | keyof IHasValidation<T>>;
 
 export default abstract class FilteredListViewModel<TEntity, TFilter, TDetail extends ScreenBase> extends ListViewModel<
   TEntity,
@@ -11,11 +14,11 @@ export default abstract class FilteredListViewModel<TEntity, TFilter, TDetail ex
 > {
   static defaultPageSize = 30;
 
-  @observable filter: TFilter & IHasDirtyWatcher<TFilter>;
+  @observable filter: TFilter & IHasDirtyWatcher<TFilter> & Partial<IHasValidation<TFilter>>;
   @observable pagingFilter: IPagingFilter;
 
   // we need to cache applied filter so that when the user changes filter but does not Load and changes page instead, the original filter is used
-  protected appliedFilter: Omit<TFilter, keyof IHasDirtyWatcher<TFilter>>;
+  protected appliedFilter: OmitValidationAndDirtyWatcher<TFilter>;
 
   constructor() {
     super();
@@ -24,16 +27,22 @@ export default abstract class FilteredListViewModel<TEntity, TFilter, TDetail ex
   }
 
   @action.bound applyFilter() {
-    const { __dirtycheck, ...actualFilter } = this.filter;
+    if (!validate(this.filter)) {
+      return false;
+    }
+
+    const { __dirtycheck, __validation, ...actualFilter } = this.filter;
     __dirtycheck.reset();
 
     this.appliedFilter = actualFilter;
     this.pagingFilter.offset = 0;
+    return true;
   }
 
   @bound applyFilterAndLoad() {
-    this.applyFilter();
-    return this.loadData();
+    if (this.applyFilter()) {
+      return this.loadData();
+    }
   }
 
   @action.bound resetFilter() {

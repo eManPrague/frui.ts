@@ -6,9 +6,6 @@ interface IActivatable {
   +isActive: boolean
 
   +activate(): Promise<any>
-}
-
-interface IDeactivatable {
   +deactivate(boolean close): Promise<any>
 }
 
@@ -17,11 +14,10 @@ interface IScreen {
 }
 
 IScreen ..|> IActivatable
-IScreen ..|> IDeactivatable
 
 interface IConductor<TChild> {
   +activateChild(TChild child): Promise<any>
-  +deactivateChild(TChild child, boolean close): Promise<any>
+  +closeChild(TChild child): Promise<any>
 }
 
 interface IHasActiveChild<TChild> {

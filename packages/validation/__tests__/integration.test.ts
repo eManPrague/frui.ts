@@ -9,33 +9,44 @@ class TestEntity {
 
 beforeAll(() => {
   validatorsRepository.set("required", (value, propertyName, entity, params) =>
-    (!params || value) ? undefined : `${propertyName} is required.`);
+    !params || value ? undefined : `${propertyName} is required`
+  );
   validatorsRepository.set("equals", (value, propertyName, entity, params) =>
-    (value === params.expectedValue) ? undefined : `${propertyName} should be '${params.expectedValue}'.`);
+    value === params.expectedValue ? undefined : `${propertyName} should be '${params.expectedValue}'`
+  );
 });
 
 test("attachManualValidator()", () => {
   const entity = new TestEntity();
-  const typedEntity = Validation.attachManualValidator(entity, false);
-  expect(typedEntity.__validation.isValid).toBeTruthy();
+  Validation.attachManualValidator(entity, false);
+  expect(Validation.isValid(entity)).toBeTruthy();
+  expect(Validation.isValid(entity, "firstName")).toBeTruthy();
 
-  typedEntity.__validation.addError("firstName", "First name is required");
-  expect(typedEntity.__validation.isValid).toBeFalsy();
-  expect(typedEntity.__validation.errors.firstName).toBe("First name is required");
+  Validation.addError(entity, "firstName", "First name is required");
+  expect(Validation.isValid(entity)).toBeFalsy();
+  expect(Validation.isValid(entity, "firstName")).toBeFalsy();
+  expect(Validation.isValid(entity, "lastName")).toBeTruthy();
+  expect(Validation.getValidationMessage(entity, "firstName")).toBeFalsy();
 
-  typedEntity.__validation.addError("lastName", "Last name is required");
-  expect(typedEntity.__validation.isValid).toBeFalsy();
-  expect(typedEntity.__validation.errors.lastName).toBe("Last name is required");
+  expect(Validation.validate(entity)).toBeFalsy();
+  expect(Validation.getValidationMessage(entity, "firstName")).toBe("First name is required");
 
-  typedEntity.firstName = "John";
-  typedEntity.__validation.removeError("firstName");
-  expect(typedEntity.__validation.isValid).toBeFalsy();
-  expect(typedEntity.__validation.errors.firstName).toBeUndefined();
+  Validation.addError(entity, "lastName", "Last name is required");
+  expect(Validation.isValid(entity)).toBeFalsy();
+  expect(Validation.isValid(entity, "lastName")).toBeFalsy();
+  expect(Validation.getValidationMessage(entity, "lastName")).toBe("Last name is required");
 
-  typedEntity.lastName = "Doe";
-  typedEntity.__validation.clearErrors();
-  expect(typedEntity.__validation.isValid).toBeTruthy();
-  expect(typedEntity.__validation.errors.lastName).toBeUndefined();
+  Validation.removeError(entity, "firstName");
+  expect(Validation.isValid(entity)).toBeFalsy();
+  expect(Validation.isValid(entity, "firstName")).toBeTruthy();
+  expect(Validation.isValid(entity, "lastName")).toBeFalsy();
+  expect(Validation.getValidationMessage(entity, "firstName")).toBeUndefined();
+
+  Validation.clearErrors(entity);
+  expect(Validation.isValid(entity)).toBeTruthy();
+  expect(Validation.isValid(entity, "firstName")).toBeTruthy();
+  expect(Validation.isValid(entity, "lastName")).toBeTruthy();
+  expect(Validation.getValidationMessage(entity, "lastName")).toBeUndefined();
 });
 
 test("attachAutomaticValidator()", () => {
@@ -51,12 +62,21 @@ test("attachAutomaticValidator()", () => {
     },
   };
 
-  const typedEntity = Validation.attachAutomaticValidator(entity, validationRules, false);
-  expect(typedEntity.__validation.isValid).toBeFalsy();
-  expect(typedEntity.__validation.errors.firstName).toBeTruthy();
-  expect(typedEntity.__validation.errors.lastName).toBeUndefined();
+  Validation.attachAutomaticValidator(entity, validationRules, false);
+  expect(Validation.isValid(entity)).toBeFalsy();
+  expect(Validation.isValid(entity, "firstName")).toBeFalsy();
+  expect(Validation.isValid(entity, "lastName")).toBeTruthy();
+  expect(Validation.getValidationMessage(entity, "firstName")).toBeFalsy();
+  expect(Validation.getValidationMessage(entity, "lastName")).toBeFalsy();
 
-  typedEntity.firstName = "John";
-  expect(typedEntity.__validation.isValid).toBeTruthy();
-  expect(typedEntity.__validation.errors.firstName).toBeUndefined();
+  expect(Validation.validate(entity)).toBeFalsy();
+  expect(Validation.getValidationMessage(entity, "firstName")).toBe("firstName is required");
+
+  entity.firstName = "Jane";
+  expect(Validation.getValidationMessage(entity, "firstName")).toBe("firstName should be 'John'");
+
+  entity.firstName = "John";
+  expect(Validation.isValid(entity)).toBeTruthy();
+  expect(Validation.isValid(entity, "firstName")).toBeTruthy();
+  expect(Validation.getValidationMessage(entity, "firstName")).toBeFalsy();
 });

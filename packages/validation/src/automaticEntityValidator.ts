@@ -26,7 +26,9 @@ export default class AutomaticEntityValidator<TTarget extends {}> implements IEn
         this.validatedProperties.push(propertyName);
 
         extendObservable(this.errors, {
-          get [propertyName]() { return validator(get(target, propertyName), target); },
+          get [propertyName]() {
+            return validator(get(target, propertyName), target);
+          },
         });
       }
     }
@@ -46,7 +48,6 @@ export function createPropertyValidatorFromRules(propertyName: string, propertyR
 
   for (const ruleName in propertyRules) {
     if (propertyRules.hasOwnProperty(ruleName)) {
-
       const validator = validatorsRepository.get(ruleName);
       if (!validator) {
         throw new Error(`Unknown validator ${ruleName}. The validator must be registered in 'validatorsRepository'`);
@@ -55,7 +56,8 @@ export function createPropertyValidatorFromRules(propertyName: string, propertyR
       const params = propertyRules[ruleName];
       if (finalValidator) {
         const temp = finalValidator;
-        finalValidator = (propertyValue, entity) => validator(propertyValue, propertyName, entity, params) || temp(propertyValue, entity);
+        finalValidator = (propertyValue, entity) =>
+          validator(propertyValue, propertyName, entity, params) || temp(propertyValue, entity);
       } else {
         finalValidator = (propertyValue, entity) => validator(propertyValue, propertyName, entity, params);
       }

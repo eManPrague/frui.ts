@@ -1,11 +1,17 @@
 import ConductorOneChildActive from "../src/structure/conductorOneChildActive";
 import ChildMock from "./mocks/childMock";
 
+class TestConductor<TChild extends ChildMock> extends ConductorOneChildActive<TChild> {
+  deactivateChild(child: TChild, close: boolean) {
+    return super.deactivateChild(child, close);
+  }
+}
+
 describe("ConductorOneChildActive", () => {
   describe("children", () => {
     test("adding a new child sets parent link", () => {
       const child = new ChildMock();
-      const conductor = new ConductorOneChildActive<ChildMock>();
+      const conductor = new TestConductor<ChildMock>();
 
       conductor.children.push(child);
       expect(child.parent).toBe(conductor);
@@ -15,7 +21,7 @@ describe("ConductorOneChildActive", () => {
   describe("deactivate", () => {
     it("deactivates activeChild", async () => {
       const child = new ChildMock();
-      const conductor = new ConductorOneChildActive<ChildMock>();
+      const conductor = new TestConductor<ChildMock>();
 
       conductor.children.push(child);
       await conductor.activate();
@@ -30,7 +36,7 @@ describe("ConductorOneChildActive", () => {
       const child1 = new ChildMock();
       const child2 = new ChildMock();
 
-      const conductor = new ConductorOneChildActive<ChildMock>();
+      const conductor = new TestConductor<ChildMock>();
       await conductor.activate();
       conductor.children.push(child1, child2);
 
@@ -44,7 +50,7 @@ describe("ConductorOneChildActive", () => {
       const child1 = new ChildMock();
       const child2 = new ChildMock();
 
-      const conductor = new ConductorOneChildActive<ChildMock>();
+      const conductor = new TestConductor<ChildMock>();
       await conductor.activate();
       conductor.children.push(child1, child2);
 
@@ -69,7 +75,7 @@ describe("ConductorOneChildActive", () => {
       const child1 = new ChildMock();
       const child2 = new ChildMock();
 
-      const conductor = new ConductorOneChildActive<ChildMock>();
+      const conductor = new TestConductor<ChildMock>();
       conductor.children.push(child1, child2);
 
       await conductor.activateChild(child1);
@@ -85,7 +91,7 @@ describe("ConductorOneChildActive", () => {
       const child2 = new ChildMock();
       child2.isCloseAllowed = false;
 
-      const conductor = new ConductorOneChildActive<ChildMock>();
+      const conductor = new TestConductor<ChildMock>();
       conductor.children.push(child1, child2);
 
       const canClose = await conductor.canClose();
@@ -98,7 +104,7 @@ describe("ConductorOneChildActive", () => {
       const child1 = new ChildMock();
       const child2 = new ChildMock();
 
-      const conductor = new ConductorOneChildActive<ChildMock>();
+      const conductor = new TestConductor<ChildMock>();
       await conductor.activate();
       conductor.children.push(child1, child2);
 

@@ -27,24 +27,20 @@ export function hasDirtyWatcher<TTarget>(target: any): target is IHasDirtyWatche
   return !!target && (target as IHasDirtyWatcher<TTarget>).__dirtycheck !== undefined;
 }
 
-export function getDirtyFlag<TTarget>(target: TTarget, propertyName: PropertyName<TTarget>) {
-  if (hasDirtyWatcher<TTarget>(target) && target.__dirtycheck.isDirtyFlagVisible) {
-    return !!target.__dirtycheck.dirtyProperties[propertyName];
-  }
-  return null;
-}
-
-export function isDirty<TTarget>(target: any) {
-  if (hasDirtyWatcher(target)) {
-    return target.__dirtycheck.isDirty;
+export function isDirty<TTarget>(target: TTarget, propertyName?: PropertyName<TTarget>) {
+  if (hasDirtyWatcher<TTarget>(target)) {
+    return propertyName ? !!target.__dirtycheck.dirtyProperties[propertyName] : target.__dirtycheck.isDirty;
   } else {
     return true;
   }
 }
 
-export function hasVisibleDirtyChanges<TTarget>(target: any) {
-  if (hasDirtyWatcher(target)) {
-    return target.__dirtycheck.isDirtyFlagVisible && !target.__dirtycheck.isDirty;
+export function hasVisibleDirtyChanges<TTarget>(target: TTarget, propertyName?: PropertyName<TTarget>) {
+  if (hasDirtyWatcher<TTarget>(target)) {
+    return (
+      target.__dirtycheck.isDirtyFlagVisible &&
+      (propertyName ? !!target.__dirtycheck.dirtyProperties[propertyName] : target.__dirtycheck.isDirty)
+    );
   } else {
     return false;
   }
@@ -56,5 +52,11 @@ export function checkDirtyChanges<TTarget>(target: any) {
     return target.__dirtycheck.isDirty;
   } else {
     return true;
+  }
+}
+
+export function resetDirty<TTarget>(target: TTarget) {
+  if (hasDirtyWatcher<TTarget>(target)) {
+    target.__dirtycheck.reset();
   }
 }

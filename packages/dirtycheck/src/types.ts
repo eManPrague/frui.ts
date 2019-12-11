@@ -31,7 +31,7 @@ export interface IDirtyWatcher<TTarget> {
 
 /** Dirty values watcher with manually maintained dirty flags */
 export interface IManualDirtyWatcher<TTarget> extends IDirtyWatcher<TTarget> {
-  setDirty(propertyName: PropertyName<TTarget>): void;
+  setDirty(propertyName: PropertyName<TTarget>, isDirty?: boolean): void;
 }
 
 /** Represents an entity with attached dirty watcher */

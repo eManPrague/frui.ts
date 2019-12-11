@@ -15,36 +15,6 @@ export default class ConductorOneChildActive<
     intercept(this.children, this.handleChildrenChanged);
   }
 
-  async activateChild(child: TChild) {
-    if (child && this.activeChild === child) {
-      if (this.isActive && isActivatable(child)) {
-        await child.activate();
-      }
-      return;
-    }
-
-    await this.changeActiveChild(child, false);
-  }
-
-  async deactivateChild(child: TChild, close: boolean) {
-    if (!child) {
-      return;
-    }
-
-    if (!close) {
-      if (isDeactivatable(child)) {
-        await child.deactivate(false);
-      }
-      return;
-    } else {
-      const canClose = await child.canClose();
-      if (canClose) {
-        await this.closeChildCore(child);
-        runInAction(() => this.children.remove(child));
-      }
-    }
-  }
-
   async canClose() {
     let canCloseSelf = true;
     const childrenToClose = [] as TChild[];
@@ -79,6 +49,46 @@ export default class ConductorOneChildActive<
     return canCloseSelf;
   }
 
+  async activateChild(child: TChild) {
+    if (child && this.activeChild === child) {
+      if (this.isActive && isActivatable(child)) {
+        await child.activate();
+      }
+      return;
+    }
+
+    this.connectChild(child);
+    await this.changeActiveChild(child, false);
+  }
+
+  protected async deactivateChild(child: TChild, close: boolean) {
+    if (!child) {
+      return;
+    }
+
+    if (!close) {
+      if (isDeactivatable(child)) {
+        await child.deactivate(false);
+      }
+      return;
+    } else {
+      const canClose = await child.canClose();
+      if (canClose) {
+        await this.closeChildCore(child);
+        runInAction(() => this.children.remove(child));
+      }
+    }
+  }
+
+  protected connectChild(child: TChild) {
+    if (child) {
+      const currentIndex = this.children.indexOf(child);
+      if (currentIndex === -1) {
+        runInAction(() => this.children.push(child));
+      }
+    }
+  }
+
   protected getChildForNavigation(name: string): Promise<TChild | undefined> {
     const child = this.children.find(x => x.navigationName === name);
     return Promise.resolve(child);
@@ -95,16 +105,6 @@ export default class ConductorOneChildActive<
       this.children.clear();
     } else {
       await this.deactivateChild(this.activeChild, false);
-    }
-  }
-
-  protected connectChild(child: TChild) {
-    if (child) {
-      const currentIndex = this.children.indexOf(child);
-      if (currentIndex === -1) {
-        runInAction(() => this.children.push(child));
-        super.connectChild(child);
-      }
     }
   }
 

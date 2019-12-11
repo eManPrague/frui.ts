@@ -39,15 +39,15 @@ export function getValidationMessage<TTarget>(target: TTarget, propertyName: Pro
   return null;
 }
 
-export function isValid<TTarget>(target: any) {
-  if (hasValidation(target)) {
-    return target.__validation.isValid;
+export function isValid<TTarget>(target: TTarget, propertyName?: PropertyName<TTarget>) {
+  if (hasValidation<TTarget>(target)) {
+    return propertyName ? !target.__validation.errors[propertyName] : target.__validation.isValid;
   } else {
     return true;
   }
 }
 
-export function hasVisibleErrors<TTarget>(target: any) {
+export function hasVisibleErrors<TTarget>(target: TTarget) {
   if (hasValidation(target)) {
     return target.__validation.isErrorsVisible && !target.__validation.isValid;
   } else {
@@ -55,7 +55,7 @@ export function hasVisibleErrors<TTarget>(target: any) {
   }
 }
 
-export function validate<TTarget>(target: any) {
+export function validate<TTarget>(target: TTarget) {
   if (hasValidation(target)) {
     runInAction(() => (target.__validation.isErrorsVisible = true));
     return target.__validation.isValid;

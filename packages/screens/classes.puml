@@ -53,7 +53,7 @@ IHasActiveChild ()- ConductorBaseWithActiveChild
 
 class ConductorSingleChild {
   +activateChild(child: TChild): Promise
-  +deactivateChild(child: TChild, close: boolean): Promise
+  +closeChild(child: TChild): Promise
 }
 note left
   Use this if there is no finite list of children
@@ -66,7 +66,7 @@ class ConductorOneChildActive {
   +children: TChild[]
 
   +activateChild(child: TChild): Promise
-  +deactivateChild(child: TChild, close: boolean): Promise
+  +closeChild(child: TChild): Promise
 }
 note right
   Use this if there is a finite list of potential children
@@ -79,7 +79,7 @@ class ConductorAllChildrenActive {
   +children: TChild[]
 
   +activateChild(child: TChild): Promise
-  +deactivateChild(child: TChild, close: boolean): Promise
+  +closeChild(child: TChild): Promise
 }
 note right
   Use this if there is a finite list of potential children

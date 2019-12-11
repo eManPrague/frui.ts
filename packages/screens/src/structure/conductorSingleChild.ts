@@ -26,7 +26,7 @@ export default abstract class ConductorSingleChild<
     }
   }
 
-  async deactivateChild(child: TChild, close: boolean) {
+  protected async deactivateChild(child: TChild, close: boolean) {
     if (!child || this.activeChild !== child) {
       return;
     }

@@ -3,8 +3,8 @@
   "publishConfig": {
     "registry": "https://nexus.eman.cz/repository/eman-npm/"
   },
-  "version": "0.5.0",
-  "description": "> TODO: description",
+  "version": "0.6.0",
+  "description": "Frui.ts helpers for http communication",
   "author": "Augustin Šulc <sulc.gusta@gmail.com>",
   "license": "ISC",
   "main": "dist/index.js",
@@ -24,6 +24,6 @@
     "build": "tsc"
   },
   "dependencies": {
-    "@frui.ts/helpers": "^0.5.0"
+    "@frui.ts/helpers": "^0.6.0"
   }
 }

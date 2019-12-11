@@ -1,30 +1,43 @@
 import ManualDirtyWatcher from "../src/manualDirtyWatcher";
+import { IManualDirtyWatcher } from "../src/types";
 
 describe("ManualDirtyWatcher", () => {
   test("initial state is not dirty", () => {
-    const checker = new ManualDirtyWatcher({ firstName: "John" }, false);
+    const watcher = new ManualDirtyWatcher({ firstName: "John" }, false);
 
-    expect(checker.isDirty).toBeFalsy();
-    expect(checker.dirtyProperties.firstName).toBeUndefined();
+    expect(watcher.isDirty).toBeFalsy();
+    expect(watcher.dirtyProperties.firstName).toBeUndefined();
   });
 
   test("setting dirty property changes isDirty flag", () => {
-    const checker = new ManualDirtyWatcher({ firstName: "John" }, false);
+    const watcher = new ManualDirtyWatcher({ firstName: "John" }, false);
 
-    checker.setDirty("firstName");
-    expect(checker.isDirty).toBeTruthy();
-    expect(checker.dirtyProperties.firstName).toBeTruthy();
+    watcher.setDirty("firstName");
+    expect(watcher.isDirty).toBeTruthy();
+    expect(watcher.dirtyProperties.firstName).toBeTruthy();
+  });
+
+  test("setDirty can be used to remove dirty flag", () => {
+    const watcher = new ManualDirtyWatcher({ firstName: "John" }, false);
+
+    watcher.setDirty("firstName", true);
+    expect(watcher.isDirty).toBeTruthy();
+    expect(watcher.dirtyProperties.firstName).toBeTruthy();
+
+    watcher.setDirty("firstName", false);
+    expect(watcher.isDirty).toBeFalsy();
+    expect(watcher.dirtyProperties.firstName).toBeFalsy();
   });
 
   test("reset() clears dirty flags", () => {
-    const checker = new ManualDirtyWatcher({ firstName: "John" }, false);
+    const watcher = new ManualDirtyWatcher({ firstName: "John" }, false);
 
-    checker.setDirty("firstName");
-    expect(checker.isDirty).toBeTruthy();
-    expect(checker.dirtyProperties.firstName).toBeTruthy();
+    watcher.setDirty("firstName");
+    expect(watcher.isDirty).toBeTruthy();
+    expect(watcher.dirtyProperties.firstName).toBeTruthy();
 
-    checker.reset();
-    expect(checker.isDirty).toBeFalsy();
-    expect(checker.dirtyProperties.firstName).toBeFalsy();
+    watcher.reset();
+    expect(watcher.isDirty).toBeFalsy();
+    expect(watcher.dirtyProperties.firstName).toBeFalsy();
   });
 });

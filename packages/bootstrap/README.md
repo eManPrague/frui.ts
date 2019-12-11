@@ -1,11 +1,21 @@
 # `bootstrap`
 
-> TODO: description
+Bootstrap controls ready for Frui.ts integration. Mainly input controls wrapped in `BindingComponent`.
 
-## Usage
+## Input
 
 ```
-const bootstrap = require('bootstrap');
+TODO
+```
 
-// TODO: DEMONSTRATE API
+## Select
+
+```
+TODO
+```
+
+## Check
+
+```
+TODO
 ```

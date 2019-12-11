@@ -1,4 +1,4 @@
-import { getDirtyFlag } from "@frui.ts/dirtycheck";
+import { isDirty as getDirtyFlag } from "@frui.ts/dirtycheck";
 import { getValidationMessage } from "@frui.ts/validation";
 import { getInnerComponent, IFormFieldProps } from "@frui.ts/views";
 import { observer } from "mobx-react-lite";

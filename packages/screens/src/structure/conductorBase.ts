@@ -1,3 +1,4 @@
+// tslint:disable: member-ordering
 import { canApplyNavigationParams, canNavigate, getNavigationParams } from "../navigation/helpers";
 import { combineNavigationPath, NavigationPath, splitNavigationPath } from "../navigation/navigationPath";
 import { ICanNavigate, IHasNavigationName } from "../navigation/types";
@@ -17,7 +18,13 @@ export default abstract class ConductorBase<TChild extends IChild<any> & IHasNav
   protected childNavigationPathClosed = false;
 
   abstract activateChild(child: TChild): Promise<any>;
-  abstract deactivateChild(child: TChild, close: boolean): Promise<any>;
+  protected abstract deactivateChild(child: TChild, close: boolean): Promise<any>;
+
+  closeChild(child: TChild) {
+    return this.deactivateChild(child, true);
+  }
+
+  // navigation
 
   getCurrentNavigationPath(): NavigationPath {
     // TODO cache currentNavigationPath

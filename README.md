@@ -6,6 +6,10 @@ Frui.ts is a frontend framework using MVVM design pattern for clean separation o
 
 TODO
 
+## Guidelines
+
+Design the logic from ViewModels.
+
 ## Packages
 
  - [Screens](packages/screens/README.md)

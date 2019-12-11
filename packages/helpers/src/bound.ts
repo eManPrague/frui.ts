@@ -6,7 +6,7 @@ export default function bound(target: any, propertyKey: string, descriptor: Prop
   const fn = descriptor.value;
 
   if (typeof fn !== "function") {
-    throw new Error(`@bound decorator can only be applied to methods not: ${typeof fn}`);
+    throw new Error(`@bound decorator can only be applied to methods, not ${typeof fn}`);
   }
 
   // In IE11 calling Object.defineProperty has a side-effect of evaluating the

@@ -6,14 +6,21 @@ import { IHasNavigationName } from "../navigation/types";
 import { IChild, IConductor, IScreen } from "./types";
 
 export default abstract class ScreenBase implements IScreen, IChild<IConductor<ScreenBase>>, IHasNavigationName {
-  // TODO view aware?
   navigationName: string = this.constructor.name.replace("ViewModel", "");
   name: string;
   parent: IConductor<ScreenBase>;
 
-  protected get canBeNavigationActiveScreen() {
-    return true;
+  // child
+
+  canClose() {
+    return Promise.resolve(true);
   }
+
+  @bound requestClose() {
+    return this.parent ? this.parent.closeChild(this) : Promise.resolve();
+  }
+
+  // activation
 
   private isInitialized = false;
   @observable protected isActiveValue = false;
@@ -108,12 +115,10 @@ export default abstract class ScreenBase implements IScreen, IChild<IConductor<S
     return;
   }
 
-  canClose() {
-    return Promise.resolve(true);
-  }
+  // navigation
 
-  @bound requestClose() {
-    return this.parent ? this.parent.deactivateChild(this, true) : Promise.resolve();
+  protected get canBeNavigationActiveScreen() {
+    return true;
   }
 
   protected notifyNavigationChanged() {

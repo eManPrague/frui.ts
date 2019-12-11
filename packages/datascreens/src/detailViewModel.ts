@@ -3,12 +3,7 @@ import { action, observable } from "mobx";
 
 export default abstract class DetailViewModel<TDetail> extends ScreenBase {
   busyWatcher = new BusyWatcher();
-  @observable item: TDetail = undefined as any;
-
-  constructor(parent: IConductor<ScreenBase>) {
-    super();
-    this.parent = parent;
-  }
+  @observable item?: TDetail = undefined;
 
   @action.bound setItem(item: TDetail) {
     this.item = item;

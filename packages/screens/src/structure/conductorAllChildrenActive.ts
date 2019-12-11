@@ -16,18 +16,30 @@ export default class ConductorAllChildrenActive<TChild extends IChild<any> & IHa
     intercept(this.children, this.handleChildrenChanged);
   }
 
+  async canClose() {
+    let canCloseSelf = true;
+    for (const child of this.children.slice()) {
+      const canClose = await child.canClose();
+      if (canClose) {
+        this.closeChildCore(child);
+        runInAction(() => this.children.remove(child));
+      } else {
+        canCloseSelf = false;
+      }
+    }
+
+    return canCloseSelf;
+  }
+
   async activateChild(child: TChild) {
     if (!child) {
       return;
     }
 
-    const currentIndex = this.children.indexOf(child);
-    if (currentIndex === -1) {
-      runInAction(() => this.children.push(child));
-    }
+    this.connectChild(child);
   }
 
-  async deactivateChild(child: TChild, close: boolean) {
+  protected async deactivateChild(child: TChild, close: boolean) {
     if (!child) {
       return;
     }
@@ -46,19 +58,13 @@ export default class ConductorAllChildrenActive<TChild extends IChild<any> & IHa
     }
   }
 
-  async canClose() {
-    let canCloseSelf = true;
-    for (const child of this.children.slice()) {
-      const canClose = await child.canClose();
-      if (canClose) {
-        this.closeChildCore(child);
-        runInAction(() => this.children.remove(child));
-      } else {
-        canCloseSelf = false;
+  protected connectChild(child: TChild) {
+    if (child) {
+      const currentIndex = this.children.indexOf(child);
+      if (currentIndex === -1) {
+        runInAction(() => this.children.push(child));
       }
     }
-
-    return canCloseSelf;
   }
 
   protected getChildForNavigation(name: string): Promise<TChild | undefined> {

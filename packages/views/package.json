@@ -3,7 +3,7 @@
   "publishConfig": {
     "registry": "https://nexus.eman.cz/repository/eman-npm/"
   },
-  "version": "0.5.0",
+  "version": "0.6.0",
   "description": "> TODO: description",
   "author": "Augustin Šulc <sulc.gusta@gmail.com>",
   "homepage": "",
@@ -25,7 +25,7 @@
     "build": "tsc"
   },
   "dependencies": {
-    "@frui.ts/helpers": "^0.5.0",
-    "@frui.ts/screens": "^0.5.0"
+    "@frui.ts/helpers": "^0.6.0",
+    "@frui.ts/screens": "^0.6.0"
   }
 }

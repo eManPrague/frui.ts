@@ -1,4 +1,4 @@
-import { ICanApplyNavigationParams, ICanNavigate, IHasNavigationName, IHasNavigationParams } from "./types";
+import { ICanNavigate, IHasNavigationName, IHasNavigationParams } from "./types";
 
 export function hasNavigationName(item: any): item is IHasNavigationName {
   return item.navigationName !== undefined;
@@ -12,7 +12,7 @@ export function getNavigationParams(item: any): any {
   return item.navigationParams;
 }
 
-export function canApplyNavigationParams(item: any): item is ICanApplyNavigationParams {
+export function canApplyNavigationParams(item: any): item is Required<IHasNavigationParams> {
   return item.applyNavigationParams && typeof item.applyNavigationParams === "function";
 }
 

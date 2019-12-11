@@ -7,10 +7,10 @@ describe("AutomaticDirtyWatcher", () => {
       firstName: "John",
     });
 
-    const checker = new AutomaticDirtyWatcher(target, false);
+    const watcher = new AutomaticDirtyWatcher(target, false);
 
-    expect(checker.isDirty).toBeFalsy();
-    expect(checker.dirtyProperties.firstName).toBeFalsy();
+    expect(watcher.isDirty).toBeFalsy();
+    expect(watcher.dirtyProperties.firstName).toBeFalsy();
   });
 
   test("changing property value raises dirty flag", () => {
@@ -18,11 +18,11 @@ describe("AutomaticDirtyWatcher", () => {
       firstName: "John",
     });
 
-    const checker = new AutomaticDirtyWatcher(target, false);
+    const watcher = new AutomaticDirtyWatcher(target, false);
 
     target.firstName = "Tom";
-    expect(checker.isDirty).toBeTruthy();
-    expect(checker.dirtyProperties.firstName).toBeTruthy();
+    expect(watcher.isDirty).toBeTruthy();
+    expect(watcher.dirtyProperties.firstName).toBeTruthy();
   });
 
   test("reset() clears dirty flags", () => {
@@ -30,15 +30,15 @@ describe("AutomaticDirtyWatcher", () => {
       firstName: "John",
     });
 
-    const checker = new AutomaticDirtyWatcher(target, false);
+    const watcher = new AutomaticDirtyWatcher(target, false);
 
     target.firstName = "Tom";
 
-    expect(checker.isDirty).toBeTruthy();
-    expect(checker.dirtyProperties.firstName).toBeTruthy();
+    expect(watcher.isDirty).toBeTruthy();
+    expect(watcher.dirtyProperties.firstName).toBeTruthy();
 
-    checker.reset();
-    expect(checker.isDirty).toBeFalsy();
-    expect(checker.dirtyProperties.firstName).toBeFalsy();
+    watcher.reset();
+    expect(watcher.isDirty).toBeFalsy();
+    expect(watcher.dirtyProperties.firstName).toBeFalsy();
   });
 });
