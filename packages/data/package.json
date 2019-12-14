@@ -3,7 +3,7 @@
   "publishConfig": {
     "registry": "https://nexus.eman.cz/repository/eman-npm/"
   },
-  "version": "0.6.0",
+  "version": "0.6.1",
   "description": "Helpers and interfaces for handling paged and sorted data sets",
   "author": "Augustin Šulc <sulc.gusta@gmail.com>",
   "license": "ISC",
