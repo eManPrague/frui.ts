@@ -8,18 +8,25 @@ const hashPrefix = "#/";
 
 export default class UrlNavigationAdapter {
   private isNavigationSuppressed = false;
+  private isStarted = false;
   private lastUrl = "";
   constructor(private rootViewModel: ICanNavigate) {}
 
   start() {
+    this.isStarted = true;
     NavigationManager.onActiveScreenChanged = this.onScreenActivated;
     window.onpopstate = this.onUrlChanged;
+
     this.onUrlChanged();
+  }
+
+  stop() {
+    this.isStarted = false;
   }
 
   @bound
   private onScreenActivated(screen: IScreen & IChild<IConductor<any>> & IHasNavigationName) {
-    if (!this.isNavigationSuppressed && screen.parent && canNavigate(screen.parent)) {
+    if (this.isStarted && !this.isNavigationSuppressed && screen.parent && canNavigate(screen.parent)) {
       const params = getNavigationParams(screen);
       const path = screen.parent.getChildNavigationPath(screen, params);
 
@@ -39,13 +46,17 @@ export default class UrlNavigationAdapter {
   private onUrlChanged() {
     const hash = window.location.hash;
 
-    if (hash && hash.startsWith(hashPrefix)) {
+    if (this.isStarted && hash && hash.startsWith(hashPrefix)) {
       const path = parseUrl(hash.substr(hashPrefix.length));
 
       this.isNavigationSuppressed = true;
       this.rootViewModel.navigate(path.url, path.query).then(
         () => (this.isNavigationSuppressed = false),
-        () => (this.isNavigationSuppressed = false)
+        error => {
+          // tslint:disable-next-line: no-console
+          console.error(error);
+          this.isNavigationSuppressed = false;
+        }
       );
     }
   }

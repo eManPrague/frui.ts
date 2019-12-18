@@ -39,7 +39,7 @@ export default class SingleChildViewModel extends ConductorSingleChild<ChildView
     return super.onActivate();
   }
 
-  protected getChildForNavigation(navigationName: string) {
+  protected findNavigationChild(navigationName: string) {
     if (this.child1.navigationName === navigationName) {
       return Promise.resolve(this.child1);
     }

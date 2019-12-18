@@ -39,7 +39,8 @@ These components are heavily inspired by the Caliburn.Micro framework from .NET 
 - `activeChild` - observable property with the currently selected child
 - `activateChild(child)` - call this function to change the currently selected child. Automatically closes the old child if possible (calls `canClose` on the child) and assigns `parent` to the new one.
 - `closeChild(child)` - use to properly close the child (calls `canClose`)
-- `getChildForNavigation(navigationName)` - implement this function to return proper child view model based on the navigation name provided. It is automatically called when navigating, however, you can reuse it in your logic as well (e.g., when creating a child for `activateChild`).
+- `findNavigationChild(navigationName)` - implement this function to return proper child view model based on the navigation name provided. It is automatically called when navigating, however, you can reuse it in your logic as well (e.g., when creating a child for `activateChild`).
+- `onChildNavigated(child)` - implement this function to do some actions after navigation is done
 
 ## `ConductorOneChildActive`
 

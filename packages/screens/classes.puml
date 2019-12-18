@@ -33,9 +33,10 @@ abstract class ConductorBase {
   +navigate(path: string, params: any): Promise
   +getChildNavigationPath(child: TChild, params: any): NavigationPath
 
-  .. Abstract functions ..
-  #{abstract} getChildForNavigation(navigationName: string): Promise<TChild>
-  #handleNavigationParams(params: any): Promise<any> | void
+  .. Extension functions ..
+  #findNavigationChild(navigationName: string): Promise<TChild>
+  #onChildNavigated(child): Promise<any> | void
+  #applyNavigationParams(params: any): Promise<any> | void
 }
 
 ConductorBase --|> ScreenBase

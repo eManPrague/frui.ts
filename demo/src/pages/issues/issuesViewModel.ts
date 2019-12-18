@@ -35,10 +35,6 @@ export default class IssuesViewModel extends FilteredListViewModel<Issue, Issues
     filter.subject = null;
   }
 
-  protected getChildForNavigation(navigationName: string) {
-    return Promise.resolve(undefined);
-  }
-
   private loadCodebooks() {
     return this.busyWatcher.watch(
       this.issuesRepository.getAllProjects({ sortColumn: "name", limit: 999, offset: 0 }).then(this.setProjects)

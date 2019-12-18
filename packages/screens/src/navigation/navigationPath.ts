@@ -15,6 +15,10 @@ export function combineNavigationPath(base: string | undefined, path: string) {
 }
 
 export function splitNavigationPath(path: string): [string, string] {
+  if (!path) {
+    return [undefined, undefined];
+  }
+
   if (path.startsWith(NavigationManager.pathDelimiter)) {
     path = path.substr(1);
   }

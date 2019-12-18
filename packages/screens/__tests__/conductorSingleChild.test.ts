@@ -5,9 +5,6 @@ class TestConductor<TChild extends ChildMock> extends ConductorSingleChild<TChil
   deactivateChild(child: TChild, close: boolean) {
     return super.deactivateChild(child, close);
   }
-  protected getChildForNavigation(navigationName: string) {
-    return Promise.resolve(undefined);
-  }
 }
 
 describe("ConductorSingleChild", () => {

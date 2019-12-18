@@ -62,7 +62,8 @@ export default abstract class ConductorBase<TChild extends IChild<any> & IHasNav
 
   async navigate(path: string, params: any) {
     const segments = splitNavigationPath(path);
-    const childToActivate = await this.getChildForNavigation(segments[0]);
+    const childToActivate = await this.findNavigationChild(segments[0]);
+
     if (childToActivate) {
       await this.activateChild(childToActivate);
 
@@ -82,9 +83,19 @@ export default abstract class ConductorBase<TChild extends IChild<any> & IHasNav
         await childToActivate.navigate(segments[1], params);
       }
     }
+
+    const childNavigatedPromise = this.onChildNavigated(childToActivate);
+    if (childNavigatedPromise) {
+      await childNavigatedPromise;
+    }
   }
 
-  protected abstract getChildForNavigation(navigationName: string): Promise<TChild | undefined>;
+  protected findNavigationChild(navigationName: string): Promise<TChild | undefined> {
+    return Promise.resolve(undefined);
+  }
+
+  // tslint:disable-next-line: no-empty
+  protected onChildNavigated(child: TChild | undefined): Promise<any> | void {}
 
   protected connectChild(item: TChild) {
     if (item) {

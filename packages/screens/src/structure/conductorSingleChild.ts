@@ -48,4 +48,10 @@ export default abstract class ConductorSingleChild<
   protected async onDeactivate(close: boolean) {
     await this.deactivateChild(this.activeChild, close);
   }
+
+  protected onChildNavigated(child: TChild | undefined) {
+    if (!child && this.activeChild) {
+      return this.closeChild(this.activeChild);
+    }
+  }
 }
