@@ -73,7 +73,7 @@ export class RestRequestBuilder {
     return this.apiConnector.patchJson(this.url, content, this.params);
   }
 
-  delete(content: any) {
+  delete(content?: any) {
     return content
       ? this.apiConnector.deleteJson(this.url, content, this.params)
       : this.apiConnector.delete(this.url, this.params);
