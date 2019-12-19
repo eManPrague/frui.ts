@@ -14,4 +14,6 @@ export interface IApiConnector {
   patchFormData(url: string, data: FormData, params?: RequestInit): Promise<Response>;
 
   delete(url: string, params?: RequestInit): Promise<Response>;
+  deleteText(url: string, text: string, params?: RequestInit): Promise<Response>;
+  deleteJson(url: string, content: any, params?: RequestInit): Promise<Response>;
 }
