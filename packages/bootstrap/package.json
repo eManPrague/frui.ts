@@ -3,7 +3,7 @@
   "publishConfig": {
     "registry": "https://nexus.eman.cz/repository/eman-npm/"
   },
-  "version": "0.7.2",
+  "version": "0.7.3",
   "description": "Bootstrap controls ready for Frui.ts integration",
   "author": "Augustin Šulc <sulc.gusta@gmail.com>",
   "license": "ISC",
@@ -24,9 +24,9 @@
     "build": "tsc"
   },
   "dependencies": {
-    "@frui.ts/dirtycheck": "^0.7.2",
-    "@frui.ts/validation": "^0.7.2",
-    "@frui.ts/views": "^0.7.2",
+    "@frui.ts/dirtycheck": "^0.7.3",
+    "@frui.ts/validation": "^0.7.3",
+    "@frui.ts/views": "^0.7.3",
     "bind-decorator": "^1.0.11",
     "bootstrap": "^4.3.1",
     "react-bootstrap": "^1.0.0-beta.12"
