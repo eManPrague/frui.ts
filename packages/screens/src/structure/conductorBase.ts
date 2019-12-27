@@ -36,7 +36,7 @@ export default abstract class ConductorBase<TChild extends IChild<any> & IHasNav
       return {
         path: pathFromParent.path,
         params: combineObjects(pathFromParent.params, currentParams),
-        isClosed: pathFromParent.isClosed,
+        isClosed: pathFromParent.isClosed || this.childNavigationPathClosed,
       };
     } else {
       return {
@@ -55,7 +55,7 @@ export default abstract class ConductorBase<TChild extends IChild<any> & IHasNav
       return {
         path: combineNavigationPath(currentPath.path, child.navigationName),
         params: combineObjects(currentPath.params, params),
-        isClosed: false,
+        isClosed: currentPath.isClosed,
       };
     }
   }

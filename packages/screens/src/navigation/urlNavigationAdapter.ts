@@ -17,7 +17,7 @@ export default class UrlNavigationAdapter {
     NavigationManager.onActiveScreenChanged = this.onScreenActivated;
     window.onpopstate = this.onUrlChanged;
 
-    this.onUrlChanged();
+    return this.onUrlChanged();
   }
 
   stop() {
@@ -43,21 +43,21 @@ export default class UrlNavigationAdapter {
   }
 
   @bound
-  private onUrlChanged() {
+  private async onUrlChanged() {
     const hash = window.location.hash;
 
     if (this.isStarted && hash && hash.startsWith(hashPrefix)) {
       const path = parseUrl(hash.substr(hashPrefix.length));
 
       this.isNavigationSuppressed = true;
-      this.rootViewModel.navigate(path.url, path.query).then(
-        () => (this.isNavigationSuppressed = false),
-        error => {
-          // tslint:disable-next-line: no-console
-          console.error(error);
-          this.isNavigationSuppressed = false;
-        }
-      );
+
+      try {
+        await this.rootViewModel.navigate(path.url, path.query);
+      } catch (error) {
+        // tslint:disable-next-line: no-console
+        console.error(error);
+      }
+      this.isNavigationSuppressed = false;
     }
   }
 }
