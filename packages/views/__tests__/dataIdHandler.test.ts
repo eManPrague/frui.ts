@@ -4,11 +4,11 @@ const testEvent = {
   currentTarget: {
     dataset: { id: 42 },
   },
-};
+} as any;
 
 describe("dataIdHandler", () => {
   it("sends the element 'data-id' attribute to the wrapped function", () => {
-    let handledId: number;
+    let handledId = 0;
     const innerHandler = (id: number) => {
       handledId = id;
     };

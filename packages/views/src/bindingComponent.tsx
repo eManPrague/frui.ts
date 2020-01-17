@@ -23,7 +23,7 @@ export interface IBindingProps<TTarget> {
    * @param property  Name of the bound property on the target entity
    * @param target  The target entity for the binding
    */
-  onValueChanged?: (value: any, property?: keyof TTarget & string, target?: TTarget) => void;
+  onValueChanged?: (value: any, property: keyof TTarget & string, target: TTarget) => void;
 }
 
 /**
@@ -59,7 +59,7 @@ export abstract class BindingComponent<TProps extends IBindingProps<TTarget>, TT
 
   /** Returns value of the bound property */
   protected get value() {
-    const { target, property } = this.props;
+    const { target, property } = this.props as { target: TTarget; property: keyof TTarget & string }; // the cast is a TS compiler workaround
 
     if (!target) {
       //// throw new Error("'target' prop has not been set");
@@ -80,12 +80,14 @@ export abstract class BindingComponent<TProps extends IBindingProps<TTarget>, TT
 
   /** Sets the provided value to the bound property  */
   @action.bound protected setValue(value: any) {
-    const { target, property, onValueChanged } = this.props;
+    const { target, property, onValueChanged } = this.props as { target: TTarget; property: keyof TTarget & string } & IBindingProps<TTarget>; // the cast is a TS compiler workaround
 
-    ensureObservableProperty(target, property, value);
+    if (target && property) {
+      ensureObservableProperty(target, property, value);
 
-    if (onValueChanged) {
-      onValueChanged(value, property, target);
+      if (onValueChanged) {
+        onValueChanged(value, property, target);
+      }
     }
   }
 }

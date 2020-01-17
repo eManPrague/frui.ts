@@ -39,12 +39,12 @@ export default class AutomaticEntityValidator<TTarget extends {}> implements IEn
   }
 }
 
-type IPropertyBoundValidator = (propertyValue: any, entity: any) => string;
+type IPropertyBoundValidator = (propertyValue: any, entity: any) => string | undefined;
 const TrueValidator: IPropertyBoundValidator = _ => undefined;
 
 /** Creates actual validator function for a particular property based on the provided validation rules */
 export function createPropertyValidatorFromRules(propertyName: string, propertyRules: IPropertyValidationRules) {
-  let finalValidator: IPropertyBoundValidator;
+  let finalValidator: IPropertyBoundValidator | undefined;
 
   for (const ruleName in propertyRules) {
     if (propertyRules.hasOwnProperty(ruleName)) {

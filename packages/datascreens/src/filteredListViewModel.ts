@@ -62,7 +62,7 @@ export default abstract class FilteredListViewModel<TEntity, TFilter, TDetail ex
     this.pagingFilter = {
       offset: 0,
       limit: FilteredListViewModel.defaultPageSize,
-      sortColumn: null,
+      sortColumn: undefined,
       sortDirection: SortingDirection.Ascending,
     };
 

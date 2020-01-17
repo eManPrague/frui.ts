@@ -30,9 +30,9 @@ export default class IssuesViewModel extends FilteredListViewModel<Issue, Issues
   }
 
   protected resetFilterValues(filter: IssuesFilter) {
-    filter.issue_id = null;
-    filter.project_id = null;
-    filter.subject = null;
+    filter.issue_id = undefined;
+    filter.project_id = undefined;
+    filter.subject = undefined;
   }
 
   private loadCodebooks() {

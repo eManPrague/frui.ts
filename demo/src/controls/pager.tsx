@@ -13,7 +13,8 @@ const PageButton: React.FunctionComponent<{ onClick: React.MouseEventHandler<HTM
 const Pager: React.FunctionComponent<IPagerProps> = observer(({ paging, filter, onPageChanged }) => {
 
   const pageChangedHandler: React.MouseEventHandler<HTMLButtonElement> = e => {
-    const pageNumber = +e.currentTarget.dataset.page;
+    const page = e.currentTarget.dataset?.page;
+    const pageNumber = page ? +page : 0;
     handlePageChanged(pageNumber, filter, onPageChanged);
   };
 

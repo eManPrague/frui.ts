@@ -1,5 +1,5 @@
 import { bound } from "@frui.ts/helpers";
-import { IArraySplice, IArrayWillChange, intercept, observable, runInAction } from "mobx";
+import { IArrayWillChange, IArrayWillSplice, intercept, observable, runInAction } from "mobx";
 import { IHasNavigationName } from "../navigation/types";
 import ConductorBase from "./conductorBase";
 import { isActivatable, isDeactivatable } from "./helpers";
@@ -95,7 +95,7 @@ export default class ConductorAllChildrenActive<TChild extends IChild<any> & IHa
     }
   }
 
-  @bound private handleChildrenChanged(change: IArrayWillChange<any> | IArraySplice<any>) {
+  @bound private handleChildrenChanged(change: IArrayWillChange<any> | IArrayWillSplice<any>) {
     switch (change.type) {
       case "splice":
         for (const newItem of change.added) {

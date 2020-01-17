@@ -2,7 +2,7 @@ import { IPagingFilter, SortingDirection } from "@frui.ts/data";
 import { observer } from "mobx-react-lite";
 import * as React from "react";
 
-type onSortChangedHandler = (key: string, direction: SortingDirection) => void;
+type onSortChangedHandler = (key: string, direction?: SortingDirection) => void;
 
 export interface ISortingHeaderProps {
   column: string;
@@ -28,11 +28,11 @@ const SortingHeader: React.FunctionComponent<ISortingHeaderProps> = observer(({ 
     }
   };
 
-  return <th onClick={clickHandler}>{children} {getSortIndicator(filter.sortColumn, filter.sortDirection, column)}</th>;
+  return <th onClick={clickHandler}>{children} {filter && getSortIndicator(filter.sortColumn, filter.sortDirection, column)}</th>;
 });
 export default SortingHeader;
 
-function getSortIndicator(currentColumn: string, currentDirection: SortingDirection, column: string) {
+function getSortIndicator(currentColumn: string | undefined, currentDirection: SortingDirection | undefined, column: string) {
   if (column !== currentColumn) {
     return null;
   }

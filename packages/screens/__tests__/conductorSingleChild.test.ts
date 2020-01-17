@@ -96,7 +96,7 @@ describe("ConductorSingleChild", () => {
       await conductor.activateChild(child);
 
       await conductor.deactivateChild(child, true);
-      expect(conductor.activeChild).toBeNull();
+      expect(conductor.activeChild).toBeUndefined();
       expect(child.calls.canClose).toBe(1);
       expect(child.calls.deactivate).toBe(1);
     });

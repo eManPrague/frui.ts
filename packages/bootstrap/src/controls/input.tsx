@@ -17,7 +17,10 @@ export class Input<TTarget> extends BindingComponent<
   @bind protected renderInner() {
     const { noValidation, errorMessage, ...otherProps } = this.inheritedProps;
     const validationError =
-      noValidation !== true && (errorMessage || getValidationMessage(this.props.target, this.props.property));
+      noValidation !== true &&
+      this.props.target &&
+      this.props.property &&
+      (errorMessage || getValidationMessage(this.props.target, this.props.property));
 
     return (
       <>

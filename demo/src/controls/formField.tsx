@@ -6,7 +6,7 @@ import * as React from "react";
 import { IChildProps, IFieldProps } from "./types";
 
 const FormField: React.FunctionComponent<IFormFieldProps<any, IChildProps> & IFieldProps> = observer(props => {
-  const validationMessage = getValidationMessage(props.target, props.property);
+  const validationMessage = props.target && props.property && getValidationMessage(props.target, props.property);
   const isDirty = getDirtyFlag(props.target, props.property);
 
   const childClassName = "form-control " + getControlClassName(!validationMessage, isDirty);
@@ -46,5 +46,5 @@ export function fieldForType<TTarget>(target: TTarget): React.FunctionComponent<
 }
 
 export function fieldForTarget<TTarget>(target: TTarget): React.FunctionComponent<IFormFieldProps<TTarget, IChildProps> & IFieldProps> {
-  return props => <FormField {...props} target={target} />;
+  return (props: any) => <FormField {...props} target={target} />;
 }

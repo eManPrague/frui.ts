@@ -8,7 +8,7 @@ import { IChild, IHasActiveChild } from "./types";
 export default abstract class ConductorBaseWithActiveChild<TChild extends IChild<any> & IHasNavigationName>
   extends ConductorBase<TChild>
   implements IHasActiveChild<TChild> {
-  @observable private activeChildValue: TChild;
+  @observable private activeChildValue?: TChild;
   @computed get activeChild() {
     return this.activeChildValue;
   }
@@ -17,7 +17,7 @@ export default abstract class ConductorBaseWithActiveChild<TChild extends IChild
     return !this.activeChildValue;
   }
 
-  protected async changeActiveChild(newChild: TChild, closePrevious: boolean) {
+  protected async changeActiveChild(newChild: TChild | undefined, closePrevious: boolean) {
     const currentChild = this.activeChild;
     if (currentChild && isDeactivatable(currentChild)) {
       await currentChild.deactivate(closePrevious);

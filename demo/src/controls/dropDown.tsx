@@ -14,7 +14,7 @@ export class DropDown extends BindingComponent<IDropDownProps<any>, any> {
     return (
       <Observer>
         {() => <select className={this.props.className} value={cleanupValue(this.value)} onChange={this.handleValueChanged}>
-          {this.props.allowEmpty && <option value={null} />}
+          {this.props.allowEmpty && <option value={undefined} />}
 
           {this.props.options && this.props.options.map(x => <option key={x.value || 0} value={x.value}>{x.label}</option>)}
         </select>

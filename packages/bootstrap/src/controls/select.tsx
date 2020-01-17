@@ -42,9 +42,12 @@ export class Select<TTarget, TItem> extends BindingComponent<
       ...otherProps
     } = this.inheritedProps;
     const validationError =
-      noValidation !== true && (errorMessage || getValidationMessage(this.props.target, this.props.property));
+      noValidation !== true &&
+      this.props.target &&
+      this.props.property &&
+      (errorMessage || getValidationMessage(this.props.target, this.props.property));
 
-    const options = items.map((x: any) => (
+    const options = items?.map((x: any) => (
       <option key={x[keyProperty]} value={x[keyProperty]}>
         {!!textProperty ? x[textProperty] : x}
       </option>

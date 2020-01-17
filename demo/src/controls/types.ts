@@ -4,7 +4,7 @@ export interface IFieldProps {
 }
 
 export interface IChildProps {
-  id: string;
+  id?: string;
   className: string;
   placeholder: string;
 }

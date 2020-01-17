@@ -14,7 +14,7 @@ export interface IConductor<TChild> {
 }
 
 export interface IHasActiveChild<TChild> {
-  activeChild: TChild;
+  activeChild?: TChild;
 }
 
 export interface IChild<TParent> {

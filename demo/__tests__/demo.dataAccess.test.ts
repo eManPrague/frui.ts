@@ -15,7 +15,7 @@ describe.skip("IssuesRepository", () => {
   test("getAllIssues", async () => {
     const repository = new IssuesRepository(apiFactory);
 
-    const [issues, page] = await repository.getAllIssues(null, { offset: 1, limit: 2 });
+    const [issues, page] = await repository.getAllIssues({}, { offset: 1, limit: 2 });
 
     expect(issues).toBeDefined();
     expect(page.offset).toBe(1);

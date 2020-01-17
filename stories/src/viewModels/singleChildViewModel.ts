@@ -47,7 +47,7 @@ export default class SingleChildViewModel extends ConductorSingleChild<ChildView
       return Promise.resolve(this.child2);
     }
     else {
-      return Promise.resolve(null);
+      return Promise.resolve(undefined);
     }
   }
 }

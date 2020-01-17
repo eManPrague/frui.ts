@@ -26,7 +26,7 @@ export default abstract class ConductorSingleChild<
     }
   }
 
-  protected async deactivateChild(child: TChild, close: boolean) {
+  protected async deactivateChild(child: TChild | undefined, close: boolean) {
     if (!child || this.activeChild !== child) {
       return;
     }
@@ -37,7 +37,7 @@ export default abstract class ConductorSingleChild<
         return;
       }
 
-      await this.changeActiveChild(null, close);
+      await this.changeActiveChild(undefined, close);
     } else {
       if (isDeactivatable(child)) {
         await child.deactivate(false);

@@ -7,7 +7,7 @@ import { IChild, IConductor, IScreen } from "./types";
 
 export default abstract class ScreenBase implements IScreen, IChild<IConductor<ScreenBase>>, IHasNavigationName {
   navigationName: string = this.constructor.name.replace("ViewModel", "");
-  name: string;
+  @observable name: string = this.constructor.name.replace("ViewModel", "");
   parent: IConductor<ScreenBase>;
 
   // child
@@ -29,7 +29,7 @@ export default abstract class ScreenBase implements IScreen, IChild<IConductor<S
   }
 
   // this ensures that activateInner will be called only once even if it takes longer time
-  private activatePromise: Promise<void>;
+  private activatePromise?: Promise<void>;
   private clearActivatePromise: () => void = () => (this.activatePromise = undefined);
   activate() {
     return (
@@ -76,7 +76,7 @@ export default abstract class ScreenBase implements IScreen, IChild<IConductor<S
   }
 
   // this ensures that deactivateInner will be called only once even if it takes a longer time
-  private deactivatePromise: Promise<void>;
+  private deactivatePromise?: Promise<void>;
   private clearDeactivatePromise: () => void = () => (this.deactivatePromise = undefined);
   deactivate(close: boolean) {
     return (

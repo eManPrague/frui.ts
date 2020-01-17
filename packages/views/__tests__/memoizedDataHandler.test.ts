@@ -4,13 +4,13 @@ const testEvent = {
   currentTarget: {
     dataset: { somedatakey: "foobar" },
   },
-};
+} as any;
 
 const somedatakeyHandler = createMemoizedHandler("somedatakey");
 
 describe("memoizedDataHandler", () => {
   it("sends the specified 'data-' attribute to the wrapped function", () => {
-    let handledValue: string;
+    let handledValue = "";
     const innerHandler = (value: string) => {
       handledValue = value;
     };

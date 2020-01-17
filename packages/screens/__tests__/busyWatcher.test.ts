@@ -53,8 +53,11 @@ describe("BusyWatcher", () => {
     it("clears busy when promise resolved", async () => {
       const watcher = new BusyWatcher();
 
-      let handler: () => void;
-      const promise = new Promise((resolve, reject) => { handler = resolve; });
+      // tslint:disable-next-line: no-empty
+      let handler = () => {};
+      const promise = new Promise((resolve, reject) => {
+        handler = resolve;
+      });
       watcher.watch(promise);
 
       expect(watcher.isBusy).toBeTruthy();
@@ -67,8 +70,11 @@ describe("BusyWatcher", () => {
     it("clears busy when promise fails", async () => {
       const watcher = new BusyWatcher();
 
-      let handler: () => void;
-      const promise = new Promise((resolve, reject) => { handler = reject; });
+      // tslint:disable-next-line: no-empty
+      let handler = () => {};
+      const promise = new Promise((resolve, reject) => {
+        handler = reject;
+      });
       watcher.watch(promise);
 
       expect(watcher.isBusy).toBeTruthy();

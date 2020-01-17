@@ -13,7 +13,7 @@ export interface ChildProps {
 }
 
 export const FormField: React.FunctionComponent<IFormFieldProps<any, ChildProps> & FieldProps> = observer(props => {
-  const validationMessage = getValidationMessage(props.target, props.property);
+  const validationMessage = props.target && props.property && getValidationMessage(props.target, props.property);
   const isDirty = getDirtyFlag(props.target, props.property);
   const bordercolor = !!validationMessage ? "red" : (isDirty ? "green" : "black");
 
@@ -38,5 +38,5 @@ export function fieldForType<TTarget>(target: TTarget): React.FunctionComponent<
 }
 
 export function fieldForTarget<TTarget>(target: TTarget): React.FunctionComponent<IFormFieldProps<TTarget, ChildProps> & FieldProps> {
-  return props => <FormField {...props} target={target} />;
+  return (props: any) => <FormField {...props} target={target} />;
 }

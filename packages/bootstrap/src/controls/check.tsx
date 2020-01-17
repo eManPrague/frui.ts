@@ -12,7 +12,7 @@ export class Check<TTarget> extends BindingComponent<
   render() {
     return (
       <Observer>
-        {() => <Form.Check {...this.inheritedProps} checked={!!this.value} onChange={this.handleValueChanged} />}
+        {() => <Form.Check id={this.props.property} {...this.inheritedProps} checked={!!this.value} onChange={this.handleValueChanged} />}
       </Observer>
     );
   }

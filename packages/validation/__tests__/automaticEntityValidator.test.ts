@@ -139,10 +139,10 @@ describe("createPropertyValidatorFromRules()", () => {
   });
 
   test("all validators are called", () => {
-    const mockValidator1 = jest.fn(value => null);
+    const mockValidator1 = jest.fn(value => undefined);
     validatorsRepository.set("mock1", mockValidator1);
 
-    const mockValidator2 = jest.fn(value => null);
+    const mockValidator2 = jest.fn(value => undefined);
     validatorsRepository.set("mock2", mockValidator2);
 
     const entity = {
@@ -157,7 +157,7 @@ describe("createPropertyValidatorFromRules()", () => {
   });
 
   test("parameters are passed to validator", () => {
-    const mockValidator = jest.fn(value => null);
+    const mockValidator = jest.fn(value => undefined);
     validatorsRepository.set("mock", mockValidator);
 
     const entity = {

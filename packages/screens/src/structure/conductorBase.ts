@@ -90,14 +90,14 @@ export default abstract class ConductorBase<TChild extends IChild<any> & IHasNav
     }
   }
 
-  protected findNavigationChild(navigationName: string): Promise<TChild | undefined> {
+  protected findNavigationChild(navigationName: string | undefined): Promise<TChild | undefined> {
     return Promise.resolve(undefined);
   }
 
   // tslint:disable-next-line: no-empty
   protected onChildNavigated(child: TChild | undefined): Promise<any> | void {}
 
-  protected connectChild(item: TChild) {
+  protected connectChild(item: TChild | undefined) {
     if (item) {
       item.parent = this;
     }

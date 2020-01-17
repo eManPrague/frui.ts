@@ -1,12 +1,12 @@
 import NavigationManager from "./navigationManager";
 
 export interface NavigationPath {
-  readonly path: string;
-  readonly params: any;
+  readonly path?: string;
+  readonly params?: any;
   readonly isClosed: boolean;
 }
 
-export function combineNavigationPath(base: string | undefined, path: string) {
+export function combineNavigationPath(base: string | undefined, path: string | undefined) {
   if (base) {
     return path ? base + NavigationManager.pathDelimiter + path : base;
   } else {
@@ -14,7 +14,7 @@ export function combineNavigationPath(base: string | undefined, path: string) {
   }
 }
 
-export function splitNavigationPath(path: string): [string, string] {
+export function splitNavigationPath(path: string): [string?, string?] {
   if (!path) {
     return [undefined, undefined];
   }
