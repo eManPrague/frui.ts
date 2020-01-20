@@ -31,7 +31,7 @@ export function isDirty<TTarget>(target: TTarget, propertyName?: PropertyName<TT
   if (hasDirtyWatcher<TTarget>(target)) {
     return propertyName ? !!target.__dirtycheck.dirtyProperties[propertyName] : target.__dirtycheck.isDirty;
   } else {
-    return true;
+    return false;
   }
 }
 
@@ -47,11 +47,11 @@ export function hasVisibleDirtyChanges<TTarget>(target: TTarget, propertyName?: 
 }
 
 export function checkDirtyChanges<TTarget>(target: any) {
-  if (hasDirtyWatcher(target)) {
+  if (hasDirtyWatcher<TTarget>(target)) {
     runInAction(() => (target.__dirtycheck.isDirtyFlagVisible = true));
     return target.__dirtycheck.isDirty;
   } else {
-    return true;
+    return false;
   }
 }
 

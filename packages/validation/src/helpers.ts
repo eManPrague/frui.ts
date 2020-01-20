@@ -63,3 +63,7 @@ export function validate<TTarget>(target: TTarget) {
     return true;
   }
 }
+
+export function validateAll(items: any[]) {
+  return items.reduce((acc, item) => validate(item) && acc, true);
+}

@@ -51,7 +51,7 @@ export abstract class BindingComponent<TProps extends IBindingProps<TTarget>, TT
    * }
    * ```
    */
-  protected get inheritedProps() {
+  protected get inheritedProps() : Partial<TProps> {
     const { target, property, onValueChanged, ...otherProps } = this.props;
 
     return otherProps as TProps;

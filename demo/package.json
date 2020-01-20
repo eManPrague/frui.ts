@@ -1,7 +1,7 @@
 {
   "name": "@frui.ts/demo",
   "private": true,
-  "version": "0.7.3",
+  "version": "0.8.0",
   "description": "> TODO: description",
   "author": "Augustin Šulc <sulc.gusta@gmail.com>",
   "license": "ISC",
@@ -24,12 +24,12 @@
     "proxy": "lcp --proxyUrl https://redmine.dev.eman.cz"
   },
   "dependencies": {
-    "@frui.ts/apiclient": "^0.7.3",
-    "@frui.ts/data": "^0.7.3",
-    "@frui.ts/datascreens": "^0.7.3",
-    "@frui.ts/dirtycheck": "^0.7.3",
-    "@frui.ts/screens": "^0.7.3",
-    "@frui.ts/validation": "^0.7.3",
-    "@frui.ts/views": "^0.7.3"
+    "@frui.ts/apiclient": "^0.8.0",
+    "@frui.ts/data": "^0.8.0",
+    "@frui.ts/datascreens": "^0.8.0",
+    "@frui.ts/dirtycheck": "^0.8.0",
+    "@frui.ts/screens": "^0.8.0",
+    "@frui.ts/validation": "^0.8.0",
+    "@frui.ts/views": "^0.8.0"
   }
 }
