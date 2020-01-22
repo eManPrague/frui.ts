@@ -60,7 +60,7 @@ export default abstract class ConductorBase<TChild extends IChild<any> & IHasNav
     }
   }
 
-  async navigate(path: string, params: any) {
+  async navigate(path: string | undefined, params: any) {
     const segments = splitNavigationPath(path);
     const childToActivate = await this.findNavigationChild(segments[0]);
 

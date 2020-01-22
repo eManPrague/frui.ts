@@ -14,7 +14,7 @@ export function combineNavigationPath(base: string | undefined, path: string | u
   }
 }
 
-export function splitNavigationPath(path: string): [string?, string?] {
+export function splitNavigationPath(path: string | undefined): [string?, string?] {
   if (!path) {
     return [undefined, undefined];
   }

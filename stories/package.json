@@ -1,7 +1,7 @@
 {
   "name": "@frui.ts/stories",
   "private": true,
-  "version": "0.8.0",
+  "version": "0.8.1",
   "description": "> TODO: description",
   "author": "Augustin Šulc <sulc.gusta@gmail.com>",
   "license": "ISC",
@@ -20,11 +20,11 @@
     "prebuild": "rimraf dist"
   },
   "dependencies": {
-    "@frui.ts/bootstrap": "^0.8.0",
-    "@frui.ts/dirtycheck": "^0.8.0",
-    "@frui.ts/screens": "^0.8.0",
-    "@frui.ts/validation": "^0.8.0",
-    "@frui.ts/views": "^0.8.0",
+    "@frui.ts/bootstrap": "^0.8.1",
+    "@frui.ts/dirtycheck": "^0.8.1",
+    "@frui.ts/screens": "^0.8.1",
+    "@frui.ts/validation": "^0.8.1",
+    "@frui.ts/views": "^0.8.1",
     "bootstrap": "^4.3.1",
     "react-bootstrap": "^1.0.0-beta.12"
   }
