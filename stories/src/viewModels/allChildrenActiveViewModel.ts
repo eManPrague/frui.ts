@@ -3,8 +3,7 @@ import { action } from "mobx";
 import ChildViewModel from "./childViewModel";
 import { notifyRoutePathChanged } from "./helpers";
 
-export default class AllChildrenActiveViewModel extends ConductorAllChildrenActive<ChildViewModel>
-{
+export default class AllChildrenActiveViewModel extends ConductorAllChildrenActive<ChildViewModel> {
   private childCounter = 1;
 
   @action.bound addChild() {
@@ -28,12 +27,11 @@ export default class AllChildrenActiveViewModel extends ConductorAllChildrenActi
   protected findNavigationChild(name: string) {
     const child = this.children.find(x => x.navigationName === name);
     if (child) {
-      return Promise.resolve(child);
-    }
-    else {
+      return child;
+    } else {
       this.childCounter = parseInt(name, 0);
       const newChild = this.addChild();
-      return Promise.resolve(newChild);
+      return newChild;
     }
   }
 }

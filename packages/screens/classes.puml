@@ -10,7 +10,7 @@ class ScreenBase {
   +isActive: boolean
   +activate(): Promise
   +deactivate(close: boolean): Promise
-  +canClose(): Promise<boolean>
+  +canClose(): Promise<boolean> | boolean
 
   .. Activation hooks ..
   #onInitialize(): Promise
@@ -30,11 +30,11 @@ abstract class ConductorBase {
   #activateChild(child: TChild): Promise
 
   __ Navigation functions __
-  +navigate(path: string, params: any): Promise
+  +navigate(path: string, params: any): Promise<any> | void
   +getChildNavigationPath(child: TChild, params: any): NavigationPath
 
   .. Extension functions ..
-  #findNavigationChild(navigationName: string): Promise<TChild>
+  #findNavigationChild(navigationName: string): Promise<TChild> | TChild
   #onChildNavigated(child): Promise<any> | void
   #applyNavigationParams(params: any): Promise<any> | void
 }

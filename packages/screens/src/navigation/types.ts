@@ -10,6 +10,6 @@ export interface IHasNavigationParams {
 }
 
 export interface ICanNavigate {
-  navigate(path: string | undefined, params: any): Promise<any>;
+  navigate(path: string | undefined, params: any): Promise<any> | void;
   getChildNavigationPath(item: IHasNavigationName, params: any): NavigationPath;
 }

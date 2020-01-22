@@ -5,8 +5,8 @@ title Frui.ts screen interfaces
 interface IActivatable {
   +isActive: boolean
 
-  +activate(): Promise<any>
-  +deactivate(boolean close): Promise<any>
+  +activate(): Promise<any> | void
+  +deactivate(boolean close): Promise<any> | void
 }
 
 interface IScreen {
@@ -16,8 +16,8 @@ interface IScreen {
 IScreen ..|> IActivatable
 
 interface IConductor<TChild> {
-  +activateChild(TChild child): Promise<any>
-  +closeChild(TChild child): Promise<any>
+  +activateChild(TChild child): Promise<any> | void
+  +closeChild(TChild child): Promise<any> | void
 }
 
 interface IHasActiveChild<TChild> {
@@ -26,12 +26,12 @@ interface IHasActiveChild<TChild> {
 
 interface IChild<TParent> {
   +parent: TParent
-  +canClose(): Promise<boolean>
-  +requestClose(): Promise<any>
+  +canClose(): Promise<boolean> | boolean
+  +requestClose(): Promise<any> | void
 }
 
 interface ICanNavigate {
-  +navigate(path: string, params: any): Promise
+  +navigate(path: string, params: any): Promise<any> | void
   +getChildNavigationPath(item: IHasNavigationName, params: any): NavigationPath
 }
 

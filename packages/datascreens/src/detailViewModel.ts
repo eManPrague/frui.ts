@@ -1,4 +1,4 @@
-import { BusyWatcher, IConductor, ScreenBase } from "@frui.ts/screens";
+import { BusyWatcher, IConductor, ScreenBase, watchBusy } from "@frui.ts/screens";
 import { action, observable } from "mobx";
 
 export default abstract class DetailViewModel<TDetail> extends ScreenBase {
@@ -9,9 +9,10 @@ export default abstract class DetailViewModel<TDetail> extends ScreenBase {
     this.item = item;
   }
 
-  onInitialize() {
-    const process = this.loadDetail().then(this.setItem);
-    return this.busyWatcher.watch(process);
+  @watchBusy
+  async onInitialize() {
+    const item = await this.loadDetail();
+    this.setItem(item);
   }
-  protected abstract loadDetail(): Promise<TDetail>;
+  protected abstract loadDetail(): Promise<TDetail> | TDetail;
 }

@@ -1,7 +1,7 @@
 export interface IActivatable {
   isActive: boolean;
-  activate(): Promise<any>;
-  deactivate(close: boolean): Promise<any>;
+  activate(): Promise<any> | void;
+  deactivate(close: boolean): Promise<any> | void;
 }
 
 export interface IScreen extends IActivatable {
@@ -9,8 +9,8 @@ export interface IScreen extends IActivatable {
 }
 
 export interface IConductor<TChild> {
-  activateChild(child: TChild): Promise<any>;
-  closeChild(child: TChild): Promise<any>;
+  activateChild(child: TChild): Promise<any> | void;
+  closeChild(child: TChild): Promise<any> | void;
 }
 
 export interface IHasActiveChild<TChild> {
@@ -19,8 +19,8 @@ export interface IHasActiveChild<TChild> {
 
 export interface IChild<TParent> {
   parent: TParent;
-  canClose(): Promise<boolean>;
-  requestClose(): Promise<any>;
+  canClose(): Promise<boolean> | boolean;
+  requestClose(): Promise<any> | void;
 }
 
 export interface IBusyWatcher {

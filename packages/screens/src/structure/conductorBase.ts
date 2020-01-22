@@ -17,8 +17,8 @@ export default abstract class ConductorBase<TChild extends IChild<any> & IHasNav
   implements IConductor<TChild>, ICanNavigate {
   protected childNavigationPathClosed = false;
 
-  abstract activateChild(child: TChild): Promise<any>;
-  protected abstract deactivateChild(child: TChild, close: boolean): Promise<any>;
+  abstract activateChild(child: TChild): Promise<any> | void;
+  protected abstract deactivateChild(child: TChild, close: boolean): Promise<any> | void;
 
   closeChild(child: TChild) {
     return this.deactivateChild(child, true);
@@ -90,8 +90,8 @@ export default abstract class ConductorBase<TChild extends IChild<any> & IHasNav
     }
   }
 
-  protected findNavigationChild(navigationName: string | undefined): Promise<TChild | undefined> {
-    return Promise.resolve(undefined);
+  protected findNavigationChild(navigationName: string | undefined): Promise<TChild | undefined> | TChild | undefined {
+    return undefined;
   }
 
   // tslint:disable-next-line: no-empty

@@ -4,7 +4,6 @@ import ChildViewModel from "./childViewModel";
 import { notifyRoutePathChanged } from "./helpers";
 
 export default class SingleChildViewModel extends ConductorSingleChild<ChildViewModel> {
-
   private child1: ChildViewModel;
   private child2: ChildViewModel;
 
@@ -41,13 +40,11 @@ export default class SingleChildViewModel extends ConductorSingleChild<ChildView
 
   protected findNavigationChild(navigationName: string) {
     if (this.child1.navigationName === navigationName) {
-      return Promise.resolve(this.child1);
-    }
-    else if (this.child2.navigationName === navigationName) {
-      return Promise.resolve(this.child2);
-    }
-    else {
-      return Promise.resolve(undefined);
+      return this.child1;
+    } else if (this.child2.navigationName === navigationName) {
+      return this.child2;
+    } else {
+      return undefined;
     }
   }
 }

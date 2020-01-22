@@ -12,12 +12,12 @@ export default abstract class ScreenBase implements IScreen, IChild<IConductor<S
 
   // child
 
-  canClose() {
-    return Promise.resolve(true);
+  canClose(): Promise<boolean> | boolean {
+    return true;
   }
 
-  @bound requestClose() {
-    return this.parent ? this.parent.closeChild(this) : Promise.resolve();
+  @bound requestClose(): Promise<any> | void {
+    return this.parent?.closeChild(this);
   }
 
   // activation
@@ -46,10 +46,7 @@ export default abstract class ScreenBase implements IScreen, IChild<IConductor<S
     await this.initialize();
 
     try {
-      const activateResult = this.onActivate();
-      if (activateResult) {
-        await activateResult;
-      }
+      await this.onActivate();
     } catch (error) {
       // tslint:disable-next-line: no-console
       console.error(error);
@@ -62,10 +59,7 @@ export default abstract class ScreenBase implements IScreen, IChild<IConductor<S
   private async initialize() {
     if (!this.isInitialized) {
       try {
-        const initializeResult = this.onInitialize();
-        if (initializeResult) {
-          await initializeResult;
-        }
+        await this.onInitialize();
       } catch (error) {
         // tslint:disable-next-line: no-console
         console.error(error);
@@ -90,10 +84,7 @@ export default abstract class ScreenBase implements IScreen, IChild<IConductor<S
   private async deactivateInner(close: boolean) {
     if (this.isActiveValue || (this.isInitialized && close)) {
       try {
-        const deactivateResult = this.onDeactivate(close);
-        if (deactivateResult) {
-          await deactivateResult;
-        }
+        await this.onDeactivate(close);
       } catch (error) {
         // tslint:disable-next-line: no-console
         console.error(error);
@@ -103,17 +94,11 @@ export default abstract class ScreenBase implements IScreen, IChild<IConductor<S
     }
   }
 
-  protected onInitialize(): Promise<any> | void {
-    return;
-  }
+  protected onInitialize(): Promise<any> | void {}
 
-  protected onActivate(): Promise<any> | void {
-    return;
-  }
+  protected onActivate(): Promise<any> | void {}
 
-  protected onDeactivate(close: boolean): Promise<any> | void {
-    return;
-  }
+  protected onDeactivate(close: boolean): Promise<any> | void {}
 
   // navigation
 

@@ -6,12 +6,15 @@ describe("Screen", () => {
       const screen = new TestScreen();
       screen.stopOnActivate = true;
 
-      screen.activate();
-      screen.activate();
+      const activatePromise1 = screen.activate();
+      const activatePromise2 = screen.activate();
+
+      // give some time for the activate promises to start
+      await new Promise(resolve => setTimeout(resolve));
 
       screen.finishActivate();
 
-      await Promise.resolve();
+      await Promise.all([activatePromise1, activatePromise2]);
 
       expect(screen.initialized).toBe(1);
       expect(screen.activated).toBe(1);

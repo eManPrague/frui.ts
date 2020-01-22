@@ -89,9 +89,8 @@ export default class ConductorOneChildActive<
     }
   }
 
-  protected findNavigationChild(name: string): Promise<TChild | undefined> {
-    const child = this.children.find(x => x.navigationName === name);
-    return Promise.resolve(child);
+  protected findNavigationChild(name: string): Promise<TChild | undefined> | TChild | undefined {
+    return this.children.find(x => x.navigationName === name);
   }
 
   protected async onDeactivate(close: boolean) {
