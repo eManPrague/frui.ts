@@ -20,7 +20,8 @@
     "build": "lerna run build",
     "test": "jest",
     "storybook": "start-storybook -p 9001 -c .storybook",
-    "lint": "tslint --project ."
+    "lint": "tslint --project .",
+    "validate": "npm run lint && npm run cleanbuild && npm run test && npm run publish"
   },
   "repository": {
     "type": "git",

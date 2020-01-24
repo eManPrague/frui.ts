@@ -30,8 +30,7 @@ export default class OneChildActiveViewModel extends ConductorOneChildActive<Chi
       return child;
     } else {
       this.childCounter = parseInt(name, 0);
-      const newChild = this.addChild();
-      return newChild;
+      return this.addChild();
     }
   }
 }

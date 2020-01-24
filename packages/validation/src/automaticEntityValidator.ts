@@ -15,7 +15,7 @@ export default class AutomaticEntityValidator<TTarget extends {}> implements IEn
 
     for (const propertyName in entityValidationRules) {
       if (entityValidationRules.hasOwnProperty(propertyName)) {
-        const rules = entityValidationRules[propertyName];
+        const rules = (entityValidationRules as Record<string, IPropertyValidationRules>)[propertyName];
 
         const validator = createPropertyValidatorFromRules(propertyName, rules);
         if (!validator) {

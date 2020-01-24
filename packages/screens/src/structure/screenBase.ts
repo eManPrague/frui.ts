@@ -6,8 +6,8 @@ import { IHasNavigationName } from "../navigation/types";
 import { IChild, IConductor, IScreen } from "./types";
 
 export default abstract class ScreenBase implements IScreen, IChild<IConductor<ScreenBase>>, IHasNavigationName {
-  navigationName: string = this.constructor.name.replace("ViewModel", "");
-  @observable name: string = this.constructor.name.replace("ViewModel", "");
+  navigationName: string;
+  @observable name: string;
   parent: IConductor<ScreenBase>;
 
   // child

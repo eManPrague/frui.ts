@@ -2,6 +2,7 @@
   "extends": ["@eman/tslint-config"],
   "rules": {
     "no-unused-variable": { "severity": "off" },
+    "no-empty": [true, "allow-empty-catch", "allow-empty-functions"],
     "max-line-length": {
       "options": {
         "ignore-pattern": "class [a-zA-Z]+ implements |^export {(.*?)}"

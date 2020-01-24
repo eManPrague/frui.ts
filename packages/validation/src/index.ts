@@ -8,4 +8,4 @@ export {
   removeError,
 } from "./manualEntityValidator";
 export * from "./types";
-export { default as validatorsRepository } from "./validatorsRepository";
+export { default as validatorsRepository, IValidator, IValidatorsRepository } from "./validatorsRepository";

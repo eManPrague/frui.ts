@@ -50,12 +50,22 @@ export interface IManualEntityValidator<TTarget> extends IEntityValidator<TTarge
  * }
  * ```
  */
-export type IEntityValidationRules<TTarget> =
-  Partial<Record<PropertyName<TTarget>, IPropertyValidationRules>> & { [propertyName: string]: IPropertyValidationRules };
+export type IEntityValidationRules<TTarget, TRuleNames = string> = Partial<
+  Record<PropertyName<TTarget>, IPropertyValidationRules<TRuleNames>>
+>;
+
+/**
+ * Contains validation definition for the whole entity.
+ * Each key represents a single validated property.
+ */
+export type ITypedEntityValidationRules<TTarget, TRules> = Partial<
+  Record<PropertyName<TTarget>, ITypedPropertyValidationRules<TRules>>
+>;
 
 /**
  * Contains validation rules for a single property.
  * Each key represents a validation rule, with rule-specific params as value.
+ * You can restrict the list of possible keys
  *
  * Example:
  * ```ts
@@ -65,9 +75,13 @@ export type IEntityValidationRules<TTarget> =
  * }
  * ```
  */
-export interface IPropertyValidationRules {
-  [ruleName: string]: any;
-}
+export type IPropertyValidationRules<TRuleNames = string> = Partial<Record<string & TRuleNames, any>>;
+
+/**
+ * Contains validation rules for a single property,
+ * based on a TRules type with all rules and parameters.
+ */
+export type ITypedPropertyValidationRules<TRules> = IPropertyValidationRules<keyof TRules> & Partial<TRules>;
 
 /** Represents an entity with attached entity validator */
 export interface IHasValidation<TTarget> {

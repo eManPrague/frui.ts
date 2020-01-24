@@ -10,7 +10,9 @@
  */
 export type IValidator = (propertyValue: any, propertyName: string, entity: any, params: any) => string | undefined;
 
-const validatorsRepository = new Map<string, IValidator>();
+export type IValidatorsRepository<TRuleNames> = Map<TRuleNames, IValidator>;
+
+const validatorsRepository = new Map<string, IValidator>() as IValidatorsRepository<string>;
 
 /**
  * Repository of validators used by [[AutomaticEntityValidator]]
