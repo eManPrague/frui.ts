@@ -5,6 +5,10 @@ class TestConductor<TChild extends ChildMock> extends ConductorSingleChild<TChil
   deactivateChild(child: TChild, close: boolean) {
     return super.deactivateChild(child, close);
   }
+
+  tryDeactivateChild(child: TChild, isClosing: boolean) {
+    return super.tryDeactivateChild(child, isClosing);
+  }
 }
 
 describe("ConductorSingleChild", () => {
@@ -13,7 +17,7 @@ describe("ConductorSingleChild", () => {
       const child = new ChildMock();
       const conductor = new TestConductor<ChildMock>();
 
-      await conductor.activateChild(child);
+      await conductor.tryActivateChild(child);
       expect(conductor.isActive).toBeFalsy();
       expect(child.calls.activate).toBeUndefined();
 
@@ -29,7 +33,7 @@ describe("ConductorSingleChild", () => {
       const conductor = new TestConductor<ChildMock>();
 
       await conductor.activate();
-      await conductor.activateChild(child);
+      await conductor.tryActivateChild(child);
       expect(child.calls.activate).toBe(1);
       expect(child.calls.deactivate).toBeUndefined();
 
@@ -38,14 +42,14 @@ describe("ConductorSingleChild", () => {
     });
   });
 
-  describe("activateChild", () => {
+  describe("tryActivateChild", () => {
     it("sets the new child as activeChild", async () => {
       const child = new ChildMock();
       const conductor = new TestConductor<ChildMock>();
 
       expect(conductor.activeChild).toBeUndefined();
 
-      await conductor.activateChild(child);
+      await conductor.tryActivateChild(child);
 
       expect(conductor.activeChild).toBe(child);
       expect(child.calls.activate).toBeUndefined();
@@ -58,7 +62,7 @@ describe("ConductorSingleChild", () => {
       await conductor.activate();
       expect(conductor.isActive).toBeTruthy();
 
-      await conductor.activateChild(child);
+      await conductor.tryActivateChild(child);
 
       expect(conductor.activeChild).toBe(child);
       expect(child.calls.activate).toBe(1);
@@ -67,37 +71,26 @@ describe("ConductorSingleChild", () => {
     it("closes the current activeChild", async () => {
       const child1 = new ChildMock();
       const conductor = new TestConductor<ChildMock>();
-      await conductor.activateChild(child1);
+      await conductor.tryActivateChild(child1);
 
       const child2 = new ChildMock();
-      await conductor.activateChild(child2);
+      await conductor.tryActivateChild(child2);
 
       expect(conductor.activeChild).toBe(child2);
       expect(child1.calls.deactivate).toBe(1);
     });
   });
 
-  describe("deactivateChild", () => {
-    it("deactivates the current activeChild", async () => {
-      const child = new ChildMock();
-      const conductor = new TestConductor<ChildMock>();
-      await conductor.activateChild(child);
-
-      await conductor.deactivateChild(child, false);
-      expect(conductor.activeChild).toBe(child);
-      expect(child.calls.canClose).toBeUndefined();
-      expect(child.calls.deactivate).toBe(1);
-    });
-
+  describe("tryDeactivateChild", () => {
     it("closes the current activeChild if possible", async () => {
       const child = new ChildMock();
       child.isCloseAllowed = true;
       const conductor = new TestConductor<ChildMock>();
-      await conductor.activateChild(child);
+      await conductor.tryActivateChild(child);
 
-      await conductor.deactivateChild(child, true);
+      await conductor.tryDeactivateChild(child, true);
       expect(conductor.activeChild).toBeUndefined();
-      expect(child.calls.canClose).toBe(1);
+      expect(child.calls.canDeactivate).toBe(1);
       expect(child.calls.deactivate).toBe(1);
     });
 
@@ -105,12 +98,25 @@ describe("ConductorSingleChild", () => {
       const child = new ChildMock();
       child.isCloseAllowed = false;
       const conductor = new TestConductor<ChildMock>();
-      await conductor.activateChild(child);
+      await conductor.tryActivateChild(child);
 
-      await conductor.deactivateChild(child, true);
+      await conductor.tryDeactivateChild(child, true);
       expect(conductor.activeChild).toBe(child);
-      expect(child.calls.canClose).toBe(1);
+      expect(child.calls.canDeactivate).toBe(1);
       expect(child.calls.deactivate).toBeUndefined();
+    });
+  });
+
+  describe("deactivateChild", () => {
+    it("deactivates the current activeChild", async () => {
+      const child = new ChildMock();
+      const conductor = new TestConductor<ChildMock>();
+      await conductor.tryActivateChild(child);
+
+      await conductor.deactivateChild(child, false);
+      expect(conductor.activeChild).toBe(child);
+      expect(child.calls.canDeactivate).toBeUndefined();
+      expect(child.calls.deactivate).toBe(1);
     });
   });
 });

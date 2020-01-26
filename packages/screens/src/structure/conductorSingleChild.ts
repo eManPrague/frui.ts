@@ -1,57 +1,30 @@
 import { IHasNavigationName } from "../navigation/types";
 import ConductorBaseWithActiveChild from "./conductorBaseWithActiveChild";
-import { isActivatable, isDeactivatable } from "./helpers";
+import { isDeactivatable } from "./helpers";
 import { IChild } from "./types";
 
 export default abstract class ConductorSingleChild<
   TChild extends IChild<any> & IHasNavigationName
 > extends ConductorBaseWithActiveChild<TChild> {
-  async activateChild(child: TChild) {
-    if (child && this.activeChild === child) {
-      if (this.isActive && isActivatable(child)) {
-        await child.activate();
-      }
-      return;
-    }
-
-    if (this.activeChild) {
-      const canCloseCurrentChild = await this.activeChild.canClose();
-      if (!canCloseCurrentChild) {
-        return;
-      }
-    }
-
-    if (this.activeChild !== child) {
-      await this.changeActiveChild(child, true);
-    }
-  }
-
-  protected async deactivateChild(child: TChild | undefined, close: boolean) {
+  protected async deactivateChild(child: TChild | undefined, isClosing: boolean) {
     if (!child || this.activeChild !== child) {
       return;
     }
 
-    if (close) {
-      const canCloseCurrentChild = await this.activeChild.canClose();
-      if (!canCloseCurrentChild) {
-        return;
-      }
-
-      await this.changeActiveChild(undefined, close);
-    } else {
-      if (isDeactivatable(child)) {
-        await child.deactivate(false);
-      }
+    if (isClosing) {
+      await this.changeActiveChild(undefined, isClosing);
+    } else if (isDeactivatable(child)) {
+      await child.deactivate(false);
     }
   }
 
-  protected async onDeactivate(close: boolean) {
-    await this.deactivateChild(this.activeChild, close);
+  protected async onDeactivate(isClosing: boolean) {
+    await this.deactivateChild(this.activeChild, isClosing);
   }
 
-  protected onChildNavigated(child: TChild | undefined) {
+  protected async onChildNavigated(child: TChild | undefined) {
     if (!child && this.activeChild) {
-      return this.closeChild(this.activeChild);
+      await this.closeChild(this.activeChild, false);
     }
   }
 }

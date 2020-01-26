@@ -23,13 +23,13 @@ These components are heavily inspired by the Caliburn.Micro framework from .NET 
 - `isActive` - observable property indicating whether the screen is currently active/visible in the application
 - `onInitialize()`, `onActivate()`, `onDeactivate()` - override these functions in derived class if you need to react to the respective events. If overriding in conductors, don't forget to call the function from base class (`super`) as well.
 
-- `canClose()` - use this function in views to enable/disable close button. You can override this function and implement custom logic. Conductors override this function and forward it to `canClose()` from their children.
+- `canDeactivate()` - use this function in views to enable/disable close button. You can override this function and implement custom logic. Conductors override this function and forward it to `canDeactivate()` from their children.
 - `requestClose()` - use this function to ask the screen's parent to close the screen.
 
 #### Example
 
 ```html
-<button disabled="{!vm.canClose()}" onClick="{vm.requestClose}">Close</button>
+<button disabled="{!vm.canDeactivate()}" onClick="{vm.requestClose}">Close</button>
 ```
 
 ## `ConductorSingleChild`
@@ -37,9 +37,9 @@ These components are heavily inspired by the Caliburn.Micro framework from .NET 
 ### Useful functionality
 
 - `activeChild` - observable property with the currently selected child
-- `activateChild(child)` - call this function to change the currently selected child. Automatically closes the old child if possible (calls `canClose` on the child) and assigns `parent` to the new one.
-- `closeChild(child)` - use to properly close the child (calls `canClose`)
-- `findNavigationChild(navigationName)` - implement this function to return proper child view model based on the navigation name provided. It is automatically called when navigating, however, you can reuse it in your logic as well (e.g., when creating a child for `activateChild`).
+- `tryActivateChild(child)` - call this function to change the currently selected child. Automatically closes the old child if possible (calls `canDeactivate` on the child) and assigns `parent` to the new one.
+- `closeChild(child)` - use to properly close the child (calls `canDeactivate`)
+- `findNavigationChild(navigationName)` - implement this function to return proper child view model based on the navigation name provided. It is automatically called when navigating, however, you can reuse it in your logic as well (e.g., when creating a child for `tryActivateChild`).
 - `onChildNavigated(child)` - implement this function to do some actions after navigation is done
 
 ## `ConductorOneChildActive`
@@ -48,15 +48,15 @@ These components are heavily inspired by the Caliburn.Micro framework from .NET 
 
 - `activeChild` - observable property with the currently selected child
 - `children` - add all possible children here. Just adding a child to the list assigns its `parent` property.
-- `activateChild(child)` - call this function to switch to another child
-- `closeChild(child)` - use to properly close the child (calls `canClose`) and remove it from `children`
+- `tryActivateChild(child)` - call this function to switch to another child
+- `closeChild(child)` - use to properly close the child (calls `canDeactivate`) and remove it from `children`
 
 ## `ConductorAllChildrenActive`
 
 ### Useful functionality
 
 - `children` - add all possible children here. Just adding a child to the list assigns its `parent` property.
-- `closeChild(child)` - use to properly close the child (calls `canClose`) and remove it from `children`
+- `closeChild(child)` - use to properly close the child (calls `canDeactivate`) and remove it from `children`
 
 ## Busywatcher
 

@@ -23,12 +23,12 @@ export default class SingleChildViewModel extends ConductorSingleChild<ChildView
 
   @action.bound
   selectChild1() {
-    this.activateChild(this.child1);
+    this.tryActivateChild(this.child1);
   }
 
   @action.bound
   selectChild2() {
-    this.activateChild(this.child2);
+    this.tryActivateChild(this.child2);
   }
 
   protected onActivate() {

@@ -23,7 +23,7 @@ storiesOf("Navigation", module)
       <h2>Demo navigation</h2>
       <Observer>{() =>
         <React.Fragment>
-          {rootViewModel.children.map(x => <button key={x.name} onClick={() => rootViewModel.activateChild(x)}>{x.name}</button>)}
+          {rootViewModel.children.map(x => <button key={x.name} onClick={() => rootViewModel.tryActivateChild(x)}>{x.name}</button>)}
         </React.Fragment>}
       </Observer>
 

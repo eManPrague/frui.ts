@@ -23,7 +23,7 @@ export function attachAutomaticValidator<TTarget>(
  */
 export function attachManualValidator<TTarget>(target: TTarget, errorsImmediatelyVisible = false) {
   const typedTarget = target as TTarget & IHasManualValidation<TTarget>;
-  typedTarget.__validation = new ManualEntityValidator(target, errorsImmediatelyVisible);
+  typedTarget.__validation = new ManualEntityValidator<TTarget>(errorsImmediatelyVisible);
   return typedTarget;
 }
 

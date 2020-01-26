@@ -2,7 +2,7 @@ import { bound } from "@frui.ts/helpers";
 import { IArrayWillChange, IArrayWillSplice, intercept, IObservableArray, observable, runInAction } from "mobx";
 import { IHasNavigationName } from "../navigation/types";
 import ConductorBaseWithActiveChild from "./conductorBaseWithActiveChild";
-import { isActivatable, isDeactivatable } from "./helpers";
+import { canDeactivate, isDeactivatable } from "./helpers";
 import { IChild } from "./types";
 
 export default class ConductorOneChildActive<
@@ -15,96 +15,54 @@ export default class ConductorOneChildActive<
     intercept(this.children, this.handleChildrenChanged);
   }
 
-  async canClose() {
-    let canCloseSelf = true;
-    const childrenToClose = [] as TChild[];
+  async canDeactivate(isClosing: boolean) {
+    const affectedChildren = isClosing ? this.children : [this.activeChild]; // optimization
 
-    for (const child of this.children) {
-      const canClose = await child.canClose();
-      if (canClose) {
-        childrenToClose.push(child);
-      } else {
-        canCloseSelf = false;
+    for (const child of affectedChildren) {
+      const canChildDeactivate = await canDeactivate(child, isClosing);
+      if (!canChildDeactivate) {
+        return false;
       }
     }
 
-    for (const child of childrenToClose) {
-      if (isDeactivatable(child)) {
-        await child.deactivate(true);
-      }
-    }
-
-    if (childrenToClose.length !== this.children.length) {
-      runInAction(() => {
-        for (const child of childrenToClose) {
-          this.children.remove(child);
-        }
-      });
-
-      this.activateChild(this.children[0]);
-    } else {
-      runInAction(() => this.children.clear());
-    }
-
-    return canCloseSelf;
+    return true;
   }
 
-  async activateChild(child: TChild) {
-    if (child && this.activeChild === child) {
-      if (this.isActive && isActivatable(child)) {
-        await child.activate();
-      }
-      return;
-    }
-
-    this.connectChild(child);
-    await this.changeActiveChild(child, false);
-  }
-
-  protected async deactivateChild(child: TChild | undefined, close: boolean) {
+  protected async deactivateChild(child: TChild | undefined, isClosing: boolean) {
     if (!child) {
       return;
     }
 
-    if (!close) {
-      if (isDeactivatable(child)) {
-        await child.deactivate(false);
+    if (isClosing) {
+      await this.closeChildCore(child);
+      runInAction(() => this.children.remove(child));
+    } else if (isDeactivatable(child)) {
+      await child.deactivate(isClosing);
+    }
+  }
+
+  protected async onDeactivate(isClosing: boolean) {
+    if (isClosing) {
+      for (const child of this.children) {
+        if (isDeactivatable(child)) {
+          await child.deactivate(isClosing);
+        }
       }
-      return;
-    } else {
-      const canClose = await child.canClose();
-      if (canClose) {
-        await this.closeChildCore(child);
-        runInAction(() => this.children.remove(child));
-      }
+
+      this.children.clear();
+    } else if (this.activeChild && isDeactivatable(this.activeChild)) {
+      await this.activeChild.deactivate(isClosing);
     }
   }
 
   protected connectChild(child: TChild) {
-    if (child) {
-      const currentIndex = this.children.indexOf(child);
-      if (currentIndex === -1) {
-        runInAction(() => this.children.push(child));
-      }
+    if (child && !this.children.includes(child)) {
+      runInAction(() => this.children.push(child));
     }
   }
 
   protected findNavigationChild(name: string): Promise<TChild | undefined> | TChild | undefined {
     return this.children.find(x => x.navigationName === name);
-  }
-
-  protected async onDeactivate(close: boolean) {
-    if (close) {
-      for (const child of this.children) {
-        if (isDeactivatable(child)) {
-          await child.deactivate(true);
-        }
-      }
-
-      this.children.clear();
-    } else {
-      await this.deactivateChild(this.activeChild, false);
-    }
   }
 
   private async closeChildCore(child: TChild) {
@@ -119,7 +77,6 @@ export default class ConductorOneChildActive<
       }
     }
   }
-
   private determineNextChildToActivate(children: IObservableArray<TChild>, lastIndex: number) {
     if (lastIndex > 0) {
       return children[lastIndex - 1];

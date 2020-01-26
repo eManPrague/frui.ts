@@ -5,6 +5,10 @@ class TestConductor<TChild extends ChildMock> extends ConductorAllChildrenActive
   deactivateChild(child: TChild, close: boolean) {
     return super.deactivateChild(child, close);
   }
+
+  tryDeactivateChild(child: TChild, isClosing: boolean) {
+    return super.tryDeactivateChild(child, isClosing);
+  }
 }
 
 describe("ConductorAllChildrenActive", () => {
@@ -50,7 +54,7 @@ describe("ConductorAllChildrenActive", () => {
     });
   });
 
-  describe("activateChild", () => {
+  describe("tryActivateChild", () => {
     it("activates the new child if active itsef", async () => {
       const child = new ChildMock();
       const conductor = new TestConductor<ChildMock>();
@@ -58,8 +62,36 @@ describe("ConductorAllChildrenActive", () => {
       await conductor.activate();
       expect(conductor.isActive).toBeTruthy();
 
-      await conductor.activateChild(child);
-      expect(child.calls.activate).toBe(1);
+      await conductor.tryActivateChild(child);
+      expect(child.calls.activate).toBeTruthy();
+    });
+  });
+
+  describe("tryDeactivateChild", () => {
+    it("closes the child if possible", async () => {
+      const child = new ChildMock();
+      child.isCloseAllowed = true;
+      const conductor = new TestConductor<ChildMock>();
+      await conductor.tryActivateChild(child);
+
+      const result = await conductor.tryDeactivateChild(child, true);
+      expect(conductor.children).not.toContain(child);
+      expect(child.calls.canDeactivate).toBe(1);
+      expect(child.calls.deactivate).toBe(1);
+      expect(result).toBe(true);
+    });
+
+    it("does not close the child if not allowed to close", async () => {
+      const child = new ChildMock();
+      child.isCloseAllowed = false;
+      const conductor = new TestConductor<ChildMock>();
+      await conductor.tryActivateChild(child);
+
+      const result = await conductor.tryDeactivateChild(child, true);
+      expect(conductor.children).toContain(child);
+      expect(child.calls.canDeactivate).toBe(1);
+      expect(child.calls.deactivate).toBeUndefined();
+      expect(result).toBe(false);
     });
   });
 
@@ -67,33 +99,11 @@ describe("ConductorAllChildrenActive", () => {
     it("deactivates the child", async () => {
       const child = new ChildMock();
       const conductor = new TestConductor<ChildMock>();
-      await conductor.activateChild(child);
+      await conductor.tryActivateChild(child);
 
       await conductor.deactivateChild(child, false);
-      expect(child.calls.canClose).toBeUndefined();
+      expect(child.calls.canDeactivate).toBeUndefined();
       expect(child.calls.deactivate).toBe(1);
-    });
-    it("closes the child if possible", async () => {
-      const child = new ChildMock();
-      child.isCloseAllowed = true;
-      const conductor = new TestConductor<ChildMock>();
-      await conductor.activateChild(child);
-
-      await conductor.deactivateChild(child, true);
-      expect(conductor.children).not.toContain(child);
-      expect(child.calls.canClose).toBe(1);
-      expect(child.calls.deactivate).toBe(1);
-    });
-    it("does not close the child if not allowed to close", async () => {
-      const child = new ChildMock();
-      child.isCloseAllowed = false;
-      const conductor = new TestConductor<ChildMock>();
-      await conductor.activateChild(child);
-
-      await conductor.deactivateChild(child, true);
-      expect(conductor.children).toContain(child);
-      expect(child.calls.canClose).toBe(1);
-      expect(child.calls.deactivate).toBeUndefined();
     });
   });
 
@@ -113,22 +123,6 @@ describe("ConductorAllChildrenActive", () => {
       await conductor.activate();
       conductor.children.push(child);
       expect(child.calls.activate).toBe(1);
-    });
-  });
-
-  describe("canClose", () => {
-    it("calls children, checks canClose and closes where possible", async () => {
-      const child1 = new ChildMock();
-      const child2 = new ChildMock();
-      child2.isCloseAllowed = false;
-
-      const conductor = new TestConductor<ChildMock>();
-      conductor.children.push(child1, child2);
-
-      const canClose = await conductor.canClose();
-      expect(canClose).toBeFalsy();
-      expect(conductor.children).not.toContain(child1);
-      expect(conductor.children).toContain(child2);
     });
   });
 });

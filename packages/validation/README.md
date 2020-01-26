@@ -86,7 +86,7 @@ Basic implementation of `IValidator` interface where you need to manually add va
 // direct usage
 const target = { firstName: "John" };
 
-const validator = new ManualEntityValidator(target, false);
+const validator = new ManualEntityValidator<typeof target>(false);
 
 let isEntityValid = validator.isValid; // true
 let firstNameError = validator.errors.firstName; // undefined

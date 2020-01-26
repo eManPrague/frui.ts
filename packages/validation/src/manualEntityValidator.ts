@@ -6,7 +6,7 @@ export default class ManualEntityValidator<TTarget> implements IManualEntityVali
   @observable isErrorsVisible: boolean;
   @observable errors: ValidationErrors<TTarget> = {};
 
-  constructor(target: TTarget, isErrorsVisible: boolean) {
+  constructor(isErrorsVisible: boolean) {
     this.isErrorsVisible = isErrorsVisible;
   }
 

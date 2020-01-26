@@ -14,8 +14,8 @@ export default class ChildMock extends ScreenBase {
     return super.deactivate(close);
   }
 
-  canClose() {
-    this.logCall("canClose");
+  canDeactivate() {
+    this.logCall("canDeactivate");
     return Promise.resolve(this.isCloseAllowed);
   }
 

@@ -12,12 +12,12 @@ export default abstract class ScreenBase implements IScreen, IChild<IConductor<S
 
   // child
 
-  canClose(): Promise<boolean> | boolean {
+  canDeactivate(isClosing: boolean): Promise<boolean> | boolean {
     return true;
   }
 
-  @bound requestClose(): Promise<any> | void {
-    return this.parent?.closeChild(this);
+  @bound requestClose(): Promise<boolean> | boolean {
+    return this.parent?.closeChild(this) ?? false;
   }
 
   // activation

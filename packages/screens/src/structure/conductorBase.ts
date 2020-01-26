@@ -2,6 +2,7 @@
 import { canApplyNavigationParams, canNavigate, getNavigationParams } from "../navigation/helpers";
 import { combineNavigationPath, NavigationPath, splitNavigationPath } from "../navigation/navigationPath";
 import { ICanNavigate, IHasNavigationName } from "../navigation/types";
+import { canDeactivate } from "./helpers";
 import ScreenBase from "./screenBase";
 import { IChild, IConductor } from "./types";
 
@@ -17,11 +18,21 @@ export default abstract class ConductorBase<TChild extends IChild<any> & IHasNav
   implements IConductor<TChild>, ICanNavigate {
   protected childNavigationPathClosed = false;
 
-  abstract activateChild(child: TChild): Promise<any> | void;
-  protected abstract deactivateChild(child: TChild, close: boolean): Promise<any> | void;
+  abstract tryActivateChild(child: TChild): Promise<boolean> | boolean;
+  protected abstract deactivateChild(child: TChild, isClosing: boolean): Promise<any>;
 
-  closeChild(child: TChild) {
-    return this.deactivateChild(child, true);
+  protected async tryDeactivateChild(child: TChild, isClosing: boolean) {
+    const canContinue = await canDeactivate(child, isClosing);
+    if (canContinue) {
+      await this.deactivateChild(child, isClosing);
+      return true;
+    } else {
+      return false;
+    }
+  }
+
+  closeChild(child: TChild, forceClose = false): Promise<boolean> | boolean {
+    return forceClose ? this.deactivateChild(child, true).then(() => true) : this.tryDeactivateChild(child, true);
   }
 
   // navigation
@@ -65,7 +76,7 @@ export default abstract class ConductorBase<TChild extends IChild<any> & IHasNav
     const childToActivate = await this.findNavigationChild(segments[0]);
 
     if (childToActivate) {
-      await this.activateChild(childToActivate);
+      await this.tryActivateChild(childToActivate);
 
       if (params && canApplyNavigationParams(childToActivate)) {
         try {
@@ -84,10 +95,7 @@ export default abstract class ConductorBase<TChild extends IChild<any> & IHasNav
       }
     }
 
-    const childNavigatedPromise = this.onChildNavigated(childToActivate);
-    if (childNavigatedPromise) {
-      await childNavigatedPromise;
-    }
+    await this.onChildNavigated(childToActivate);
   }
 
   protected findNavigationChild(navigationName: string | undefined): Promise<TChild | undefined> | TChild | undefined {

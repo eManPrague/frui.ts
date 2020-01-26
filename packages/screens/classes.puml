@@ -10,7 +10,7 @@ class ScreenBase {
   +isActive: boolean
   +activate(): Promise
   +deactivate(close: boolean): Promise
-  +canClose(): Promise<boolean> | boolean
+  +canDeactivate(): Promise<boolean> | boolean
 
   .. Activation hooks ..
   #onInitialize(): Promise
@@ -27,7 +27,7 @@ IScreen ()- ScreenBase
 ScreenBase -() IChild
 
 abstract class ConductorBase {
-  #activateChild(child: TChild): Promise
+  #tryActivateChild(child: TChild): Promise
 
   __ Navigation functions __
   +navigate(path: string, params: any): Promise<any> | void
@@ -53,7 +53,7 @@ ConductorBaseWithActiveChild --|> ConductorBase
 IHasActiveChild ()- ConductorBaseWithActiveChild
 
 class ConductorSingleChild {
-  +activateChild(child: TChild): Promise
+  +tryActivateChild(child: TChild): Promise
   +closeChild(child: TChild): Promise
 }
 note left
@@ -66,7 +66,7 @@ ConductorSingleChild --|> ConductorBaseWithActiveChild
 class ConductorOneChildActive {
   +children: TChild[]
 
-  +activateChild(child: TChild): Promise
+  +tryActivateChild(child: TChild): Promise
   +closeChild(child: TChild): Promise
 }
 note right
@@ -79,7 +79,7 @@ ConductorOneChildActive --|> ConductorBaseWithActiveChild
 class ConductorAllChildrenActive {
   +children: TChild[]
 
-  +activateChild(child: TChild): Promise
+  +tryActivateChild(child: TChild): Promise
   +closeChild(child: TChild): Promise
 }
 note right
