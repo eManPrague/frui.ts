@@ -12,6 +12,7 @@ export interface SelectProps<TItem> {
   textProperty?: keyof TItem & string;
   mode?: "key" | "item";
   allowEmpty?: boolean;
+  isNumeric?: boolean;
 }
 
 const EMPTY_VALUE = "";
@@ -25,6 +26,12 @@ export class Select<TTarget, TItem> extends BindingComponent<
     textProperty: "label",
     mode: "item",
   };
+
+  protected get inheritedProps() {
+    const { target, property, onValueChanged, isNumeric, ...otherProps } = this.props;
+
+    return otherProps;
+  }
 
   render() {
     return <Observer render={this.renderInner} />;
@@ -42,32 +49,39 @@ export class Select<TTarget, TItem> extends BindingComponent<
       ...otherProps
     } = this.inheritedProps;
     const validationError =
-      noValidation !== true &&
-      this.props.target &&
-      this.props.property &&
-      (errorMessage || getValidationMessage(this.props.target, this.props.property));
+      noValidation !== true && (errorMessage || getValidationMessage(this.props.target!, this.props.property!));
 
-    const options = items?.map((x: any) => (
+    const options = items.map((x: any) => (
       <option key={x[keyProperty]} value={x[keyProperty]}>
         {!!textProperty ? x[textProperty] : x}
       </option>
     ));
-    const selectedValue = mode === "item" && this.value ? this.value[keyProperty] : this.value;
-
     return (
       <>
         <Form.Control
           {...otherProps}
           as="select"
-          value={selectedValue || EMPTY_VALUE}
+          value={this.selectedValue ?? EMPTY_VALUE}
           onChange={this.handleValueChanged}
           isInvalid={!!validationError}>
-          {allowEmpty && <option value={EMPTY_VALUE} />}
+          {(allowEmpty || !this.hasValidValue) && <option value={EMPTY_VALUE} />}
           {options}
         </Form.Control>
         {validationError && <Form.Control.Feedback type="invalid">{validationError}</Form.Control.Feedback>}
       </>
     );
+  }
+
+  get selectedValue() {
+    const { mode, keyProperty } = this.props;
+    return mode === "item" && this.value ? this.value[keyProperty] : this.value;
+  }
+
+  get hasValidValue() {
+    const { items, keyProperty } = this.props;
+
+    // tslint:disable-next-line
+    return items.findIndex((x: any) => x[keyProperty] == this.selectedValue) !== -1; // key might be a number, compare with '==' only
   }
 
   @bind protected handleValueChanged(e: React.FormEvent<any>) {
@@ -81,11 +95,11 @@ export class Select<TTarget, TItem> extends BindingComponent<
 
     if (this.props.mode === "item") {
       const { items, keyProperty } = this.props;
-      // tslint:disable-next-line:triple-equals
+      // tslint:disable-next-line
       const selectedItem = items.find((x: any) => x[keyProperty] == selectedKey); // key might be a number, compare with '==' only
       this.setValue(selectedItem);
     } else {
-      this.setValue(selectedKey);
+      this.setValue(this.props.isNumeric ? parseInt(selectedKey, 10) : selectedKey);
     }
   }
 }

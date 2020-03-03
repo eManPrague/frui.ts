@@ -6,30 +6,39 @@ import * as React from "react";
 import { Form, FormControlProps } from "react-bootstrap";
 import { CommonInputProps } from "./commonInputProps";
 
-export class Input<TTarget> extends BindingComponent<
-  FormControlProps & CommonInputProps & IBindingProps<TTarget>,
+export interface InputProps {
+  onBlur?: (e: React.FormEvent<any>) => void;
+  onFocus?: (e: React.FormEvent<any>) => void;
+  onKeyDown?: (e: React.KeyboardEvent<any>) => void;
+}
+
+export class Input<TTarget, OtherProps = {}> extends BindingComponent<
+  InputProps & FormControlProps & CommonInputProps & IBindingProps<TTarget> & OtherProps,
   TTarget
 > {
   render() {
     return <Observer render={this.renderInner} />;
   }
 
+  @bind protected onKeyDown(e: React.KeyboardEvent<any>) {
+    if (this.props.onKeyDown) {
+      this.props.onKeyDown(e);
+    }
+  }
+
   @bind protected renderInner() {
-    const { noValidation, errorMessage, ...otherProps } = this.inheritedProps;
+    const { onKeyDown, noValidation, errorMessage, ...otherProps } = this.inheritedProps;
     const validationError =
-      noValidation !== true &&
-      this.props.target &&
-      this.props.property &&
-      (errorMessage || getValidationMessage(this.props.target, this.props.property));
+      noValidation !== true && (errorMessage || getValidationMessage(this.props.target!, this.props.property!));
 
     return (
       <>
         <Form.Control
           {...otherProps}
-          // tslint:disable-next-line:
-          value={this.value == undefined ? "" : this.value}
+          value={this.value === undefined || this.value === null ? "" : this.value}
           onChange={this.handleValueChanged}
           isInvalid={!!validationError}
+          onKeyDown={this.onKeyDown}
         />
         {validationError && <Form.Control.Feedback type="invalid">{validationError}</Form.Control.Feedback>}
       </>
