@@ -26,6 +26,8 @@ export interface IBindingProps<TTarget> {
   onValueChanged?: (value: any, property: keyof TTarget & string, target: TTarget) => void;
 }
 
+type ExcludeBindingProps<T> = Omit<T, keyof IBindingProps<any>>;
+
 /**
  * Base class for all user input controls supporting two-way binding.
  *
@@ -51,19 +53,18 @@ export abstract class BindingComponent<TProps extends IBindingProps<TTarget>, TT
    * }
    * ```
    */
-  protected get inheritedProps() : Partial<TProps> {
+  protected get inheritedProps(): Partial<ExcludeBindingProps<TProps>> {
     const { target, property, onValueChanged, ...otherProps } = this.props;
 
-    return otherProps as TProps;
+    return otherProps as ExcludeBindingProps<TProps>;
   }
 
   /** Returns value of the bound property */
   protected get value() {
-    const { target, property } = this.props as { target: TTarget; property: keyof TTarget & string }; // the cast is a TS compiler workaround
+    const { target, property } = this.props as IBindingProps<TTarget>;
 
     if (!target) {
       //// throw new Error("'target' prop has not been set");
-      // tslint:disable-next-line: no-console
       console.warn("'target' prop has not been set");
       return undefined;
     }
@@ -80,7 +81,7 @@ export abstract class BindingComponent<TProps extends IBindingProps<TTarget>, TT
 
   /** Sets the provided value to the bound property  */
   @action.bound protected setValue(value: any) {
-    const { target, property, onValueChanged } = this.props as { target: TTarget; property: keyof TTarget & string } & IBindingProps<TTarget>; // the cast is a TS compiler workaround
+    const { target, property, onValueChanged } = this.props as IBindingProps<TTarget>;
 
     if (target && property) {
       ensureObservableProperty(target, property, value);

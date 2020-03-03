@@ -2,7 +2,34 @@ import { bind } from "@frui.ts/helpers";
 import FetchError from "./fetchError";
 import { IApiConnector } from "./types";
 
+const jsonContentType = "application/json";
 type Middleware = (response: Response) => Response | PromiseLike<Response>;
+
+/** Creates a new RequestInit based on the provided values and with a 'Content-Type: application/json' header. */
+export function appendJsonHeader(params?: RequestInit): RequestInit {
+  return {
+    ...params,
+    headers: {
+      ...(params || {}).headers,
+      "Content-Type": jsonContentType,
+    },
+  };
+}
+
+/** Middleware used by FetchApiConnector to handle response status codes other than 2xx as errors */
+export async function handleErrorStatusMiddleware(response: Response) {
+  if (response.status >= 200 && response.status < 300) {
+    return response;
+  }
+
+  let content: any;
+  try {
+    content = await response.json();
+  } catch {
+    throw new FetchError(response);
+  }
+  throw new FetchError(response, content);
+}
 
 /**
  * API connector that uses the fetch function to call a backend.
@@ -11,10 +38,7 @@ type Middleware = (response: Response) => Response | PromiseLike<Response>;
  * custom values through the constructor.
  */
 export class FetchApiConnector implements IApiConnector {
-  constructor(
-    private fetchFunction = bind(window.fetch, window),
-    private middleware: Middleware = handleErrorStatusMiddleware
-  ) {}
+  constructor(private fetchFunction = bind(window.fetch, window), private middleware: Middleware = handleErrorStatusMiddleware) {}
 
   get(url: string, params?: RequestInit): Promise<Response> {
     return this.fetchFunction(url, { ...params, method: "get" }).then(this.middleware);
@@ -58,32 +82,4 @@ export class FetchApiConnector implements IApiConnector {
   deleteText(url: string, text: string, params?: RequestInit): Promise<Response> {
     return this.fetchFunction(url, { ...params, method: "delete", body: text }).then(this.middleware);
   }
-}
-
-/** Middleware used by FetchApiConnector to handle response status codes other than 2xx as errors */
-export async function handleErrorStatusMiddleware(response: Response) {
-  if (response.status >= 200 && response.status < 300) {
-    return response;
-  }
-
-  let content: any;
-  try {
-    content = await response.json();
-  } catch {
-    throw new FetchError(response);
-  }
-  throw new FetchError(response, content);
-}
-
-const jsonContentType = "application/json";
-
-/** Creates a new RequestInit based on the provided values and with a 'Content-Type: application/json' header. */
-export function appendJsonHeader(params?: RequestInit): RequestInit {
-  return {
-    ...params,
-    headers: {
-      ...(params || {}).headers,
-      "Content-Type": jsonContentType,
-    },
-  };
 }

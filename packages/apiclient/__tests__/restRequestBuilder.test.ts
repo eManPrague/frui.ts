@@ -1,4 +1,4 @@
-// tslint:disable no-duplicate-string
+/* eslint-disable @typescript-eslint/tslint/config */
 import { mock } from "jest-mock-extended";
 import { appendUrl, IApiConnector, RestRequestBuilder } from "../src";
 

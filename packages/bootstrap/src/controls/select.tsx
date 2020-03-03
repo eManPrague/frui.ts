@@ -38,18 +38,8 @@ export class Select<TTarget, TItem> extends BindingComponent<
   }
 
   @bind protected renderInner() {
-    const {
-      noValidation,
-      errorMessage,
-      items,
-      keyProperty,
-      textProperty,
-      mode,
-      allowEmpty,
-      ...otherProps
-    } = this.inheritedProps;
-    const validationError =
-      noValidation !== true && (errorMessage || getValidationMessage(this.props.target!, this.props.property!));
+    const { noValidation, errorMessage, items, keyProperty, textProperty, mode, allowEmpty, ...otherProps } = this.inheritedProps;
+    const validationError = this.getValidationError();
 
     const options = items.map((x: any) => (
       <option key={x[keyProperty]} value={x[keyProperty]}>
@@ -80,7 +70,6 @@ export class Select<TTarget, TItem> extends BindingComponent<
   get hasValidValue() {
     const { items, keyProperty } = this.props;
 
-    // tslint:disable-next-line
     return items.findIndex((x: any) => x[keyProperty] == this.selectedValue) !== -1; // key might be a number, compare with '==' only
   }
 
@@ -95,11 +84,29 @@ export class Select<TTarget, TItem> extends BindingComponent<
 
     if (this.props.mode === "item") {
       const { items, keyProperty } = this.props;
-      // tslint:disable-next-line
       const selectedItem = items.find((x: any) => x[keyProperty] == selectedKey); // key might be a number, compare with '==' only
       this.setValue(selectedItem);
     } else {
       this.setValue(this.props.isNumeric ? parseInt(selectedKey, 10) : selectedKey);
     }
+  }
+
+  private getValidationError() {
+    const { noValidation, errorMessage } = this.props;
+
+    if (noValidation === true) {
+      return undefined;
+    }
+
+    if (errorMessage) {
+      return errorMessage;
+    }
+
+    const { target, property } = this.props as IBindingProps<TTarget>;
+    if (target && property) {
+      return getValidationMessage(target, property);
+    }
+
+    return undefined;
   }
 }

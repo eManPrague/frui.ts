@@ -1,7 +1,7 @@
 import { isObservableProp, observable } from "mobx";
 import { BindingComponent, IBindingProps } from "../src/bindingComponent";
 
-type TestControlProps = IBindingProps<any> & { otherText?: string, otherValue?: any };
+type TestControlProps = IBindingProps<any> & { otherText?: string; otherValue?: any };
 
 class TestControl extends BindingComponent<TestControlProps, any> {
   readValue() {
@@ -103,13 +103,13 @@ describe("BindingComponent", () => {
         otherValue: { id: 1 },
       });
 
-      const { target, property, onValueChanged, otherText, otherValue } = control.getInheritedProps();
-      expect(target).toBeUndefined();
-      expect(property).toBeUndefined();
-      expect(onValueChanged).toBeUndefined();
+      const inheritedProps = control.getInheritedProps() as TestControlProps;
+      expect(inheritedProps.target).toBeUndefined();
+      expect(inheritedProps.property).toBeUndefined();
+      expect(inheritedProps.onValueChanged).toBeUndefined();
 
-      expect(otherText).toBe("test");
-      expect(otherValue.id).toBe(1);
+      expect(inheritedProps.otherText).toBe("test");
+      expect(inheritedProps.otherValue.id).toBe(1);
     });
   });
 });

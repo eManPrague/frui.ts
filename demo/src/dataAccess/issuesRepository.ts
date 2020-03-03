@@ -4,7 +4,6 @@ import { Project, ProjectsQuery } from "../entities/project";
 import { IRedminePageRequest } from "../entities/redminePageRequest";
 import { extractPagingInfo, RepositoryBase } from "./repositoryBase";
 
-// tslint:disable-next-line: interface-name
 export interface IssuesFilter {
   issue_id?: number | string;
   project_id?: number;

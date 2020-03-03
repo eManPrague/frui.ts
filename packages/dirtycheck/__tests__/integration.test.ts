@@ -1,10 +1,4 @@
-import { observable } from "mobx";
 import * as DirtyCheck from "../src";
-
-class TestEntity {
-  @observable firstName: string;
-  @observable lastName: string;
-}
 
 test("attachManualDirtyWatcher", () => {
   const entity = {

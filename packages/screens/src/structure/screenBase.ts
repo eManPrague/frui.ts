@@ -1,4 +1,4 @@
-// tslint:disable: member-ordering
+/* eslint-disable @typescript-eslint/no-empty-function */
 import { bound } from "@frui.ts/helpers";
 import { computed, observable } from "mobx";
 import navigationManager from "../navigation/navigationManager";
@@ -48,7 +48,6 @@ export default abstract class ScreenBase implements IScreen, IChild<IConductor<S
     try {
       await this.onActivate();
     } catch (error) {
-      // tslint:disable-next-line: no-console
       console.error(error);
     }
 
@@ -61,7 +60,6 @@ export default abstract class ScreenBase implements IScreen, IChild<IConductor<S
       try {
         await this.onInitialize();
       } catch (error) {
-        // tslint:disable-next-line: no-console
         console.error(error);
       }
 
@@ -75,10 +73,7 @@ export default abstract class ScreenBase implements IScreen, IChild<IConductor<S
   deactivate(close: boolean) {
     return (
       this.deactivatePromise ||
-      (this.deactivatePromise = this.deactivateInner(close).then(
-        this.clearDeactivatePromise,
-        this.clearDeactivatePromise
-      ))
+      (this.deactivatePromise = this.deactivateInner(close).then(this.clearDeactivatePromise, this.clearDeactivatePromise))
     );
   }
   private async deactivateInner(close: boolean) {
@@ -86,7 +81,6 @@ export default abstract class ScreenBase implements IScreen, IChild<IConductor<S
       try {
         await this.onDeactivate(close);
       } catch (error) {
-        // tslint:disable-next-line: no-console
         console.error(error);
       }
 

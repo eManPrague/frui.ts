@@ -1,4 +1,3 @@
-// tslint:disable: member-ordering
 import { canApplyNavigationParams, canNavigate, getNavigationParams } from "../navigation/helpers";
 import { combineNavigationPath, NavigationPath, splitNavigationPath } from "../navigation/navigationPath";
 import { ICanNavigate, IHasNavigationName } from "../navigation/types";
@@ -40,8 +39,7 @@ export default abstract class ConductorBase<TChild extends IChild<any> & IHasNav
   getCurrentNavigationPath(): NavigationPath {
     // TODO cache currentNavigationPath
     const currentParams = getNavigationParams(this);
-    const pathFromParent =
-      this.parent && canNavigate(this.parent) && this.parent.getChildNavigationPath(this, currentParams);
+    const pathFromParent = this.parent && canNavigate(this.parent) && this.parent.getChildNavigationPath(this, currentParams);
 
     if (pathFromParent) {
       return {
@@ -85,7 +83,6 @@ export default abstract class ConductorBase<TChild extends IChild<any> & IHasNav
             await paramsHandlePromise;
           }
         } catch (error) {
-          // tslint:disable-next-line: no-console
           console.error(error);
         }
       }
@@ -102,7 +99,7 @@ export default abstract class ConductorBase<TChild extends IChild<any> & IHasNav
     return undefined;
   }
 
-  // tslint:disable-next-line: no-empty
+  // eslint-disable-next-line @typescript-eslint/no-empty-function
   protected onChildNavigated(child: TChild | undefined): Promise<any> | void {}
 
   protected connectChild(item: TChild | undefined) {

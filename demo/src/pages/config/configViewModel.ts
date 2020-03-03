@@ -17,7 +17,6 @@ export default class ConfigViewModel {
     });
 
     dispose() {
-        // tslint:disable-next-line: no-console
         console.log("disposing configViewModel");
         this.disposeAutorun();
     }

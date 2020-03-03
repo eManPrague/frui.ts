@@ -13,8 +13,7 @@ describe("ensureObservableProperty", () => {
   });
 
   it("creates new property on an observable object", () => {
-    const target = observable({
-    }) as any;
+    const target = observable({}) as any;
 
     ensureObservableProperty(target, "firstName", "Peter");
     expect(target.firstName).toBe("Peter");
@@ -32,8 +31,7 @@ describe("ensureObservableProperty", () => {
   });
 
   it("creates new property on a non-observable object", () => {
-    const target = {
-    } as any;
+    const target = {} as any;
 
     ensureObservableProperty(target, "firstName", "Peter");
     expect(target.firstName).toBe("Peter");

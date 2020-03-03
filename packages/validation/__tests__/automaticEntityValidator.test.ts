@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/tslint/config */
 import { observable } from "mobx";
 import AutomaticEntityValidator, { createPropertyValidatorFromRules } from "../src/automaticEntityValidator";
 import validatorsRepository from "../src/validatorsRepository";
@@ -37,7 +38,7 @@ describe("AutomaticEntityValidator", () => {
       },
     };
 
-    const validator = new AutomaticEntityValidator(target, validationRules, false);
+    new AutomaticEntityValidator(target, validationRules, false);
     expect(target.firstName).toBe("");
   });
 

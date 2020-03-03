@@ -1,5 +1,4 @@
 import ManualDirtyWatcher from "../src/manualDirtyWatcher";
-import { IManualDirtyWatcher } from "../src/types";
 
 describe("ManualDirtyWatcher", () => {
   test("initial state is not dirty", () => {

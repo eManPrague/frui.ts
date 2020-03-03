@@ -1,5 +1,4 @@
 
-// tslint:disable:jsx-boolean-value
 import "!style-loader!css-loader!bootstrap/dist/css/bootstrap.css";
 import { Check, Input, Select } from "@frui.ts/bootstrap";
 import { attachAutomaticDirtyWatcher } from "@frui.ts/dirtycheck";

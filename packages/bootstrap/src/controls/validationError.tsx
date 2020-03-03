@@ -6,9 +6,7 @@ import { CommonInputProps } from "./commonInputProps";
 
 export class ValidationError<TTarget> extends React.Component<CommonInputProps & IBindingProps<TTarget>> {
   render() {
-    const { noValidation, errorMessage } = this.props;
-    const validationError =
-      noValidation !== true && (errorMessage || getValidationMessage(this.props.target!, this.props.property!));
+    const validationError = this.getValidationError();
 
     return (
       <Observer>
@@ -19,5 +17,24 @@ export class ValidationError<TTarget> extends React.Component<CommonInputProps &
         )}
       </Observer>
     );
+  }
+
+  private getValidationError() {
+    const { noValidation, errorMessage } = this.props;
+
+    if (noValidation === true) {
+      return undefined;
+    }
+
+    if (errorMessage) {
+      return errorMessage;
+    }
+
+    const { target, property } = this.props as IBindingProps<TTarget>;
+    if (target && property) {
+      return getValidationMessage(target, property);
+    }
+
+    return undefined;
   }
 }

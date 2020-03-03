@@ -54,7 +54,6 @@ export default class UrlNavigationAdapter {
       try {
         await this.rootViewModel.navigate(path.url, path.query);
       } catch (error) {
-        // tslint:disable-next-line: no-console
         console.error(error);
       }
       this.isNavigationSuppressed = false;

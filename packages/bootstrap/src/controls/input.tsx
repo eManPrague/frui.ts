@@ -13,7 +13,7 @@ export interface InputProps {
 }
 
 export class Input<TTarget, OtherProps = {}> extends BindingComponent<
-  InputProps & FormControlProps & CommonInputProps & IBindingProps<TTarget> & OtherProps,
+  InputProps & FormControlProps & CommonInputProps & OtherProps & IBindingProps<TTarget>,
   TTarget
 > {
   render() {
@@ -28,8 +28,7 @@ export class Input<TTarget, OtherProps = {}> extends BindingComponent<
 
   @bind protected renderInner() {
     const { onKeyDown, noValidation, errorMessage, ...otherProps } = this.inheritedProps;
-    const validationError =
-      noValidation !== true && (errorMessage || getValidationMessage(this.props.target!, this.props.property!));
+    const validationError = this.getValidationError();
 
     return (
       <>
@@ -60,5 +59,24 @@ export class Input<TTarget, OtherProps = {}> extends BindingComponent<
     } else {
       this.setValue(value === "" ? undefined : value);
     }
+  }
+
+  private getValidationError() {
+    const { noValidation, errorMessage } = this.props;
+
+    if (noValidation === true) {
+      return undefined;
+    }
+
+    if (errorMessage) {
+      return errorMessage;
+    }
+
+    const { target, property } = this.props as IBindingProps<TTarget>;
+    if (target && property) {
+      return getValidationMessage(target, property);
+    }
+
+    return undefined;
   }
 }

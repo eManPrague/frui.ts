@@ -2,6 +2,33 @@ import { IApiConnector } from "./types";
 
 const cleanupRegex = /\/+$/g; // removes trailing slash
 
+function getValueForUri(input: any) {
+  if (input instanceof Date) {
+    return input.toISOString();
+  } else {
+    return input;
+  }
+}
+
+function getQueryString(query: any) {
+  return Object.keys(query)
+    .filter(prop => query[prop] || query[prop] === 0)
+    .map(prop => `${encodeURIComponent(prop)}=${encodeURIComponent(getValueForUri(query[prop]))}`)
+    .join("&");
+}
+
+const jsonContentType = "application/json,text/json";
+
+function appendAcceptJsonHeader(params?: RequestInit) {
+  return {
+    ...params,
+    headers: {
+      ...(params || {}).headers,
+      Accept: jsonContentType,
+    },
+  };
+}
+
 /** Fluent URL builder that makes the network call with the underlying IApiConnector */
 export class RestRequestBuilder {
   protected url: string;
@@ -95,31 +122,4 @@ export function appendUrl(base: string, ...segments: any[]) {
     result += "/" + x;
   });
   return result;
-}
-
-function getQueryString(query: any) {
-  return Object.keys(query)
-    .filter(prop => query[prop] || query[prop] === 0)
-    .map(prop => `${encodeURIComponent(prop)}=${encodeURIComponent(getValueForUri(query[prop]))}`)
-    .join("&");
-}
-
-function getValueForUri(input: any) {
-  if (input instanceof Date) {
-    return input.toISOString();
-  } else {
-    return input;
-  }
-}
-
-const jsonContentType = "application/json,text/json";
-
-function appendAcceptJsonHeader(params?: RequestInit) {
-  return {
-    ...params,
-    headers: {
-      ...(params || {}).headers,
-      Accept: jsonContentType,
-    },
-  };
 }

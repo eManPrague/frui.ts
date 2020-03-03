@@ -13,10 +13,23 @@ export interface IComponentInAttributeProps<TTarget> {
 export type IFormFieldProps<TTarget, TChildProps> = IBindingProps<TTarget> &
   (IComponentInChildrenProps<TTarget, TChildProps> | IComponentInAttributeProps<TTarget>);
 
-export function getInnerComponent<TTarget, TChildProps>(
-  props: IFormFieldProps<TTarget, TChildProps>,
-  childProps: TChildProps
-) {
+export function extractBindingProps<TTarget>(props: IBindingProps<TTarget>): IBindingProps<TTarget> {
+  return {
+    target: props.target,
+    property: props.property,
+    onValueChanged: props.onValueChanged,
+  };
+}
+
+function hasComponentInChildren<TTarget, TChildProps>(object: any): object is IComponentInChildrenProps<TTarget, TChildProps> {
+  return !!object.children && typeof object.children === "function";
+}
+
+function hasComponentInAttribute<TTarget>(object: any): object is IComponentInAttributeProps<TTarget> {
+  return !!object.component;
+}
+
+export function getInnerComponent<TTarget, TChildProps>(props: IFormFieldProps<TTarget, TChildProps>, childProps: TChildProps) {
   const bindingProps = extractBindingProps<TTarget>(props);
 
   if (hasComponentInAttribute<TTarget>(props)) {
@@ -26,21 +39,4 @@ export function getInnerComponent<TTarget, TChildProps>(
     // TODO why the check (and function hasComponentInChildren) is needed here?
     return props.children(bindingProps, childProps);
   }
-}
-
-export function extractBindingProps<TTarget>(props: IBindingProps<TTarget>): IBindingProps<TTarget> {
-  return {
-    target: props.target,
-    property: props.property,
-    onValueChanged: props.onValueChanged,
-  };
-}
-
-function hasComponentInChildren<TTarget, TChildProps>(
-  object: any
-): object is IComponentInChildrenProps<TTarget, TChildProps> {
-  return !!object.children && typeof object.children === "function";
-}
-function hasComponentInAttribute<TTarget>(object: any): object is IComponentInAttributeProps<TTarget> {
-  return !!object.component;
 }

@@ -5,7 +5,6 @@ import * as React from "react";
 import RootViewModel from "./viewModels/rootViewModel";
 import "./views/childView";
 
-// tslint:disable: jsx-no-lambda
 storiesOf("Navigation", module)
   .add("Path", () => {
     const rootViewModel = new RootViewModel();

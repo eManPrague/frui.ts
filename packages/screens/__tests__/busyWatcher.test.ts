@@ -53,7 +53,7 @@ describe("BusyWatcher", () => {
     it("clears busy when promise resolved", async () => {
       const watcher = new BusyWatcher();
 
-      // tslint:disable-next-line: no-empty
+      // eslint-disable-next-line @typescript-eslint/no-empty-function
       let handler = () => {};
       const promise = new Promise((resolve, reject) => {
         handler = resolve;
@@ -70,7 +70,7 @@ describe("BusyWatcher", () => {
     it("clears busy when promise fails", async () => {
       const watcher = new BusyWatcher();
 
-      // tslint:disable-next-line: no-empty
+      // eslint-disable-next-line @typescript-eslint/no-empty-function
       let handler = () => {};
       const promise = new Promise((resolve, reject) => {
         handler = reject;

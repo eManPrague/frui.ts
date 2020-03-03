@@ -3,7 +3,6 @@ import { observer, Observer } from "mobx-react-lite";
 import * as React from "react";
 import OneChildActiveViewModel from "../viewModels/oneChildActiveViewModel";
 
-// tslint:disable: jsx-no-lambda
 const oneChildActiveView: React.FunctionComponent<{ vm: OneChildActiveViewModel }> = observer(({ vm }) => !vm ? null :
   <div>
     Choose view model: &nbsp;

@@ -5,14 +5,18 @@ import * as React from "react";
 import { Form, FormCheckProps } from "react-bootstrap";
 import { CommonInputProps } from "./commonInputProps";
 
-export class Check<TTarget> extends BindingComponent<
-  FormCheckProps & CommonInputProps & IBindingProps<TTarget>,
-  TTarget
-> {
+export class Check<TTarget> extends BindingComponent<FormCheckProps & CommonInputProps & IBindingProps<TTarget>, TTarget> {
   render() {
     return (
       <Observer>
-        {() => <Form.Check id={this.props.property} {...this.inheritedProps} checked={!!this.value} onChange={this.handleValueChanged} />}
+        {() => (
+          <Form.Check
+            id={this.props.property}
+            {...this.inheritedProps}
+            checked={!!this.value}
+            onChange={this.handleValueChanged}
+          />
+        )}
       </Observer>
     );
   }

@@ -9,7 +9,6 @@ import "./views/childView";
 import "./views/oneChildActiveView";
 import "./views/singleChildView";
 
-// tslint:disable: jsx-no-lambda
 storiesOf("Conductor", module)
   .add("Single child", () => {
     const conductor = new SingleChildViewModel();

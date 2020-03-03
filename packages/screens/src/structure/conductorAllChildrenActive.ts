@@ -5,9 +5,7 @@ import ConductorBase from "./conductorBase";
 import { canDeactivate, isActivatable, isDeactivatable } from "./helpers";
 import { IActivatable, IChild } from "./types";
 
-export default class ConductorAllChildrenActive<TChild extends IChild<any> & IHasNavigationName> extends ConductorBase<
-  TChild
-> {
+export default class ConductorAllChildrenActive<TChild extends IChild<any> & IHasNavigationName> extends ConductorBase<TChild> {
   readonly children = observable.array<TChild>(undefined, { deep: false });
   protected childNavigationPathClosed = true;
 

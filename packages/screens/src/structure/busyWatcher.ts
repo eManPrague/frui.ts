@@ -38,7 +38,6 @@ export function watchBusy(target: any, propertyKey: string, descriptor: Property
     const result = originalFunction.apply(this, args);
 
     if (result && result.then && typeof result.then === "function") {
-      // tslint:disable-next-line: no-console
       result.then(undefined, (error: any) => console.error(error));
 
       if (this.busyWatcher && typeof this.busyWatcher.watch === "function") {

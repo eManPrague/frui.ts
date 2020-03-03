@@ -6,10 +6,9 @@ export function notifyRoutePathChanged(source: IChild<IConductor<any>> & IHasNav
   }
 
   const navigationPath = source.parent.getChildNavigationPath(source, undefined);
-  window.dispatchEvent(new CustomEvent("navigated", {
-    detail: navigationPath,
-  }));
-
-  // tslint:disable-next-line: no-console
-  // console.log("navigation", navigationPath.path, navigationPath.isClosed);
+  window.dispatchEvent(
+    new CustomEvent("navigated", {
+      detail: navigationPath,
+    })
+  );
 }

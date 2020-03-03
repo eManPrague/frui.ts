@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/tslint/config */
 import ManualEntityValidator from "../src/manualEntityValidator";
 
 interface ITarget {

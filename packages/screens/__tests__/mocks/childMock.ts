@@ -22,8 +22,7 @@ export default class ChildMock extends ScreenBase {
   private logCall(name: string) {
     if (this.calls[name]) {
       this.calls[name]++;
-    }
-    else {
+    } else {
       this.calls[name] = 1;
     }
   }

@@ -2,7 +2,6 @@ import { ScreenBase } from "@frui.ts/screens";
 import { observable } from "mobx";
 import { notifyRoutePathChanged } from "./helpers";
 
-// tslint:disable: no-console
 export default class ChildViewModel extends ScreenBase {
   @observable text: string;
 

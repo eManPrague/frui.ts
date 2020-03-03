@@ -3,7 +3,6 @@
  * @param func The function to be bound.
  * @param target An object to which the this keyword can refer inside the new function.
  */
-// tslint:disable-next-line: ban-types
 export function bind<T>(func: T & Function, target: any): T {
-    return func.bind(target);
+  return func.bind(target);
 }

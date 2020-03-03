@@ -9,8 +9,18 @@ export interface IPagerProps {
 }
 
 const defaultPageSize = 25;
-export function pageChangedHandler(newPageNumber: number, filter: IPagingFilter, onPageChanged: onPageChangedHandler) {
-  return () => handlePageChanged(newPageNumber, filter, onPageChanged);
+
+/** Assigns the provided paging values to the filter and calls the provided handler */
+export function handlePagingChanged(offset: number, limit: number, filter?: IPagingFilter, onPageChanged?: onPageChangedHandler) {
+  if (filter) {
+    // shouldn't we use mobx's runInAction here?
+    filter.offset = offset;
+    filter.limit = limit;
+  }
+
+  if (onPageChanged) {
+    onPageChanged(offset, limit);
+  }
 }
 
 /** Calculates paging filter values for the new page, updates the filter, and calls the provided handler */
@@ -21,29 +31,11 @@ export function handlePageChanged(newPageNumber: number, filter?: IPagingFilter,
   handlePagingChanged(offset, pageSize, filter, onPageChanged);
 }
 
-/** Calculates paging filter values for the new page size, updates the filter, and calls the provided handler */
-export function handlePageSizeChanged(
-  newPageSize: number,
-  filter?: IPagingFilter,
-  onPageChanged?: onPageChangedHandler
-) {
-  handlePagingChanged(0, newPageSize, filter, onPageChanged);
+export function pageChangedHandler(newPageNumber: number, filter: IPagingFilter, onPageChanged: onPageChangedHandler) {
+  return () => handlePageChanged(newPageNumber, filter, onPageChanged);
 }
 
-/** Assigns the provided paging values to the filter and calls the provided handler */
-export function handlePagingChanged(
-  offset: number,
-  limit: number,
-  filter?: IPagingFilter,
-  onPageChanged?: onPageChangedHandler
-) {
-  if (filter) {
-    // shouldn't we use mobx's runInAction here?
-    filter.offset = offset;
-    filter.limit = limit;
-  }
-
-  if (onPageChanged) {
-    onPageChanged(offset, limit);
-  }
+/** Calculates paging filter values for the new page size, updates the filter, and calls the provided handler */
+export function handlePageSizeChanged(newPageSize: number, filter?: IPagingFilter, onPageChanged?: onPageChangedHandler) {
+  handlePagingChanged(0, newPageSize, filter, onPageChanged);
 }
