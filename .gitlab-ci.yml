@@ -1,4 +1,4 @@
-image: node:11.9
+image: node:12.16
 
 cache:
   key: ${CI_COMMIT_REF_SLUG}
@@ -12,25 +12,25 @@ stages:
   - deploy
 
 before_script:
-  - npm install
-  - npx lerna bootstrap
+  - yarn install
+  - yarn run lerna bootstrap
 
 lint:
   stage: review
   script:
-    - npm run lint
+    - yarn run lint
 
 test:
   stage: test
   script:
-    - npm run build
-    - npm test
+    - yarn run build
+    - yarn test
 
 publish:
   stage: build
   script:
-    - npm run build
-    - npm run publish
+    - yarn run build
+    - yarn run publish
   artifacts:
     paths:
       - demo/dist
@@ -54,7 +54,7 @@ deploy_to_nexus:
   except:
     - /^feature/.*/
   script:
-    - npm run build
-    - npm config set $REPO_URL:_authToken=$NPM_AUTH_TOKEN
+    - yarn run build
+    - yarn config set $REPO_URL:_authToken=$NPM_AUTH_TOKEN
     - git checkout package-lock.json # --no-git-reset does not work
     - npx lerna publish from-package --registry $REPO_URL --yes
