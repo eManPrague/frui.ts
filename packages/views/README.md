@@ -2,7 +2,7 @@
 
 ## View discovery
 
-In order to support viewmodel-driven workflow, view discovery is an essential feature. This means that based on a particular view model instance, we should be able to find proper view and display it.
+In order to support ViewModel-driven workflow, view discovery is an essential feature. This means that based on a particular view model instance, we should be able to find proper view and display it.
 
 This feature consists of two parts - view registry that is a list of all available view models and their assigned views, and `View` component that makes the lookup and rendering.
 
@@ -53,13 +53,13 @@ We can display proper views for the currently active child of the `RootViewModel
 
 ## BindingComponent
 
-Core component for 2-way binding is `BindingComponent`, a wrapper around any visual component that handles the communication.
+The core component for 2-way binding is `BindingComponent`, a wrapper around any visual component.
 
-When creating custom bindable control, you can use the following:
+When creating a custom bindable control, you can use the following:
 
-- `value` - contains the value that the control is bound to, use it in the underlying component
-- `setValue(value)` - call this and pass the new value when user changes the value through the underlying component
-- `inheritedProps` - contains the props passed to the wrapper except binding specific properties, you can directly pass it to the underlying component
+- `this.value` - contains the value that the control is bound to, use it in the underlying component
+- `this.setValue(value)` - call this and pass the new value when user changes the value through the underlying component
+- `this.inheritedProps` - contains the props passed to the wrapper except binding specific properties, so that you can directly pass it to the underlying component
 
 ### Example
 

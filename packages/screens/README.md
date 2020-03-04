@@ -1,6 +1,6 @@
 # `@frui.ts/screens`
 
-Since the application should be viewmodel-driven, we need to properly design the application structure within VMs.
+Since the application should be ViewModel-driven, we need to properly design the application structure within VMs.
 
 There is a simple base class for all view models - `ScreenBase`. It handles basic lifecycle such as `init`, `activate`, `deactivate`. These actions come from the `View` component.
 

@@ -64,7 +64,6 @@ export abstract class BindingComponent<TProps extends IBindingProps<TTarget>, TT
     const { target, property } = this.props as IBindingProps<TTarget>;
 
     if (!target) {
-      //// throw new Error("'target' prop has not been set");
       console.warn("'target' prop has not been set");
       return undefined;
     }

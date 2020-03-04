@@ -33,7 +33,7 @@
     "mobx"
   ],
   "author": "Augustin Šulc",
-  "license": "ISC",
+  "license": "MIT",
   "devDependencies": {
     "@storybook/addon-actions": "^5.3.6",
     "@storybook/addon-console": "^1.2.1",
