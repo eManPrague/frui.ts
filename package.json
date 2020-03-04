@@ -14,13 +14,13 @@
     "version": "lerna version -y --no-push --no-git-tag-version",
     "publish:storybook": "build-storybook -c .storybook -o dist/storybook",
     "publish:docs": "typedoc packages --out dist/docs --hideGenerator --exclude '**/node_modules' --ignoreCompilerErrors",
-    "publish": "rimraf dist && npm run publish:storybook && npm run publish:docs",
+    "publish": "rimraf dist && yarn run publish:storybook && yarn run publish:docs",
     "cleanbuild": "lerna run clean && lerna run build",
     "build": "lerna run build",
     "test": "jest",
     "storybook": "start-storybook -p 9001 -c .storybook",
     "lint": "eslint ./{packages,examples}/**/*.{ts,tsx}",
-    "validate": "npm run lint && npm run cleanbuild && npm run test && npm run publish"
+    "validate": "yarn run lint && yarn run cleanbuild && yarn run test && yarn run publish"
   },
   "repository": {
     "type": "git",
@@ -66,7 +66,7 @@
     "ts-loader": "^6.2.1",
     "tslint": "^5.14.0",
     "tslint-sonarts": "^1.9.0",
-    "typedoc": "^0.15.8",
+    "typedoc": "^0.16.11",
     "typedoc-plugin-no-inherit": "^1.1.10",
     "typescript": "^3.7.5",
     "webpack-cli": "^3.3.10",

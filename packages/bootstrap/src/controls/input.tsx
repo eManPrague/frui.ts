@@ -72,6 +72,7 @@ export class Input<TTarget, OtherProps = {}> extends BindingComponent<
       return errorMessage;
     }
 
+    // eslint-disable-next-line @typescript-eslint/tslint/config
     const { target, property } = this.props as IBindingProps<TTarget>;
     if (target && property) {
       return getValidationMessage(target, property);
