@@ -26,7 +26,7 @@ export interface IBindingProps<TTarget> {
   onValueChanged?: (value: any, property: keyof TTarget & string, target: TTarget) => void;
 }
 
-type ExcludeBindingProps<T> = Omit<T, keyof IBindingProps<any>>;
+export type ExcludeBindingProps<T> = Omit<T, keyof IBindingProps<any>>;
 
 /**
  * Base class for all user input controls supporting two-way binding.

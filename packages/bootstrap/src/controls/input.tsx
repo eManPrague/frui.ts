@@ -1,5 +1,5 @@
 import { getValidationMessage } from "@frui.ts/validation";
-import { BindingComponent, IBindingProps } from "@frui.ts/views";
+import { BindingComponent, ExcludeBindingProps, IBindingProps } from "@frui.ts/views";
 import bind from "bind-decorator";
 import { Observer } from "mobx-react-lite";
 import * as React from "react";
@@ -13,7 +13,7 @@ export interface InputProps {
 }
 
 export class Input<TTarget, OtherProps = {}> extends BindingComponent<
-  InputProps & FormControlProps & CommonInputProps & OtherProps & IBindingProps<TTarget>,
+  ExcludeBindingProps<InputProps & FormControlProps & CommonInputProps & OtherProps> & IBindingProps<TTarget>,
   TTarget
 > {
   render() {
