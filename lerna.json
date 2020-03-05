@@ -8,6 +8,9 @@
     "stories"
   ],
   "command": {
+    "bootstrap": {
+      "npmClient": "yarn"
+    },
     "publish": {
       "ignoreChanges": [
         "ignored-file",
