@@ -11,6 +11,7 @@
     "test": "tests"
   },
   "scripts": {
+    "lerna-bootstrap": "yarn lerna bootstrap --npmClient=yarn",
     "version": "lerna version -y --no-push --no-git-tag-version",
     "publish:storybook": "build-storybook -c .storybook -o dist/storybook",
     "publish:docs": "typedoc packages --out dist/docs --hideGenerator --exclude '**/node_modules' --ignoreCompilerErrors",

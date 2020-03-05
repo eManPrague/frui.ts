@@ -12,7 +12,7 @@ stages:
 
 before_script:
   - yarn install
-  - yarn run lerna bootstrap
+  - yarn run lerna-bootstrap
 
 test:
   stage: test
@@ -50,6 +50,6 @@ deploy_to_nexus:
     - /^feature/.*/
   script:
     - yarn run build
-    - yarn config set $REPO_URL:_authToken=$NPM_AUTH_TOKEN
-    - git checkout yarn.lock # --no-git-reset does not work
+    - npm config set $REPO_URL:_authToken=$NPM_AUTH_TOKEN
+    # - git checkout yarn.lock # --no-git-reset does not work
     - yarn run lerna publish from-package --registry $REPO_URL --yes
