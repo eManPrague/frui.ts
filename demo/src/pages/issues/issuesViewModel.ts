@@ -19,10 +19,9 @@ export default class IssuesViewModel extends FilteredListViewModel<Issue, Issues
     this.applyFilterAndLoad();
   }
 
-  @action.bound loadData() {
-    return this.busyWatcher.watch(
-      this.issuesRepository.getAllIssues(this.appliedFilter, this.pagingFilter).then(this.setData)
-    );
+  @action.bound
+  loadData() {
+    return this.busyWatcher.watch(this.issuesRepository.getAllIssues(this.appliedFilter, this.pagingFilter).then(this.setData));
   }
 
   openDetail(id: number) {
@@ -41,7 +40,8 @@ export default class IssuesViewModel extends FilteredListViewModel<Issue, Issues
     );
   }
 
-  @action.bound private setProjects(data: PagedQueryResult<Project>) {
+  @action.bound
+  private setProjects(data: PagedQueryResult<Project>) {
     this.projects = data[0].map(x => ({ value: x.id, label: x.name }));
   }
 }

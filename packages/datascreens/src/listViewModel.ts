@@ -6,7 +6,8 @@ export default abstract class ListViewModel<TEntity, TDetail extends ScreenBase>
   @observable.shallow items: TEntity[];
   @observable currentPaging: IPagingInfo;
 
-  @action.bound protected setData([items, paging]: PagedQueryResult<TEntity>) {
+  @action.bound
+  protected setData([items, paging]: PagedQueryResult<TEntity>) {
     this.items = items;
     this.currentPaging = paging;
   }

@@ -16,7 +16,8 @@ export default abstract class ScreenBase implements IScreen, IChild<IConductor<S
     return true;
   }
 
-  @bound requestClose(): Promise<boolean> | boolean {
+  @bound
+  requestClose(): Promise<boolean> | boolean {
     return this.parent?.closeChild(this) ?? false;
   }
 

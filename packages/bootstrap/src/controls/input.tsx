@@ -1,10 +1,8 @@
-import { getValidationMessage } from "@frui.ts/validation";
-import { BindingComponent, ExcludeBindingProps, IBindingProps } from "@frui.ts/views";
-import bind from "bind-decorator";
-import { Observer } from "mobx-react-lite";
+import { bound } from "@frui.ts/helpers";
 import * as React from "react";
 import { Form, FormControlProps } from "react-bootstrap";
 import { CommonInputProps } from "./commonInputProps";
+import { ValidationControlBase } from "./validationControlBase";
 
 export interface InputProps {
   onBlur?: (e: React.FormEvent<any>) => void;
@@ -12,22 +10,10 @@ export interface InputProps {
   onKeyDown?: (e: React.KeyboardEvent<any>) => void;
 }
 
-export class Input<TTarget, OtherProps = {}> extends BindingComponent<
-  ExcludeBindingProps<InputProps & FormControlProps & CommonInputProps & OtherProps> & IBindingProps<TTarget>,
-  TTarget
-> {
-  render() {
-    return <Observer render={this.renderInner} />;
-  }
-
-  @bind protected onKeyDown(e: React.KeyboardEvent<any>) {
-    if (this.props.onKeyDown) {
-      this.props.onKeyDown(e);
-    }
-  }
-
-  @bind protected renderInner() {
-    const { onKeyDown, noValidation, errorMessage, ...otherProps } = this.inheritedProps;
+export class Input<TTarget> extends ValidationControlBase<TTarget, InputProps & FormControlProps & CommonInputProps> {
+  @bound
+  protected renderInner() {
+    const { noValidation, errorMessage, ...otherProps } = this.inheritedProps;
     const validationError = this.getValidationError();
 
     return (
@@ -37,14 +23,14 @@ export class Input<TTarget, OtherProps = {}> extends BindingComponent<
           value={this.value === undefined || this.value === null ? "" : this.value}
           onChange={this.handleValueChanged}
           isInvalid={!!validationError}
-          onKeyDown={this.onKeyDown}
         />
         {validationError && <Form.Control.Feedback type="invalid">{validationError}</Form.Control.Feedback>}
       </>
     );
   }
 
-  @bind protected handleValueChanged(e: React.FormEvent<any>) {
+  @bound
+  protected handleValueChanged(e: React.FormEvent<any>) {
     const target = e.target as HTMLInputElement;
     if (this.props.type === "number") {
       this.setNumber(target.value);
@@ -59,25 +45,5 @@ export class Input<TTarget, OtherProps = {}> extends BindingComponent<
     } else {
       this.setValue(value === "" ? undefined : value);
     }
-  }
-
-  private getValidationError() {
-    const { noValidation, errorMessage } = this.props;
-
-    if (noValidation === true) {
-      return undefined;
-    }
-
-    if (errorMessage) {
-      return errorMessage;
-    }
-
-    // eslint-disable-next-line @typescript-eslint/tslint/config
-    const { target, property } = this.props as IBindingProps<TTarget>;
-    if (target && property) {
-      return getValidationMessage(target, property);
-    }
-
-    return undefined;
   }
 }

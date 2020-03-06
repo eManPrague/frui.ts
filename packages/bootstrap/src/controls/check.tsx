@@ -1,5 +1,5 @@
+import { bound } from "@frui.ts/helpers";
 import { BindingComponent, IBindingProps } from "@frui.ts/views";
-import bind from "bind-decorator";
 import { Observer } from "mobx-react-lite";
 import * as React from "react";
 import { Form, FormCheckProps } from "react-bootstrap";
@@ -21,7 +21,8 @@ export class Check<TTarget> extends BindingComponent<FormCheckProps & CommonInpu
     );
   }
 
-  @bind protected handleValueChanged(e: React.FormEvent<any>) {
+  @bound
+  protected handleValueChanged(e: React.FormEvent<any>) {
     const target = e.target as HTMLInputElement;
     this.setValue(target.checked);
   }

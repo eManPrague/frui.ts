@@ -1,10 +1,8 @@
-import { getValidationMessage } from "@frui.ts/validation";
-import { BindingComponent, IBindingProps } from "@frui.ts/views";
-import bind from "bind-decorator";
-import { Observer } from "mobx-react-lite";
+import { bound } from "@frui.ts/helpers";
 import * as React from "react";
 import { Form, FormControlProps } from "react-bootstrap";
 import { CommonInputProps } from "./commonInputProps";
+import { ValidationControlBase } from "./validationControlBase";
 
 export interface SelectProps<TItem> {
   items: TItem[];
@@ -17,9 +15,9 @@ export interface SelectProps<TItem> {
 
 const EMPTY_VALUE = "";
 
-export class Select<TTarget, TItem> extends BindingComponent<
-  FormControlProps & CommonInputProps & SelectProps<TItem> & IBindingProps<TTarget>,
-  TTarget
+export class Select<TTarget, TItem> extends ValidationControlBase<
+  TTarget,
+  FormControlProps & CommonInputProps & SelectProps<TItem>
 > {
   static defaultProps: Partial<SelectProps<any>> = {
     keyProperty: "id",
@@ -33,11 +31,8 @@ export class Select<TTarget, TItem> extends BindingComponent<
     return otherProps;
   }
 
-  render() {
-    return <Observer render={this.renderInner} />;
-  }
-
-  @bind protected renderInner() {
+  @bound
+  protected renderInner() {
     const { noValidation, errorMessage, items, keyProperty, textProperty, mode, allowEmpty, ...otherProps } = this.inheritedProps;
     const validationError = this.getValidationError();
 
@@ -73,7 +68,8 @@ export class Select<TTarget, TItem> extends BindingComponent<
     return items.findIndex((x: any) => x[keyProperty] == this.selectedValue) !== -1; // key might be a number, compare with '==' only
   }
 
-  @bind protected handleValueChanged(e: React.FormEvent<any>) {
+  @bound
+  protected handleValueChanged(e: React.FormEvent<any>) {
     const target = e.target as HTMLSelectElement;
     const selectedKey = target.value;
 
@@ -89,25 +85,5 @@ export class Select<TTarget, TItem> extends BindingComponent<
     } else {
       this.setValue(this.props.isNumeric ? parseInt(selectedKey, 10) : selectedKey);
     }
-  }
-
-  private getValidationError() {
-    const { noValidation, errorMessage } = this.props;
-
-    if (noValidation === true) {
-      return undefined;
-    }
-
-    if (errorMessage) {
-      return errorMessage;
-    }
-
-    // eslint-disable-next-line @typescript-eslint/tslint/config
-    const { target, property } = this.props as IBindingProps<TTarget>;
-    if (target && property) {
-      return getValidationMessage(target, property);
-    }
-
-    return undefined;
   }
 }

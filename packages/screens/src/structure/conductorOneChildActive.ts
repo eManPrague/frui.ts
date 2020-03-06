@@ -87,7 +87,8 @@ export default class ConductorOneChildActive<
     }
   }
 
-  @bound private handleChildrenChanged(change: IArrayWillChange<any> | IArrayWillSplice<any>) {
+  @bound
+  private handleChildrenChanged(change: IArrayWillChange<any> | IArrayWillSplice<any>) {
     switch (change.type) {
       case "splice":
         for (const newItem of change.added) {

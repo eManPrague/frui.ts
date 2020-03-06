@@ -29,11 +29,13 @@ export default class RootViewModel extends ConductorOneChildActive<any> {
     });
   }
 
-  @action.bound setNavigationPath(path: string) {
+  @action.bound
+  setNavigationPath(path: string) {
     this.navigationPath = path;
   }
 
-  @action.bound startNavigation() {
+  @action.bound
+  startNavigation() {
     return this.navigate(this.navigationPath, undefined);
   }
 }

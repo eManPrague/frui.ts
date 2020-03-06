@@ -10,7 +10,8 @@ export default class ManualDirtyWatcher<TTarget> implements IManualDirtyWatcher<
     this.isDirtyFlagVisible = isDirtyFlagVisible;
   }
 
-  @action setDirty(propertyName: string & keyof TTarget, isDirty = true): void {
+  @action
+  setDirty(propertyName: string & keyof TTarget, isDirty = true): void {
     set(this.dirtyProperties, propertyName, isDirty);
   }
 

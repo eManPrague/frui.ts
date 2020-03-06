@@ -8,7 +8,8 @@ export default class BusyWatcher implements IBusyWatcher {
     return this.counter > 0;
   }
 
-  @action.bound getBusyTicket() {
+  @action.bound
+  getBusyTicket() {
     this.counter++;
 
     let wasUsed = false;
@@ -20,13 +21,15 @@ export default class BusyWatcher implements IBusyWatcher {
     };
   }
 
-  @action.bound watch<T>(watchedAction: Promise<T>) {
+  @action.bound
+  watch<T>(watchedAction: Promise<T>) {
     this.counter++;
     watchedAction.then(this.decrement, this.decrement);
     return watchedAction;
   }
 
-  @action.bound private decrement() {
+  @action.bound
+  private decrement() {
     this.counter--;
   }
 }

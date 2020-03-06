@@ -79,7 +79,8 @@ export abstract class BindingComponent<TProps extends IBindingProps<TTarget>, TT
   }
 
   /** Sets the provided value to the bound property  */
-  @action.bound protected setValue(value: any) {
+  @action.bound
+  protected setValue(value: any) {
     const { target, property, onValueChanged } = this.props as IBindingProps<TTarget>;
 
     if (target && property) {

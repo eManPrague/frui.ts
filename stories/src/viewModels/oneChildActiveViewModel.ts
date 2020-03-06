@@ -6,7 +6,8 @@ import { notifyRoutePathChanged } from "./helpers";
 export default class OneChildActiveViewModel extends ConductorOneChildActive<ChildViewModel> {
   private childCounter = 1;
 
-  @action.bound addChild() {
+  @action.bound
+  addChild() {
     const newChild = new ChildViewModel();
     newChild.navigationName = this.childCounter.toString();
     newChild.name = `Child ${this.childCounter}`;

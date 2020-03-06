@@ -26,7 +26,8 @@ export default abstract class FilteredListViewModel<TEntity, TFilter, TDetail ex
     this.initFilter();
   }
 
-  @action.bound applyFilter() {
+  @action.bound
+  applyFilter() {
     if (!validate(this.filter)) {
       return false;
     }
@@ -39,18 +40,21 @@ export default abstract class FilteredListViewModel<TEntity, TFilter, TDetail ex
     return true;
   }
 
-  @bound applyFilterAndLoad() {
+  @bound
+  applyFilterAndLoad() {
     if (this.applyFilter()) {
       return this.loadData();
     }
   }
 
-  @action.bound resetFilter() {
+  @action.bound
+  resetFilter() {
     this.resetFilterValues(this.filter);
     this.applyFilter();
   }
 
-  @bound resetFilterAndLoad() {
+  @bound
+  resetFilterAndLoad() {
     this.resetFilter();
     return this.loadData();
   }

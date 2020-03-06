@@ -1,5 +1,5 @@
+import { bound } from "@frui.ts/helpers";
 import { BindingComponent, IBindingProps } from "@frui.ts/views";
-import bind from "bind-decorator";
 import { Observer } from "mobx-react-lite";
 import * as React from "react";
 
@@ -14,7 +14,7 @@ export class Checkbox<TTarget> extends BindingComponent<CheckboxProps<TTarget>, 
     );
   }
 
-  @bind
+  @bound
   protected handleValueChanged(e: React.ChangeEvent<HTMLInputElement>) {
     this.setValue(e.target.checked);
   }

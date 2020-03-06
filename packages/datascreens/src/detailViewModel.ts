@@ -5,7 +5,8 @@ export default abstract class DetailViewModel<TDetail> extends ScreenBase {
   busyWatcher = new BusyWatcher();
   @observable item: TDetail;
 
-  @action.bound setItem(item: TDetail) {
+  @action.bound
+  setItem(item: TDetail) {
     this.item = item;
   }
 
