@@ -1,4 +1,4 @@
-import * as React from "React";
+import * as React from "react";
 import * as ReactDOM from "react-dom";
 import TodoListViewModel from "./viewModels/todoListViewModel";
 import TodoListView from "./views/todoListView";

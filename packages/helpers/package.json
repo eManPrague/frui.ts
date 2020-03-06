@@ -25,5 +25,8 @@
   "scripts": {
     "clean": "rimraf dist",
     "build": "tsc"
+  },
+  "dependencies": {
+    "mobx": "^4.15.4"
   }
 }

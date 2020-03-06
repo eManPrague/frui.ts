@@ -25,11 +25,11 @@ publish:
   stage: build
   script:
     - yarn run build
-    - yarn run publish:docs
+    - yarn run publish
   artifacts:
     paths:
       - demo/dist
-      - dist/storybook
+      - stories/dist
       - dist/docs
 
 pages:
@@ -38,7 +38,7 @@ pages:
     - /^feature/.*/
   script:
     - mv dist/docs public
-    # - mv dist/storybook public/storybook
+    - mv stories/dist public/storybook
     - mv demo/dist public/demo
   artifacts:
     paths:

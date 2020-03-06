@@ -1,6 +1,6 @@
 import { Checkbox, Textbox } from "@frui.ts/htmlcontrols";
 import { observer } from "mobx-react-lite";
-import * as React from "React";
+import * as React from "react";
 import TodoItem from "../../models/todoItem";
 import TodoListViewModel from "../../viewModels/todoListViewModel";
 import { onEnterHandler } from "../helpers";

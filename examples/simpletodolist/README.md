@@ -57,7 +57,7 @@ export default class TodoListViewModel extends ScreenBase {
 `views/todoListView.tsx`
 ```tsx
 import { ViewComponent } from "@frui.ts/views";
-import * as React from "React";
+import * as React from "react";
 import TodoListViewModel from "../viewModels/todoListViewModel";
 
 const TodoListView: ViewComponent<TodoListViewModel> = ({ vm }) => (
@@ -69,7 +69,7 @@ const TodoListView: ViewComponent<TodoListViewModel> = ({ vm }) => (
 
 `index.tsx`
 ```tsx
-import * as React from "React";
+import * as React from "react";
 import * as ReactDOM from "react-dom";
 import TodoListViewModel from "./viewModels/todoListViewModel";
 import TodoListView from "./views/todoListView";

@@ -1,7 +1,7 @@
 import { Textbox } from "@frui.ts/htmlcontrols";
 import { ViewComponent } from "@frui.ts/views";
 import { observer } from "mobx-react-lite";
-import * as React from "React";
+import * as React from "react";
 import TodoListViewModel from "../../viewModels/todoListViewModel";
 import { onEnterHandler } from "../helpers";
 

@@ -31,6 +31,22 @@
     "@frui.ts/helpers": "^0.12.0",
     "@frui.ts/screens": "^0.12.0",
     "@frui.ts/validation": "^0.12.0",
-    "@frui.ts/views": "^0.12.0"
+    "@frui.ts/views": "^0.12.0",
+    "fetch-with-proxy": "^1.1.0",
+    "isomorphic-fetch": "^2.2.1",
+    "mobx": "^4.15.4",
+    "mobx-react-lite": "^1.5.2",
+    "react": "16.13.0",
+    "react-dom": "16.13.0",
+    "reflect-metadata": "^0.1.13"
+  },
+  "devDependencies": {
+    "@types/react": "^16.9.23",
+    "@types/react-dom": "^16.9.5",
+    "html-webpack-plugin": "^3.2.0",
+    "ts-loader": "^6.2.1",
+    "webpack": "^4.42.0",
+    "webpack-cli": "^3.3.11",
+    "webpack-dev-server": "^3.10.3"
   }
 }
