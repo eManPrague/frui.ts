@@ -20,13 +20,14 @@ module.exports = {
     "@typescript-eslint/explicit-function-return-type": "off",
     "@typescript-eslint/no-explicit-any": "off",
     "@typescript-eslint/no-unused-vars": [1, { args: "none", ignoreRestSiblings: true }],
+    "@typescript-eslint/no-use-before-define": [2, { "functions": false }],
     "@typescript-eslint/interface-name-prefix": "off",
     "@typescript-eslint/tslint/config": [1, { lintFile: "./tslint.json" }],
   },
   plugins: ["@typescript-eslint/tslint"], // tslint integration is used for tslint-sonarts. Other rules should be handled by ESlint.
   settings: {
     react: {
-      version: "detect", // Tells eslint-plugin-react to automatically detect the version of React to use
+      version: "latest", // Tells eslint-plugin-react to automatically detect the version of React to use
     },
   },
 };
