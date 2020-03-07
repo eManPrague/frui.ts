@@ -19,24 +19,6 @@ export interface IssuesFilter {
 
 type AsyncQueryResult<T> = Promise<PagedQueryResult<T>>;
 
-export class IssuesRepository extends RepositoryBase {
-  getAllProjects(paging: IPagingFilter): AsyncQueryResult<Project> {
-    const requestFilter = createRequestFilter(null, paging) as any;
-    return this.apiFactory().all("projects").get<ProjectsQuery>(requestFilter).then(data => [data.projects, extractPagingInfo(data)]);
-  }
-
-  getAllIssues(filter: IssuesFilter, paging: IPagingFilter): AsyncQueryResult<Issue> {
-    const requestFilter = createRequestFilter(filter, paging) as any;
-    requestFilter.subject = filter.subject && ("~" + filter.subject.trim());
-
-    return this.apiFactory().all("issues").get<IssuesQuery>(requestFilter).then(data => [data.issues, extractPagingInfo(data)]);
-  }
-
-  getIssueDetail(id: number) {
-    return this.apiFactory().one("issues", id).get<{ issue: Issue }>().then(x => x.issue);
-  }
-}
-
 function createRequestFilter(inputFilter: any, paging: IPagingFilter): IRedminePageRequest {
   const { sortColumn, sortDirection, ...restPaging } = paging;
   const resultFilter = Object.assign({}, inputFilter, restPaging);
@@ -46,4 +28,31 @@ function createRequestFilter(inputFilter: any, paging: IPagingFilter): IRedmineP
   }
 
   return resultFilter;
+}
+
+export class IssuesRepository extends RepositoryBase {
+  getAllProjects(paging: IPagingFilter): AsyncQueryResult<Project> {
+    const requestFilter = createRequestFilter(null, paging) as any;
+    return this.apiFactory()
+      .all("projects")
+      .get<ProjectsQuery>(requestFilter)
+      .then(data => [data.projects, extractPagingInfo(data)]);
+  }
+
+  getAllIssues(filter: IssuesFilter, paging: IPagingFilter): AsyncQueryResult<Issue> {
+    const requestFilter = createRequestFilter(filter, paging) as any;
+    requestFilter.subject = filter.subject && "~" + filter.subject.trim();
+
+    return this.apiFactory()
+      .all("issues")
+      .get<IssuesQuery>(requestFilter)
+      .then(data => [data.issues, extractPagingInfo(data)]);
+  }
+
+  getIssueDetail(id: number) {
+    return this.apiFactory()
+      .one("issues", id)
+      .get<{ issue: Issue }>()
+      .then(x => x.issue);
+  }
 }

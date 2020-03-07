@@ -5,6 +5,16 @@ import { observer } from "mobx-react-lite";
 import * as React from "react";
 import { IChildProps, IFieldProps } from "./types";
 
+function getControlClassName(isValid: boolean, isDirty: boolean) {
+  if (!isValid) {
+    return "is-invalid";
+  } else if (isDirty) {
+    return "is-valid";
+  } else {
+    return "";
+  }
+}
+
 const FormField: React.FunctionComponent<IFormFieldProps<any, IChildProps> & IFieldProps> = observer(props => {
   const validationMessage = props.target && props.property && getValidationMessage(props.target, props.property);
   const isDirty = getDirtyFlag(props.target, props.property);
@@ -29,22 +39,14 @@ const FormField: React.FunctionComponent<IFormFieldProps<any, IChildProps> & IFi
 });
 export default FormField;
 
-function getControlClassName(isValid: boolean, isDirty: boolean) {
-  if (!isValid) {
-    return "is-invalid";
-  }
-  else if (isDirty) {
-    return "is-valid";
-  }
-  else {
-    return "";
-  }
-}
-
-export function fieldForType<TTarget>(target: TTarget): React.FunctionComponent<IFormFieldProps<TTarget, IChildProps> & IFieldProps> {
+export function fieldForType<TTarget>(
+  target: TTarget
+): React.FunctionComponent<IFormFieldProps<TTarget, IChildProps> & IFieldProps> {
   return FormField;
 }
 
-export function fieldForTarget<TTarget>(target: TTarget): React.FunctionComponent<IFormFieldProps<TTarget, IChildProps> & IFieldProps> {
+export function fieldForTarget<TTarget>(
+  target: TTarget
+): React.FunctionComponent<IFormFieldProps<TTarget, IChildProps> & IFieldProps> {
   return (props: any) => <FormField {...props} target={target} />;
 }

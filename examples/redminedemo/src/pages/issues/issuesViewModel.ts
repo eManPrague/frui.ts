@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/camelcase */
 import { PagedQueryResult } from "@frui.ts/data";
 import { FilteredListViewModel } from "@frui.ts/datascreens";
 import { BusyWatcher } from "@frui.ts/screens";

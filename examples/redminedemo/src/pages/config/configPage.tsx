@@ -4,10 +4,10 @@ import ConfigView from "./configView";
 import ConfigViewModel from "./configViewModel";
 
 const ConfigPage: React.FunctionComponent = () => {
-    const viewModel = new ConfigViewModel();
-    useDisposable(viewModel);
+  const viewModel = new ConfigViewModel();
+  useDisposable(viewModel);
 
-    return <ConfigView vm={viewModel} />;
+  return <ConfigView vm={viewModel} />;
 };
 
 export default ConfigPage;

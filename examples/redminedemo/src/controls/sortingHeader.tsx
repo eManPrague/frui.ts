@@ -4,6 +4,14 @@ import * as React from "react";
 
 type onSortChangedHandler = (key: string, direction?: SortingDirection) => void;
 
+function getSortIndicator(currentColumn: string | undefined, currentDirection: SortingDirection | undefined, column: string) {
+  if (column !== currentColumn) {
+    return null;
+  }
+
+  return currentDirection === SortingDirection.Descending ? "🔽" : "🔼";
+}
+
 export interface ISortingHeaderProps {
   column: string;
   filter?: IPagingFilter;
@@ -15,9 +23,9 @@ const SortingHeader: React.FunctionComponent<ISortingHeaderProps> = observer(({ 
   const clickHandler = () => {
     if (filter) {
       if (filter.sortColumn === column) {
-        filter.sortDirection = filter.sortDirection === SortingDirection.Ascending ? SortingDirection.Descending : SortingDirection.Ascending;
-      }
-      else {
+        filter.sortDirection =
+          filter.sortDirection === SortingDirection.Ascending ? SortingDirection.Descending : SortingDirection.Ascending;
+      } else {
         filter.sortColumn = column;
         filter.sortDirection = SortingDirection.Ascending;
       }
@@ -28,14 +36,10 @@ const SortingHeader: React.FunctionComponent<ISortingHeaderProps> = observer(({ 
     }
   };
 
-  return <th onClick={clickHandler}>{children} {filter && getSortIndicator(filter.sortColumn, filter.sortDirection, column)}</th>;
+  return (
+    <th onClick={clickHandler}>
+      {children} {filter && getSortIndicator(filter.sortColumn, filter.sortDirection, column)}
+    </th>
+  );
 });
 export default SortingHeader;
-
-function getSortIndicator(currentColumn: string | undefined, currentDirection: SortingDirection | undefined, column: string) {
-  if (column !== currentColumn) {
-    return null;
-  }
-
-  return currentDirection === SortingDirection.Descending ? "🔽" : "🔼";
-}

@@ -38,4 +38,3 @@ export class DropDown extends BindingComponent<IDropDownProps<any>, any> {
     this.setValue(e.target.value);
   }
 }
-

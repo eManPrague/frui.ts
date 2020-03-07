@@ -3,9 +3,7 @@ import { IRedminePageInfo } from "../entities/redminePageInfo";
 import { RedmineRequestBuilder } from "./redmineRequestBuilder";
 
 export class RepositoryBase {
-  constructor(protected apiFactory: () => RedmineRequestBuilder) {
-  }
-
+  constructor(protected apiFactory: () => RedmineRequestBuilder) {}
 }
 
 export function extractPagingInfo(queryResult: IRedminePageInfo): IPagingInfo {
