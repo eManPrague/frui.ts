@@ -35,21 +35,22 @@ export function runApp(container: Container) {
 
 ```tsx
 import { registerView, ViewComponent } from "@frui.ts/views";
-import { observer } from "mobx-react-lite";
 import React from "react";
 import RootViewModel from "../viewModels/rootViewModel";
 
-const RootView: ViewComponent<RootViewModel> = observer(({ vm }) => {
+const RootView: ViewComponent<RootViewModel> = ({ vm }) => {
   return <p>Hello from {vm.name}!</p>;
-});
+};
 
 registerView(RootView, RootViewModel);
 ```
 
+`ViewComponent` is a simple type shortcut for `React.FunctionComponent<{ vm: TViewModel }>`, so our view is a simple React function component with single prop - `vm`.
+
 The `registerView` function registers `RootView` as the default view for `RootViewModel`. Therefore, general `<View />` component can be used to locate the proper view for a particular view model, and there is no need to explicitly mention `RootView` any more.
 We just have to make sure the file is loaded:
 
-`views/index.ts` (this file can be generated)
+`views/index.ts` (this file can be generated along DI configuration files)
 
 ```ts
 import "./rootView";

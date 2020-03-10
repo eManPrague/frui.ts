@@ -1,11 +1,15 @@
 import { Container } from "inversify";
+import LoginRepository from "./data/repositories/loginRepository";
 import "./di.decorators";
 import registerServices from "./di.registry";
+import UserContext from "./models/userContext";
 
 export default function createContainer() {
   const container = new Container({ skipBaseClassChecks: true });
 
-  // register all components here with container.bind<>().to()...
+  const userContext = new UserContext();
+  container.bind(UserContext).toConstantValue(userContext);
+  container.bind(LoginRepository).toSelf();
 
   registerServices(container);
 

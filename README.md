@@ -6,6 +6,12 @@ It allows ViewModel-first approach, which enables automated testing of complex w
 
 This framework is designed to support both small and large applications with SOLID codebase. It is built on top of the [React](https://reactjs.org/) library, using [MobX](https://mobx.js.org/) and written in the modern TypeScript language.
 
+## Why should you use Frui.ts?
+
+Because you can write this:
+
+TODO - person model with validation, simple form with bound input and button, vm with canSave
+
 ## Motivation
 
 We were not happy with the currently popular event-sourced state management, and that logic is still usually dependant on the presentation structure.

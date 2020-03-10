@@ -1,1 +1,2 @@
+import "./loginView";
 import "./rootView";
