@@ -1,8 +1,5 @@
 {
   "name": "frui.ts",
-  "publishConfig": {
-    "registry": "https://nexus.eman.cz/repository/eman-npm/"
-  },
   "version": "0.1.0",
   "description": "MVVM UI framework",
   "main": "index.js",
