@@ -65,12 +65,12 @@ Frui.ts comprises of several modules that you can use separately.
 ## Examples
 
 - [Simple TODO list](examples/simpletodolist/README.md)
-- Complex application (TODO)
+- [Complex application](examples/complexdemo/README.md)
 
-## Guidelines
+## Tips and tricks
 
-- Design the logic from ViewModels.
+- Design the logic from ViewModels, not Views.
 
 ### Cookbook
 
-(TODO)
+(Coming soon)

@@ -3,4 +3,5 @@ export interface ISelectItem {
   label: string;
 }
 
-export type ViewComponent<TViewModel> = React.FunctionComponent<{ vm: TViewModel }>;
+export type ViewProps<TViewModel> = { vm: TViewModel };
+export type ViewComponent<TViewModel> = React.FunctionComponent<ViewProps<TViewModel>>;

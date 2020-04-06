@@ -6,9 +6,9 @@ There is a simple base class for all view models - `ScreenBase`. It handles basi
 
 Hierarchical nesting of VMs is necessary to structure almost any application and thus base classes for the task are supplied as well:
 
-- `ConductorSingleChild` - this is usually used when you want to manually create child VMs. E.g., list with possible detail page.
-- `ConductorOneChildActive` - conductor with list of children and single active child. This is used when the parent has a static list of possible child VMs and only single child can be active at a time. E.g., application module with list of pages.
-- `ConductorAllChildrenActive` - conductor with list of children of which all are active. This is used when the parent has a list child VMs and all children are active. This is typical for multi window screens or dashboards.
+- `ConductorSingleChild` - conductor with manually managed child VMs, e.g., a list with a detail page.
+- `ConductorOneChildActive` - conductor with a list of children and single active child. This is used when the parent has a static list of possible child VMs and only a single child can be active at a time. E.g., application module with list of pages.
+- `ConductorAllChildrenActive` - conductor with a list of children of which all are active. This is typical for multi window screens or dashboards.
 
 It is recommended to design the structure of VMs first and only after that start with views implementation.
 
