@@ -28,7 +28,14 @@ We highly appreciate if you not only report an issue or request a new feature, b
  3. Pull requests will be merged when you get approvals from at least 2 of the maintainers (and no rejection from others).
 
 ## Set up your work environment
-You need Node.js and Yarn installed locally. After that, you can simply run `yarn install` snd then with `yarn validate`, you should be good to go. You are now ready to contribute!
+You need Node.js and Yarn installed locally and run
+
+```
+yarn install
+yarn lerna bootstrap
+```
+
+You can then check the environment with `yarn validate` and if there are no errors, you should be good to go. You are now ready to contribute!
 
 ## Working with the Git
  1. Fork the repository.

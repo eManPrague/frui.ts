@@ -37,7 +37,7 @@ export default class BusyWatcher implements IBusyWatcher {
 export function watchBusy(target: any, propertyKey: string, descriptor: PropertyDescriptor) {
   const originalFunction = descriptor.value;
 
-  descriptor.value = function(this: any, ...args: any[]) {
+  descriptor.value = function (this: any, ...args: any[]) {
     const result = originalFunction.apply(this, args);
 
     if (result && result.then && typeof result.then === "function") {

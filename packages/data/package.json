@@ -1,7 +1,7 @@
 {
   "name": "@frui.ts/data",
   "publishConfig": {
-    "registry": "https://nexus.eman.cz/repository/eman-npm/"
+    "access": "public"
   },
   "version": "0.12.1",
   "description": "Helpers and interfaces for handling paged and sorted data sets",

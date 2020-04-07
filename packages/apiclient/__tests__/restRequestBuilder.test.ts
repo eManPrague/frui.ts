@@ -27,10 +27,7 @@ describe("RestRequestBuilder", () => {
     const connector = mock<IApiConnector>();
     const builder = new RestRequestBuilder(connector, "www.base.url", {});
 
-    builder
-      .one("users", 123)
-      .all("invoices")
-      .getRaw();
+    builder.one("users", 123).all("invoices").getRaw();
     expect(connector.get).toHaveBeenCalledWith("www.base.url/users/123/invoices", {});
   });
 
@@ -39,10 +36,7 @@ describe("RestRequestBuilder", () => {
       const connector = mock<IApiConnector>();
       const builder = new RestRequestBuilder(connector, "www.base.url", {});
 
-      builder
-        .one("users", 123)
-        .all("invoices")
-        .getRaw();
+      builder.one("users", 123).all("invoices").getRaw();
 
       builder.reset();
 

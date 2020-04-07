@@ -1,7 +1,7 @@
 {
   "name": "@frui.ts/validation",
   "publishConfig": {
-    "registry": "https://nexus.eman.cz/repository/eman-npm/"
+    "access": "public"
   },
   "version": "0.12.1",
   "description": "Observable validation",

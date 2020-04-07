@@ -1,5 +1,5 @@
 import "reflect-metadata";
-import { runApp } from "./app";
+import { runApp } from "./application";
 import "./assets/themes/default.theme.scss";
 import createContainer from "./di.config";
 import * as serviceWorker from "./serviceWorker";
