@@ -2,6 +2,22 @@
   "name": "frui.ts",
   "version": "0.1.0",
   "description": "MVVM UI framework",
+  "keywords": [
+    "front-end",
+    "framework",
+    "mvvm",
+    "react",
+    "mobx"
+  ],
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/eManPrague/frui.ts.git"
+  },
+  "bugs": {
+    "url": "https://github.com/eManPrague/frui.ts/issues"
+  },
+  "author": "Augustin Šulc <sulc.gusta@gmail.com>",
+  "license": "MIT",
   "main": "index.js",
   "directories": {
     "example": "examples",
@@ -19,19 +35,8 @@
     "lint": "eslint ./{packages,examples}/**/*.{ts,tsx}",
     "validate": "yarn run lint && yarn run cleanbuild && yarn run test && yarn run publish"
   },
-  "repository": {
-    "type": "git",
-    "url": "git@gitlab.eman.cz:frui.ts/frui.ts-fe.git"
-  },
-  "keywords": [
-    "mvvm",
-    "react",
-    "mobx"
-  ],
-  "author": "Augustin Šulc",
-  "license": "MIT",
   "devDependencies": {
-    "@types/jest": "^25.2.1",
+    "@types/jest": "^24.9.1",
     "@types/prettier": "^2.0.0",
     "@types/rimraf": "^3.0.0",
     "@typescript-eslint/eslint-plugin": "^2.27.0",
@@ -47,7 +52,7 @@
     "lerna-update-wizard": "^0.17.8",
     "prettier": "^2.0.4",
     "rimraf": "^3.0.2",
-    "ts-jest": "^25.3.1",
+    "ts-jest": "^24.1.0",
     "tslint": "^5.14.0",
     "tslint-sonarts": "^1.9.0",
     "typedoc": "^0.17.4",

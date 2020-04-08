@@ -5,8 +5,21 @@
   },
   "version": "0.12.1",
   "description": "Helpers and interfaces for handling paged and sorted data sets",
+  "keywords": [
+    "front-end",
+    "framework",
+    "mvvm",
+    "data"
+  ],
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/eManPrague/frui.ts.git"
+  },
+  "bugs": {
+    "url": "https://github.com/eManPrague/frui.ts/issues"
+  },
   "author": "Augustin Šulc <sulc.gusta@gmail.com>",
-  "license": "ISC",
+  "license": "MIT",
   "main": "dist/index.js",
   "directories": {
     "lib": "dist",
@@ -15,10 +28,6 @@
   "files": [
     "dist"
   ],
-  "repository": {
-    "type": "git",
-    "url": "git@gitlab.eman.cz:frui.ts/frui.ts-fe.git"
-  },
   "scripts": {
     "clean": "rimraf dist",
     "build": "tsc"
