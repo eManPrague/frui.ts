@@ -3,12 +3,13 @@
   "publishConfig": {
     "access": "public"
   },
-  "version": "0.12.1",
+  "version": "0.12.2",
   "description": "Frui.ts helpers for HTTP communication",
   "keywords": [
     "front-end",
     "fetch"
   ],
+  "homepage": "https://github.com/eManPrague/frui.ts",
   "repository": {
     "type": "git",
     "url": "git+https://github.com/eManPrague/frui.ts.git"
@@ -31,6 +32,6 @@
     "build": "tsc"
   },
   "dependencies": {
-    "@frui.ts/helpers": "^0.12.1"
+    "@frui.ts/helpers": "^0.12.2"
   }
 }

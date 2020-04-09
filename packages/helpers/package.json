@@ -3,7 +3,7 @@
   "publishConfig": {
     "access": "public"
   },
-  "version": "0.12.1",
+  "version": "0.12.2",
   "description": "Frui.ts helper functions",
   "keywords": [
     "front-end",
@@ -11,6 +11,7 @@
     "mvvm",
     "helpers"
   ],
+  "homepage": "https://github.com/eManPrague/frui.ts",
   "repository": {
     "type": "git",
     "url": "git+https://github.com/eManPrague/frui.ts.git"

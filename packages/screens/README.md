@@ -1,8 +1,8 @@
 # `@frui.ts/screens`
 
-Since the application should be ViewModel-driven, we need to properly design the application structure within VMs.
+Since the application should be **ViewModel-driven**, we need to properly design the application structure within VMs.
 
-There is a simple base class for all view models - `ScreenBase`. It handles basic lifecycle such as `init`, `activate`, `deactivate`. These actions come from the `View` component.
+There is a simple base class for all view models - `ScreenBase`. It handles basic lifecycle such as `initialize`, `activate`, `deactivate`. These actions origin from the root `View` component and are passed to child view models by their parent conductors.
 
 Hierarchical nesting of VMs is necessary to structure almost any application and thus base classes for the task are supplied as well:
 
@@ -13,6 +13,10 @@ Hierarchical nesting of VMs is necessary to structure almost any application and
 It is recommended to design the structure of VMs first and only after that start with views implementation.
 
 These components are heavily inspired by the Caliburn.Micro framework from .NET platform.
+
+![Interfaces cheatsheet](http://www.plantuml.com/plantuml/proxy?cache=no&src=https://raw.githubusercontent.com/eManPrague/frui.ts/develop/packages/screens/interfaces.puml)
+
+![Classes layout](http://www.plantuml.com/plantuml/proxy?cache=no&src=https://raw.githubusercontent.com/eManPrague/frui.ts/develop/packages/screens/classes.puml)
 
 ## `ScreenBase`
 

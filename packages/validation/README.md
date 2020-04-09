@@ -53,10 +53,10 @@ import {
 } from "@frui.ts/validation";
 
 const target = { firstName: "John" };
-attachAutomaticValidator(target);
+attachAutomaticValidator(target, validationRules);
 
 // you can also use:
-// const target = attachAutomaticValidator({ firstName: "John" });
+// const target = attachAutomaticValidator({ firstName: "John" }, validationRules);
 
 let isEntityValid = isValid(target); // true
 let isFirstNameValid = isValid(target, "firstName"); // true

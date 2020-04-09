@@ -9,6 +9,7 @@
     "react",
     "mobx"
   ],
+  "homepage": "https://github.com/eManPrague/frui.ts",
   "repository": {
     "type": "git",
     "url": "git+https://github.com/eManPrague/frui.ts.git"

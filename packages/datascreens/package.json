@@ -3,7 +3,7 @@
   "publishConfig": {
     "access": "public"
   },
-  "version": "0.12.1",
+  "version": "0.12.2",
   "description": "Frui.ts base classes for data-oriented view models",
   "keywords": [
     "front-end",
@@ -12,6 +12,7 @@
     "data",
     "mobx"
   ],
+  "homepage": "https://github.com/eManPrague/frui.ts",
   "repository": {
     "type": "git",
     "url": "git+https://github.com/eManPrague/frui.ts.git"
@@ -34,11 +35,11 @@
     "build": "tsc"
   },
   "dependencies": {
-    "@frui.ts/data": "^0.12.1",
-    "@frui.ts/dirtycheck": "^0.12.1",
-    "@frui.ts/helpers": "^0.12.1",
-    "@frui.ts/screens": "^0.12.1",
-    "@frui.ts/validation": "^0.12.1",
+    "@frui.ts/data": "^0.12.2",
+    "@frui.ts/dirtycheck": "^0.12.2",
+    "@frui.ts/helpers": "^0.12.2",
+    "@frui.ts/screens": "^0.12.2",
+    "@frui.ts/validation": "^0.12.2",
     "mobx": "^4.15.4"
   }
 }

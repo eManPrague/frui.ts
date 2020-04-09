@@ -3,7 +3,7 @@
   "publishConfig": {
     "access": "public"
   },
-  "version": "0.12.1",
+  "version": "0.12.2",
   "description": "Helpers and interfaces for handling paged and sorted data sets",
   "keywords": [
     "front-end",
@@ -11,6 +11,7 @@
     "mvvm",
     "data"
   ],
+  "homepage": "https://github.com/eManPrague/frui.ts",
   "repository": {
     "type": "git",
     "url": "git+https://github.com/eManPrague/frui.ts.git"
