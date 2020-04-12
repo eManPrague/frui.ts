@@ -1,11 +1,8 @@
-import { IHasNavigationName } from "../navigation/types";
 import ConductorBaseWithActiveChild from "./conductorBaseWithActiveChild";
 import { isDeactivatable } from "./helpers";
-import { IChild } from "./types";
+import { IChild, IScreen } from "./types";
 
-export default abstract class ConductorSingleChild<
-  TChild extends IChild<any> & IHasNavigationName
-> extends ConductorBaseWithActiveChild<TChild> {
+export default abstract class ConductorSingleChild<TChild extends IScreen & IChild> extends ConductorBaseWithActiveChild<TChild> {
   protected async deactivateChild(child: TChild | undefined, isClosing: boolean) {
     if (!child || this.activeChild !== child) {
       return;

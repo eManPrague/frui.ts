@@ -9,6 +9,7 @@ export interface IActivatable {
 
 export interface IScreen extends IActivatable {
   readonly name: string;
+  readonly navigationName: string;
 }
 
 export interface IConductor<TChild> {
@@ -20,7 +21,7 @@ export interface IHasActiveChild<TChild> {
   activeChild?: TChild;
 }
 
-export interface IChild<TParent> {
+export interface IChild<TParent = IConductor<IScreen>> {
   parent: TParent;
   requestClose(): Promise<boolean> | boolean;
 }

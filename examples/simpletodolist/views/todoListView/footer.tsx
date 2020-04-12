@@ -15,17 +15,17 @@ const Footer: ViewComponent<TodoListViewModel> = observer(({ vm }) => {
 
       <ul className="filters">
         <li>
-          <a className={getFilterClass("all")} href="#" onClick={vm.showAll}>
+          <a className={getFilterClass("all")} href="#/">
             All
           </a>
         </li>
         <li>
-          <a className={getFilterClass("incomplete")} href="#/active" onClick={vm.showIncomplete}>
+          <a className={getFilterClass("active")} href="#/active">
             Active
           </a>
         </li>
         <li>
-          <a className={getFilterClass("complete")} href="#/active" onClick={vm.showComplete}>
+          <a className={getFilterClass("completed")} href="#/completed">
             Completed
           </a>
         </li>

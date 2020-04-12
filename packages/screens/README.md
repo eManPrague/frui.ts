@@ -72,8 +72,64 @@ You can also use function decorator `@watchBusy`. It automates the use of `busyW
 
 # Navigation
 
-TODO initialize navigation
+There are several use cases related to navigation:
 
-Implement `IHasNavigationParams` if you want to propagate some parameter no the navigation path.
+## 1. Notify that application navigation has changed
+
+Every time the application needs to update the navigation state (usually resulting in changing the URL), it raises an event. In order to streamline the event issuing, there is a helper function on `NavigationConfiguration`.
+
+```ts
+import { NavigationConfiguration } from "@frui.ts/screens";
+
+// is you call this from a view model, you will probably replace 'currentScreen' with 'this'
+NavigationConfiguration.onScreenChanged?.(currentScreen);
+```
+
+There are two places where `onScreenChanged` is called by default:
+
+1. Whenever a `ScreenBase` is activated.
+2. When a `ConductorBaseWithActiveChild` does not have an active child.
+
+You might notice that point 1 would cause problems when activating a parent conductor with already present active child (because both get activated). To handle that, there is a property `canBeNavigationActiveScreen` and function `notifyNavigationChanged()` in `ScreenBase`. The property is used as a flag if the actual `onScreenChanged` should be called. For example in `ConductorBaseWithActiveChild`, it is implemented as this:
+
+```ts
+get canBeNavigationActiveScreen() {
+  return !this.activeChildValue;
+}
+```
+
+So, if you are creating some kind of a conductor that contains children, you should implement the property similarly. Besides that, all you need to do is to call `notifyNavigationChanged()` that is available from the base class `ScreenBase` any time you want to update the navigation state (e.g., a filter is changed).
+
+## 2. Get current navigation path
+
+When a call to `onScreenChanged` is issued, the simplest way to get actual navigation path is to call `getNavigationPath` on the source view model. It is then its responsibility to get the proper path. The default implementation in `ScreenBase` recursively calls parent view models to get the full path.
+
+## 3. React when URL changes
+
+When the navigation path changes from outsite of the application, we need the app to react. Because Frui.ts applications are composed as a hierarchical structure of view models, the navigation should start from the top-most level, i.e., the root view model. Simply call its `navigate()` function. And let it recursively activate its children along the new path.
+
+## 4. Generate local navigation links
+
+
+
+## 5. Generate application-wide navigation links
+
+
+
+## `UrlNavigationAdapter`
+
+This is a reference implementation for navigation adapter that handles browser URL and history changes.
+
+To initialize the adapter, you need to provide the root view model. It will automatically hook to the `onScreenChanged` handler.
+
+```ts
+// in your application initialization code
+import { UrlNavigationAdapter } from "@frui.ts/screens";
+
+...
+const urlAdapter = new UrlNavigationAdapter(rootViewModel);
+urlAdapter.start();
+```
+
 
 Implement `ICanNavigate` if you want to control navigation path for children and react to changes in the navigation path. Note that the conductors described above already implement `ICanNavigate`.

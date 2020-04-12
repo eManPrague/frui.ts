@@ -3,7 +3,7 @@ import { action, computed, observable } from "mobx";
 import TodoItem from "../models/todoItem";
 import { uuid } from "uuidv4";
 
-type FilterType = "all" | "complete" | "incomplete";
+type FilterType = "all" | "completed" | "active";
 
 export default class TodoListViewModel extends ScreenBase {
   name = "TODO List";
@@ -15,9 +15,9 @@ export default class TodoListViewModel extends ScreenBase {
   @observable filter: FilterType = "all";
   @computed get filteredList() {
     switch (this.filter) {
-      case "complete":
+      case "completed":
         return this.list.filter(x => x.completed);
-      case "incomplete":
+      case "active":
         return this.list.filter(x => !x.completed);
       default:
         return this.list;
@@ -72,13 +72,16 @@ export default class TodoListViewModel extends ScreenBase {
     this.list.forEach(x => (x.completed = newValue));
   }
 
-  @action.bound showAll() {
-    this.filter = "all";
-  }
-  @action.bound showComplete() {
-    this.filter = "complete";
-  }
-  @action.bound showIncomplete() {
-    this.filter = "incomplete";
+  @action.bound
+  navigate(path: string) {
+    switch (path) {
+      case "completed":
+      case "active":
+        this.filter = path;
+        break;
+      default:
+        this.filter = "all";
+        break;
+    }
   }
 }

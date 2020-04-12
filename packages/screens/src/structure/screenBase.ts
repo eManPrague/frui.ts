@@ -1,11 +1,13 @@
 /* eslint-disable @typescript-eslint/no-empty-function */
 import { bound } from "@frui.ts/helpers";
 import { computed, observable } from "mobx";
-import navigationManager from "../navigation/navigationManager";
-import { IHasNavigationName } from "../navigation/types";
+import { isNavigationParent } from "../navigation/helpers";
+import NavigationConfiguration from "../navigation/navigationConfiguration";
+import { NavigationPath } from "../navigation/navigationPath";
+import { ICanNavigate } from "../navigation/types";
 import { IChild, IConductor, IScreen } from "./types";
 
-export default abstract class ScreenBase implements IScreen, IChild<IConductor<ScreenBase>>, IHasNavigationName {
+export default abstract class ScreenBase implements IScreen, IChild, ICanNavigate {
   navigationName: string;
   @observable name: string;
   parent: IConductor<ScreenBase>;
@@ -102,8 +104,20 @@ export default abstract class ScreenBase implements IScreen, IChild<IConductor<S
   }
 
   protected notifyNavigationChanged() {
-    if (this.canBeNavigationActiveScreen && navigationManager.onActiveScreenChanged) {
-      navigationManager.onActiveScreenChanged(this);
+    if (this.canBeNavigationActiveScreen && NavigationConfiguration.onScreenChanged) {
+      NavigationConfiguration.onScreenChanged(this);
+    }
+  }
+
+  // you can override this function to navigate to children, react to params, etc.
+  navigate(subPath: string | undefined, params: any): Promise<any> | void {}
+
+  // you can override this function to add params, manipulate the address, etc.
+  getNavigationPath(): NavigationPath {
+    if (this.parent && isNavigationParent(this.parent)) {
+      return this.parent.getChildNavigationPath(this);
+    } else {
+      return { path: this.navigationName, isClosed: false };
     }
   }
 }

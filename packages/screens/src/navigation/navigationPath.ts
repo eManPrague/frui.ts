@@ -1,4 +1,4 @@
-import NavigationManager from "./navigationManager";
+import NavigationConfiguration from "./navigationConfiguration";
 
 export interface NavigationPath {
   readonly path?: string;
@@ -6,24 +6,27 @@ export interface NavigationPath {
   readonly isClosed: boolean;
 }
 
-export function combineNavigationPath(base: string | undefined, path: string | undefined) {
-  if (base) {
-    return path ? base + NavigationManager.pathDelimiter + path : base;
-  } else {
-    return path;
-  }
+export function combinePath(base: NavigationPath, path: string, isClosed = false): NavigationPath {
+  return {
+    path: base.path + NavigationConfiguration.pathDelimiter + path,
+    params: base.params,
+    isClosed: base.isClosed || isClosed,
+  };
 }
 
-export function splitNavigationPath(path: string | undefined): [string?, string?] {
+export function splitUrlSegments(
+  path: string | undefined,
+  delimiter = NavigationConfiguration.pathDelimiter
+): [string?, string?] {
   if (!path) {
     return [undefined, undefined];
   }
 
-  if (path.startsWith(NavigationManager.pathDelimiter)) {
+  if (path.startsWith(delimiter)) {
     path = path.substr(1);
   }
 
-  const delimiterIndex = path.indexOf(NavigationManager.pathDelimiter);
+  const delimiterIndex = path.indexOf(delimiter);
   if (delimiterIndex < 0 || delimiterIndex === path.length - 1) {
     return [path, undefined];
   } else {

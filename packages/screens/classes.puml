@@ -16,6 +16,10 @@ class ScreenBase {
   #onInitialize(): Promise
   #onActivate(): Promise
   #onDeactivate(boolean close): Promise
+
+  __ Navigation functions __
+  +navigate(subPath: string, params: any): Promise<any> | void
+  +getNavigationPath(): NavigationPath
 }
 note right
   Use this if there are no child view models
@@ -25,23 +29,24 @@ end note
 
 IScreen ()- ScreenBase
 ScreenBase -() IChild
+ScreenBase -() ICanNavigate
 
 abstract class ConductorBase {
-  #tryActivateChild(child: TChild): Promise
+  {abstract} +tryActivateChild(child: TChild): Promise
+  +closeChild(child: TChild, forceClose = false): Promise<boolean> | boolean
 
   __ Navigation functions __
-  +navigate(path: string, params: any): Promise<any> | void
-  +getChildNavigationPath(child: TChild, params: any): NavigationPath
+  +navigate(subPath: string, params: any): Promise<any> | void
+  +getChildNavigationPath(child: TChild): NavigationPath
 
   .. Extension functions ..
   #findNavigationChild(navigationName: string): Promise<TChild> | TChild
   #onChildNavigated(child): Promise<any> | void
-  #applyNavigationParams(params: any): Promise<any> | void
 }
 
 ConductorBase --|> ScreenBase
 ConductorBase -() IConductor
-ICanNavigate ()- ConductorBase
+INavigationParent ()- ConductorBase
 
 abstract class ConductorBaseWithActiveChild {
   +activeChild: TChild
@@ -53,8 +58,6 @@ ConductorBaseWithActiveChild --|> ConductorBase
 IHasActiveChild ()- ConductorBaseWithActiveChild
 
 class ConductorSingleChild {
-  +tryActivateChild(child: TChild): Promise
-  +closeChild(child: TChild): Promise
 }
 note left
   Use this if there is no finite list of children
@@ -65,9 +68,6 @@ ConductorSingleChild --|> ConductorBaseWithActiveChild
 
 class ConductorOneChildActive {
   +children: TChild[]
-
-  +tryActivateChild(child: TChild): Promise
-  +closeChild(child: TChild): Promise
 }
 note right
   Use this if there is a finite list of potential children
@@ -78,9 +78,6 @@ ConductorOneChildActive --|> ConductorBaseWithActiveChild
 
 class ConductorAllChildrenActive {
   +children: TChild[]
-
-  +tryActivateChild(child: TChild): Promise
-  +closeChild(child: TChild): Promise
 }
 note right
   Use this if there is a finite list of potential children

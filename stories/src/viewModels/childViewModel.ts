@@ -1,6 +1,6 @@
 import { ScreenBase } from "@frui.ts/screens";
 import { observable } from "mobx";
-import { notifyRoutePathChanged } from "./helpers";
+import "./helpers";
 
 export default class ChildViewModel extends ScreenBase {
   @observable text: string;
@@ -11,7 +11,6 @@ export default class ChildViewModel extends ScreenBase {
 
   protected onActivate() {
     console.log(this.name, "onActivate");
-    notifyRoutePathChanged(this);
   }
 
   protected onDeactivate(close: boolean) {

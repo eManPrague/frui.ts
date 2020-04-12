@@ -1,5 +1,5 @@
 export * from "./navigation/helpers";
-export { default as NavigationManager } from "./navigation/navigationManager";
+export { default as NavigationConfiguration } from "./navigation/navigationConfiguration";
 export * from "./navigation/navigationPath";
 export * from "./navigation/types";
 export { default as UrlNavigationAdapter } from "./navigation/urlNavigationAdapter";

@@ -1,40 +1,30 @@
-import { combineNavigationPath, splitNavigationPath } from "../src/navigation/navigationPath";
+import { combinePath, splitUrlSegments } from "../src/navigation/navigationPath";
 
-describe("combineNavigationPath", () => {
+describe("combinePath", () => {
   it("combines base and child path with path delimiter", () => {
-    const result = combineNavigationPath("basePath", "childPath");
-    expect(result).toBe("basePath/childPath");
-  });
-
-  it("returns base if path element is empty", () => {
-    const result = combineNavigationPath("basePath", undefined);
-    expect(result).toBe("basePath");
-  });
-
-  it("returns path element if base is empty", () => {
-    const result = combineNavigationPath(undefined, "childPath");
-    expect(result).toBe("childPath");
+    const result = combinePath({ path: "basePath", isClosed: false }, "childPath");
+    expect(result.path).toBe("basePath/childPath");
   });
 });
 
-describe("splitNavigationPath", () => {
+describe("splitUrlSegments", () => {
   it("returns first navigation element and the rest", () => {
-    const result = splitNavigationPath("basePath/childPath");
+    const result = splitUrlSegments("basePath/childPath");
     expect(result).toEqual(["basePath", "childPath"]);
   });
 
   it("returns only single element if no path delimiter is used", () => {
-    const result = splitNavigationPath("basePath");
+    const result = splitUrlSegments("basePath");
     expect(result).toEqual(["basePath", undefined]);
   });
 
   it("skips leading slash", () => {
-    const result = splitNavigationPath("/basePath");
+    const result = splitUrlSegments("/basePath");
     expect(result).toEqual(["basePath", undefined]);
   });
 
   it("returns first navigation element and the rest if leading slash present", () => {
-    const result = splitNavigationPath("/basePath/childPath/foo");
+    const result = splitUrlSegments("/basePath/childPath/foo");
     expect(result).toEqual(["basePath", "childPath/foo"]);
   });
 });

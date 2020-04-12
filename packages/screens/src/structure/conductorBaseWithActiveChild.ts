@@ -1,12 +1,10 @@
 import { computed, observable, runInAction } from "mobx";
-import navigationManager from "../navigation/navigationManager";
-import { IHasNavigationName } from "../navigation/types";
+import NavigationConfiguration from "../navigation/navigationConfiguration";
 import ConductorBase from "./conductorBase";
 import { canDeactivate, isActivatable, isDeactivatable } from "./helpers";
-import { IChild, IHasActiveChild } from "./types";
+import { IChild, IHasActiveChild, IScreen } from "./types";
 
-export default abstract class ConductorBaseWithActiveChild<TChild extends IChild<any> & IHasNavigationName>
-  extends ConductorBase<TChild>
+export default abstract class ConductorBaseWithActiveChild<TChild extends IScreen & IChild> extends ConductorBase<TChild>
   implements IHasActiveChild<TChild> {
   @observable private activeChildValue?: TChild;
   @computed get activeChild() {
@@ -51,8 +49,8 @@ export default abstract class ConductorBaseWithActiveChild<TChild extends IChild
       await newChild.activate();
     }
 
-    if (this.isActive && !newChild && navigationManager.onActiveScreenChanged) {
-      navigationManager.onActiveScreenChanged(this);
+    if (this.isActive && !newChild && NavigationConfiguration.onScreenChanged) {
+      NavigationConfiguration.onScreenChanged(this);
     }
 
     return true;

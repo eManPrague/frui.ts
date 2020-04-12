@@ -1,8 +1,8 @@
 import { bound } from "@frui.ts/helpers";
 import { parseUrl, stringify } from "query-string";
-import { canNavigate, IChild, IConductor, IScreen, NavigationManager } from "..";
-import { getNavigationParams } from "./helpers";
-import { ICanNavigate, IHasNavigationName } from "./types";
+import { IScreen } from "..";
+import NavigationConfiguration from "./navigationConfiguration";
+import { ICanNavigate } from "./types";
 
 const hashPrefix = "#/";
 
@@ -14,7 +14,7 @@ export default class UrlNavigationAdapter {
 
   start() {
     this.isStarted = true;
-    NavigationManager.onActiveScreenChanged = this.onScreenActivated;
+    NavigationConfiguration.onScreenChanged = this.onScreenChanged;
     window.onpopstate = this.onUrlChanged;
 
     return this.onUrlChanged();
@@ -25,10 +25,9 @@ export default class UrlNavigationAdapter {
   }
 
   @bound
-  private onScreenActivated(screen: IScreen & IChild<IConductor<any>> & IHasNavigationName) {
-    if (this.isStarted && !this.isNavigationSuppressed && screen.parent && canNavigate(screen.parent)) {
-      const params = getNavigationParams(screen);
-      const path = screen.parent.getChildNavigationPath(screen, params);
+  private onScreenChanged(screen: IScreen & ICanNavigate) {
+    if (this.isStarted && !this.isNavigationSuppressed) {
+      const path = screen.getNavigationPath();
 
       let url = hashPrefix + path.path;
       if (path.params) {
