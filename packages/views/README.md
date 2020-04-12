@@ -1,6 +1,6 @@
 # `@frui.ts/views`
 
-## View discovery
+# View discovery
 
 In order to support ViewModel-driven workflow, view discovery is an essential feature. This means that based on a particular view model instance, we should be able to find proper view and display it.
 
@@ -15,7 +15,7 @@ The `View` component accepts the following props:
 - `useLifecycle` - if set to `true`, the view will pass lifecycle events (activate, deactivate) to the view model. This is needed only for the top-most root view because all child view models will receive the events from their parent view model.
 - `fallbackMode` - by default, the view throws an error when the appropriate view cannot be found. You can set `message` or `empty` to display an error message or empty control instead.
 
-### Usage
+## Usage
 
 ```tsx
 // loginView.tsx
@@ -51,7 +51,7 @@ We can display proper views for the currently active child of the `RootViewModel
 </main>
 ```
 
-## BindingComponent
+# BindingComponent
 
 The core component for 2-way binding is `BindingComponent`, a wrapper around any visual component.
 
@@ -61,7 +61,7 @@ When creating a custom bindable control, you can use the following:
 - `this.setValue(value)` - call this and pass the new value when user changes the value through the underlying component
 - `this.inheritedProps` - contains the props passed to the wrapper except binding specific properties, so that you can directly pass it to the underlying component
 
-### Example
+## Example
 
 ```tsx
 export class TextBox<TTarget> extends BindingComponent<IBindingProps<TTarget>, TTarget> {

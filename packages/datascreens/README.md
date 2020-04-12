@@ -6,6 +6,8 @@ This package contains base classes for data-centric view models.
 - `FilteredListViewModel`
 - `DetailViewModel`
 
+![Classes hierarchy](http://www.plantuml.com/plantuml/proxy?cache=no&src=https://raw.githubusercontent.com/eManPrague/frui.ts/develop/packages/datascreens/classes.puml)
+
 ## `ListViewModel`
 
 Base class for master lists in master-detail scenarios.

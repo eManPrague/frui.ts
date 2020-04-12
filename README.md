@@ -97,7 +97,7 @@ Frui.ts is **UI framework agnostic** - you can use it with any UI framework (suc
 
 # Modules
 
-Frui.ts comprises of several modules that you can use **separately**.
+Fruits is not a platform like, e.g., Angular - it does not force you to do yur work in one particular way. It is a set of tools and helpers you can use to simplify your job. It comprises of several modules that you can use **separately**.
 
 **View models**
 

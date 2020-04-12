@@ -1,5 +1,7 @@
 # `@frui.ts/screens`
 
+# Screens
+
 Since the application should be **ViewModel-driven**, we need to properly design the application structure within VMs.
 
 There is a simple base class for all view models - `ScreenBase`. It handles basic lifecycle such as `initialize`, `activate`, `deactivate`. These actions origin from the root `View` component and are passed to child view models by their parent conductors.
@@ -16,7 +18,7 @@ These components are heavily inspired by the Caliburn.Micro framework from .NET 
 
 ![Interfaces cheatsheet](http://www.plantuml.com/plantuml/proxy?cache=no&src=https://raw.githubusercontent.com/eManPrague/frui.ts/develop/packages/screens/interfaces.puml)
 
-![Classes layout](http://www.plantuml.com/plantuml/proxy?cache=no&src=https://raw.githubusercontent.com/eManPrague/frui.ts/develop/packages/screens/classes.puml)
+![Classes hierarchy](http://www.plantuml.com/plantuml/proxy?cache=no&src=https://raw.githubusercontent.com/eManPrague/frui.ts/develop/packages/screens/classes.puml)
 
 ## `ScreenBase`
 
@@ -62,13 +64,13 @@ These components are heavily inspired by the Caliburn.Micro framework from .NET 
 - `children` - add all possible children here. Just adding a child to the list assigns its `parent` property.
 - `closeChild(child)` - use to properly close the child (calls `canDeactivate`) and remove it from `children`
 
-## Busywatcher
+# Busywatcher
 
 `Busywatcher` is a simple counter of currently running processes that need to display a loading progress. You can either manually increment and decrement the counter, get a disposable ticket with `getBusyTicket()`, or use its `watch()` function to watch over a promise.
 
 You can also use function decorator `@watchBusy`. It automates the use of `busyWatcher.watch()` - if the function the decorator is applied to is async or returns a promise, and the parent class also contains a property named `busyWatcher`, the function is automatically watched by the busyWatcher.
 
-## Navigation
+# Navigation
 
 TODO initialize navigation
 

@@ -1,3 +1,3 @@
 # `HTML controls`
 
-Plain HTML controls  wrapped in `BindingComponent`.
+Plain HTML controls wrapped in `BindingComponent`.
