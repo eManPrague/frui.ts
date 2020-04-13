@@ -28,13 +28,14 @@
   },
   "devDependencies": {
     "@craco/craco": "^5.6.3",
+    "@frui.ts/generator": "^0.12.2",
     "ts-morph": "^7.0.0"
   },
   "scripts": {
     "start": "craco start",
     "build": "craco build",
     "test": "craco test",
-    "generate": "node ./tools/generate.js"
+    "generate": "node ./node_modules/@frui.ts/generator inversify && node ./node_modules/@frui.ts/generator views"
   },
   "browserslist": {
     "production": [

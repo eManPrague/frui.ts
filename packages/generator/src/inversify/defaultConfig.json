@@ -1,0 +1,20 @@
+{
+  "factoryName": "Factory",
+  "rules": [
+    {
+      "pattern": "Service$",
+      "injectable": true,
+      "scope": "singleton"
+    },
+    {
+      "pattern": "ViewModel$",
+      "injectable": true,
+      "scope": "transient"
+    },
+    {
+      "pattern": "Repository$",
+      "injectable": true,
+      "scope": "transient"
+    }
+  ]
+}

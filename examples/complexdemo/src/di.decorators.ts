@@ -1,3 +1,4 @@
+// WARNING: This file has been generated. Do not edit it manually, your changes might get lost.
 import { decorate, inject, injectable } from "inversify";
 import LoginRepository from "./data/repositories/loginRepository";
 import UserContext from "./models/userContext";

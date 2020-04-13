@@ -5,6 +5,17 @@
   "version": "0.2.0",
   "configurations": [
     {
+      "type": "node",
+      "request": "launch",
+      "name": "Debug generator",
+      "cwd": "${workspaceFolder}/examples/complexdemo",
+      "runtimeArgs": ["-r", "ts-node/register/transpile-only"],
+      "args": ["${workspaceFolder}/packages/generator/src/index.ts", "inversify"],
+      "env": {
+        "TS_NODE_PROJECT": "${workspaceFolder}/packages/generator/tsconfig.json"
+      }
+    },
+    {
       "type": "chrome",
       "request": "attach",
       "name": "Attach to Chrome",
@@ -21,7 +32,7 @@
       "internalConsoleOptions": "neverOpen",
       "disableOptimisticBPs": true,
       "windows": {
-        "program": "${workspaceFolder}/node_modules/jest/bin/jest",
+        "program": "${workspaceFolder}/node_modules/jest/bin/jest"
       }
     },
     {
@@ -29,14 +40,12 @@
       "request": "launch",
       "name": "Jest Current File",
       "program": "${workspaceFolder}/node_modules/.bin/jest",
-      "args": [
-        "${relativeFile}"
-      ],
+      "args": ["${relativeFile}"],
       "console": "integratedTerminal",
       "internalConsoleOptions": "neverOpen",
       "disableOptimisticBPs": true,
       "windows": {
-        "program": "${workspaceFolder}/node_modules/jest/bin/jest",
+        "program": "${workspaceFolder}/node_modules/jest/bin/jest"
       }
     }
   ]
