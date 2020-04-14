@@ -8,13 +8,13 @@ export interface IGeneratorParams extends BaseParams {
   registry?: { output: string };
 }
 
-export type Scope = "singleton" | "transient" | "none";
+export type LifeScope = "none" | "singleton" | "transient";
 
 export interface IConfig {
   factoryName: string;
   rules: {
     pattern: string;
-    injectable?: boolean;
-    scope?: Scope;
+    addDecorators?: boolean;
+    scope: LifeScope;
   }[];
 }

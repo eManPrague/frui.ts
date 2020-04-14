@@ -3,17 +3,17 @@
   "rules": [
     {
       "pattern": "Service$",
-      "injectable": true,
+      "addDecorators": true,
       "scope": "singleton"
     },
     {
       "pattern": "ViewModel$",
-      "injectable": true,
+      "addDecorators": true,
       "scope": "transient"
     },
     {
       "pattern": "Repository$",
-      "injectable": true,
+      "addDecorators": true,
       "scope": "transient"
     }
   ]

@@ -1,21 +1,25 @@
-import { ClassDeclaration, SourceFile, Type, Directory, Project, ts } from "ts-morph";
+import { ClassDeclaration, ImportDeclarationStructure, OptionalKind, SourceFile, Type } from "ts-morph";
 
 export function toSingleArray<T>(item: T | undefined) {
   return item ? [item] : undefined;
 }
 
 export function importType(type: ClassDeclaration, target: SourceFile) {
+  const declaration = getImportDeclaration(type, target);
+  target.addImportDeclaration(declaration.declaration);
+  return declaration.identifier;
+}
+
+export function getImportDeclaration(type: ClassDeclaration, target: SourceFile) {
   const file = type.getSourceFile();
   const path = target.getRelativePathAsModuleSpecifierTo(file);
   const identifier = type.getName();
 
-  if (type.isDefaultExport()) {
-    target.addImportDeclaration({ defaultImport: identifier, moduleSpecifier: path });
-  } else {
-    target.addImportDeclaration({ namedImports: toSingleArray(identifier), moduleSpecifier: path });
-  }
+  const declaration: OptionalKind<ImportDeclarationStructure> = type.isDefaultExport()
+    ? { defaultImport: identifier, moduleSpecifier: path }
+    : { namedImports: toSingleArray(identifier), moduleSpecifier: path };
 
-  return identifier;
+  return { identifier, declaration };
 }
 
 export function unwrapType(sourceType: Type) {

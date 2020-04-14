@@ -54,21 +54,10 @@ export default abstract class GeneratorBase<TParams extends BaseParams, TConfig>
   }
 
   protected async saveFile(file: SourceFile) {
-    const progress = createProgressBar(file.getBaseName());
-    progress.start(4, 0);
-
     this.writeGeneratedHeader(file);
-    progress.increment();
-
     file.organizeImports();
-    progress.increment();
-
     file.formatText();
-    progress.increment();
-
     await file.save();
-    progress.increment();
-    progress.stop();
   }
 
   public static generatedFileHeader =

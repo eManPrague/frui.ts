@@ -1,136 +1,53 @@
-import {
-  ArrowFunction,
-  ClassDeclaration,
-  ConstructorDeclaration,
-  FunctionDeclaration,
-  MethodDeclaration,
-  SourceFile,
-} from "ts-morph";
+import { FunctionDeclaration, SourceFile } from "ts-morph";
 import GeneratorBase from "../generatorBase";
-import { importType, unwrapType } from "../morphHelpers";
-import { IConfig, IGeneratorParams, Scope } from "./types";
+import { createProgressBar } from "../progressBar";
+import ExportsAnalyzer from "./exportsAnalyzer";
+import ServiceRule from "./models/serviceRule";
+import RegistrationsProcessor from "./registrationsProcessor";
+import { IConfig, IGeneratorParams } from "./types";
 
 export default class IversifyGenerator extends GeneratorBase<IGeneratorParams, IConfig> {
   private decoratorsFile: SourceFile;
   private registryFile: SourceFile;
   private registrationFunction: FunctionDeclaration;
 
-  // eslint-disable-next-line @typescript-eslint/tslint/config
   async run() {
+    const progressBar = createProgressBar("Generating");
+    progressBar.start(4, 0);
+
     const rules = this.parseRules();
+    const services = new ExportsAnalyzer().analyze(this.project, rules);
+    progressBar.increment();
 
-    this.forEachExport((declarations, key) => {
-      const declaration = declarations[0];
-      if (declaration instanceof ClassDeclaration && !declaration.isAbstract()) {
-        const className = declaration.getName();
+    const processor = new RegistrationsProcessor(
+      this.ensureDecoratorsFile(),
+      this.ensureRegistryFile(),
+      this.config.factoryName ?? "Factory"
+    );
 
-        if (className) {
-          const matchingRule = rules.find(x => x.regex.test(className));
+    const { decorators, registrations } = processor.process(services);
+    progressBar.increment();
 
-          if (matchingRule) {
-            if (matchingRule.injectable && this.ensureDecoratorsFile()) {
-              this.markInjectable(declaration);
-            }
+    if (decorators.length) {
+      const importStatements = decorators.flatMap(x => x.importStatements);
+      this.decoratorsFile.addImportDeclarations(importStatements);
 
-            if (matchingRule.scope && this.ensureRegistryFile()) {
-              this.registerService(declaration, matchingRule.scope);
-            }
-          }
-        }
-      }
-    });
-
-    if (this.decoratorsFile) {
+      const codeStatements = decorators.flatMap(x => x.statements);
+      this.decoratorsFile.addStatements(codeStatements);
       await this.saveFile(this.decoratorsFile);
     }
-    if (this.registryFile) {
+    progressBar.increment();
+
+    if (registrations.length) {
+      const importStatements = registrations.flatMap(x => x.importStatements);
+      this.registryFile.addImportDeclarations(importStatements);
+
+      const codeStatements = registrations.flatMap(x => x.statements);
+      this.registrationFunction.addStatements(codeStatements);
       await this.saveFile(this.registryFile);
     }
-  }
-
-  private markInjectable(declaration: ClassDeclaration) {
-    if (this.decoratorsFile) {
-      const identifier = importType(declaration, this.decoratorsFile);
-      this.decoratorsFile.addStatements([writer => writer.newLine(), `decorate(injectable(), ${identifier});`]);
-    }
-  }
-
-  private registerService(declaration: ClassDeclaration, scope: Scope) {
-    if (scope === "none") {
-      return;
-    }
-
-    const factory = this.config.factoryName && declaration.getStaticMethod(this.config.factoryName);
-    const construct = declaration.getConstructors()[0];
-
-    if (factory) {
-      this.registerServiceFactory(declaration, factory);
-    } else if (construct) {
-      this.registerServiceCustomConstructor(declaration, construct, scope);
-    } else {
-      this.registerServiceEmptyConstructor(declaration, scope);
-    }
-  }
-
-  private registerServiceFactory(declaration: ClassDeclaration, factory: MethodDeclaration) {
-    const identifier = importType(declaration, this.registryFile);
-    const factoryIdentifier = `${identifier}.${factory.getName()}`;
-    this.registrationFunction.addStatements([
-      writer => writer.newLine(),
-      "container",
-      `.bind<interfaces.Factory<${identifier}>>(${factoryIdentifier})`,
-      `.toFactory(${factoryIdentifier});`,
-    ]);
-  }
-
-  private registerServiceEmptyConstructor(declaration: ClassDeclaration, scope: Scope) {
-    const identifier = importType(declaration, this.registryFile);
-
-    const bindSuffix = scope === "singleton" ? ".inSingletonScope()" : "";
-    this.registrationFunction.addStatements([
-      writer => writer.newLine(),
-      `container.bind<${identifier}>(${identifier}).toSelf()${bindSuffix};`,
-    ]);
-  }
-
-  private registerServiceCustomConstructor(declaration: ClassDeclaration, construct: ConstructorDeclaration, scope: Scope) {
-    const identifier = importType(declaration, this.registryFile);
-    if (identifier) {
-      const bindSuffix = scope === "singleton" ? ".inSingletonScope()" : "";
-      this.registrationFunction.addStatements([
-        writer => writer.newLine(),
-        `container.bind<${identifier}>(${identifier}).toSelf()${bindSuffix};`,
-      ]);
-
-      if (this.decoratorsFile) {
-        this.registerConstructorParameters(identifier, construct);
-      }
-    }
-  }
-
-  private registerConstructorParameters(identifier: string, construct: ConstructorDeclaration) {
-    const parameters = construct.getParameters();
-    for (let i = 0; i < parameters.length; i++) {
-      const param = parameters[i];
-      const dependencyType = unwrapType(param.getType());
-
-      if (dependencyType instanceof ClassDeclaration) {
-        const dependencyIdentifier = importType(dependencyType, this.decoratorsFile);
-        this.decoratorsFile.addStatements([`decorate(inject(${dependencyIdentifier}) as any, ${identifier}, ${i});`]);
-      } else if (dependencyType instanceof ArrowFunction) {
-        // factory
-        const sourceType = unwrapType(dependencyType.getReturnType());
-        if (sourceType instanceof ClassDeclaration) {
-          const factoryMethod = this.config.factoryName && sourceType.getStaticMethod(this.config.factoryName);
-          if (factoryMethod) {
-            const sourceTypeIdentifier = importType(sourceType, this.decoratorsFile);
-            this.decoratorsFile.addStatements([
-              `decorate(inject(${sourceTypeIdentifier}.${factoryMethod.getName()}) as any, ${identifier}, ${i});`,
-            ]);
-          }
-        }
-      }
-    }
+    progressBar.increment();
+    progressBar.stop();
   }
 
   protected async getDefaultConfig() {
@@ -168,10 +85,13 @@ export default class IversifyGenerator extends GeneratorBase<IGeneratorParams, I
 
   private parseRules() {
     return (
-      this.config.rules?.map(x => ({
-        ...x,
-        regex: new RegExp(x.pattern),
-      })) ?? []
+      this.config.rules?.map(
+        x =>
+          ({
+            ...x,
+            regexPattern: new RegExp(x.pattern),
+          } as ServiceRule)
+      ) ?? []
     );
   }
 }
