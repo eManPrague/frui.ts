@@ -7,7 +7,7 @@ import {
   SourceFile,
 } from "ts-morph";
 import GeneratorBase from "../generatorBase";
-import { importType, unwrapType } from "../helpers";
+import { importType, unwrapType } from "../morphHelpers";
 import { IConfig, IGeneratorParams, Scope } from "./types";
 
 export default class IversifyGenerator extends GeneratorBase<IGeneratorParams, IConfig> {
@@ -16,7 +16,7 @@ export default class IversifyGenerator extends GeneratorBase<IGeneratorParams, I
   private registrationFunction: FunctionDeclaration;
 
   // eslint-disable-next-line @typescript-eslint/tslint/config
-  run() {
+  async run() {
     const rules = this.parseRules();
 
     this.forEachExport((declarations, key) => {
@@ -41,10 +41,10 @@ export default class IversifyGenerator extends GeneratorBase<IGeneratorParams, I
     });
 
     if (this.decoratorsFile) {
-      this.saveFile(this.decoratorsFile);
+      await this.saveFile(this.decoratorsFile);
     }
     if (this.registryFile) {
-      this.saveFile(this.registryFile);
+      await this.saveFile(this.registryFile);
     }
   }
 
@@ -135,7 +135,7 @@ export default class IversifyGenerator extends GeneratorBase<IGeneratorParams, I
 
   protected async getDefaultConfig() {
     const config = await import("./defaultConfig.json");
-    return config as IConfig;
+    return config.default as IConfig;
   }
 
   private ensureDecoratorsFile() {

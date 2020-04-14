@@ -1,8 +1,10 @@
 #!/usr/bin/env node
+/* eslint-disable @typescript-eslint/tslint/config */
 import { program } from "commander";
 import { BaseParams } from "./generatorBase";
+import PackageInfo from "../package.json";
 
-program.version("0.1.0").description("Frui.ts Generator");
+program.version(PackageInfo.version).description(PackageInfo.description);
 
 program
   .command("inversify")
@@ -30,7 +32,7 @@ program
     const GeneratorType = await import("./inversify");
     const generator = new GeneratorType.default(params);
     await generator.init();
-    generator.run();
+    await generator.run();
   });
 
 program
@@ -48,7 +50,27 @@ program
     const GeneratorType = await import("./views");
     const generator = new GeneratorType.default(params);
     await generator.init();
-    generator.run();
+    await generator.run();
+  });
+
+program
+  .command("openapi")
+  .alias("swagger")
+  .description("Generate OpenAPI client files")
+  .option("-p, --project <fileName>", "TS project file", "./tsconfig.json")
+  .option("-o, --output <relativePath>", "Output folder path", "src/entities")
+  .option("-c, --config <fileName>", "Custom configuration file")
+  .action(async options => {
+    const params = {
+      project: options.project,
+      config: options.config,
+      outputFolder: options.output,
+    };
+
+    const GeneratorType = await import("./openapi");
+    const generator = new GeneratorType.default(params);
+    await generator.init();
+    await generator.run();
   });
 
 program.parse(process.argv);

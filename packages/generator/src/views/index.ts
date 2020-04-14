@@ -5,7 +5,7 @@ import GeneratorParams from "./generatorParams";
 export default class ViewsGenerator extends GeneratorBase<GeneratorParams, any> {
   private viewsFile: SourceFile;
 
-  run() {
+  async run() {
     if (this.ensureViewsFile()) {
       this.forEachFile(file => {
         const isViewRegistration = file
@@ -22,7 +22,7 @@ export default class ViewsGenerator extends GeneratorBase<GeneratorParams, any> 
       }, "**/views/**/*.tsx");
     }
 
-    this.saveFile(this.viewsFile);
+    await this.saveFile(this.viewsFile);
   }
 
   private ensureViewsFile() {

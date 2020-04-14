@@ -51,15 +51,14 @@
     "jest-mock-extended": "^1.0.7",
     "lerna": "^3.20.2",
     "lerna-update-wizard": "^0.17.8",
-    "nodemon": "^2.0.3",
     "prettier": "^2.0.4",
     "rimraf": "^3.0.2",
     "ts-jest": "^24.1.0",
+    "ts-node": "^8.8.2",
     "tslint": "^5.14.0",
     "tslint-sonarts": "^1.9.0",
     "typedoc": "^0.17.4",
-    "typescript": "^3.7.5",
-    "ts-node": "^8.8.2"
+    "typescript": "^3.7.5"
   },
   "dependencies": {}
 }

@@ -1,5 +1,5 @@
-import { SingleBar } from "cli-progress";
-import { ExportedDeclarations, Project, SourceFile } from "ts-morph";
+import { ExportedDeclarations, Project, SourceFile, IndentationText, Directory, ts } from "ts-morph";
+import { createProgressBar } from "./progressBar";
 
 export interface BaseParams {
   project: string;
@@ -15,8 +15,12 @@ export default abstract class GeneratorBase<TParams extends BaseParams, TConfig>
   constructor(protected params: TParams) {}
 
   public async init() {
+    // TODO make formatting configurable or load from settings
     this.project = new Project({
       tsConfigFilePath: this.params.project,
+      manipulationSettings: {
+        indentationText: IndentationText.TwoSpaces,
+      },
     });
 
     if (this.params.config) {
@@ -27,20 +31,19 @@ export default abstract class GeneratorBase<TParams extends BaseParams, TConfig>
   }
 
   protected forEachFile(action: (file: SourceFile) => void, fileGlobPattern?: string) {
-    const progressBar = GeneratorBase.createProgress("Processing");
+    const progress = createProgressBar("Processing");
+    progress.start(1, 0);
 
     const files = fileGlobPattern ? this.project.getSourceFiles(fileGlobPattern) : this.project.getSourceFiles();
-    progressBar.start(files.length, 0);
+    progress.setTotal(files.length + 1);
+    progress.increment();
 
     for (let index = 0; index < files.length; index++) {
-      progressBar.update(index);
-
-      const file = files[index];
-      action(file);
+      action(files[index]);
+      progress.increment();
     }
 
-    progressBar.update(files.length);
-    progressBar.stop();
+    progress.stop();
   }
 
   protected forEachExport(action: MapForEachCallback<string, ExportedDeclarations[]>, thisArg?: any, fileGlobPattern?: string) {
@@ -50,8 +53,8 @@ export default abstract class GeneratorBase<TParams extends BaseParams, TConfig>
     }, fileGlobPattern);
   }
 
-  protected saveFile(file: SourceFile) {
-    const progress = GeneratorBase.createProgress(file.getBaseName());
+  protected async saveFile(file: SourceFile) {
+    const progress = createProgressBar(file.getBaseName());
     progress.start(4, 0);
 
     this.writeGeneratedHeader(file);
@@ -63,25 +66,26 @@ export default abstract class GeneratorBase<TParams extends BaseParams, TConfig>
     file.formatText();
     progress.increment();
 
-    file.saveSync();
+    await file.save();
     progress.increment();
     progress.stop();
   }
 
+  public static generatedFileHeader =
+    "// WARNING: This file has been generated. Do not edit it manually, your changes might get lost.";
+
+  public static canOverwiteFile(parent: Project | Directory, path: string) {
+    const file = parent.getSourceFile(path);
+
+    return !file
+      ?.getStatementByKind(ts.SyntaxKind.SingleLineCommentTrivia || ts.SyntaxKind.MultiLineCommentTrivia)
+      ?.getText()
+      .includes("generator:ignore");
+  }
+
   protected writeGeneratedHeader(file: SourceFile) {
-    file.insertText(0, x => {
-      x.writeLine("// WARNING: This file has been generated. Do not edit it manually, your changes might get lost.");
-    });
+    file.insertText(0, x => x.writeLine(GeneratorBase.generatedFileHeader));
   }
 
   protected abstract getDefaultConfig(): Promise<TConfig>;
-
-  protected static createProgress(name: string) {
-    return new SingleBar(GeneratorBase.getProgressOptions(name));
-  }
-  protected static getProgressOptions(name: string) {
-    return {
-      format: `${name.padEnd(18)} [{bar}] {percentage}% | ETA: {eta}s | {value}/{total}`,
-    };
-  }
 }
