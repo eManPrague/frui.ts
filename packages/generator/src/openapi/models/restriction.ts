@@ -1,6 +1,7 @@
-export enum Restriction {
+enum Restriction {
   required,
   maxLength,
   minLength,
   pattern,
 }
+export default Restriction;

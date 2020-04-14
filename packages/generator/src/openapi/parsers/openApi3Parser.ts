@@ -3,7 +3,7 @@ import { OpenAPIV3 } from "openapi-types";
 import Constants from "../constants";
 import Entity from "../models/entity";
 import EntityProperty from "../models/entityProperty";
-import { Restriction } from "../models/restriction";
+import Restriction from "../models/restriction";
 import TypeDefinition from "../models/typeDefinition";
 import { isArraySchemaObject, isReferenceObject, isSchemaObject } from "./helpers";
 

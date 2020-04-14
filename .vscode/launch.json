@@ -8,9 +8,9 @@
       "type": "node",
       "request": "launch",
       "name": "Debug generator",
-      "cwd": "${workspaceFolder}/examples/complexdemo",
+      "cwd": "${workspaceFolder}/packages/generator",
       "runtimeArgs": ["-r", "ts-node/register/transpile-only"],
-      "args": ["${workspaceFolder}/packages/generator/src/index.ts", "views"],
+      "args": ["${workspaceFolder}/packages/generator/src/index.ts", "openapi"],
       "env": {
         "TS_NODE_PROJECT": "${workspaceFolder}/packages/generator/tsconfig.json"
       }

@@ -1,4 +1,4 @@
-import { Restriction } from "./restriction";
+import Restriction from "./restriction";
 import TypeDefinition from "./typeDefinition";
 
 export default class EntityProperty {

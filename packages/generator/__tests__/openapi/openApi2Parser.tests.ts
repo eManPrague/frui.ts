@@ -9,7 +9,7 @@ describe("OpenApi2Parser", () => {
       };
 
       const result = new OpenApi2Parser().parseType(definition);
-      expect(result).toBe("integer");
+      expect(result).toEqual({ name: "integer" });
     });
 
     it("returns entity reference", () => {
@@ -18,7 +18,7 @@ describe("OpenApi2Parser", () => {
       };
 
       const result = new OpenApi2Parser().parseType(definition);
-      expect(result).toBe("entity:Category");
+      expect(result).toEqual({ name: "Category", isEntity: true });
     });
 
     it("returns array of simple types", () => {
@@ -30,7 +30,7 @@ describe("OpenApi2Parser", () => {
       };
 
       const result = new OpenApi2Parser().parseType(definition);
-      expect(result).toBe("array:string");
+      expect(result).toEqual({ name: "string", isArray: true });
     });
 
     it("returns array of entity references", () => {
@@ -43,7 +43,7 @@ describe("OpenApi2Parser", () => {
       };
 
       const result = new OpenApi2Parser().parseType(definition);
-      expect(result).toBe("array:entity:Tag");
+      expect(result).toEqual({ name: "Tag", isEntity: true, isArray: true });
     });
 
     it("returns enum", () => {
@@ -53,7 +53,7 @@ describe("OpenApi2Parser", () => {
       };
 
       const result = new OpenApi2Parser().parseType(definition);
-      expect(result).toBe("enum:one|two|three");
+      expect(result).toMatchObject({ isEnum: true, definition: "one|two|three" });
     });
   });
 });

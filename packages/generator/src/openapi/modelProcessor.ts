@@ -39,11 +39,13 @@ export default class ModelProcessor {
   }
 
   private extractEnums(entities: Entity[]) {
-    const properties = entities.flatMap(e => Array.from(e.properties.values()).filter(p => p.type?.isEnum && p.type?.definition));
-    return uniqBy(properties, p => p.type.definition).map(p => {
-      const definition = p.type.definition as string;
+    const properties = entities.flatMap(e =>
+      Array.from(e.properties.values(), p => p.type).filter(t => t?.isEnum && t?.definition)
+    );
+    return uniqBy(properties, t => t.definition).map(t => {
+      const definition = t.definition as string;
       return {
-        name: p.type.name,
+        name: t.name,
         definition: definition,
         items: definition.split(Constants.enumSeparator),
       } as Enum;
