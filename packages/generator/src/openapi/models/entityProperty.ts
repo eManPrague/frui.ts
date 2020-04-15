@@ -14,4 +14,8 @@ export default class EntityProperty {
 
     this.restrictions.set(name, params);
   }
+
+  get isRequired() {
+    return this.restrictions?.has(Restriction.required);
+  }
 }

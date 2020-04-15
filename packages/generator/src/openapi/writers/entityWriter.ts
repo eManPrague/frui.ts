@@ -6,9 +6,10 @@ import Entity from "../models/entity";
 import EntityProperty from "../models/entityProperty";
 import Restriction from "../models/restriction";
 import TypeDefinition from "../models/typeDefinition";
+import { IGeneratorParams } from "../types";
 
 export default class EntityWriter {
-  constructor(private parentDirectory: Directory) {}
+  constructor(private parentDirectory: Directory, private params: IGeneratorParams) {}
 
   write(definition: Entity) {
     const fileName = `${camelCase(definition.name)}.ts`;
@@ -25,7 +26,7 @@ export default class EntityWriter {
     if (currentClass) {
       currentClass.removeText();
       currentClass.insertText(currentClass.getEnd() - 1, writer =>
-        writer.newLineIfLastNot().indent(() => writeEntityBody(writer, definition))
+        writer.newLineIfLastNot().indent(() => this.writeEntityBody(writer, definition))
       );
     }
 
@@ -49,18 +50,24 @@ export default class EntityWriter {
           .writeLine(entityGeneratedHeader)
           .write("export default class ")
           .write(definition.name)
-          .block(() => writeEntityBody(writer, definition))
+          .block(() => this.writeEntityBody(writer, definition))
           .newLineIfLastNot();
       },
       { overwrite: true }
     );
   }
-}
 
-function writeEntityBody(writer: CodeBlockWriter, definition: Entity) {
-  definition.properties.forEach(p => writeEntityProperty(writer, p));
-  writer.blankLine();
-  writeValidationEntity(writer, definition);
+  private writeEntityBody(writer: CodeBlockWriter, definition: Entity) {
+    definition.properties.forEach(p => writeEntityProperty(writer, p));
+
+    if (this.params.generateValidation) {
+      writeValidationEntity(writer, definition);
+    }
+
+    if (this.params.generateConversion) {
+      writeConversionFunction(writer, definition);
+    }
+  }
 }
 
 function writeEntityProperty(writer: CodeBlockWriter, property: EntityProperty) {
@@ -68,7 +75,7 @@ function writeEntityProperty(writer: CodeBlockWriter, property: EntityProperty) 
 
   writer
     .write(property.name)
-    .conditionalWrite(!property.restrictions?.has(Restriction.required), "?")
+    .write(property.isRequired ? "!" : "?")
     .write(": ")
     .write(getType(property.type))
     .write(";")
@@ -91,12 +98,11 @@ function writePropertyDoc(writer: CodeBlockWriter, property: EntityProperty) {
 }
 
 function writeValidationEntity(writer: CodeBlockWriter, entity: Entity) {
-  writer.write("static ValidationRules = {");
-
   if (entity.properties.some(p => p.restrictions?.size)) {
+    writer.blankLineIfLastNot().write("static ValidationRules = {");
     writer.indent(() => entity.properties.forEach(p => writeValidationProperty(writer, p)));
+    writer.write("};").newLine();
   }
-  writer.write("};").newLineIfLastNot();
 }
 
 function writeValidationProperty(writer: CodeBlockWriter, property: EntityProperty) {
@@ -132,5 +138,32 @@ function getRestrictionDefinition(restriction: Restriction, params: any) {
   switch (restriction) {
     default:
       return `${Restriction[restriction]}: ${JSON.stringify(params)}`;
+  }
+}
+
+function writeConversionFunction(writer: CodeBlockWriter, entity: Entity) {
+  const identifier = camelCase(entity.name);
+  const statements = entity.properties.map(x => getConversionStatement(identifier, x)).filter(x => x) as string[];
+  if (statements.length) {
+    writer
+      .blankLineIfLastNot()
+      .write("static fromJson(")
+      .write(identifier)
+      .write(": ")
+      .write(entity.name)
+      .write(") {")
+      .indent(() => statements.forEach(x => writer.writeLine(x)));
+    writer.write("}").newLine();
+  }
+}
+
+function getConversionStatement(identifier: string, property: EntityProperty) {
+  switch (property.type.name) {
+    case "dateTime":
+      return property.isRequired
+        ? `${identifier}.${property.name} = new Date(${identifier}.${property.name});`
+        : `${identifier}.${property.name} = !!${identifier}.${property.name} ? new Date(${identifier}.${property.name}) : undefined;`;
+    default:
+      return undefined;
   }
 }

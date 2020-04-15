@@ -14,7 +14,7 @@ export default class OpenApiGenerator extends GeneratorBase<IGeneratorParams, IC
     const { entities, enums } = await modelProcessor.process(this.config.api);
 
     const fileGenerator = new FileGenerator(this.project, entities, enums);
-    await fileGenerator.generate(this.params.outputFolder);
+    await fileGenerator.generate(this.params);
   }
 
   protected async getDefaultConfig() {

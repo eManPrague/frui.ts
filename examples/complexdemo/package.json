@@ -4,6 +4,7 @@
   "private": true,
   "dependencies": {
     "@frui.ts/bootstrap": "^0.12.2",
+    "@frui.ts/generator": "^0.12.2",
     "@frui.ts/helpers": "^0.12.2",
     "@frui.ts/screens": "^0.12.2",
     "@frui.ts/views": "^0.12.2",
@@ -34,8 +35,7 @@
   "scripts": {
     "start": "craco start",
     "build": "craco build",
-    "test": "craco test",
-    "generate": "node ./node_modules/@frui.ts/generator inversify && node ./node_modules/@frui.ts/generator views"
+    "test": "craco test"
   },
   "browserslist": {
     "production": [

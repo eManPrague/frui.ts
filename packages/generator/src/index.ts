@@ -58,13 +58,17 @@ program
   .alias("swagger")
   .description("Generate OpenAPI client files")
   .option("-p, --project <fileName>", "TS project file", "./tsconfig.json")
-  .option("-o, --output <relativePath>", "Output folder path", "src/entities")
   .option("-c, --config <fileName>", "Custom configuration file")
+  .option("-o, --output <relativePath>", "Output folder path", "src/entities")
+  .option("--no-validation", "Do not generate validation rules")
+  .option("--no-conversion", "Do not generate conversion function")
   .action(async options => {
     const params = {
       project: options.project,
       config: options.config,
       outputFolder: options.output,
+      generateValidation: options.validation,
+      generateConversion: options.conversion,
     };
 
     const GeneratorType = await import("./openapi");
