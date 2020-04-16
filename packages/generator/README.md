@@ -34,11 +34,9 @@ Options:
   -p, --project <fileName>            TS project file (default: "./tsconfig.json")
   -c, --config <fileName>             Custom configuration file
   --no-decorators                     Do not generate decorators file
-  --decorators-output <relativePath>  Decorators output file path (default:
-                                      "src/di.decorators.ts")
+  --decorators-output <relativePath>  Decorators output file path (default: "src/di.decorators.ts")
   --no-registry                       Do not generate registry file
-  --registry-output <relativePath>    Registry output file path (default:
-                                      "src/di.registry.ts")
+  --registry-output <relativePath>    Registry output file path (default: "src/di.registry.ts")
   -h, --help                          display help for command
 ```
 
