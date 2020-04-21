@@ -3,7 +3,7 @@
   "publishConfig": {
     "access": "public"
   },
-  "version": "0.12.2",
+  "version": "0.12.3",
   "description": "Observable dirty checking",
   "keywords": [
     "front-end",
@@ -35,7 +35,7 @@
     "build": "tsc"
   },
   "dependencies": {
-    "@frui.ts/helpers": "^0.12.2",
+    "@frui.ts/helpers": "^0.12.3",
     "mobx": "^4.15.4"
   }
 }
