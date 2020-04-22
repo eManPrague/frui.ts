@@ -36,6 +36,10 @@
   "dependencies": {
     "@frui.ts/helpers": "^0.12.2",
     "mobx": "^4.15.4",
-    "query-string": "^6.9.0"
+    "query-string": "^6.9.0",
+    "route-parser": "^0.0.5"
+  },
+  "devDependencies": {
+    "@types/route-parser": "^0.1.3"
   }
 }

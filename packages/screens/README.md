@@ -110,11 +110,83 @@ When the navigation path changes from outsite of the application, we need the ap
 
 ## 4. Generate local navigation links
 
+When you want to navigate between children of a conductor, you can use `conductor.tryActivateChild(child)`. This will work, properly update browser URL, and also react to any URL changes. However, the action will be bound to the respective user control such as a button via `onClick` handler and thus some typical web actions such as opening the link in a new window will not work. If you need such functionality, we need to generate navigation URL for the children.
 
+You can either manually call `child.getNavigationPath()`, use `conductor.getChildNavigationPath()`, or call a helper function `Router.getChildUrlFactory()`. This factory function is usefull especially when creating multiple URLs, because it caches the root path.
+
+```tsx
+import { Router } from "@frui.ts/screens";
+
+...
+// somewhere inside a view
+const getUrl = Router.getChildUrlFactory(vm);
+
+<a href={getUrl("childId")}>Link</a> // creates <a href="#/foo/bar/parent/childId">Link</a>
+```
+
+You can also use application-wide links as described below.
 
 ## 5. Generate application-wide navigation links
 
+You can also use navigation path for navigating to another part of the application. The hard part here is how to get the proper path.
 
+The first and obvious solution is to manually generate it. This is quite easy provided that you know the structure of your application and navigation names of the respective view models.
+
+```tsx
+<a href={`#/foo/bar/${id}`}>Link</a>
+```
+
+```ts
+rootViewModel.navigate(`foo/bar/${id}`);
+```
+
+You can also use a typical solution with centrally defined routes. What we don't like about this solution is that you actually still rely on knowing the proper path for each view model and in case of any change, you have to manually update the routes as well. We wanted to find a better solution and keep the knowledge about the application structure as close to the source as possible.
+
+The idea is that you always register only a single parent-child relationship, and during the application initialization, these parts are joined to get the full path from the root view model to the deepest child view models.
+
+```ts
+// rootViewModel.ts
+import { ConductorOneChildActive, Router, ScreenBase } from "@frui.ts/screens";
+
+// we already need to reference the child VMs in the constructor,
+// so it is OK to mention it here as well
+@Router.registerRoute({ route: "", children: [OrdersViewModel, UsersViewModel] })
+export default class RootViewModel extends ConductorOneChildActive<ScreenBase> {
+
+  constructor(ordersVM: OrdersViewModel, usersVM: UsersViewModel)
+  {
+    ...
+  }
+}
+```
+
+```ts
+// usersViewModel.ts
+import { ConductorOneChildActive, Router, ScreenBase } from "@frui.ts/screens";
+
+@Router.registerRoute({ name: "usersList", route: "users" })
+@Router.registerRoute({ name: "userDetail", route: "users/:userId" })
+export default class UsersViewModel extends ConductorSingleChild<UserDetailViewModel> {
+  navigationName = "users";
+
+  constructor(private ordersModule: OrdersModuleViewModel, securityModule: SecurityModuleViewModel)
+  {
+    ...
+  }
+}
+```
+
+```ts
+import { Router } from "@frui.ts/screens";
+
+const router = new Router(rootViewModel);
+router.start();
+
+...
+
+const url = router.getUrl("userDetail", { userId: 42 }); // "#/users/42"
+await router.navigate("userDetail", { userId: 42 }); // opens the user detail
+```
 
 ## `UrlNavigationAdapter`
 
@@ -130,6 +202,5 @@ import { UrlNavigationAdapter } from "@frui.ts/screens";
 const urlAdapter = new UrlNavigationAdapter(rootViewModel);
 urlAdapter.start();
 ```
-
 
 Implement `ICanNavigate` if you want to control navigation path for children and react to changes in the navigation path. Note that the conductors described above already implement `ICanNavigate`.

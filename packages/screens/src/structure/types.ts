@@ -18,7 +18,7 @@ export interface IConductor<TChild> {
 }
 
 export interface IHasActiveChild<TChild> {
-  activeChild?: TChild;
+  readonly activeChild?: TChild;
 }
 
 export interface IChild<TParent = IConductor<IScreen>> {

@@ -9,3 +9,10 @@ export interface ICanNavigate {
 export interface INavigationParent<TChild> {
   getChildNavigationPath(child: TChild, childParams?: any): NavigationPath;
 }
+export type Class = { new (...args: any[]): any };
+
+export interface RouteDefinition {
+  name?: string;
+  route: string;
+  children?: Class[];
+}
