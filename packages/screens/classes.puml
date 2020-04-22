@@ -20,6 +20,7 @@ class ScreenBase {
   __ Navigation functions __
   +navigate(subPath: string, params: any): Promise<any> | void
   +getNavigationPath(): NavigationPath
+  +get navigationParams(): any
 }
 note right
   Use this if there are no child view models
@@ -37,7 +38,7 @@ abstract class ConductorBase {
 
   __ Navigation functions __
   +navigate(subPath: string, params: any): Promise<any> | void
-  +getChildNavigationPath(child: TChild): NavigationPath
+  +getChildNavigationPath(child: TChild, childParams?: any): NavigationPath
 
   .. Extension functions ..
   #findNavigationChild(navigationName: string): Promise<TChild> | TChild

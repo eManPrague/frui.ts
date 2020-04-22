@@ -1,3 +1,4 @@
+import { stringify } from "query-string";
 import NavigationConfiguration from "./navigationConfiguration";
 
 export interface NavigationPath {
@@ -6,10 +7,15 @@ export interface NavigationPath {
   readonly isClosed: boolean;
 }
 
-export function combinePath(base: NavigationPath, path: string, isClosed = false): NavigationPath {
+export function combinePathString(base = "", path = "") {
+  const delimiter = base && path ? NavigationConfiguration.pathDelimiter : "";
+  return base + delimiter + path;
+}
+
+export function combinePath(base: NavigationPath, path: string, params: any = undefined, isClosed = false): NavigationPath {
   return {
-    path: base.path + NavigationConfiguration.pathDelimiter + path,
-    params: base.params,
+    path: combinePathString(base.path, path),
+    params: base.params && params ? Object.assign({}, base.params, params) : base.params || params,
     isClosed: base.isClosed || isClosed,
   };
 }
@@ -32,4 +38,14 @@ export function splitUrlSegments(
   } else {
     return [path.substring(0, delimiterIndex), path.substring(delimiterIndex + 1)];
   }
+}
+
+export function appendQueryString(path: string, query?: any) {
+  if (query) {
+    const queryText = stringify(query);
+    if (queryText) {
+      return `${path}?${queryText}`;
+    }
+  }
+  return path;
 }

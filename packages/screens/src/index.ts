@@ -1,6 +1,7 @@
 export * from "./navigation/helpers";
 export { default as NavigationConfiguration } from "./navigation/navigationConfiguration";
 export * from "./navigation/navigationPath";
+export { default as Router } from "./navigation/router";
 export * from "./navigation/types";
 export { default as UrlNavigationAdapter } from "./navigation/urlNavigationAdapter";
 export { default as BusyWatcher, watchBusy } from "./structure/busyWatcher";

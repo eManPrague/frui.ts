@@ -37,7 +37,7 @@ interface ICanNavigate {
 }
 
 interface INavigationParent<TChild> {
-  +getChildNavigationPath(child: TChild): NavigationPath
+  +getChildNavigationPath(child: TChild, childParams?: any): NavigationPath
 }
 
 @enduml

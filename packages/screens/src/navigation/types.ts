@@ -7,5 +7,5 @@ export interface ICanNavigate {
 }
 
 export interface INavigationParent<TChild> {
-  getChildNavigationPath(child: TChild): NavigationPath;
+  getChildNavigationPath(child: TChild, childParams?: any): NavigationPath;
 }

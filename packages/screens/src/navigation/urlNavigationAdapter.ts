@@ -1,10 +1,9 @@
 import { bound } from "@frui.ts/helpers";
-import { parseUrl, stringify } from "query-string";
+import { parseUrl } from "query-string";
 import { IScreen } from "..";
 import NavigationConfiguration from "./navigationConfiguration";
+import { appendQueryString } from "./navigationPath";
 import { ICanNavigate } from "./types";
-
-const hashPrefix = "#/";
 
 export default class UrlNavigationAdapter {
   private isNavigationSuppressed = false;
@@ -29,10 +28,7 @@ export default class UrlNavigationAdapter {
     if (this.isStarted && !this.isNavigationSuppressed) {
       const path = screen.getNavigationPath();
 
-      let url = hashPrefix + path.path;
-      if (path.params) {
-        url += "?" + stringify(path.params);
-      }
+      const url = appendQueryString(NavigationConfiguration.hashPrefix + path.path, path.params);
 
       if (this.lastUrl !== url) {
         window.history.pushState(null, screen.name, url);
@@ -45,8 +41,8 @@ export default class UrlNavigationAdapter {
   private async onUrlChanged() {
     const hash = window.location.hash;
 
-    if (this.isStarted && hash && hash.startsWith(hashPrefix)) {
-      const path = parseUrl(hash.substr(hashPrefix.length));
+    if (this.isStarted && hash && hash.startsWith(NavigationConfiguration.hashPrefix)) {
+      const path = parseUrl(hash.substr(NavigationConfiguration.hashPrefix.length));
 
       this.isNavigationSuppressed = true;
 

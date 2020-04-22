@@ -2,7 +2,7 @@
 
 ## @frui.ts/Screens
 
- - `IHasNavigationName` deleted, `NavigationName` moved to `IScreen`
- - `IHasNavigationParams` deleted, handle the logic directly in `navigate()` instead
- - Added `INavigationParent`
- - Current screens and conductors updated according to the changes above
+ - `IHasNavigationName` deleted, `NavigationName` moved to `IScreen`.
+ - `IHasNavigationParams` deleted, `get navigationParams()` is now directly in `ScreenBase`. You can handle incoming params in `navigate()` function (move your logic from `applyNavigationParams()`).
+ - Added `INavigationParent`.
+ - Current screens and conductors updated according to the changes above.
