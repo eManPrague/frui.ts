@@ -25,7 +25,7 @@
     "test": "tests"
   },
   "scripts": {
-    "version": "lerna version -y --no-push --no-git-tag-version",
+    "setversion": "lerna version -y --no-push --no-git-tag-version",
     "publish:storybook": "yarn --cwd stories run publish",
     "publish:docs": "typedoc packages --out dist/docs --hideGenerator --exclude '**/node_modules' --ignoreCompilerErrors",
     "publish": "rimraf dist && yarn run publish:storybook && yarn run publish:docs",

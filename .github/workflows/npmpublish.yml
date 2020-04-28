@@ -13,12 +13,16 @@ jobs:
         with:
           node-version: 12
           registry-url: https://registry.npmjs.org/
+      - uses: olegtarasov/get-tag@v2
+        id: tagName
+        with:
+          tagRegex: "v(.*)"
+          tagRegexGroup: 1
       - run: yarn install
       - run: yarn run lerna bootstrap
       - run: yarn run lint
       - run: yarn run build
       - run: yarn test
-      - run: git checkout examples/complexdemo/yarn.lock
-      - run: yarn run lerna publish from-package --yes
+      - run: yarn run lerna publish ${{ steps.tagName.outputs.tag }} --yes --no-git-tag-version --no-push
         env:
           NODE_AUTH_TOKEN: ${{secrets.npm_token}}

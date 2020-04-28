@@ -77,4 +77,4 @@ program
     await generator.run();
   });
 
-program.parse(process.argv);
+program.parse();

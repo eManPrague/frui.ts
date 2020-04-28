@@ -135,6 +135,7 @@ function convertType(type: string) {
 }
 
 function getRestrictionDefinition(restriction: Restriction, params: any) {
+  // eslint-disable-next-line @typescript-eslint/tslint/config
   switch (restriction) {
     default:
       return `${Restriction[restriction]}: ${JSON.stringify(params)}`;
@@ -158,6 +159,7 @@ function writeConversionFunction(writer: CodeBlockWriter, entity: Entity) {
 }
 
 function getConversionStatement(identifier: string, property: EntityProperty) {
+  // eslint-disable-next-line @typescript-eslint/tslint/config
   switch (property.type.name) {
     case "dateTime":
       return property.isRequired
