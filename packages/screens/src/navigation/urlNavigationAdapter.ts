@@ -15,7 +15,7 @@ export default class UrlNavigationAdapter {
   start() {
     this.isStarted = true;
     NavigationManager.onActiveScreenChanged = this.onScreenActivated;
-    window.onpopstate = this.onUrlChanged;
+    window.addEventListener("hashchange", this.onUrlChanged, false);
 
     return this.onUrlChanged();
   }
@@ -43,7 +43,7 @@ export default class UrlNavigationAdapter {
   }
 
   @bound
-  private async onUrlChanged() {
+  public async onUrlChanged() {
     const hash = window.location.hash;
 
     if (this.isStarted && hash && hash.startsWith(hashPrefix)) {

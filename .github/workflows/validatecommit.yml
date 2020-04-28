@@ -1,6 +1,7 @@
 name: Validate commit
 
 on:
+  pull_request:
   push:
     tags-ignore:
       - '*.*'             # We don't want this to run on release
