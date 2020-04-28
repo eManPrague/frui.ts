@@ -4,6 +4,7 @@
   "private": true,
   "dependencies": {
     "@frui.ts/bootstrap": "^0.12.3",
+    "@frui.ts/generator": "^0.12.2",
     "@frui.ts/helpers": "^0.12.3",
     "@frui.ts/screens": "^0.12.3",
     "@frui.ts/views": "^0.12.3",
@@ -28,13 +29,13 @@
   },
   "devDependencies": {
     "@craco/craco": "^5.6.3",
+    "@frui.ts/generator": "^0.12.2",
     "ts-morph": "^7.0.0"
   },
   "scripts": {
     "start": "craco start",
     "build": "craco build",
-    "test": "craco test",
-    "generate": "node ./tools/generate.js"
+    "test": "craco test"
   },
   "browserslist": {
     "production": [

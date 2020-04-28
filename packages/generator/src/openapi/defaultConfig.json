@@ -1,0 +1,5 @@
+{
+  "api2": "https://petstore.swagger.io/v2/swagger.json",
+  "api3": "http://petstore.swagger.io:8080/api/v3/openapi.yaml",
+  "api": "https://fruits-demo.herokuapp.com/api/swagger-json"
+}

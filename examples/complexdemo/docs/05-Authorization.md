@@ -196,7 +196,7 @@ export function runApp(container: Container) {
 }
 ```
 
-In order to make `UserContext` resolvable from the container, we need to register its instance in `di.config.ts`. The same holds for `LoginRepository`.
+In order to make `UserContext` resolvable from the container, we need to register its instance in `di.config.ts`. `LoginRepository` shall be registered by the generated code in `di.registry.ts`.
 
 ```ts
 export default function createContainer() {
@@ -204,7 +204,6 @@ export default function createContainer() {
 
   const userContext = new UserContext();
   container.bind(UserContext).toConstantValue(userContext);
-  container.bind(LoginRepository).toSelf();
 
   registerServices(container);
 

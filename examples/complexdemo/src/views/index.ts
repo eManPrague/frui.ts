@@ -1,2 +1,3 @@
+// WARNING: This file has been generated. Do not edit it manually, your changes might get lost.
 import "./loginView";
 import "./rootView";

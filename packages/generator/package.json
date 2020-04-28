@@ -1,0 +1,57 @@
+{
+  "private": true,
+  "name": "@frui.ts/generator",
+  "publishConfig": {
+    "access": "public"
+  },
+  "version": "0.12.2",
+  "description": "Frui.ts code generator",
+  "keywords": [
+    "code-generator"
+  ],
+  "homepage": "https://github.com/eManPrague/frui.ts",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/eManPrague/frui.ts.git"
+  },
+  "bugs": {
+    "url": "https://github.com/eManPrague/frui.ts/issues"
+  },
+  "author": "Augustin Šulc <sulc.gusta@gmail.com>",
+  "license": "MIT",
+  "main": "dist/index.js",
+  "directories": {
+    "lib": "dist",
+    "test": "__tests__"
+  },
+  "files": [
+    "dist"
+  ],
+  "bin": {
+    "fruits-generate": "./dist/index.js"
+  },
+  "scripts": {
+    "start-openapi": "ts-node src/index.ts openapi -o temp/apitest",
+    "clean": "rimraf dist",
+    "build": "tsc",
+    "postbuild": "cpr dist/src dist && rimraf dist/src && rimraf dist/package.json"
+  },
+  "dependencies": {
+    "@apidevtools/swagger-parser": "^9.0.1",
+    "cli-progress": "^3.7.0",
+    "commander": "^5.0.0",
+    "lodash": "^4.17.15",
+    "openapi-types": "^1.3.5",
+    "ts-morph": "^7.0.2"
+  },
+  "devDependencies": {
+    "@types/cli-progress": "^3.4.2",
+    "@types/lodash": "^4.14.149",
+    "@types/node": "^13.11.1",
+    "cpr": "^3.0.1",
+    "cpy-cli": "^3.1.0",
+    "nodemon": "^2.0.3",
+    "rimraf": "^3.0.2",
+    "ts-node": "^8.8.2"
+  }
+}

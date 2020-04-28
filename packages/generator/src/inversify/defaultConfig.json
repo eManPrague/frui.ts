@@ -1,0 +1,20 @@
+{
+  "factoryName": "Factory",
+  "rules": [
+    {
+      "pattern": "Service$",
+      "addDecorators": true,
+      "scope": "singleton"
+    },
+    {
+      "pattern": "ViewModel$",
+      "addDecorators": true,
+      "scope": "transient"
+    },
+    {
+      "pattern": "Repository$",
+      "addDecorators": true,
+      "scope": "transient"
+    }
+  ]
+}
