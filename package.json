@@ -25,7 +25,7 @@
     "test": "tests"
   },
   "scripts": {
-    "version": "lerna version -y --no-push --no-git-tag-version",
+    "setversion": "lerna version -y --no-push --no-git-tag-version",
     "publish:storybook": "yarn --cwd stories run publish",
     "publish:docs": "typedoc packages --out dist/docs --hideGenerator --exclude '**/node_modules' --ignoreCompilerErrors",
     "publish": "rimraf dist && yarn run publish:storybook && yarn run publish:docs",
@@ -54,6 +54,7 @@
     "prettier": "^2.0.4",
     "rimraf": "^3.0.2",
     "ts-jest": "^24.1.0",
+    "ts-node": "^8.8.2",
     "tslint": "^5.14.0",
     "tslint-sonarts": "^1.9.0",
     "typedoc": "^0.17.4",

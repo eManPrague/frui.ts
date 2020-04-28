@@ -10,8 +10,8 @@ This framework is designed to support both small and large applications with SOL
 
 Because you can write this:
 
+`model.ts` - define your model or entities, define validation rules
 ```ts
-// model.ts - define your model or entities, define validation rules
 
 interface ICustomer {
   id: number;
@@ -27,8 +27,8 @@ const CustomerValidationRules = {
 };
 ```
 
+`viewModel.ts` - write only the code that actually makes sense
 ```ts
-// viewModel.ts - write the code that actually makes sense
 
 class CustomerViewModel {
   categories = [
@@ -56,8 +56,8 @@ class CustomerViewModel {
 }
 ```
 
+`view.tsx` - declare how the VM should be presented
 ```tsx
-// view.tsx - declare how the VM should be presented, the view will react to VM changes
 
 const customerView: ViewComponent<CustomerViewModel> = observer(({ vm }) => (
   <form>
@@ -118,9 +118,10 @@ Fruits is not a platform like, e.g., Angular - it does not force you to do yur w
 - [Validation](packages/validation/README.md) - standalone solution for MobX-based entity validation.
 - [Dirty checking](packages/dirtycheck/README.md) - standalone solution for MobX-based dirty check flags.
 
-**Shared helpers**
+**Helpers**
 
-- [Helpers](packages/helpers/README.md) - helper functions used on various places in Frui.ts. For example, `@bound`, `createMap`, `nameof`.
+- [Generator](packages/generator/README.md) - code generator for saving time in typical scenarios.
+- [Helpers](packages/helpers/README.md) - shared helper functions used on various places in Frui.ts. For example, `@bound`, `createMap`, `nameof`.
 
 **UI components**
 

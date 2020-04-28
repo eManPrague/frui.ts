@@ -13,7 +13,7 @@
     "target": "es5",
     "jsx": "react",
     "lib": [
-      "es2018",
+      "es2019",
       "dom"
     ],
     "types": [
