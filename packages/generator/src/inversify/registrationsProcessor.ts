@@ -45,7 +45,7 @@ export default class RegistrationsProcessor {
     if (factory) {
       this.registerServiceFactory(declaration, factory);
     } else {
-      const construct = declaration.getConstructors()[0];
+      const construct = getConstructor(declaration);
       this.registerConstructor(declaration, scope, construct);
     }
   }
@@ -119,4 +119,15 @@ export default class RegistrationsProcessor {
       }
     }
   }
+}
+
+function getConstructor(declaration: ClassDeclaration): ConstructorDeclaration {
+  const construct = declaration.getConstructors()[0];
+
+  if (construct) {
+    return construct;
+  }
+
+  const base = declaration.getBaseClass();
+  return base ? getConstructor(base) : construct;
 }
