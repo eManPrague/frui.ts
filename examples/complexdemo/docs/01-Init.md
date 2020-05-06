@@ -1,6 +1,7 @@
 # Init the repo
 
-    yarn init
+Run in the parent folder:
+
     yarn create react-app complexdemo --template typescript
 
 Delete the following files created by CRA because we will not need them:
@@ -10,7 +11,6 @@ Delete the following files created by CRA because we will not need them:
 - src/App.tsx
 - src/index.css
 - src/logo.svg
-- src/App.tsx
 
 It means that only `index.tsx`, `react-app-env.d.ts`, `serviceWorker.ts`, and `setupTests.ts` should remain in the `src` folder.
 

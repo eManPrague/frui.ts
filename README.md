@@ -101,7 +101,7 @@ Fruits is not a platform like, e.g., Angular - it does not force you to do yur w
 
 **View models**
 
-- [Screens](packages/screens/README.md) - components for application structure, navigation, etc. For example, `ScreenBase`, `ConductorSingleChild`, `Busywatcher`.
+- [Screens](packages/screens/README.md) - components for application structure, navigation, etc. For example, `ScreenBase`, `ConductorSingleChild`, `Busywatcher`, `Router`.
 - [Data Screens](packages/datascreens/README.md) - base classes for data-focused applications. For example, `FilteredListViewModel`, `DetailViewModel`.
 
 **Views**
