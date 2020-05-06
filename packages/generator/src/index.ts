@@ -4,7 +4,7 @@ import { program } from "commander";
 import { BaseParams } from "./generatorBase";
 import PackageInfo from "../package.json";
 
-program.version(PackageInfo.version).description(PackageInfo.description);
+program.name("fruits-generate").version(PackageInfo.version).description(PackageInfo.description);
 
 program
   .command("inversify")

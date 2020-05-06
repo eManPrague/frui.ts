@@ -23,8 +23,9 @@ export default abstract class GeneratorBase<TParams extends BaseParams, TConfig>
       },
     });
 
-    if (this.params.config) {
-      this.config = await import(this.params.config);
+    const configPath = this.params.config;
+    if (configPath) {
+      this.config = await import(configPath);
     } else {
       this.config = await this.getDefaultConfig();
     }
