@@ -22,7 +22,7 @@ The `View` component accepts the following props:
 import { observer } from "mobx-react-lite";
 import { registerView } from "@frui.ts/views";
 
-const loginView: React.SFC<{ vm: LoginViewModel }> = observer(({ vm }) => (
+const loginView: React.FunctionComponent<{ vm: LoginViewModel }> = observer(({ vm }) => (
   <TextBox target={vm.credentials} property="login" />
   <TextBox target={vm.credentials} property="password" type="password" />
 );

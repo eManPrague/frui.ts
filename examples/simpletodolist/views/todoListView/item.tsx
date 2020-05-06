@@ -5,7 +5,7 @@ import TodoItem from "../../models/todoItem";
 import TodoListViewModel from "../../viewModels/todoListViewModel";
 import { onEnterHandler } from "../helpers";
 
-const Item: React.SFC<{ vm: TodoListViewModel; item: TodoItem }> = observer(({ vm, item }) => {
+const Item: React.FunctionComponent<{ vm: TodoListViewModel; item: TodoItem }> = observer(({ vm, item }) => {
   if (vm.editedItem === item) {
     const closeEdit = () => vm.editItem();
     return (

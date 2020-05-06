@@ -115,7 +115,7 @@ export default class LoginModel {
 
 ```ts
 import { ScreenBase } from "@frui.ts/screens";
-import { observable } from "@frui.ts/screens/node_modules/mobx";
+import { observable } from "mobx";
 import LoginModel from "../models/loginModel";
 import AuthorizationService from "../services/authorizationService";
 

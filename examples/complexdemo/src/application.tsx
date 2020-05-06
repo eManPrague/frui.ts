@@ -1,7 +1,7 @@
 import { ScreenBase } from "@frui.ts/screens";
-import { reaction } from "@frui.ts/screens/node_modules/mobx";
 import { View } from "@frui.ts/views";
 import { Container } from "inversify";
+import { reaction } from "mobx";
 import React from "react";
 import ReactDOM from "react-dom";
 import UserContext from "./models/userContext";
