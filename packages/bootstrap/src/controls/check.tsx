@@ -5,7 +5,7 @@ import * as React from "react";
 import { Form, FormCheckProps } from "react-bootstrap";
 import { CommonInputProps } from "./commonInputProps";
 
-export class Check<TTarget> extends BindingComponent<FormCheckProps & CommonInputProps & IBindingProps<TTarget>, TTarget> {
+export class Check<TTarget> extends BindingComponent<TTarget, FormCheckProps & CommonInputProps & IBindingProps<TTarget>> {
   render() {
     return (
       <Observer>

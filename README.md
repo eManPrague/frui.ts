@@ -120,6 +120,7 @@ Fruits is not a platform like, e.g., Angular - it does not force you to do yur w
 
 **Helpers**
 
+- [CRA template](packages/cra-template/README.md) - Create React App template
 - [Generator](packages/generator/README.md) - code generator for saving time in typical scenarios.
 - [Helpers](packages/helpers/README.md) - shared helper functions used on various places in Frui.ts. For example, `@bound`, `createMap`, `nameof`.
 

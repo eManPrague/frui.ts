@@ -3,7 +3,7 @@ import { BindingComponent, IBindingProps } from "../src/bindingComponent";
 
 type TestControlProps = IBindingProps<any> & { otherText?: string; otherValue?: any };
 
-class TestControl extends BindingComponent<TestControlProps, any> {
+class TestControl<TTarget> extends BindingComponent<TTarget, TestControlProps> {
   readValue() {
     return this.value;
   }

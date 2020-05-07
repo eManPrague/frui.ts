@@ -64,7 +64,7 @@ When creating a custom bindable control, you can use the following:
 ## Example
 
 ```tsx
-export class TextBox<TTarget> extends BindingComponent<IBindingProps<TTarget>, TTarget> {
+export class TextBox<TTarget> extends BindingComponent<TTarget, IBindingProps<TTarget>> {
   render() {
     return (
       <Observer>

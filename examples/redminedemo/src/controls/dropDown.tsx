@@ -13,7 +13,7 @@ function cleanupValue(value: any) {
   return value === 0 ? value : value || "";
 }
 
-export class DropDown extends BindingComponent<IDropDownProps<any>, any> {
+export class DropDown<TTarget> extends BindingComponent<TTarget, IDropDownProps<TTarget>> {
   render() {
     return (
       <Observer>

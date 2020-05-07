@@ -1,7 +1,6 @@
 import { bound } from "@frui.ts/helpers";
 import * as React from "react";
 import { Form, FormControlProps } from "react-bootstrap";
-import { CommonInputProps } from "./commonInputProps";
 import { ValidationControlBase } from "./validationControlBase";
 
 export interface InputProps {
@@ -10,7 +9,10 @@ export interface InputProps {
   onKeyDown?: (e: React.KeyboardEvent<any>) => void;
 }
 
-export class Input<TTarget> extends ValidationControlBase<TTarget, InputProps & FormControlProps & CommonInputProps> {
+export class Input<TTarget, TOtherProps = {}> extends ValidationControlBase<
+  TTarget,
+  InputProps & FormControlProps & TOtherProps
+> {
   @bound
   protected renderInner() {
     const { noValidation, errorMessage, ...otherProps } = this.inheritedProps;

@@ -1,7 +1,6 @@
 import { bound } from "@frui.ts/helpers";
 import * as React from "react";
 import { Form, FormControlProps } from "react-bootstrap";
-import { CommonInputProps } from "./commonInputProps";
 import { ValidationControlBase } from "./validationControlBase";
 
 export interface SelectProps<TItem> {
@@ -15,10 +14,7 @@ export interface SelectProps<TItem> {
 
 const EMPTY_VALUE = "";
 
-export class Select<TTarget, TItem> extends ValidationControlBase<
-  TTarget,
-  FormControlProps & CommonInputProps & SelectProps<TItem>
-> {
+export class Select<TTarget, TItem> extends ValidationControlBase<TTarget, FormControlProps & SelectProps<TItem>> {
   static defaultProps: Partial<SelectProps<any>> = {
     keyProperty: "id",
     textProperty: "label",

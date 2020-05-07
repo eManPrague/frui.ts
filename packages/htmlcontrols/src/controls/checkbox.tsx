@@ -5,7 +5,7 @@ import * as React from "react";
 
 type CheckboxProps<TTarget> = IBindingProps<TTarget> & React.InputHTMLAttributes<HTMLInputElement>;
 
-export class Checkbox<TTarget> extends BindingComponent<CheckboxProps<TTarget>, TTarget> {
+export class Checkbox<TTarget> extends BindingComponent<TTarget, CheckboxProps<TTarget>> {
   render() {
     return (
       <Observer>

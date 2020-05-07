@@ -5,7 +5,7 @@ import * as React from "react";
 
 type TextboxProps<TTarget> = IBindingProps<TTarget> & React.InputHTMLAttributes<HTMLInputElement>;
 
-export class Textbox<TTarget> extends BindingComponent<TextboxProps<TTarget>, TTarget> {
+export class Textbox<TTarget> extends BindingComponent<TTarget, TextboxProps<TTarget>> {
   render() {
     return (
       <Observer>

@@ -39,10 +39,10 @@ export type ExcludeBindingProps<T> = Omit<T, keyof IBindingProps<any>>;
  *
  * @see [[TextBox]] for example
  *
- * @typeparam TProps Type of the props. Should implement [[IBindingProps]] with information required for binding.
  * @typeparam TTarget Type of the targete entity for binding
+ * @typeparam TProps Type of the props. Should implement [[IBindingProps]] with information required for binding.
  */
-export abstract class BindingComponent<TProps extends IBindingProps<TTarget>, TTarget> extends React.Component<TProps> {
+export abstract class BindingComponent<TTarget, TProps extends IBindingProps<TTarget>> extends React.Component<TProps> {
   /**
    * Returns `props` excluding properties required for binding.
    *

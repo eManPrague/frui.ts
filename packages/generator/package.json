@@ -33,7 +33,7 @@
     "start-openapi": "ts-node src/index.ts openapi -o temp/apitest",
     "clean": "rimraf dist",
     "build": "tsc",
-    "postbuild": "cpr dist/src dist && rimraf dist/src && rimraf dist/package.json"
+    "postbuild": "cpr dist/src dist -o && rimraf dist/src && rimraf dist/package.json"
   },
   "dependencies": {
     "@apidevtools/swagger-parser": "^9.0.1",

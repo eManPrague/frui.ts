@@ -3,7 +3,7 @@ import { BindingComponent, IBindingProps } from "@frui.ts/views";
 import { Observer } from "mobx-react-lite";
 import * as React from "react";
 
-export class TextBox extends BindingComponent<IBindingProps<any>, any> {
+export class TextBox<TTarget> extends BindingComponent<TTarget, IBindingProps<TTarget>> {
   render() {
     return (
       <Observer>
