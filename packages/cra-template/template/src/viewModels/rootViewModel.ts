@@ -1,5 +1,4 @@
 import { ConductorOneChildActive, ScreenBase } from "@frui.ts/screens";
-import { action } from "mobx";
 import ModuleViewModel from "./demo/demoViewModel";
 
 export default class RootViewModel extends ConductorOneChildActive<ScreenBase> {
