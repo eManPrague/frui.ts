@@ -8,6 +8,7 @@
     "removeComments": true,
     "experimentalDecorators": true,
     "emitDecoratorMetadata": true,
+    "downlevelIteration": true,
     "sourceMap": true,
     "target": "es5",
     "jsx": "react",

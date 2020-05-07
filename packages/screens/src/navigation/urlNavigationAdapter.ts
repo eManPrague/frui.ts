@@ -1,10 +1,9 @@
 import { bound } from "@frui.ts/helpers";
-import { parseUrl, stringify } from "query-string";
-import { canNavigate, IChild, IConductor, IScreen, NavigationManager } from "..";
-import { getNavigationParams } from "./helpers";
-import { ICanNavigate, IHasNavigationName } from "./types";
-
-const hashPrefix = "#/";
+import { parseUrl } from "query-string";
+import { IScreen } from "..";
+import NavigationConfiguration from "./navigationConfiguration";
+import { appendQueryString } from "./navigationPath";
+import { ICanNavigate } from "./types";
 
 export default class UrlNavigationAdapter {
   private isNavigationSuppressed = false;
@@ -14,7 +13,7 @@ export default class UrlNavigationAdapter {
 
   start() {
     this.isStarted = true;
-    NavigationManager.onActiveScreenChanged = this.onScreenActivated;
+    NavigationConfiguration.onScreenChanged = this.onScreenChanged;
     window.addEventListener("hashchange", this.onUrlChanged, false);
 
     return this.onUrlChanged();
@@ -25,15 +24,11 @@ export default class UrlNavigationAdapter {
   }
 
   @bound
-  private onScreenActivated(screen: IScreen & IChild<IConductor<any>> & IHasNavigationName) {
-    if (this.isStarted && !this.isNavigationSuppressed && screen.parent && canNavigate(screen.parent)) {
-      const params = getNavigationParams(screen);
-      const path = screen.parent.getChildNavigationPath(screen, params);
+  private onScreenChanged(screen: IScreen & ICanNavigate) {
+    if (this.isStarted && !this.isNavigationSuppressed) {
+      const path = screen.getNavigationPath();
 
-      let url = hashPrefix + path.path;
-      if (path.params) {
-        url += "?" + stringify(path.params);
-      }
+      const url = appendQueryString(NavigationConfiguration.hashPrefix + path.path, path.params);
 
       if (this.lastUrl !== url) {
         window.history.pushState(null, screen.name, url);
@@ -46,8 +41,8 @@ export default class UrlNavigationAdapter {
   public async onUrlChanged() {
     const hash = window.location.hash;
 
-    if (this.isStarted && hash && hash.startsWith(hashPrefix)) {
-      const path = parseUrl(hash.substr(hashPrefix.length));
+    if (this.isStarted && hash && hash.startsWith(NavigationConfiguration.hashPrefix)) {
+      const path = parseUrl(hash.substr(NavigationConfiguration.hashPrefix.length));
 
       this.isNavigationSuppressed = true;
 

@@ -6,18 +6,20 @@ interface IActivatable {
   +isActive: boolean
 
   +activate(): Promise<any> | void
-  +deactivate(boolean close): Promise<any> | void
+  +canDeactivate(): Promise<boolean> | boolean
+  +deactivate(close: boolean): Promise<any> | void
 }
 
 interface IScreen {
   +name: string
+  +navigationName: string
 }
 
 IScreen ..|> IActivatable
 
 interface IConductor<TChild> {
-  +tryActivateChild(TChild child): Promise<any> | void
-  +closeChild(TChild child): Promise<any> | void
+  +tryActivateChild(child: TChild): Promise<boolean> | void
+  +closeChild(child: TChild): Promise<boolean> | void
 }
 
 interface IHasActiveChild<TChild> {
@@ -26,13 +28,16 @@ interface IHasActiveChild<TChild> {
 
 interface IChild<TParent> {
   +parent: TParent
-  +canDeactivate(): Promise<boolean> | boolean
   +requestClose(): Promise<any> | void
 }
 
 interface ICanNavigate {
-  +navigate(path: string, params: any): Promise<any> | void
-  +getChildNavigationPath(item: IHasNavigationName, params: any): NavigationPath
+  +navigate(subPath: string, params: any): Promise<any> | void
+  +getNavigationPath(): NavigationPath
+}
+
+interface INavigationParent<TChild> {
+  +getChildNavigationPath(child: TChild, childParams?: any): NavigationPath
 }
 
 @enduml

@@ -1,13 +1,10 @@
 import { bound } from "@frui.ts/helpers";
 import { IArrayWillChange, IArrayWillSplice, intercept, IObservableArray, observable, runInAction } from "mobx";
-import { IHasNavigationName } from "../navigation/types";
 import ConductorBaseWithActiveChild from "./conductorBaseWithActiveChild";
 import { canDeactivate, isDeactivatable } from "./helpers";
-import { IChild } from "./types";
+import { IChild, IScreen } from "./types";
 
-export default class ConductorOneChildActive<
-  TChild extends IChild<any> & IHasNavigationName
-> extends ConductorBaseWithActiveChild<TChild> {
+export default class ConductorOneChildActive<TChild extends IScreen & IChild> extends ConductorBaseWithActiveChild<TChild> {
   readonly children = observable.array<TChild>(undefined, { deep: false });
 
   constructor() {

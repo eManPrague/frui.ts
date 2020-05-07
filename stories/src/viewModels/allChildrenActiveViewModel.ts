@@ -1,7 +1,7 @@
 import { ConductorAllChildrenActive } from "@frui.ts/screens";
 import { action } from "mobx";
 import ChildViewModel from "./childViewModel";
-import { notifyRoutePathChanged } from "./helpers";
+import "./helpers";
 
 export default class AllChildrenActiveViewModel extends ConductorAllChildrenActive<ChildViewModel> {
   private childCounter = 1;
@@ -16,13 +16,6 @@ export default class AllChildrenActiveViewModel extends ConductorAllChildrenActi
 
     this.childCounter++;
     return newChild;
-  }
-
-  protected onActivate() {
-    if (!this.children.length) {
-      notifyRoutePathChanged(this);
-    }
-    return super.onActivate();
   }
 
   protected findNavigationChild(name: string) {

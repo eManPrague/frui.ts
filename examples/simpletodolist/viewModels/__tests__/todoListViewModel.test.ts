@@ -146,9 +146,8 @@ describe("TodoListViewModel", () => {
       vm.list.push({ id: "2", title: "Existing item 2", completed: false });
       vm.list.push({ id: "3", title: "Existing item 3", completed: true });
 
-      vm.showAll();
+      vm.filter = "all";
 
-      expect(vm.filter).toBe("all");
       expect(vm.filteredList).toHaveLength(3);
     });
 
@@ -158,21 +157,19 @@ describe("TodoListViewModel", () => {
       vm.list.push({ id: "2", title: "Existing item 2", completed: false });
       vm.list.push({ id: "3", title: "Existing item 3", completed: true });
 
-      vm.showComplete();
+      vm.filter = "completed";
 
-      expect(vm.filter).toBe("complete");
       expect(vm.filteredList).toHaveLength(2);
     });
 
-    it("displays incomplete items", () => {
+    it("displays active items", () => {
       const vm = new TodoListViewModel();
       vm.list.push({ id: "1", title: "Existing item 1", completed: true });
       vm.list.push({ id: "2", title: "Existing item 2", completed: false });
       vm.list.push({ id: "3", title: "Existing item 3", completed: true });
 
-      vm.showIncomplete();
+      vm.filter = "active";
 
-      expect(vm.filter).toBe("incomplete");
       expect(vm.filteredList).toHaveLength(1);
     });
   });

@@ -1,22 +1,12 @@
-import { canApplyNavigationParams, canNavigate, getNavigationParams } from "../navigation/helpers";
-import { combineNavigationPath, NavigationPath, splitNavigationPath } from "../navigation/navigationPath";
-import { ICanNavigate, IHasNavigationName } from "../navigation/types";
+import { canNavigate } from "../navigation/helpers";
+import { combinePath, splitUrlSegments } from "../navigation/navigationPath";
+import { ICanNavigate, INavigationParent } from "../navigation/types";
 import { canDeactivate } from "./helpers";
 import ScreenBase from "./screenBase";
-import { IChild, IConductor } from "./types";
+import { IChild, IConductor, IScreen } from "./types";
 
-function combineObjects(a: any, b: any) {
-  if (a && b) {
-    return Object.assign(a, b);
-  } else {
-    return a || b;
-  }
-}
-
-export default abstract class ConductorBase<TChild extends IChild<any> & IHasNavigationName> extends ScreenBase
-  implements IConductor<TChild>, ICanNavigate {
-  protected childNavigationPathClosed = false;
-
+export default abstract class ConductorBase<TChild extends IScreen & IChild> extends ScreenBase
+  implements IConductor<TChild>, ICanNavigate, INavigationParent<TChild> {
   abstract tryActivateChild(child: TChild): Promise<boolean> | boolean;
   protected abstract deactivateChild(child: TChild, isClosing: boolean): Promise<any>;
 
@@ -36,56 +26,24 @@ export default abstract class ConductorBase<TChild extends IChild<any> & IHasNav
 
   // navigation
 
-  getCurrentNavigationPath(): NavigationPath {
-    // TODO cache currentNavigationPath
-    const currentParams = getNavigationParams(this);
-    const pathFromParent = this.parent && canNavigate(this.parent) && this.parent.getChildNavigationPath(this, currentParams);
+  protected childNavigationPathClosed = false;
 
-    if (pathFromParent) {
-      return {
-        path: pathFromParent.path,
-        params: combineObjects(pathFromParent.params, currentParams),
-        isClosed: pathFromParent.isClosed || this.childNavigationPathClosed,
-      };
-    } else {
-      return {
-        path: this.navigationName,
-        params: currentParams,
-        isClosed: this.childNavigationPathClosed,
-      };
-    }
-  }
+  getChildNavigationPath(child: TChild, childParams?: any) {
+    const currentPath = this.getNavigationPath();
 
-  getChildNavigationPath(child: TChild, params: any): NavigationPath {
-    const currentPath = this.getCurrentNavigationPath();
-    if (currentPath.isClosed) {
+    if (this.childNavigationPathClosed) {
       return currentPath;
     } else {
-      return {
-        path: combineNavigationPath(currentPath.path, child.navigationName),
-        params: combineObjects(currentPath.params, params),
-        isClosed: currentPath.isClosed,
-      };
+      return combinePath(currentPath, child.navigationName, childParams);
     }
   }
 
-  async navigate(path: string | undefined, params: any) {
-    const segments = splitNavigationPath(path);
+  async navigate(subPath: string | undefined, params: any) {
+    const segments = splitUrlSegments(subPath);
     const childToActivate = await this.findNavigationChild(segments[0]);
 
     if (childToActivate) {
       await this.tryActivateChild(childToActivate);
-
-      if (params && canApplyNavigationParams(childToActivate)) {
-        try {
-          const paramsHandlePromise = childToActivate.applyNavigationParams(params);
-          if (paramsHandlePromise) {
-            await paramsHandlePromise;
-          }
-        } catch (error) {
-          console.error(error);
-        }
-      }
 
       if (canNavigate(childToActivate)) {
         await childToActivate.navigate(segments[1], params);

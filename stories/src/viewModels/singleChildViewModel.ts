@@ -1,7 +1,7 @@
 import { ConductorSingleChild } from "@frui.ts/screens";
 import { action } from "mobx";
 import ChildViewModel from "./childViewModel";
-import { notifyRoutePathChanged } from "./helpers";
+import "./helpers";
 
 export default class SingleChildViewModel extends ConductorSingleChild<ChildViewModel> {
   private child1: ChildViewModel;
@@ -29,13 +29,6 @@ export default class SingleChildViewModel extends ConductorSingleChild<ChildView
   @action.bound
   selectChild2() {
     this.tryActivateChild(this.child2);
-  }
-
-  protected onActivate() {
-    if (!this.activeChild) {
-      notifyRoutePathChanged(this);
-    }
-    return super.onActivate();
   }
 
   protected findNavigationChild(navigationName: string) {

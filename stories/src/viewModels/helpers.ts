@@ -1,14 +1,13 @@
-import { canNavigate, IChild, IConductor, IHasNavigationName } from "@frui.ts/screens";
+import { ICanNavigate } from "@frui.ts/screens";
 
-export function notifyRoutePathChanged(source: IChild<IConductor<any>> & IHasNavigationName) {
-  if (!source.parent || !canNavigate(source.parent)) {
-    return;
-  }
+import { NavigationConfiguration } from "@frui.ts/screens";
 
-  const navigationPath = source.parent.getChildNavigationPath(source, undefined);
+export function notifyRoutePathChanged(source: ICanNavigate) {
+  const navigationPath = source.getNavigationPath();
   window.dispatchEvent(
     new CustomEvent("navigated", {
       detail: navigationPath,
     })
   );
 }
+NavigationConfiguration.onScreenChanged = notifyRoutePathChanged;

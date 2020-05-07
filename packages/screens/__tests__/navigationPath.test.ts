@@ -1,40 +1,68 @@
-import { combineNavigationPath, splitNavigationPath } from "../src/navigation/navigationPath";
+import { combinePath, splitUrlSegments, combinePathString } from "../src/navigation/navigationPath";
 
-describe("combineNavigationPath", () => {
-  it("combines base and child path with path delimiter", () => {
-    const result = combineNavigationPath("basePath", "childPath");
-    expect(result).toBe("basePath/childPath");
+describe("combinePathString", () => {
+  it("combines base and path with path delimiter", () => {
+    const result = combinePathString("bar", "foo");
+    expect(result).toBe("bar/foo");
   });
-
-  it("returns base if path element is empty", () => {
-    const result = combineNavigationPath("basePath", undefined);
-    expect(result).toBe("basePath");
+  it("returns base when path is empty", () => {
+    const result = combinePathString("bar", "");
+    expect(result).toBe("bar");
   });
-
-  it("returns path element if base is empty", () => {
-    const result = combineNavigationPath(undefined, "childPath");
-    expect(result).toBe("childPath");
+  it("returns base when path is undefined", () => {
+    const result = combinePathString("bar");
+    expect(result).toBe("bar");
+  });
+  it("returns path when base is empty", () => {
+    const result = combinePathString("", "foo");
+    expect(result).toBe("foo");
+  });
+  it("return path when base is undefined", () => {
+    const result = combinePathString(undefined, "foo");
+    expect(result).toBe("foo");
   });
 });
 
-describe("splitNavigationPath", () => {
+describe("combinePath", () => {
+  it("combines base and child path with path delimiter", () => {
+    const result = combinePath({ path: "basePath", isClosed: false }, "childPath");
+    expect(result.path).toBe("basePath/childPath");
+  });
+  it("uses base params when new params are undefined", () => {
+    const result = combinePath({ path: "basePath", params: { foo: "bar" }, isClosed: false }, "childPath");
+    expect(result.params).toEqual({ foo: "bar" });
+  });
+  it("uses new params when base params are undefined", () => {
+    const result = combinePath({ path: "basePath", isClosed: false }, "childPath", { foo: "bar" });
+    expect(result.params).toEqual({ foo: "bar" });
+  });
+  it("uses combines params when both are defined", () => {
+    const result = combinePath({ path: "basePath", params: { foo: "old", bar: "old" }, isClosed: false }, "childPath", {
+      foo: "new",
+      baz: "new",
+    });
+    expect(result.params).toEqual({ foo: "new", bar: "old", baz: "new" });
+  });
+});
+
+describe("splitUrlSegments", () => {
   it("returns first navigation element and the rest", () => {
-    const result = splitNavigationPath("basePath/childPath");
+    const result = splitUrlSegments("basePath/childPath");
     expect(result).toEqual(["basePath", "childPath"]);
   });
 
   it("returns only single element if no path delimiter is used", () => {
-    const result = splitNavigationPath("basePath");
+    const result = splitUrlSegments("basePath");
     expect(result).toEqual(["basePath", undefined]);
   });
 
   it("skips leading slash", () => {
-    const result = splitNavigationPath("/basePath");
+    const result = splitUrlSegments("/basePath");
     expect(result).toEqual(["basePath", undefined]);
   });
 
   it("returns first navigation element and the rest if leading slash present", () => {
-    const result = splitNavigationPath("/basePath/childPath/foo");
+    const result = splitUrlSegments("/basePath/childPath/foo");
     expect(result).toEqual(["basePath", "childPath/foo"]);
   });
 });
