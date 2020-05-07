@@ -1,0 +1,44 @@
+{
+  "name": "@frui.ts/dataviews",
+  "publishConfig": {
+    "access": "public"
+  },
+  "version": "0.12.3",
+  "description": "View components for data display",
+  "keywords": [
+    "front-end",
+    "framework",
+    "mvvm",
+    "data"
+  ],
+  "homepage": "https://github.com/eManPrague/frui.ts",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/eManPrague/frui.ts.git"
+  },
+  "bugs": {
+    "url": "https://github.com/eManPrague/frui.ts/issues"
+  },
+  "author": "Augustin Šulc <sulc.gusta@gmail.com>",
+  "license": "MIT",
+  "main": "dist/index.js",
+  "directories": {
+    "lib": "dist",
+    "test": "__tests__"
+  },
+  "files": [
+    "dist"
+  ],
+  "scripts": {
+    "clean": "rimraf dist",
+    "build": "tsc"
+  },
+  "dependencies": {
+    "@frui.ts/data": "^0.14.0-beta.2",
+    "mobx-react-lite": "^2.0.6",
+    "react": "^16.13.1"
+  },
+  "devDependencies": {
+    "@types/react": "^16.9.34"
+  }
+}

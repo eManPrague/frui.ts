@@ -1,0 +1,26 @@
+table {
+  th.sortable {
+    cursor: pointer;
+
+    .sort-indicator {
+      &:before {
+        margin-left: 3.5px;
+        content: "\2191";
+        opacity: 0.4;
+      }
+
+      &:after {
+        content: "\2193";
+        opacity: 0.4;
+      }
+
+      &.asc:before {
+        opacity: 1;
+      }
+
+      &.desc:after {
+        opacity: 1;
+      }
+    }
+  }
+}
