@@ -9,7 +9,7 @@ Our authorization logic will be composed of several components:
 
 ## UserContext
 
-This simple model holds information whether the current user is looged in and also contains authorizaton token for API access.
+This simple model holds information on whether the current user is logged in and also contains an authorization token for API access.
 
 `models/userContext.ts`
 
@@ -98,7 +98,7 @@ export default class AuthorizationService {
 
 ## LoginViewModel
 
-We need to create the view model that will display UI and make proper service calls.
+We need to create a view model that will display UI and make proper service calls.
 
 `models/loginModel.ts`
 
@@ -172,7 +172,7 @@ const LoginView: ViewComponent<LoginViewModel> = observer(({ vm }) => (
 registerView(LoginView, LoginViewModel);
 ```
 
-Note that we need to use `observer` function because the view should update as `vm.canLogin` changes.
+Note that we need to use the `observer` function because the view should update as `vm.canLogin` changes.
 
 ## Login workflow
 

@@ -79,10 +79,10 @@ registerView(customerView, CustomerViewModel);
 
 ## Motivation
 
-We were not happy with the currently popular event-sourced state management, and that logic is still usually dependant on the presentation structure.
+We were not happy with the currently popular event-sourced state management, and that logic is usually dependent on the presentation structure.
 This is mainly caused by the nature of the applications that we usually develop: **data-driven admin solutions** with server backends.
 
-From our point of view, using event-sourced state management such as Redux for the presentation layer is quite hard to understand, makes the application hard to reason about, and requires a significant amount of boilerplate code. Take, for example, a simple master-detail screen with an edit form with validation - the code necessary for this ordinary scenario was a big issue for us. That's why we embrace the MVVM model, where the presentation state is handled by the ViewModels.
+From our point of view, using event-sourced state management such as Redux for the presentation layer is quite hard to understand, makes the application hard to reason about, and requires a significant amount of boilerplate code. For example, take a simple master-detail screen with an edit form and validation - the code necessary for this ordinary scenario was a big issue for us. That's why we embrace the MVVM model, where the ViewModels handle the presentation state.
 Please note that we are not against event sourcing, especially on the backend side. That is an entirely different story!
 
 Even though the application logic is usually separated from the presentation part, there are still many places where it leaks to the view code (e.g., navigation/routing, validation, etc.). As we see it, existing solutions seem only to fix the symptoms, not the root cause. The cause is the View-first approach. If you start with views, you need to handle navigation, application structure, and so on in views, which should not be their responsibility. That's why we wanted to **start with ViewModels**, thus model the application from the logical point of view, and just after that project it to the actual user interface.
@@ -97,7 +97,7 @@ Frui.ts is **UI framework agnostic** - you can use it with any UI framework (suc
 
 # Modules
 
-Fruits is not a platform like, e.g., Angular - it does not force you to do yur work in one particular way. It is a set of tools and helpers you can use to simplify your job. It comprises of several modules that you can use **separately**.
+Frui.ts is not a platform like, e.g., Angular - it does not force you to do your work in one particular way. It is a set of tools and helpers you can use to simplify your job. It comprises of several modules that you can use **separately**.
 
 **View models**
 

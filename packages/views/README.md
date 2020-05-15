@@ -2,11 +2,11 @@
 
 # View discovery
 
-In order to support ViewModel-driven workflow, view discovery is an essential feature. This means that based on a particular view model instance, we should be able to find proper view and display it.
+In order to support ViewModel-driven workflow, view discovery is an essential feature. This means that based on a particular view model instance, we should be able to find the proper view and display it.
 
-This feature consists of two parts - view registry that is a list of all available view models and their assigned views, and `View` component that makes the lookup and rendering.
+This feature consists of two parts - view registry that is a list of all available view models and their assigned views, and the `View` component that makes the lookup and rendering.
 
-In order to register a view, use the `registerView(view, viewModelConstructor, context?)` function. If you need to register multiple views for a view model (e.g., main view, side bar, toolbar, etc.), use the `context` argument.
+To register a view, use the `registerView(view, viewModelConstructor, context?)` function. If you need to register multiple views for a view model (e.g., main view, side bar, toolbar, etc.), use the `context` argument.
 
 The `View` component accepts the following props:
 
@@ -58,8 +58,8 @@ The core component for 2-way binding is `BindingComponent`, a wrapper around any
 When creating a custom bindable control, you can use the following:
 
 - `this.value` - contains the value that the control is bound to, use it in the underlying component
-- `this.setValue(value)` - call this and pass the new value when user changes the value through the underlying component
-- `this.inheritedProps` - contains the props passed to the wrapper except binding specific properties, so that you can directly pass it to the underlying component
+- `this.setValue(value)` - call this and pass the new value when the user changes the value through the underlying component
+- `this.inheritedProps` - contains the props passed to the wrapper except for binding-specific properties, so that you can directly pass it to the underlying component
 
 ## Example
 

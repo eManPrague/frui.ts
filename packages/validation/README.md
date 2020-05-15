@@ -1,8 +1,8 @@
 # `@frui.ts/validation`
 
-Validation is based on the idea that validation of a particular property of an entity (ie., the result of validation as a list of validation errors) can be handled as a computed value referring to the property and applying validation rules. Validator is thus just a factory that is able to generate such computed properties based on validation rules.
+Validation is based on the idea that validation of a particular property of an entity (i.e., the result of validation as a list of validation errors) can be handled as a computed value referring to the property and applying validation rules. Validator is thus just a factory that can generate such computed properties based on validation rules.
 
-A validator not only maintains validation errors, but also information if the errors should be displayed to the user (the `isErrorsVisible` property). For example, you don't want to display validation errors when creating a new entity until the user clicks Save for the first time. You can set the `isErrorsVisible` property when instantiating / attaching a validator or anytime later. The visibility is also turned on when `validate()` is called for the first time.
+A validator maintains not only validation errors, but also information if the errors should be displayed to the user (the `isErrorsVisible` property). For example, you don't want to display validation errors when creating a new entity until the user clicks Save for the first time. You can set the `isErrorsVisible` property when instantiating / attaching a validator or anytime later. The visibility is also turned on when `validate()` is called for the first time.
 
 ## AutomaticEntityValidator
 
@@ -78,7 +78,7 @@ errorsVisible = hasVisibleErrors(target); // true
 
 ## ManualEntityValidator
 
-Basic implementation of `IValidator` interface where you need to manually add validation errors. This is useful when the validation is handled by server.
+Basic implementation of `IValidator` interface where you need to manually add validation errors. This is useful when the validation is handled by a server.
 
 ### Usage
 
@@ -138,5 +138,5 @@ clearErrors(target);
 ```
 
 ## TODO
- - Composed validator to use client and server side validation
+ - Composed validator to use client and server-side validation
  - Async validators for long validation calls

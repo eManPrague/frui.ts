@@ -12,7 +12,7 @@ export default class RootViewModel extends ScreenBase {
 }
 ```
 
-We can now display the view model. Note that we are resolving it from the container and there is no explicit view defined.
+We can now display the view model. Note that we are resolving it from the container, and there is no particular view defined.
 
 `app.tsx`
 
@@ -47,7 +47,7 @@ registerView(RootView, RootViewModel);
 
 `ViewComponent` is a simple type shortcut for `React.FunctionComponent<{ vm: TViewModel }>`, so our view is a simple React function component with single prop - `vm`.
 
-The `registerView` function registers `RootView` as the default view for `RootViewModel`. Therefore, general `<View />` component can be used to locate the proper view for a particular view model, and there is no need to explicitly mention `RootView` any more.
+The `registerView` function registers `RootView` as the default view for `RootViewModel`. Therefore, the general `<View />` component can be used to locate the proper view for a particular view model, and there is no need to explicitly mention `RootView` any more.
 We just have to make sure the file is loaded:
 
 `views/index.ts`

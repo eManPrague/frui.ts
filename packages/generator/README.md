@@ -21,7 +21,7 @@ Following service export scenarios are supported:
 
 Dependency injection scenarios supported:
 
-- Constructor parameters (both instance as well as via factory method).
+- Constructor parameters (an instance as well as a factory method).
 
 ### Usage
 
@@ -53,7 +53,7 @@ export interface IConfig {
 }
 ```
 
-Use `none` life scope if you don't want the service registered but still want the decorators generated. This is usefull if you want to register the service yourself.
+Use `none` life scope if you don't want the service registered but still want the decorators generated. This is useful if you want to register the service yourself.
 
 Default configuration file:
 
@@ -134,7 +134,7 @@ export default function registerServices(container: Container) {
 
 ## Views registration
 
-Generates a file referencing all Frui.ts views that call `registerView()` from the `@frui.ts/views` package. Therefore you just need to import this single generated file and all your views will be registered.
+Generates a file referencing all Frui.ts views that call `registerView()` from the `@frui.ts/views` package. Therefore you just need to import this single generated file, and all your views will be registered.
 
 ### Usage
 
@@ -153,7 +153,7 @@ Options:
 
 Generates typescript entities defined in the referenced OpenAPI definition. The entities also contain validation rules as defined in the OpenAPI definition and static function for conversion from JSON format (e.g., string->Date).
 
-Note that if the file already exists during generation, only the class' body is regenerated. For example, you can remove `export default` part or add custom code to the file.
+Note that if the file already exists during generation, only the class' body is regenerated. For example, you can remove the `export default` part or add custom code to the file.
 
 ### Usage
 

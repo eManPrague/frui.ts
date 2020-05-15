@@ -84,13 +84,13 @@ The login view now looks much better, however, there is another UX feature we sh
 import { preventDefault, registerView, ViewComponent } from "@frui.ts/views";
 ```
 
-Add the handler here. Note that we must prevent the default event, otherwise, the page would reload.
+Add the handler here. Note that we must prevent the default event, otherwise the page would reload.
 
 ```tsx
 <Form className="form-login" onSubmit={preventDefault(vm.login)}>
 ```
 
-Remove the handler and set type to submit
+Remove the handler and set the type to `submit`
 
 ```tsx
 <Button disabled={!vm.canLogin} type="submit">

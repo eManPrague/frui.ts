@@ -6,13 +6,13 @@ Since the application should be **ViewModel-driven**, we need to properly design
 
 There is a simple base class for all view models - `ScreenBase`. It handles basic lifecycle such as `initialize`, `activate`, `deactivate`. These actions origin from the root `View` component and are passed to child view models by their parent conductors.
 
-Hierarchical nesting of VMs is necessary to structure almost any application and thus base classes for the task are supplied as well:
+Hierarchical nesting of VMs is necessary to structure almost any application, and thus base classes for the task are supplied as well:
 
 - `ConductorSingleChild` - conductor with manually managed child VMs, e.g., a list with a detail page.
 - `ConductorOneChildActive` - conductor with a list of children and single active child. This is used when the parent has a static list of possible child VMs and only a single child can be active at a time. E.g., application module with list of pages.
-- `ConductorAllChildrenActive` - conductor with a list of children of which all are active. This is typical for multi window screens or dashboards.
+- `ConductorAllChildrenActive` - conductor with a list of children of which all are active. This is typical for multi-window screens or dashboards.
 
-It is recommended to design the structure of VMs first and only after that start with views implementation.
+We recommend to design the structure of VMs first and only after that start with views implementation.
 
 These components are heavily inspired by the Caliburn.Micro framework from .NET platform.
 
@@ -45,7 +45,7 @@ These components are heavily inspired by the Caliburn.Micro framework from .NET 
 - `activeChild` - observable property with the currently selected child
 - `tryActivateChild(child)` - call this function to change the currently selected child. Automatically closes the old child if possible (calls `canDeactivate` on the child) and assigns `parent` to the new one.
 - `closeChild(child)` - use to properly close the child (calls `canDeactivate`)
-- `findNavigationChild(navigationName)` - implement this function to return proper child view model based on the navigation name provided. It is automatically called when navigating, however, you can reuse it in your logic as well (e.g., when creating a child for `tryActivateChild`).
+- `findNavigationChild(navigationName)` - implement this function to return proper child view model based on the navigation name provided. It is automatically called when navigating. However, you can reuse it in your logic as well (e.g., when creating a child for `tryActivateChild`).
 - `onChildNavigated(child)` - implement this function to do some actions after navigation is done
 
 ## `ConductorOneChildActive`
@@ -66,7 +66,7 @@ These components are heavily inspired by the Caliburn.Micro framework from .NET 
 
 # Busywatcher
 
-`Busywatcher` is a simple counter of currently running processes that need to display a loading progress. You can either manually increment and decrement the counter, get a disposable ticket with `getBusyTicket()`, or use its `watch()` function to watch over a promise.
+`Busywatcher` is a simple counter of currently running processes that need to display loading progress. You can either manually increment and decrement the counter, get a disposable ticket with `getBusyTicket()`, or use its `watch()` function to watch over a promise.
 
 You can also use function decorator `@watchBusy`. It automates the use of `busyWatcher.watch()` - if the function the decorator is applied to is async or returns a promise, and the parent class also contains a property named `busyWatcher`, the function is automatically watched by the busyWatcher.
 
@@ -98,19 +98,19 @@ get canBeNavigationActiveScreen() {
 }
 ```
 
-So, if you are creating some kind of a conductor that contains children, you should implement the property similarly. Besides that, all you need to do is to call `notifyNavigationChanged()` that is available from the base class `ScreenBase` any time you want to update the navigation state (e.g., a filter is changed).
+So, if you are creating some kind of a conductor that contains children, you should implement the property similarly. Besides that, all you need to do is call `notifyNavigationChanged()` that is available from the base class `ScreenBase` whenever you want to update the navigation state (e.g., a filter is changed).
 
 ## 2. Get current navigation path
 
-When a call to `onScreenChanged` is issued, the simplest way to get actual navigation path is to call `getNavigationPath` on the source view model. It is then its responsibility to get the proper path. The default implementation in `ScreenBase` recursively calls parent view models to get the full path.
+When a call to `onScreenChanged` is issued, the simplest way to get the actual navigation path is to call `getNavigationPath` on the source view model. It is then its responsibility to get the proper path. The default implementation in `ScreenBase` recursively calls parent view models to get the full path.
 
 ## 3. React when URL changes
 
-When the navigation path changes from outsite of the application, we need the app to react. Because Frui.ts applications are composed as a hierarchical structure of view models, the navigation should start from the top-most level, i.e., the root view model. Simply call its `navigate()` function. And let it recursively activate its children along the new path.
+When the navigation path changes from outside of the application, we need the app to react. Because Frui.ts applications are composed as a hierarchical structure of view models, the navigation should start from the top-most level, i.e., the root view model. Simply call its `navigate()` function. And let it recursively activate its children along the new path.
 
 ## 4. Generate local navigation links
 
-When you want to navigate between children of a conductor, you can use `conductor.tryActivateChild(child)`. This will work, properly update browser URL, and also react to any URL changes. However, the action will be bound to the respective user control such as a button via `onClick` handler and thus some typical web actions such as opening the link in a new window will not work. If you need such functionality, we need to generate navigation URL for the children.
+When you want to navigate between children of a conductor, you can use `conductor.tryActivateChild(child)`. This will work, properly update browser URL, and also react to any URL changes. However, the action will be bound to the respective user control such as a button via `onClick` handler, and thus some typical web actions such as opening the link in a new window will not work. If you need such functionality, we need to generate a navigation URL for the children.
 
 You can either manually call `child.getNavigationPath()`, use `conductor.getChildNavigationPath()`, or call a helper function `Router.getChildUrlFactory()`. This factory function is usefull especially when creating multiple URLs, because it caches the root path.
 
@@ -128,9 +128,9 @@ You can also use application-wide links as described below.
 
 ## 5. Generate application-wide navigation links
 
-You can also use navigation path for navigating to another part of the application. The hard part here is how to get the proper path.
+You can also use a navigation path for navigating to another part of the application. The hard part here is how to get the proper path.
 
-The first and obvious solution is to manually generate it. This is quite easy provided that you know the structure of your application and navigation names of the respective view models.
+The first and obvious solution is to generate it manually. That is quite easy provided that you know the structure of your application and navigation names of the respective view models.
 
 ```tsx
 <a href={`#/foo/bar/${id}`}>Link</a>
@@ -140,9 +140,9 @@ The first and obvious solution is to manually generate it. This is quite easy pr
 rootViewModel.navigate(`foo/bar/${id}`);
 ```
 
-You can also use a typical solution with centrally defined routes. What we don't like about this solution is that you actually still rely on knowing the proper path for each view model and in case of any change, you have to manually update the routes as well. We wanted to find a better solution and keep the knowledge about the application structure as close to the source as possible.
+You can also use a typical solution with centrally defined routes. What we don't like about this solution is that you still rely on knowing the proper path for each view model, and in case of any change, you have to remember to update the routes as well. We wanted to find a better solution and keep the knowledge about the application structure as close to the source as possible.
 
-The idea is that you always register only a single parent-child relationship, and during the application initialization, these parts are joined to get the full path from the root view model to the deepest child view models.
+The idea is that you always register only a single parent-child relationship. Then, during the application initialization, these parts are joined to get the full path from the root view model to the deepest child view models.
 
 ```ts
 // rootViewModel.ts
@@ -190,7 +190,7 @@ await router.navigate("userDetail", { userId: 42 }); // opens the user detail
 
 ## `UrlNavigationAdapter`
 
-This is a reference implementation for navigation adapter that handles browser URL and history changes.
+This is a reference implementation for a navigation adapter that handles browser URL and history changes.
 
 To initialize the adapter, you need to provide the root view model. It will automatically hook to the `onScreenChanged` handler.
 
@@ -203,4 +203,4 @@ const urlAdapter = new UrlNavigationAdapter(rootViewModel);
 urlAdapter.start();
 ```
 
-Implement `ICanNavigate` if you want to control navigation path for children and react to changes in the navigation path. Note that the conductors described above already implement `ICanNavigate`.
+Implement `ICanNavigate` if you want to control the navigation path for children and react to changes in the navigation path. Note that the conductors described above already implement `ICanNavigate`.

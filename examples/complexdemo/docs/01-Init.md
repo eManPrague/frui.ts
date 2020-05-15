@@ -27,6 +27,6 @@ Add configuration to `tsconfig.json`:
 
 ## Required packages
 
-We will install these packages throughout the walkthrough, however, you can install them at once if you want to quickly start
+We will install these packages throughout the walkthrough, however, you can install them at once if you want to start quickly.
 
 TODO

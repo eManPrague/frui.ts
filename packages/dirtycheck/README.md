@@ -1,14 +1,14 @@
 # `@frui.ts/dirtycheck`
 
-Dirty checking is based on the idea that dirty flag of a particular property of an entity can be handled as a computed value comparing the current value of the property with the value at the time of dirty check initialization. Dirty watcher is thus just a factory that is able to generate such computed properties.
+Dirty checking is based on the idea that the dirty flag of a particular property of an entity can be handled as a computed value comparing the current value of the property with the value at the time of dirty check initialization. Dirty watcher is thus just a factory that can generate such computed properties.
 
 This feature is usually used to indicate which UI fields have been changed during the current session and have not been saved yet.
 
-A dirty checker not only maintains information about whether an entity is dirty, but also if the dirty flag should be displayed to the user (the `isDirtyFlagVisible` property). For example, you don't want to display dirty flags when creating a new entity. You can set the `isDirtyFlagVisible` property when instantiating / attaching a watcher or anytime later. The visibility is also turned on when `checkDirtyChanges()` is called for the first time.
+A dirty checker not only maintains information about whether an entity is dirty but also if the dirty flag should be displayed to the user (the `isDirtyFlagVisible` property). For example, you don't want to display dirty flags when creating a new entity. You can set the `isDirtyFlagVisible` property when instantiating / attaching a watcher or anytime later. The visibility is also turned on when `checkDirtyChanges()` is called for the first time.
 
 ## AutomaticDirtyWatcher
 
-Dirty watcher that automatically observes target entity and handles respective dirty flags.
+Dirty watcher that automatically observes the target entity and handles respective dirty flags.
 
 ### Usage
 
@@ -71,7 +71,7 @@ dirtyDisplayed = hasVisibleDirtyChanges(target); // false
 
 ## ManualDirtyWatcher
 
-Implements the interface `IDirtyWatcher` but you have to manually set dirty flags on properties.
+Implements the interface `IDirtyWatcher`, but you have to set dirty flags on properties manually.
 
 ### Usage
 

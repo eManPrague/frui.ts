@@ -41,7 +41,7 @@ document.write("Hello from TS!");
 
 If you run the application now with `yarn start`, you should see `Hello from TS!`.
 
-## 2. Add first ViewModel
+## 2. Add the first ViewModel
 
 Let's add our first view model and present it with a view.
 
@@ -80,7 +80,7 @@ ReactDOM.render(<TodoListView vm={viewModel} />, document.getElementById("root")
 
 ## 3. Add functionality to the VM
 
-The plan is that our `ListViewModel` should publish a list of `TodoItem`s, handle user interaction and do the respective filtering.
+The plan is that our `ListViewModel` should publish a list of `TodoItem`s, handle user interaction, and do the respective filtering.
 
 `models/todoItem.ts`
 ```ts
@@ -93,7 +93,7 @@ export default interface TodoItem {
 
 Now, let's add the functionality we require from the view model:
 
-- The VM should display list of todo items
+- The VM should display a list of todo items
 
 `viewModels/todoListViewModel.ts`
 ```ts
@@ -129,7 +129,7 @@ constructor() {
 }
 ```
 
-- The VM should allow the new item to be added to the list. Title should be trimmed and the item shall be added only if it is not empty.
+- The VM should allow the new item to be added to the list. The title should be trimmed, and the item shall be added only if it is not empty.
 
 ```ts
 @action.bound addItem() {
@@ -151,7 +151,7 @@ constructor() {
 }
 ```
 
-- The VM should provide an information whether all items are completed and allow changing of the state for all of them
+- The VM should provide information whether all items are completed and allow changing of the state for all of them
 
 ```ts
 @computed get isAllCompleted() {
@@ -164,7 +164,7 @@ constructor() {
 }
 ```
 
-- The VM should display number of incomplete items
+- The VM should display the number of incomplete items
 
 ```ts
 @computed get totalIncomplete() {

@@ -1,8 +1,8 @@
 # `@frui.ts/apiclient`
 
-Fruits provides a simple abstraction for issuing backend calls.
+Frui.ts provides a simple abstraction for issuing backend calls.
 
-Please note that you are not forced to use this library and you may make network calls from your repositories (or elsewhere) any way you want.
+Please note that you are not forced to use this library, and you may make network calls from your repositories (or elsewhere) any way you want.
 
 ## IApiConnector
 
@@ -43,7 +43,7 @@ const connector = new FetchApiConnector(window.fetch, middleware);
 
 ## RestRequestBuilder
 
-`RestRequestBuilder` helps composing URLs in a fluent way. It is a stateful object that mutates its inner URL.
+`RestRequestBuilder` helps to compose URLs in a fluent way. It is a stateful object that mutates its inner URL.
 
 ### Usage
 
