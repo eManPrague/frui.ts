@@ -1,3 +1,4 @@
+import path from "path";
 import { Directory, IndentationText, Project, SourceFile, ts } from "ts-morph";
 import { fileGeneratedHeader } from "./messages.json";
 
@@ -23,8 +24,8 @@ export default abstract class GeneratorBase<TParams extends BaseParams, TConfig>
       },
     });
 
-    const configPath = this.params.config;
-    if (configPath) {
+    if (this.params.config) {
+      const configPath = path.join(process.cwd(), this.params.config);
       this.config = await import(configPath);
     } else {
       this.config = await this.getDefaultConfig();

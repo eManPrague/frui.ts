@@ -8,9 +8,9 @@
       "type": "node",
       "request": "launch",
       "name": "Debug generator",
-      "cwd": "${workspaceFolder}/packages/generator",
-      "runtimeArgs": ["-r", "ts-node/register/transpile-only"],
-      "args": ["${workspaceFolder}/packages/generator/src/index.ts", "openapi"],
+      "cwd": "${workspaceFolder}/examples/complexdemo",
+      "runtimeArgs": ["-r", "${workspaceFolder}/packages/generator/node_modules/ts-node/register/transpile-only"],
+      "args": ["${workspaceFolder}/packages/generator/src/index.ts", "inversify", "-cdiConfig.json"],
       "env": {
         "TS_NODE_PROJECT": "${workspaceFolder}/packages/generator/tsconfig.json"
       }
