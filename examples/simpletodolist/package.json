@@ -1,6 +1,6 @@
 {
   "name": "@frui.ts/examples-simpletodolist",
-  "version": "0.12.3",
+  "version": "999.0.0",
   "description": "Todo list example",
   "author": "Augustin Šulc",
   "main": "index.js",
@@ -18,9 +18,9 @@
     "ts-jest": "^25.2.1"
   },
   "dependencies": {
-    "@frui.ts/htmlcontrols": "^0.12.3",
-    "@frui.ts/screens": "^0.12.3",
-    "@frui.ts/views": "^0.12.3",
+    "@frui.ts/htmlcontrols": "^999.0.0",
+    "@frui.ts/screens": "^999.0.0",
+    "@frui.ts/views": "^999.0.0",
     "mobx": "^4.15.4",
     "mobx-react-lite": "^1.5.2",
     "react": "^16.13.0",

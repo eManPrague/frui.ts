@@ -1,13 +1,13 @@
 {
   "name": "@frui.ts/example-complexdemo",
-  "version": "0.12.3",
+  "version": "999.0.0",
   "private": true,
   "dependencies": {
-    "@frui.ts/bootstrap": "^0.12.3",
-    "@frui.ts/generator": "^0.12.2",
-    "@frui.ts/helpers": "^0.12.3",
-    "@frui.ts/screens": "^0.12.3",
-    "@frui.ts/views": "^0.12.3",
+    "@frui.ts/bootstrap": "^999.0.0",
+    "@frui.ts/generator": "^999.0.0",
+    "@frui.ts/helpers": "^999.0.0",
+    "@frui.ts/screens": "^999.0.0",
+    "@frui.ts/views": "^999.0.0",
     "@testing-library/jest-dom": "^4.2.4",
     "@testing-library/react": "^9.3.2",
     "@testing-library/user-event": "^7.1.2",
@@ -29,7 +29,6 @@
   },
   "devDependencies": {
     "@craco/craco": "^5.6.3",
-    "@frui.ts/generator": "^0.12.2",
     "ts-morph": "^7.0.0"
   },
   "scripts": {

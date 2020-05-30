@@ -3,7 +3,7 @@
   "publishConfig": {
     "access": "public"
   },
-  "version": "0.1.0",
+  "version": "999.0.0",
   "description": "Frui.ts template for Create React App.",
   "keywords": [
     "frui.ts",

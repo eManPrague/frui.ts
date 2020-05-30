@@ -3,7 +3,7 @@
   "publishConfig": {
     "access": "public"
   },
-  "version": "0.12.3",
+  "version": "999.0.0",
   "description": "Frui.ts core classes for application structure and navigation",
   "keywords": [
     "front-end",
@@ -34,7 +34,7 @@
     "build": "tsc"
   },
   "dependencies": {
-    "@frui.ts/helpers": "^0.12.3",
+    "@frui.ts/helpers": "^999.0.0",
     "mobx": "^4.15.4",
     "query-string": "^6.9.0",
     "route-parser": "^0.0.5"

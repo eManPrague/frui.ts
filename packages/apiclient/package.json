@@ -3,7 +3,7 @@
   "publishConfig": {
     "access": "public"
   },
-  "version": "0.12.3",
+  "version": "999.0.0",
   "description": "Frui.ts helpers for HTTP communication",
   "keywords": [
     "front-end",
@@ -32,6 +32,6 @@
     "build": "tsc"
   },
   "dependencies": {
-    "@frui.ts/helpers": "^0.12.3"
+    "@frui.ts/helpers": "^999.0.0"
   }
 }
