@@ -1,6 +1,11 @@
+# 0.14.1
+
+- OpenApi generator writes string enums as type aliases.
+
 # 0.14.0
 
 ## @frui.ts/cra-template
+
 - Added a Create React App template.
 
 ## @frui.ts/Screens

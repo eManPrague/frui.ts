@@ -34,7 +34,14 @@ export default class EntityWriter {
   }
 
   private createFile(fileName: string, definition: Entity) {
-    const requiredImports = definition.properties.filter(x => x.type.isEntity || x.type.isEnum).map(x => x.type.name);
+    const requiredImports = definition.properties.filter(x => x.type.isEntity || x.type.enumValues).map(x => x.type.name);
+    requiredImports.push(
+      ...definition.properties
+        .filter(x => x.type.innerTypes)
+        // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+        .flatMap(x => x.type.innerTypes!)
+        .map(x => x.name)
+    );
 
     return this.parentDirectory.createSourceFile(
       fileName,
