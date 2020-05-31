@@ -3,7 +3,7 @@
   "publishConfig": {
     "access": "public"
   },
-  "version": "0.12.3",
+  "version": "999.0.0",
   "description": "Observable validation",
   "keywords": [
     "front-end",
@@ -35,7 +35,7 @@
     "build": "tsc"
   },
   "dependencies": {
-    "@frui.ts/helpers": "^0.12.3"
+    "@frui.ts/helpers": "^999.0.0"
   },
   "peerDependencies": {
     "mobx": "^4.0.0 || ^5.0.0"
