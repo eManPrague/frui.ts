@@ -108,6 +108,7 @@ Frui.ts is not a platform like, e.g., Angular - it does not force you to do your
 
 - [Views](packages/views/README.md) - components for binding UI to ViewModels. For example, `BindingComponent`, `View`.
 - [Data](packages/data/README.md) - helper functions for rendering data. For example, `IPagingFilter`, `pageChangedHandler`.
+- [DataViews](packages/dataviews/README.md) - higher-order components for displaying data. For example, `DataTable`, `DataRepeater`.
 
 **Data**
 

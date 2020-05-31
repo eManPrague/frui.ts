@@ -24,21 +24,27 @@
   "main": "dist/index.js",
   "directories": {
     "lib": "dist",
+    "styles": "styles",
     "test": "__tests__"
   },
   "files": [
-    "dist"
+    "dist",
+    "styles"
   ],
   "scripts": {
-    "clean": "rimraf dist",
-    "build": "tsc"
+    "clean": "rimraf dist && rimraf styles",
+    "build": "tsc",
+    "postbuild": "copyfiles src/**/*.scss styles -f"
   },
   "dependencies": {
     "@frui.ts/data": "^0.14.0-beta.2",
-    "mobx-react-lite": "^2.0.6",
-    "react": "^16.13.1"
+    "mobx-react-lite": "^2.0.6"
   },
   "devDependencies": {
-    "@types/react": "^16.9.34"
+    "@types/react": "^16.9.34",
+    "copyfiles": "^2.3.0"
+  },
+  "peerDependencies": {
+    "react": "^16.13.0"
   }
 }

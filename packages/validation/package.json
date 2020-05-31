@@ -35,7 +35,9 @@
     "build": "tsc"
   },
   "dependencies": {
-    "@frui.ts/helpers": "^0.12.3",
-    "mobx": "^4.15.4"
+    "@frui.ts/helpers": "^0.12.3"
+  },
+  "peerDependencies": {
+    "mobx": "^4.0.0 || ^5.0.0"
   }
 }
