@@ -3,9 +3,9 @@ import { observer } from "mobx-react-lite";
 import * as React from "react";
 import { ColumnDefinition, PropsWithColumns } from "../dataTypes";
 
-export interface HeaderRowProps<TItem> extends PropsWithColumns<TItem> {
+export interface HeaderRowProps<TItem, TContext> extends PropsWithColumns<TItem, TContext> {
   pagingFilter?: IPagingFilter;
-  onColumnSort?: (column: ColumnDefinition<TItem>) => any;
+  onColumnSort?: (column: ColumnDefinition<TItem, TContext>) => any;
 
   className?: string;
   cellClassName?: string;
@@ -19,24 +19,24 @@ function getSortIndicatorClass(pagingFilter: IPagingFilter, columnName: string |
   }
 }
 
-function tableHeader<TItem>(props: HeaderRowProps<TItem>) {
+function tableHeader<TItem, TContext>(props: HeaderRowProps<TItem, TContext>) {
   return (
     <tr className={props.className}>
-      {props.columns.map((col, i) => {
-        const key = col.property ?? i;
-        if (col.headerFormatter) {
-          return col.headerFormatter(col, key);
-        } else if (props.pagingFilter && col.sortable && col.property) {
+      {props.columns.map((column, i) => {
+        const key = column.property ?? i;
+        if (column.headerFormatter) {
+          return column.headerFormatter({ key, column, context: props.context });
+        } else if (props.pagingFilter && column.sortable && column.property) {
           return (
-            <th key={key} className="sortable" style={col.headerStyle} onClick={() => props.onColumnSort?.(col)}>
-              {col.title}
-              <span className={getSortIndicatorClass(props.pagingFilter, col.property)}></span>
+            <th key={key} className="sortable" style={column.headerStyle} onClick={() => props.onColumnSort?.(column)}>
+              {column.title}
+              <span className={getSortIndicatorClass(props.pagingFilter, column.property)}></span>
             </th>
           );
         } else {
           return (
-            <th key={key} className={props.cellClassName} style={col.headerStyle}>
-              {col.title}
+            <th key={key} className={props.cellClassName} style={column.headerStyle}>
+              {column.title}
             </th>
           );
         }

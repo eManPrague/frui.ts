@@ -13,7 +13,7 @@ export default class InheritedTestViewModel extends ScreenBase {
     console.log("InheritedTestViewModel", this.name, "onActivate");
   }
 
-  protected onDeactivate(close: boolean) {
-    console.log("InheritedTestViewModel", this.name, "onDeactivate", close);
+  protected onDeactivate(isClosing: boolean) {
+    console.log("InheritedTestViewModel", this.name, "onDeactivate", isClosing);
   }
 }

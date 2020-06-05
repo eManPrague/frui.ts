@@ -6,13 +6,14 @@ import RepeaterRow from "./repeaterRow";
 
 export interface DataRepeaterProps<
   TItem,
+  TContext,
   TWrapper extends React.ElementType,
   THeadWrapper extends React.ElementType,
   THeadCell extends React.ElementType,
   TBodyWrapper extends React.ElementType,
   TItemWrapper extends React.ElementType,
   TItemCell extends React.ElementType
-> extends DataTablePropsBase<TItem> {
+> extends DataTablePropsBase<TItem, TContext> {
   wrapperType?: TWrapper;
   wrapperProps?: React.ComponentPropsWithoutRef<TWrapper>;
 
@@ -34,19 +35,21 @@ export interface DataRepeaterProps<
 
 function dataRepeater<
   TItem,
+  TContext,
   TWrapper extends React.ElementType,
   THeadWrapper extends React.ElementType,
   THeadCell extends React.ElementType,
   TBodyWrapper extends React.ElementType,
   TItemWrapper extends React.ElementType,
   TItemCell extends React.ElementType
->(props: DataRepeaterProps<TItem, TWrapper, THeadWrapper, THeadCell, TBodyWrapper, TItemWrapper, TItemCell>) {
+>(props: DataRepeaterProps<TItem, TContext, TWrapper, THeadWrapper, THeadCell, TBodyWrapper, TItemWrapper, TItemCell>) {
   const Wrapper = props.wrapperType ?? "table";
   const ItemWrapper = props.bodyWrapperType ?? "tbody";
   return (
     <Wrapper {...props.wrapperProps}>
       <RepeaterHeader
         columns={props.columns}
+        context={props.context}
         pagingFilter={props.pagingFilter}
         onColumnSort={props.onColumnSort}
         wrapperType={props.headWrapperType}
@@ -60,6 +63,7 @@ function dataRepeater<
             key={String(item[props.itemKey])}
             item={item}
             columns={props.columns}
+            context={props.context}
             wrapperType={props.itemWrapperType}
             wrapperProps={props.itemWrapperProps}
             itemCellType={props.itemCellType}

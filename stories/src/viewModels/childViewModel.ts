@@ -13,7 +13,7 @@ export default class ChildViewModel extends ScreenBase {
     console.log(this.name, "onActivate");
   }
 
-  protected onDeactivate(close: boolean) {
-    console.log(this.name, "onDeactivate", close);
+  protected onDeactivate(isClosing: boolean) {
+    console.log(this.name, "onDeactivate", isClosing);
   }
 }

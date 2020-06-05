@@ -39,14 +39,14 @@ export default class ConductorAllChildrenActive<TChild extends IScreen & IChild>
     const childrenToActivate = (this.children.filter(isActivatable) as any) as IActivatable[];
     return Promise.all(childrenToActivate.map(x => x.activate()));
   }
-  protected async onDeactivate(close: boolean) {
+  protected async onDeactivate(isClosing: boolean) {
     for (const child of this.children) {
       if (isDeactivatable(child)) {
-        await child.deactivate(close);
+        await child.deactivate(isClosing);
       }
     }
 
-    if (close) {
+    if (isClosing) {
       this.children.clear();
     }
   }

@@ -3,10 +3,10 @@ import { observer } from "mobx-react-lite";
 import * as React from "react";
 import { ColumnDefinition, PropsWithColumns } from "../dataTypes";
 
-export interface HeaderRowProps<TItem, TWrapper extends React.ElementType, TItemCell extends React.ElementType>
-  extends PropsWithColumns<TItem> {
+export interface HeaderRowProps<TItem, TContext, TWrapper extends React.ElementType, TItemCell extends React.ElementType>
+  extends PropsWithColumns<TItem, TContext> {
   pagingFilter?: IPagingFilter;
-  onColumnSort?: (column: ColumnDefinition<TItem>) => any;
+  onColumnSort?: (column: ColumnDefinition<TItem, TContext>) => any;
 
   wrapperType?: TWrapper;
   wrapperProps?: React.ComponentPropsWithoutRef<TWrapper>;
@@ -23,35 +23,36 @@ function getSortIndicatorClass(pagingFilter: IPagingFilter, columnName: string |
   }
 }
 
-function repeaterHeader<TItem, TWrapper extends React.ElementType, TItemCell extends React.ElementType>(
-  props: HeaderRowProps<TItem, TWrapper, TItemCell>
+function repeaterHeader<TItem, TContext, TWrapper extends React.ElementType, TItemCell extends React.ElementType>(
+  props: HeaderRowProps<TItem, TContext, TWrapper, TItemCell>
 ) {
   const Wrapper = props.wrapperType ?? "tr";
   const Item = props.itemCellType ?? "th";
+  const { context } = props;
 
   return (
     <Wrapper {...props.wrapperProps}>
-      {props.columns.map((col, i) => {
-        const key = col.property ?? i;
+      {props.columns.map((column, i) => {
+        const key = column.property ?? i;
 
-        if (col.headerFormatter) {
-          return col.headerFormatter(col, key);
-        } else if (props.pagingFilter && col.sortable && col.property) {
+        if (column.headerFormatter) {
+          return column.headerFormatter({ key, column, context });
+        } else if (props.pagingFilter && column.sortable && column.property) {
           return (
             <Item
               key={key}
               className="sortable"
-              onClick={() => props.onColumnSort?.(col)}
+              onClick={() => props.onColumnSort?.(column)}
               {...props.itemCellProps}
-              style={col.headerStyle}>
-              {col.title}
-              <span className={getSortIndicatorClass(props.pagingFilter, col.property)}></span>
+              style={column.headerStyle}>
+              {column.title}
+              <span className={getSortIndicatorClass(props.pagingFilter, column.property)}></span>
             </Item>
           );
         } else {
           return (
-            <Item key={key} {...props.itemCellProps} style={col.headerStyle}>
-              {col.title}
+            <Item key={key} {...props.itemCellProps} style={column.headerStyle}>
+              {column.title}
             </Item>
           );
         }

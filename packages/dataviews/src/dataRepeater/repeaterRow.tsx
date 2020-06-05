@@ -2,8 +2,8 @@ import { observer } from "mobx-react-lite";
 import * as React from "react";
 import { PropsWithColumns } from "../dataTypes";
 
-export interface DataRowProps<TItem, TWrapper extends React.ElementType, TItemCell extends React.ElementType>
-  extends PropsWithColumns<TItem> {
+export interface DataRowProps<TItem, TContext, TWrapper extends React.ElementType, TItemCell extends React.ElementType>
+  extends PropsWithColumns<TItem, TContext> {
   item: TItem;
 
   wrapperType?: TWrapper;
@@ -13,11 +13,12 @@ export interface DataRowProps<TItem, TWrapper extends React.ElementType, TItemCe
   itemCellProps?: React.ComponentPropsWithoutRef<TItemCell>;
 }
 
-function repeaterRow<TItem, TWrapper extends React.ElementType, TItemCell extends React.ElementType>(
-  props: DataRowProps<TItem, TWrapper, TItemCell>
+function repeaterRow<TItem, TContext, TWrapper extends React.ElementType, TItemCell extends React.ElementType>(
+  props: DataRowProps<TItem, TContext, TWrapper, TItemCell>
 ) {
   const Wrapper = props.wrapperType ?? "tr";
   const Item = props.itemCellType ?? "td";
+  const { context } = props;
 
   const { columns, item, itemCellProps } = props;
   return (
@@ -27,11 +28,11 @@ function repeaterRow<TItem, TWrapper extends React.ElementType, TItemCell extend
         const value = column.property ? item[column.property] : undefined;
 
         if (column.cellFormatter) {
-          return column.cellFormatter(value, item, column, key);
+          return column.cellFormatter({ key, value, item, column, context });
         } else {
           return (
             <Item key={key} {...itemCellProps}>
-              {column.valueFormatter ? column.valueFormatter(value, item, column) : value}
+              {column.valueFormatter ? column.valueFormatter({ value, item, column, context }) : value}
             </Item>
           );
         }

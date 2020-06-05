@@ -95,7 +95,7 @@ export default abstract class ScreenBase implements IScreen, IChild, ICanNavigat
 
   protected onActivate(): Promise<any> | void {}
 
-  protected onDeactivate(close: boolean): Promise<any> | void {}
+  protected onDeactivate(isClosing: boolean): Promise<any> | void {}
 
   // navigation
 

@@ -1,8 +1,5 @@
 import { useEffect } from "react";
-
-interface IDisposable {
-  dispose(): void;
-}
+import { IDisposable } from "@frui.ts/helpers";
 
 export default function useDisposable(...dependencies: IDisposable[]) {
   useEffect(

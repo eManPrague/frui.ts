@@ -4,19 +4,20 @@ import { DataTablePropsBase } from "../dataTypes";
 import TableHeader from "./tableHeader";
 import TableRow from "./tableRow";
 
-export interface DataTableProps<TItem> extends DataTablePropsBase<TItem> {
+export interface DataTableProps<TItem, TContext> extends DataTablePropsBase<TItem, TContext> {
   className?: string;
 
   headerRowClassName?: string;
   headerCellClassName?: string;
 }
 
-function dataTable<TItem>(props: DataTableProps<TItem>) {
+function dataTable<TItem, TContext>(props: DataTableProps<TItem, TContext>) {
   return (
     <table className={props.className}>
       <thead>
         <TableHeader
           columns={props.columns}
+          context={props.context}
           pagingFilter={props.pagingFilter}
           onColumnSort={props.onColumnSort}
           className={props.headerRowClassName}
@@ -25,7 +26,7 @@ function dataTable<TItem>(props: DataTableProps<TItem>) {
       </thead>
       <tbody>
         {props.items?.map(item => (
-          <TableRow key={String(item[props.itemKey])} item={item} columns={props.columns} />
+          <TableRow key={String(item[props.itemKey])} item={item} columns={props.columns} context={props.context} />
         ))}
       </tbody>
     </table>
