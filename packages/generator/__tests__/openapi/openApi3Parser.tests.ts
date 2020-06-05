@@ -1,5 +1,6 @@
-import OpenApi3Parser from "../../src/openapi/parsers/openApi3Parser";
 import { OpenAPIV3 } from "openapi-types";
+import TypeDefinition from "../../src/openapi/models/typeDefinition";
+import OpenApi3Parser from "../../src/openapi/parsers/openApi3Parser";
 
 describe("OpenApi3Parser", () => {
   describe("parseType", () => {
@@ -52,7 +53,7 @@ describe("OpenApi3Parser", () => {
       };
 
       const result = new OpenApi3Parser().parseType(definition);
-      expect(result).toMatchObject({ isEnum: true, definition: "one|two|three" });
+      expect(result).toMatchObject({ enumValues: ["one", "two", "three"] } as TypeDefinition);
     });
   });
 });

@@ -1,26 +1,54 @@
 import { upperFirst } from "lodash";
 import { OpenAPIV3 } from "openapi-types";
-import Constants from "../constants";
 import Entity from "../models/entity";
 import EntityProperty from "../models/entityProperty";
 import Restriction from "../models/restriction";
 import TypeDefinition from "../models/typeDefinition";
 import { isArraySchemaObject, isReferenceObject, isSchemaObject } from "./helpers";
+import Enum from "../models/enum";
+import ApiModel from "../models/apiModel";
 
 export default class OpenApi3Parser {
   parse(api: OpenAPIV3.Document) {
-    if (api.components?.schemas) {
-      const definitions = Object.entries(api.components.schemas);
+    const entities: Entity[] = [];
+    const enums: Enum[] = [];
 
-      const entities = definitions.map(([name, definition]) => this.parseEntity(name, definition));
-      return entities.filter(x => x) as Entity[];
+    if (api.components?.schemas) {
+      for (const [name, definition] of Object.entries(api.components.schemas)) {
+        if (isReferenceObject(definition)) {
+          continue;
+        }
+
+        if (definition.enum) {
+          enums.push({
+            name,
+            items: definition.enum,
+          });
+        } else {
+          const entity = this.parseEntity(name, definition);
+          if (entity) {
+            const embeddedEnums = entity.properties
+              .filter(x => x.type.enumValues)
+              .map(
+                x =>
+                  ({
+                    name: x.type.name,
+                    items: x.type.enumValues,
+                  } as Enum)
+              );
+            enums.push(...embeddedEnums);
+
+            entities.push(entity);
+          }
+        }
+      }
     }
 
-    return [] as Entity[];
+    return new ApiModel(entities, enums);
   }
 
-  private parseEntity(name: string, definition: OpenAPIV3.ReferenceObject | OpenAPIV3.BaseSchemaObject) {
-    if (isReferenceObject(definition) || !definition.properties) {
+  private parseEntity(name: string, definition: OpenAPIV3.BaseSchemaObject) {
+    if (!definition.properties) {
       return undefined;
     }
 
@@ -35,7 +63,7 @@ export default class OpenApi3Parser {
 
   private parseEntityProperty(entityName: string, name: string, definition: OpenAPIV3.ReferenceObject | OpenAPIV3.SchemaObject) {
     const type = this.parseType(definition);
-    if (type.isEnum) {
+    if (type.enumValues) {
       type.name = entityName + upperFirst(name);
     }
 
@@ -79,15 +107,14 @@ export default class OpenApi3Parser {
     if (typeName === "string" && definition.enum) {
       return {
         name: "ENUM",
-        isEnum: true,
-        definition: definition.enum.join(Constants.enumSeparator),
+        enumValues: definition.enum.map(x => String(x)),
       };
     }
 
     if (typeName === "string" && definition.format === "date-time") {
       return {
         name: "dateTime",
-        definition: definition.format,
+        format: definition.format,
       };
     }
 
@@ -97,13 +124,25 @@ export default class OpenApi3Parser {
         return this.parseType(composed);
       }
 
-      console.error("Cannot parse type", definition);
+      if (definition.oneOf) {
+        const innerTypes = definition.oneOf.map(x => this.parseType(x));
+        if (innerTypes.length === 1) {
+          return innerTypes[0];
+        } else {
+          return {
+            name: innerTypes.map(x => x.name).join(" | "),
+            innerTypes: innerTypes,
+          };
+        }
+      }
+
+      console.error("OpenAPI3 parser cannot parse type. Unknown type: ", definition);
       throw new Error("Cannot parse type");
     }
 
     return {
       name: typeName,
-      definition: definition.format,
+      format: definition.format,
     };
   }
 }

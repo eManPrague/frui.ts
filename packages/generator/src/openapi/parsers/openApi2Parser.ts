@@ -1,22 +1,46 @@
 import { upperFirst } from "lodash";
 import { OpenAPIV2 } from "openapi-types";
 import { isArray } from "util";
-import Constants from "../constants";
 import Entity from "../models/entity";
 import EntityProperty from "../models/entityProperty";
 import Restriction from "../models/restriction";
 import TypeDefinition from "../models/typeDefinition";
+import Enum from "../models/enum";
+import ApiModel from "../models/apiModel";
 
 export default class OpenApi2Parser {
   parse(api: OpenAPIV2.Document) {
-    if (api.definitions) {
-      const definitions = Object.entries(api.definitions);
+    const entities: Entity[] = [];
+    const enums: Enum[] = [];
 
-      const entities = definitions.map(([name, definition]) => this.parseEntity(name, definition));
-      return entities.filter(x => x) as Entity[];
+    if (api.definitions) {
+      for (const [name, definition] of Object.entries(api.definitions)) {
+        if (definition.enum) {
+          enums.push({
+            name,
+            items: definition.enum,
+          });
+        } else {
+          const entity = this.parseEntity(name, definition);
+          if (entity) {
+            const embeddedEnums = entity.properties
+              .filter(x => x.type.enumValues)
+              .map(
+                x =>
+                  ({
+                    name: x.type.name,
+                    items: x.type.enumValues,
+                  } as Enum)
+              );
+            enums.push(...embeddedEnums);
+
+            entities.push(entity);
+          }
+        }
+      }
     }
 
-    return [];
+    return new ApiModel(entities, enums);
   }
 
   private parseEntity(name: string, definition: OpenAPIV2.SchemaObject) {
@@ -35,7 +59,7 @@ export default class OpenApi2Parser {
 
   private parseEntityProperty(entityName: string, name: string, definition: OpenAPIV2.SchemaObject) {
     const type = this.parseType(definition);
-    if (type.isEnum) {
+    if (type.enumValues) {
       type.name = entityName + upperFirst(name);
     }
 
@@ -76,26 +100,25 @@ export default class OpenApi2Parser {
     if (typeName === "string" && definition.enum) {
       return {
         name: "ENUM",
-        isEnum: true,
-        definition: definition.enum.join(Constants.enumSeparator),
+        enumValues: definition.enum.map(x => String(x)),
       };
     }
 
     if (typeName === "string" && definition.format === "date-time") {
       return {
         name: "dateTime",
-        definition: definition.format,
+        format: definition.format,
       };
     }
 
     if (!typeName) {
-      console.error("Cannot parse type", definition);
+      console.error("OpenAPI3 parser cannot parse type. Unknown type: ", definition);
       throw new Error("Cannot parse type");
     }
 
     return {
       name: typeName,
-      definition: definition.format,
+      format: definition.format,
     };
   }
 }

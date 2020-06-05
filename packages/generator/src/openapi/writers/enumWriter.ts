@@ -17,14 +17,8 @@ export default class EnumWriter {
   }
 
   private updateFile(file: SourceFile, definition: Enum) {
-    const currentEnum = file.getEnum(definition.name);
-
-    if (currentEnum) {
-      currentEnum.removeText();
-      currentEnum.insertText(currentEnum.getEnd() - 1, writer =>
-        writer.newLineIfLastNot().indent(() => this.writeEnumBody(writer, definition))
-      );
-    }
+    const currentEnum = file.getTypeAliasOrThrow(definition.name);
+    currentEnum.replaceWithText(writer => this.writeTypeAlias(writer, definition));
 
     return file;
   }
@@ -32,22 +26,17 @@ export default class EnumWriter {
   private createFile(fileName: string, definition: Enum) {
     return this.parentDirectory.createSourceFile(
       fileName,
-      writer =>
-        writer
-          .writeLine(entityGeneratedHeader)
-          .write("const enum ")
-          .write(definition.name)
-          .block(() => this.writeEnumBody(writer, definition))
-          .write("export default ")
-          .write(definition.name)
-          .write(";")
-          .newLineIfLastNot(),
+      writer => {
+        writer.writeLine(entityGeneratedHeader);
+        this.writeTypeAlias(writer, definition);
+        writer.writeLine(`export default ${definition.name};`);
+      },
       { overwrite: true }
     );
   }
 
-  private writeEnumBody(writer: CodeBlockWriter, definition: Enum) {
-    definition.items.forEach(x => writer.write(x).write(",").newLine());
-    return writer;
+  private writeTypeAlias(writer: CodeBlockWriter, definition: Enum) {
+    const items = definition.items.map(x => `"${x}"`).join(" | ");
+    writer.writeLine(`type ${definition.name} = ${items};`);
   }
 }

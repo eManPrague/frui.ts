@@ -3,6 +3,10 @@
 - New package @frui.ts/dataviews with higher-order components for displaying data. Check the [readme](./packages/dataviews/README.md).
 - React and Mobx made peer dependencies-
 
+# 0.14.1
+
+- OpenApi generator writes string enums as type aliases.
+
 # 0.14.0
 
 ## @frui.ts/cra-template
