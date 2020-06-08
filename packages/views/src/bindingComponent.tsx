@@ -1,5 +1,5 @@
 import { ensureObservableProperty } from "@frui.ts/helpers";
-import { action, get, isObservable, isObservableProp } from "mobx";
+import { action, get, isObservable, isObservableMap, isObservableProp } from "mobx";
 import * as React from "react";
 
 /**
@@ -71,7 +71,8 @@ export abstract class BindingComponent<TTarget, TProps extends IBindingProps<TTa
       throw new Error("'property' prop has not been set");
     }
 
-    if (!isObservable(target) || !isObservableProp(target, property)) {
+    // TODO enable disable of automatically creating observable
+    if (!isObservable(target) || (!isObservableMap(target) && !isObservableProp(target, property))) {
       ensureObservableProperty(target, property, target[property]);
     }
 

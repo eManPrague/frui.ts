@@ -1,4 +1,4 @@
-import { isObservableProp, observable } from "mobx";
+import { isObservableProp, observable, ObservableMap } from "mobx";
 import { BindingComponent, IBindingProps } from "../src/bindingComponent";
 
 type TestControlProps = IBindingProps<any> & { otherText?: string; otherValue?: any };
@@ -51,6 +51,17 @@ describe("BindingComponent", () => {
       const result = control.readValue();
       expect(result).toBeNull();
     });
+
+    it("reads from observable map", () => {
+      const target = new ObservableMap<string, string>({
+        firstName: "John",
+      });
+
+      const control = new TestControl({ target, property: "firstName" });
+
+      const result = control.readValue();
+      expect(result).toBe("John");
+    });
   });
 
   describe("BindingComponent.setValue()", () => {
@@ -86,6 +97,17 @@ describe("BindingComponent", () => {
       control.writeValue("Peter");
 
       expect(entity.firstName).toBe("Peter");
+    });
+
+    it("sets value on observable map", () => {
+      const target = new ObservableMap<string, string>({
+        firstName: "John",
+      });
+
+      const control = new TestControl({ target: target, property: "firstName" });
+      control.writeValue("Peter");
+
+      expect(target.get("firstName")).toBe("Peter");
     });
   });
 
