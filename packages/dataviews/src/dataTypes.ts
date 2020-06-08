@@ -46,4 +46,5 @@ export interface PropsWithItems<TItem> {
 export interface DataTablePropsBase<TItem, TContext> extends PropsWithColumns<TItem, TContext>, PropsWithItems<TItem> {
   pagingFilter?: IPagingFilter;
   onColumnSort?: (column: ColumnDefinition<TItem, TContext>) => any;
+  displayHeader?: boolean;
 }

@@ -33,6 +33,10 @@ export interface DataRepeaterProps<
   itemCellProps?: React.ComponentPropsWithoutRef<TItemCell>;
 }
 
+const defaultProps: Partial<DataRepeaterProps<any, any, any, any, any, any, any, any>> = {
+  displayHeader: true,
+};
+
 function dataRepeater<
   TItem,
   TContext,
@@ -47,16 +51,18 @@ function dataRepeater<
   const ItemWrapper = props.bodyWrapperType ?? "tbody";
   return (
     <Wrapper {...props.wrapperProps}>
-      <RepeaterHeader
-        columns={props.columns}
-        context={props.context}
-        pagingFilter={props.pagingFilter}
-        onColumnSort={props.onColumnSort}
-        wrapperType={props.headWrapperType}
-        wrapperProps={props.headWrapperProps}
-        itemCellType={props.headCellType}
-        itemCellProps={props.headCellProps}
-      />
+      {props.displayHeader && (
+        <RepeaterHeader
+          columns={props.columns}
+          context={props.context}
+          pagingFilter={props.pagingFilter}
+          onColumnSort={props.onColumnSort}
+          wrapperType={props.headWrapperType}
+          wrapperProps={props.headWrapperProps}
+          itemCellType={props.headCellType}
+          itemCellProps={props.headCellProps}
+        />
+      )}
       <ItemWrapper {...props.bodyWrapperProps}>
         {props.items.map(item => (
           <RepeaterRow
@@ -75,5 +81,6 @@ function dataRepeater<
   );
 }
 
+dataRepeater.defaultProps = defaultProps;
 const DataRepeater = observer(dataRepeater) as typeof dataRepeater;
 export default DataRepeater;

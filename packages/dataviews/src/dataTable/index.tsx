@@ -11,19 +11,25 @@ export interface DataTableProps<TItem, TContext> extends DataTablePropsBase<TIte
   headerCellClassName?: string;
 }
 
+const defaultProps: Partial<DataTableProps<any, any>> = {
+  displayHeader: true,
+};
+
 function dataTable<TItem, TContext>(props: DataTableProps<TItem, TContext>) {
   return (
     <table className={props.className}>
-      <thead>
-        <TableHeader
-          columns={props.columns}
-          context={props.context}
-          pagingFilter={props.pagingFilter}
-          onColumnSort={props.onColumnSort}
-          className={props.headerRowClassName}
-          cellClassName={props.headerCellClassName}
-        />
-      </thead>
+      {props.displayHeader && (
+        <thead>
+          <TableHeader
+            columns={props.columns}
+            context={props.context}
+            pagingFilter={props.pagingFilter}
+            onColumnSort={props.onColumnSort}
+            className={props.headerRowClassName}
+            cellClassName={props.headerCellClassName}
+          />
+        </thead>
+      )}
       <tbody>
         {props.items?.map(item => (
           <TableRow key={String(item[props.itemKey])} item={item} columns={props.columns} context={props.context} />
@@ -33,5 +39,6 @@ function dataTable<TItem, TContext>(props: DataTableProps<TItem, TContext>) {
   );
 }
 
+dataTable.defaultProps = defaultProps;
 const DataTable = observer(dataTable) as typeof dataTable;
 export default DataTable;
