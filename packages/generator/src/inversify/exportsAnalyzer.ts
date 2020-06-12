@@ -19,8 +19,7 @@ export default class ExportsAnalyzer {
             if (matchingRule) {
               registrations.push({
                 declaration,
-                scope: matchingRule.scope,
-                addDecorators: !!matchingRule.addDecorators,
+                rule: matchingRule,
               });
             }
           }

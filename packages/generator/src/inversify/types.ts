@@ -8,6 +8,7 @@ export interface IGeneratorParams extends BaseParams {
   registry?: { output: string };
 }
 
+export type ServiceIdentifier = "$class" | "$interface" | string;
 export type LifeScope = "none" | "singleton" | "transient";
 
 export interface IConfig {

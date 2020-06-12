@@ -2,6 +2,7 @@
 
 - OpenApi generator writes string enums as type aliases.
 - OpenApi generator supports named arrays as entities.
+- Inversify generator supports custom identifiers and auto factories.
 
 # 0.14.0
 
