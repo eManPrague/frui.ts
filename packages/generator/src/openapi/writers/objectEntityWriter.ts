@@ -2,16 +2,16 @@ import { camelCase, uniq } from "lodash";
 import { CodeBlockWriter, Directory, SourceFile } from "ts-morph";
 import GeneratorBase from "../../generatorBase";
 import { entityGeneratedHeader } from "../../messages.json";
-import Entity from "../models/entity";
 import EntityProperty from "../models/entityProperty";
+import ObjectEntity from "../models/objectEntity";
 import Restriction from "../models/restriction";
 import TypeDefinition from "../models/typeDefinition";
 import { IGeneratorParams } from "../types";
 
-export default class EntityWriter {
+export default class ObjectEntityWriter {
   constructor(private parentDirectory: Directory, private params: IGeneratorParams) {}
 
-  write(definition: Entity) {
+  write(definition: ObjectEntity) {
     const fileName = `${camelCase(definition.name)}.ts`;
     if (!GeneratorBase.canOverwiteFile(this.parentDirectory, fileName)) {
       return undefined;
@@ -21,7 +21,7 @@ export default class EntityWriter {
     return file ? this.updateFile(file, definition) : this.createFile(fileName, definition);
   }
 
-  private updateFile(file: SourceFile, definition: Entity) {
+  private updateFile(file: SourceFile, definition: ObjectEntity) {
     const currentClass = file.getClass(definition.name);
     if (currentClass) {
       currentClass.removeText();
@@ -33,7 +33,7 @@ export default class EntityWriter {
     return file;
   }
 
-  private createFile(fileName: string, definition: Entity) {
+  private createFile(fileName: string, definition: ObjectEntity) {
     const requiredImports = definition.properties.filter(x => x.type.isEntity || x.type.enumValues).map(x => x.type.name);
     requiredImports.push(
       ...definition.properties
@@ -64,7 +64,7 @@ export default class EntityWriter {
     );
   }
 
-  private writeEntityBody(writer: CodeBlockWriter, definition: Entity) {
+  private writeEntityBody(writer: CodeBlockWriter, definition: ObjectEntity) {
     definition.properties.forEach(p => writeEntityProperty(writer, p));
 
     if (this.params.generateValidation) {
@@ -104,7 +104,7 @@ function writePropertyDoc(writer: CodeBlockWriter, property: EntityProperty) {
   }
 }
 
-function writeValidationEntity(writer: CodeBlockWriter, entity: Entity) {
+function writeValidationEntity(writer: CodeBlockWriter, entity: ObjectEntity) {
   if (entity.properties.some(p => p.restrictions?.size)) {
     writer.blankLineIfLastNot().write("static ValidationRules = {");
     writer.indent(() => entity.properties.forEach(p => writeValidationProperty(writer, p)));
@@ -149,7 +149,7 @@ function getRestrictionDefinition(restriction: Restriction, params: any) {
   }
 }
 
-function writeConversionFunction(writer: CodeBlockWriter, entity: Entity) {
+function writeConversionFunction(writer: CodeBlockWriter, entity: ObjectEntity) {
   const identifier = camelCase(entity.name);
   const statements = entity.properties.map(x => getConversionStatement(identifier, x)).filter(x => x) as string[];
   if (statements.length) {

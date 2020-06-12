@@ -1,6 +1,7 @@
 # 0.14.1
 
 - OpenApi generator writes string enums as type aliases.
+- OpenApi generator supports named arrays as entities.
 
 # 0.14.0
 
