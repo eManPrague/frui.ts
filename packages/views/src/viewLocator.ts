@@ -6,7 +6,7 @@ type functionalView<TViewModel> = FunctionComponent<{ vm: TViewModel }>;
 const DEFAULT_CONTEXT = "default";
 
 // viewsRegistry is singleton
-const viewsRegistry = new Map<constructor<{}>, Record<string, functionalView<any>>>();
+const viewsRegistry = new Map<constructor<unknown>, Record<string, functionalView<any>>>();
 
 export function registerView<TViewModel>(
   view: functionalView<TViewModel>,
@@ -23,7 +23,7 @@ export function registerView<TViewModel>(
 }
 
 // todo memoize
-export function getView(viewModelConstructor: constructor<{}>, context = DEFAULT_CONTEXT) {
+export function getView(viewModelConstructor: constructor<unknown>, context = DEFAULT_CONTEXT) {
   const currentViewModelViews = viewsRegistry.get(viewModelConstructor);
 
   if (!currentViewModelViews) {
@@ -38,7 +38,7 @@ export function getView(viewModelConstructor: constructor<{}>, context = DEFAULT
   return view;
 }
 
-export function tryGetView(viewModelConstructor: constructor<{}>, context = DEFAULT_CONTEXT) {
+export function tryGetView(viewModelConstructor: constructor<unknown>, context = DEFAULT_CONTEXT) {
   const currentViewModelViews = viewsRegistry.get(viewModelConstructor);
 
   if (!currentViewModelViews) {

@@ -3,7 +3,7 @@ import { action, computed, extendObservable, get, observable } from "mobx";
 import { DirtyPropertiesList, IDirtyWatcher } from "./types";
 
 /** Dirty watcher implementation that automatically observes watched entity's properties and maintains dirty flags */
-export default class AutomaticDirtyWatcher<TTarget extends {}> implements IDirtyWatcher<TTarget> {
+export default class AutomaticDirtyWatcher<TTarget extends Record<string, any>> implements IDirtyWatcher<TTarget> {
   @observable isDirtyFlagVisible: boolean;
   @observable dirtyProperties: DirtyPropertiesList<TTarget>;
   private checkedProperties: string[];

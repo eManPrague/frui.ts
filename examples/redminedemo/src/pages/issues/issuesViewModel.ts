@@ -1,4 +1,3 @@
-/* eslint-disable @typescript-eslint/camelcase */
 import { PagedQueryResult } from "@frui.ts/data";
 import { FilteredListViewModel } from "@frui.ts/datascreens";
 import { BusyWatcher } from "@frui.ts/screens";
@@ -30,7 +29,9 @@ export default class IssuesViewModel extends FilteredListViewModel<Issue, Issues
   }
 
   protected resetFilterValues(filter: IssuesFilter) {
+    // eslint-disable-next-line @typescript-eslint/camelcase
     filter.issue_id = undefined;
+    // eslint-disable-next-line @typescript-eslint/camelcase
     filter.project_id = undefined;
     filter.subject = undefined;
   }

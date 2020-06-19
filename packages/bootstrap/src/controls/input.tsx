@@ -9,7 +9,7 @@ export interface InputProps {
   onKeyDown?: (e: React.KeyboardEvent<any>) => void;
 }
 
-export class Input<TTarget, TOtherProps = {}> extends ValidationControlBase<
+export class Input<TTarget, TOtherProps = unknown> extends ValidationControlBase<
   TTarget,
   InputProps & FormControlProps & TOtherProps
 > {

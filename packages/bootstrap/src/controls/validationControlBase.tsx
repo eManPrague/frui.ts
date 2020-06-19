@@ -4,7 +4,7 @@ import { Observer } from "mobx-react-lite";
 import * as React from "react";
 import { CommonInputProps } from "./commonInputProps";
 
-export abstract class ValidationControlBase<TTarget, TOtherProps = {}> extends BindingComponent<
+export abstract class ValidationControlBase<TTarget, TOtherProps = unknown> extends BindingComponent<
   TTarget,
   ExcludeBindingProps<CommonInputProps & TOtherProps> & IBindingProps<TTarget>
 > {
