@@ -7,12 +7,12 @@ import { ICanNavigate } from "./types";
 
 export default class UrlNavigationAdapter {
   private isNavigationSuppressed = false;
-  private isStarted = false;
   private lastUrl = "";
-  constructor(private rootViewModel: ICanNavigate) {}
 
-  start() {
-    this.isStarted = true;
+  private rootViewModel?: ICanNavigate;
+
+  start(rootViewModel: ICanNavigate) {
+    this.rootViewModel = rootViewModel;
     NavigationConfiguration.onScreenChanged = this.onScreenChanged;
     window.addEventListener("hashchange", this.onUrlChanged, false);
 
@@ -20,12 +20,12 @@ export default class UrlNavigationAdapter {
   }
 
   stop() {
-    this.isStarted = false;
+    this.rootViewModel = undefined;
   }
 
   @bound
   private onScreenChanged(screen: IScreen & ICanNavigate) {
-    if (this.isStarted && !this.isNavigationSuppressed) {
+    if (this.rootViewModel && !this.isNavigationSuppressed) {
       const path = screen.getNavigationPath();
 
       const url = appendQueryString(NavigationConfiguration.hashPrefix + path.path, path.params);
@@ -41,7 +41,7 @@ export default class UrlNavigationAdapter {
   public async onUrlChanged() {
     const hash = window.location.hash;
 
-    if (this.isStarted && hash && hash.startsWith(NavigationConfiguration.hashPrefix)) {
+    if (this.rootViewModel && hash && hash.startsWith(NavigationConfiguration.hashPrefix)) {
       const path = parseUrl(hash.substr(NavigationConfiguration.hashPrefix.length));
 
       this.isNavigationSuppressed = true;

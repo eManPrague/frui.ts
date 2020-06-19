@@ -179,8 +179,8 @@ export default class UsersViewModel extends ConductorSingleChild<UserDetailViewM
 ```ts
 import { Router } from "@frui.ts/screens";
 
-const router = new Router(rootViewModel);
-router.start();
+const router = new Router();
+router.start(rootViewModel);
 
 ...
 
@@ -199,8 +199,8 @@ To initialize the adapter, you need to provide the root view model. It will auto
 import { UrlNavigationAdapter } from "@frui.ts/screens";
 
 ...
-const urlAdapter = new UrlNavigationAdapter(rootViewModel);
-urlAdapter.start();
+const urlAdapter = new UrlNavigationAdapter();
+urlAdapter.start(rootViewModel);
 ```
 
 Implement `ICanNavigate` if you want to control the navigation path for children and react to changes in the navigation path. Note that the conductors described above already implement `ICanNavigate`.

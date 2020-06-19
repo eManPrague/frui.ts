@@ -18,13 +18,14 @@ function addRouteDefinition(viewModel: Class, route: RouteDefinition) {
 
 export default class Router {
   private routes = new Map<string, Route>();
-
-  constructor(private rootViewModel: ICanNavigate) {}
+  private rootViewModel: ICanNavigate;
 
   /**
    * Initializes the Router and builds defined routes
    */
-  start() {
+  start(rootViewModel: ICanNavigate) {
+    this.rootViewModel = rootViewModel;
+
     const rootKey = this.findRootRouteKey();
     if (rootKey) {
       this.buildRoutes(rootKey);

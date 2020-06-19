@@ -1,3 +1,8 @@
+# 0.15.0
+
+- `Router` requires root view model on `start()` instead of a constructor
+- `UrlNavigationAdapter` requires root view model on `start()` instead of a constructor
+
 # 0.14.1
 
 - OpenApi generator writes string enums as type aliases.
