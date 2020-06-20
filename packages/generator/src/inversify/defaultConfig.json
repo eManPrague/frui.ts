@@ -3,16 +3,19 @@
   "rules": [
     {
       "pattern": "Service$",
+      "identifier": "$class",
       "addDecorators": true,
       "scope": "singleton"
     },
     {
       "pattern": "ViewModel$",
+      "identifier": "$class",
       "addDecorators": true,
       "scope": "transient"
     },
     {
       "pattern": "Repository$",
+      "identifier": "$class",
       "addDecorators": true,
       "scope": "transient"
     }

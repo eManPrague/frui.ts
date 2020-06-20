@@ -1,7 +1,8 @@
+import { PropertyName } from "@frui.ts/helpers";
 import { runInAction } from "mobx";
 import AutomaticDirtyWatcher from "./automaticDirtyWatcher";
 import ManualDirtyWatcher from "./manualDirtyWatcher";
-import { IHasDirtyWatcher, IHasManualDirtyWatcher, PropertyName } from "./types";
+import { IHasDirtyWatcher, IHasManualDirtyWatcher } from "./types";
 
 /**
  * Attaches a new [[AutomaticDirtyWatcher]] to the entity and returns the entity typed as [[IHasDirtyWatcher]]

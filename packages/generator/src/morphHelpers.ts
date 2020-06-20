@@ -10,16 +10,24 @@ export function importType(type: ClassDeclaration, target: SourceFile) {
   return declaration.identifier;
 }
 
-export function getImportDeclaration(type: ClassDeclaration, target: SourceFile) {
+const identifierCleanupRegex = /\W/g;
+
+export function getImportDeclaration(
+  type: ClassDeclaration,
+  target: SourceFile
+): { identifier: string; declaration: OptionalKind<ImportDeclarationStructure> } {
   const file = type.getSourceFile();
   const path = target.getRelativePathAsModuleSpecifierTo(file);
-  const identifier = type.getName();
 
-  const declaration: OptionalKind<ImportDeclarationStructure> = type.isDefaultExport()
-    ? { defaultImport: identifier, moduleSpecifier: path }
-    : { namedImports: toSingleArray(identifier), moduleSpecifier: path };
-
-  return { identifier, declaration };
+  if (type.isDefaultExport()) {
+    const identifier = path.replace(identifierCleanupRegex, "");
+    const declaration = { defaultImport: identifier, moduleSpecifier: path };
+    return { identifier, declaration };
+  } else {
+    const identifier = path.replace(identifierCleanupRegex, "") + type.getName();
+    const declaration = { namedImports: [{ name: type.getNameOrThrow(), alias: identifier }], moduleSpecifier: path };
+    return { identifier, declaration };
+  }
 }
 
 export function unwrapType(sourceType: Type) {
@@ -35,5 +43,5 @@ export function unwrapType(sourceType: Type) {
     }
   }
 
-  return symbol && symbol.getValueDeclaration();
+  return symbol && (symbol.getValueDeclaration() || symbol.getDeclarations()[0]);
 }

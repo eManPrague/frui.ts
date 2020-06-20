@@ -1,5 +1,6 @@
+import { PropertyName } from "@frui.ts/helpers";
 import { action, computed, get, observable, set } from "mobx";
-import { DirtyPropertiesList, IHasManualDirtyWatcher, IManualDirtyWatcher, PropertyName } from "./types";
+import { DirtyPropertiesList, IHasManualDirtyWatcher, IManualDirtyWatcher } from "./types";
 
 /** Dirty watcher implementation acting as a simple dirty flags list that needs to be manually maintained */
 export default class ManualDirtyWatcher<TTarget> implements IManualDirtyWatcher<TTarget> {
@@ -11,7 +12,7 @@ export default class ManualDirtyWatcher<TTarget> implements IManualDirtyWatcher<
   }
 
   @action
-  setDirty(propertyName: string & keyof TTarget, isDirty = true): void {
+  setDirty(propertyName: PropertyName<TTarget>, isDirty = true): void {
     set(this.dirtyProperties, propertyName, isDirty);
   }
 

@@ -1,7 +1,8 @@
+import { PropertyName } from "@frui.ts/helpers";
 import { runInAction } from "mobx";
 import AutomaticEntityValidator from "./automaticEntityValidator";
 import ManualEntityValidator from "./manualEntityValidator";
-import { IEntityValidationRules, IHasManualValidation, IHasValidation, PropertyName } from "./types";
+import { IEntityValidationRules, IHasManualValidation, IHasValidation } from "./types";
 
 /**
  * Attaches a new [[AutomaticEntityValidator]] to the entity and returns the entity typed as [[IHasValidation]]

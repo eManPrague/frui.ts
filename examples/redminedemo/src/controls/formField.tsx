@@ -42,7 +42,7 @@ export default FormField;
 export function fieldForType<TTarget>(
   target: TTarget
 ): React.FunctionComponent<IFormFieldProps<TTarget, IChildProps> & IFieldProps> {
-  return FormField;
+  return FormField as any;
 }
 
 export function fieldForTarget<TTarget>(

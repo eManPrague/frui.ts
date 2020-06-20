@@ -1,4 +1,3 @@
-export default interface Enum {
-  name: string;
-  items: string[];
+export default class Enum {
+  constructor(public name: string, public items: string[]) {}
 }

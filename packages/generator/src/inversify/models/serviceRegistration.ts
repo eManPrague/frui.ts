@@ -1,8 +1,7 @@
 import { ClassDeclaration } from "ts-morph";
-import { LifeScope } from "../types";
+import ServiceRule from "./serviceRule";
 
 export default interface ServiceRegistration {
   declaration: ClassDeclaration;
-  scope: LifeScope;
-  addDecorators: boolean;
+  rule: ServiceRule;
 }

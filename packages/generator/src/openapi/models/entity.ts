@@ -1,10 +1,6 @@
-import EntityProperty from "./entityProperty";
-import Restriction from "./restriction";
+import ObjectEntity from "./objectEntity";
+import TypeEntity from "./typeEntity";
 
-export default class Entity {
-  constructor(public name: string, public properties: EntityProperty[]) {}
+type Entity = ObjectEntity | TypeEntity;
 
-  addPropertyRestriction(propertyName: string, restriction: Restriction, params: any) {
-    this.properties.find(x => x.name === propertyName)?.addRestriction(restriction, params);
-  }
-}
+export default Entity;

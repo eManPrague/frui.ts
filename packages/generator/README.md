@@ -21,7 +21,10 @@ Following service export scenarios are supported:
 
 Dependency injection scenarios supported:
 
-- Constructor parameters (an instance as well as a factory method).
+- Constructor parameters:
+  - instance (`constructor(dependecy: SomeService)`)
+  - custom static factory method (`constructor(dependecyFactory: ReturnType<typeof SomeService.Factory>)`)
+  - automatic factory method (`constructor(dependecyFactory: () => SomeService)`)
 
 ### Usage
 
@@ -49,11 +52,18 @@ export interface IConfig {
     pattern: string;
     addDecorators?: boolean;
     scope: "none" | "singleton" | "transient";
+    identifier?: "$class" | "$interface" | string;
   }[];
 }
 ```
 
 Use `none` life scope if you don't want the service registered but still want the decorators generated. This is useful if you want to register the service yourself.
+
+`Identifier` determines what service identifier shall be used when registering the service:
+
+- `$class` - the class constructor will be used (default)
+- `$interface` - name of the first interface that the service implements will be used
+- any other key - the key will be used as a string
 
 Default configuration file:
 
@@ -63,16 +73,19 @@ Default configuration file:
   "rules": [
     {
       "pattern": "Service$",
+      "identifier": "$class",
       "addDecorators": true,
       "scope": "singleton"
     },
     {
       "pattern": "ViewModel$",
+      "identifier": "$class",
       "addDecorators": true,
       "scope": "transient"
     },
     {
       "pattern": "Repository$",
+      "identifier": "$class",
       "addDecorators": true,
       "scope": "transient"
     }

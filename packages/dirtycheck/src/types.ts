@@ -1,4 +1,4 @@
-export type PropertyName<TTarget> = string & keyof TTarget;
+import { PropertyName } from "@frui.ts/helpers";
 
 /**
  * Contains dirty flags for an entity.

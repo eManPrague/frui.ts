@@ -32,7 +32,7 @@ export function createPropertyValidatorFromRules(propertyName: string, propertyR
 }
 
 /** Entity validator implementation that automatically observes validated entity's properties and maintains validation errors */
-export default class AutomaticEntityValidator<TTarget extends {}> implements IEntityValidator<TTarget> {
+export default class AutomaticEntityValidator<TTarget extends Record<string, any>> implements IEntityValidator<TTarget> {
   @observable isErrorsVisible: boolean;
 
   @observable errors: ValidationErrors<TTarget> = {};

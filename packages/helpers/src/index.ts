@@ -4,3 +4,4 @@ export * from "./disposable";
 export * from "./functionHelpers";
 export * from "./nameof";
 export * from "./observableHelpers";
+export * from "./types";

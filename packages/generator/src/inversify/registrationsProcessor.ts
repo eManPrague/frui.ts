@@ -1,8 +1,17 @@
-import { ClassDeclaration, ConstructorDeclaration, MethodDeclaration, SourceFile, ArrowFunction } from "ts-morph";
+import {
+  ArrowFunction,
+  ClassDeclaration,
+  ConstructorDeclaration,
+  FunctionTypeNode,
+  InterfaceDeclaration,
+  MethodDeclaration,
+  Node,
+  SourceFile,
+} from "ts-morph";
 import CodeBlock from "../codeBlock";
 import { getImportDeclaration, unwrapType } from "../morphHelpers";
 import ServiceRegistration from "./models/serviceRegistration";
-import { LifeScope } from "./types";
+import ServiceRule from "./models/serviceRule";
 
 export default class RegistrationsProcessor {
   private decorators: CodeBlock[];
@@ -22,11 +31,11 @@ export default class RegistrationsProcessor {
     };
   }
   private processService(service: ServiceRegistration) {
-    if (service.addDecorators) {
+    if (!!service.rule.addDecorators) {
       this.decorateServiceInjectable(service.declaration);
     }
 
-    if (service.scope !== "none") {
+    if (service.rule.scope !== "none") {
       this.registerService(service);
     }
   }
@@ -40,38 +49,68 @@ export default class RegistrationsProcessor {
     });
   }
 
-  private registerService({ declaration, scope }: ServiceRegistration) {
+  private registerService({ declaration, rule }: ServiceRegistration) {
     const factory = declaration.getStaticMethod(this.factoryName);
     if (factory) {
-      this.registerServiceFactory(declaration, factory);
+      this.registerServiceFactory(declaration, rule, factory);
     } else {
       const construct = getConstructor(declaration);
-      this.registerConstructor(declaration, scope, construct);
+      this.registerConstructor(declaration, rule, construct);
     }
   }
 
-  private registerServiceFactory(declaration: ClassDeclaration, factory: MethodDeclaration) {
+  private registerServiceFactory(declaration: ClassDeclaration, rule: ServiceRule, factory: MethodDeclaration) {
     const importStatement = getImportDeclaration(declaration, this.registrationFile);
-    const factoryIdentifier = `${importStatement.identifier}.${factory.getName()}`;
+    const factoryPath = `${importStatement.identifier}.${factory.getName()}`;
+    const serviceIdentifier = rule.identifier === undefined || rule.identifier === "$class" ? factoryPath : rule.identifier;
 
     this.registrations.push({
       importStatements: [importStatement.declaration],
       statements: [
         "container",
-        `.bind<interfaces.Factory<${importStatement.identifier}>>(${factoryIdentifier})`,
-        `.toFactory(${factoryIdentifier});`,
+        `.bind<interfaces.Factory<${importStatement.identifier}>>(${serviceIdentifier})`,
+        `.toFactory(${factoryPath});`,
       ],
     });
   }
 
-  private registerConstructor(declaration: ClassDeclaration, scope: LifeScope, construct: ConstructorDeclaration) {
+  private registerConstructor(declaration: ClassDeclaration, rule: ServiceRule, construct: ConstructorDeclaration) {
     const importStatement = getImportDeclaration(declaration, this.registrationFile);
-    const bindSuffix = scope === "singleton" ? ".inSingletonScope()" : "";
+
+    let serviceIdentifier: string;
+    let bindType: string;
+    switch (rule.identifier) {
+      case undefined:
+      case "$class":
+        serviceIdentifier = importStatement.identifier;
+        bindType = "toSelf()";
+        break;
+      case "$interface":
+        const impl = declaration.getImplements()[0];
+        serviceIdentifier = impl ? `"${impl?.getText()}"` : "NoInterfaceImplemented";
+        bindType = `to(${importStatement.identifier})`;
+        break;
+      default:
+        serviceIdentifier = `"${rule.identifier}"`;
+        bindType = `to(${importStatement.identifier})`;
+        break;
+    }
+
+    if (rule.scope === "singleton") {
+      bindType += ".inSingletonScope()";
+    }
 
     this.registrations.push({
       importStatements: [importStatement.declaration],
-      statements: [`container.bind<${importStatement.identifier}>(${importStatement.identifier}).toSelf()${bindSuffix};`],
+      statements: [`container.bind<${importStatement.identifier}>(${serviceIdentifier}).${bindType};`],
     });
+
+    if (rule.registerAutoFactory) {
+      this.registrations.push({
+        importStatements: [],
+        statements: [`container.bind("Factory<${declaration.getName()}>").toAutoFactory(${serviceIdentifier});`],
+      });
+    }
 
     if (construct) {
       this.decorateConstructorParameterInject(declaration, construct);
@@ -88,33 +127,85 @@ export default class RegistrationsProcessor {
     const parameters = construct.getParameters();
     for (let i = 0; i < parameters.length; i++) {
       const parameter = parameters[i];
-      const dependencyType = unwrapType(parameter.getType());
+      let parameterType = parameter.getType();
+      let isMultiInject = false;
 
-      if (dependencyType instanceof ClassDeclaration) {
-        // instance
-        const dependencyImportStatement = getImportDeclaration(dependencyType, this.decoratorsFile);
-        this.decorators.push({
-          importStatements: [dependencyImportStatement.declaration],
+      if (parameterType.isArray()) {
+        parameterType = parameterType.getArrayElementTypeOrThrow();
+        isMultiInject = true;
+      }
+
+      const dependencyType = unwrapType(parameterType);
+      if (dependencyType) {
+        const decorator = this.getConstructorParameterDecorator(
+          classImportStatement.identifier,
+          i,
+          dependencyType,
+          isMultiInject
+        );
+        if (decorator) {
+          this.decorators.push(decorator);
+        }
+      }
+    }
+  }
+
+  private getConstructorParameterDecorator(
+    parentClassIdentifier: string,
+    parameterIndex: number,
+    dependencyType: Node,
+    isMultiInject: boolean
+  ): CodeBlock | undefined {
+    const injectDecorator = isMultiInject ? "multiInject" : "inject";
+
+    if (dependencyType instanceof ClassDeclaration) {
+      // instance
+      const dependencyImportStatement = getImportDeclaration(dependencyType, this.decoratorsFile);
+      return {
+        importStatements: [dependencyImportStatement.declaration],
+        statements: [
+          `decorate(${injectDecorator}(${dependencyImportStatement.identifier}) as any, ${parentClassIdentifier}, ${parameterIndex});`,
+        ],
+      };
+    }
+
+    if (dependencyType instanceof InterfaceDeclaration) {
+      return {
+        importStatements: [],
+        statements: [
+          `decorate(${injectDecorator}("${dependencyType.getName()}") as any, ${parentClassIdentifier}, ${parameterIndex});`,
+        ],
+      };
+    }
+
+    // default factory method
+    if (dependencyType instanceof FunctionTypeNode) {
+      const sourceType = unwrapType(dependencyType.getReturnType());
+      if (sourceType instanceof ClassDeclaration || sourceType instanceof InterfaceDeclaration) {
+        return {
+          importStatements: [],
           statements: [
-            `decorate(inject(${dependencyImportStatement.identifier}) as any, ${classImportStatement.identifier}, ${i});`,
+            `decorate(${injectDecorator}("Factory<${sourceType.getName()}>") as any, ${parentClassIdentifier}, ${parameterIndex});`,
           ],
-        });
-      } else if (dependencyType instanceof ArrowFunction) {
-        // factory method
-        const sourceType = unwrapType(dependencyType.getReturnType());
-        if (sourceType instanceof ClassDeclaration) {
-          const factoryMethod = this.factoryName && sourceType.getStaticMethod(this.factoryName);
-          if (factoryMethod) {
-            const sourceTypeImportStatement = getImportDeclaration(sourceType, this.decoratorsFile);
-            this.decorators.push({
-              importStatements: [sourceTypeImportStatement.declaration],
-              statements: [
-                `decorate(inject(${sourceTypeImportStatement.identifier}.${factoryMethod.getName()}) as any, ${
-                  classImportStatement.identifier
-                }, ${i});`,
-              ],
-            });
-          }
+        };
+      }
+    }
+
+    if (dependencyType instanceof ArrowFunction) {
+      // custom factory method
+      const sourceType = unwrapType(dependencyType.getReturnType());
+      if (sourceType instanceof ClassDeclaration) {
+        const factoryMethod = this.factoryName && sourceType.getStaticMethod(this.factoryName);
+        if (factoryMethod) {
+          const sourceTypeImportStatement = getImportDeclaration(sourceType, this.decoratorsFile);
+          return {
+            importStatements: [sourceTypeImportStatement.declaration],
+            statements: [
+              `decorate(${injectDecorator}(${
+                sourceTypeImportStatement.identifier
+              }.${factoryMethod.getName()}) as any, ${parentClassIdentifier}, ${parameterIndex});`,
+            ],
+          };
         }
       }
     }

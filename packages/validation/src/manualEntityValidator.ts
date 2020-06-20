@@ -1,5 +1,6 @@
+import { PropertyName } from "@frui.ts/helpers";
 import { action, computed, get, observable, remove, set } from "mobx";
-import { IHasManualValidation, IManualEntityValidator, PropertyName, ValidationErrors } from "./types";
+import { IHasManualValidation, IManualEntityValidator, ValidationErrors } from "./types";
 
 /** Entity validator implementation acting as a simple validation errors list that needs to be manually maintained */
 export default class ManualEntityValidator<TTarget> implements IManualEntityValidator<TTarget> {

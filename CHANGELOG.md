@@ -1,11 +1,15 @@
 # 0.15.0
 
 - New package @frui.ts/dataviews with higher-order components for displaying data. Check the [readme](./packages/dataviews/README.md).
-- React and Mobx made peer dependencies-
+- React and Mobx made peer dependencies
+- `Router` requires root view model on `start()` instead of a constructor
+- `UrlNavigationAdapter` requires root view model on `start()` instead of a constructor
 
 # 0.14.1
 
 - OpenApi generator writes string enums as type aliases.
+- OpenApi generator supports named arrays as entities.
+- Inversify generator supports custom identifiers and auto factories.
 
 # 0.14.0
 

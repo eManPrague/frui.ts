@@ -1,12 +1,14 @@
 import { upperFirst } from "lodash";
 import { OpenAPIV2 } from "openapi-types";
 import { isArray } from "util";
+import ApiModel from "../models/apiModel";
 import Entity from "../models/entity";
 import EntityProperty from "../models/entityProperty";
+import Enum from "../models/enum";
+import ObjectEntity from "../models/objectEntity";
 import Restriction from "../models/restriction";
 import TypeDefinition from "../models/typeDefinition";
-import Enum from "../models/enum";
-import ApiModel from "../models/apiModel";
+import TypeEntity from "../models/typeEntity";
 
 export default class OpenApi2Parser {
   parse(api: OpenAPIV2.Document) {
@@ -15,27 +17,22 @@ export default class OpenApi2Parser {
 
     if (api.definitions) {
       for (const [name, definition] of Object.entries(api.definitions)) {
-        if (definition.enum) {
-          enums.push({
-            name,
-            items: definition.enum,
-          });
-        } else {
-          const entity = this.parseEntity(name, definition);
-          if (entity) {
-            const embeddedEnums = entity.properties
-              .filter(x => x.type.enumValues)
-              .map(
-                x =>
-                  ({
-                    name: x.type.name,
-                    items: x.type.enumValues,
-                  } as Enum)
-              );
-            enums.push(...embeddedEnums);
+        const entity = this.parseEntity(name, definition);
+        if (!entity) {
+          continue;
+        }
 
-            entities.push(entity);
-          }
+        if (entity instanceof Enum) {
+          enums.push(entity);
+        } else if (entity instanceof ObjectEntity) {
+          const embeddedEnums = entity.properties
+            .filter(x => x.type.enumValues)
+            // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+            .map(x => new Enum(x.type.name, x.type.enumValues!));
+          enums.push(...embeddedEnums);
+          entities.push(entity);
+        } else if (entities instanceof TypeEntity) {
+          entities.push(entity);
         }
       }
     }
@@ -44,13 +41,24 @@ export default class OpenApi2Parser {
   }
 
   private parseEntity(name: string, definition: OpenAPIV2.SchemaObject) {
+    if (definition.enum) {
+      new Enum(name, definition.enum);
+    } else if (definition.properties) {
+      return this.parseObjectEntity(name, definition);
+    } else {
+      const type = this.parseType(definition);
+      return new TypeEntity(name, type);
+    }
+  }
+
+  private parseObjectEntity(name: string, definition: OpenAPIV2.SchemaObject) {
     if (!definition.properties) {
       return undefined;
     }
 
     const properties = Object.entries(definition.properties).map(x => this.parseEntityProperty(name, x[0], x[1]));
 
-    const entity = new Entity(name, properties);
+    const entity = new ObjectEntity(name, properties);
 
     definition.required?.forEach(property => entity.addPropertyRestriction(property, Restriction.required, true));
 
