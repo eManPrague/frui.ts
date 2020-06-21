@@ -1,4 +1,4 @@
-# Frui.ts
+<img src="logomanual/color/fruits_logo_horizontal_color.svg" alt="logo" height="100" />
 
 Frui.ts is a frontend framework using [MVVM](https://en.wikipedia.org/wiki/Model-view-viewmodel) design pattern for clean separation of concerns and long-term maintainability.
 
@@ -6,7 +6,7 @@ It allows **ViewModel-first** approach, which enables automated testing of compl
 
 This framework is designed to support both small and large applications with SOLID codebase. It is built on top of the [React](https://reactjs.org/) library, using [MobX](https://mobx.js.org/) and written in the modern TypeScript language.
 
-You can find business motivation and overview [here](OVERVIEW.md).
+You can find **business overview** [here](OVERVIEW.md).
 
 ## Why should you use Frui.ts?
 
@@ -139,7 +139,3 @@ Frui.ts is not a platform like, e.g., Angular - it does not force you to do your
 ## Tips and tricks
 
 - Design the app and logic from ViewModels, not Views.
-
-## Cookbook
-
-(Coming soon)
