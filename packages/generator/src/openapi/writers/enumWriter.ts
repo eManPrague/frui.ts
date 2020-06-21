@@ -29,6 +29,7 @@ export default class EnumWriter {
       writer => {
         writer.writeLine(entityGeneratedHeader);
         this.writeTypeAlias(writer, definition);
+        writer.newLineIfLastNot();
         writer.writeLine(`export default ${definition.name};`);
       },
       { overwrite: true }
@@ -37,6 +38,6 @@ export default class EnumWriter {
 
   private writeTypeAlias(writer: CodeBlockWriter, definition: Enum) {
     const items = definition.items.map(x => `"${x}"`).join(" | ");
-    writer.writeLine(`type ${definition.name} = ${items};`);
+    writer.write(`type ${definition.name} = ${items};`);
   }
 }

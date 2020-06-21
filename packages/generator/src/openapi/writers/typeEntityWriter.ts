@@ -36,6 +36,7 @@ export default class TypeEntityWriter {
 
         writer.writeLine(entityGeneratedHeader);
         this.writeTypeAlias(writer, definition);
+        writer.newLineIfLastNot();
         writer.writeLine(`export default ${definition.name};`);
       },
       { overwrite: true }
@@ -43,6 +44,6 @@ export default class TypeEntityWriter {
   }
 
   private writeTypeAlias(writer: CodeBlockWriter, definition: TypeEntity) {
-    writer.writeLine(`type ${definition.name} = ${definition.type.name}${definition.type.isArray ? "[]" : ""};`);
+    writer.write(`type ${definition.name} = ${definition.type.name}${definition.type.isArray ? "[]" : ""};`);
   }
 }
