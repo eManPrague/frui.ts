@@ -1,5 +1,5 @@
-import { upperFirst } from "lodash";
 import { OpenAPIV3 } from "openapi-types";
+import { pascalCase } from "../../helpers";
 import ApiModel from "../models/apiModel";
 import Entity from "../models/entity";
 import EntityProperty from "../models/entityProperty";
@@ -44,7 +44,8 @@ export default class OpenApi3Parser {
     return new ApiModel(entities, enums);
   }
 
-  private parseEntity(name: string, definition: OpenAPIV3.SchemaObject) {
+  private parseEntity(rawName: string, definition: OpenAPIV3.SchemaObject) {
+    const name = pascalCase(rawName);
     if (definition.enum) {
       new Enum(name, definition.enum);
     } else if (definition.type === "object") {
@@ -72,7 +73,7 @@ export default class OpenApi3Parser {
   private parseEntityProperty(entityName: string, name: string, definition: OpenAPIV3.ReferenceObject | OpenAPIV3.SchemaObject) {
     const type = this.parseType(definition);
     if (type.enumValues) {
-      type.name = entityName + upperFirst(name);
+      type.name = entityName + pascalCase(name);
     }
 
     const property = new EntityProperty(name, type);

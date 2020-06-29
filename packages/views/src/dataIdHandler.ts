@@ -1,4 +1,4 @@
-import { memoize } from "lodash";
+import memoize from "lodash/memoize";
 import * as React from "react";
 
 function dataIdHandler(handler: (id: number) => any) {

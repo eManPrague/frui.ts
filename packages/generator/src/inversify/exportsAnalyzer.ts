@@ -1,4 +1,4 @@
-import { uniqBy } from "lodash";
+import uniqBy from "lodash/uniqBy";
 import { ClassDeclaration, Project } from "ts-morph";
 import ServiceRegistration from "./models/serviceRegistration";
 import ServiceRule from "./models/serviceRule";

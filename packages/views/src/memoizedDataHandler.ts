@@ -1,4 +1,4 @@
-import { memoize } from "lodash";
+import memoize from "lodash/memoize";
 import * as React from "react";
 
 export default function createMemoizedHandler(datasetKey: string) {
