@@ -10,6 +10,7 @@
     "emitDecoratorMetadata": true,
     "downlevelIteration": true,
     "sourceMap": true,
+    "esModuleInterop": true,
     "target": "es5",
     "jsx": "react",
     "lib": [

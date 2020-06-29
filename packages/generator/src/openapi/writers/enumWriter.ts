@@ -1,4 +1,4 @@
-import { camelCase } from "lodash";
+import camelCase from "lodash/camelCase";
 import { CodeBlockWriter, Directory, SourceFile } from "ts-morph";
 import GeneratorBase from "../../generatorBase";
 import { entityGeneratedHeader } from "../../messages.json";
