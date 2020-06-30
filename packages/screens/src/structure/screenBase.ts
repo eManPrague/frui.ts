@@ -109,9 +109,11 @@ export default abstract class ScreenBase implements IScreen, IChild, ICanNavigat
     }
   }
 
+  protected navigationParamsValue: any = undefined;
+
   // you can override this property to append navigation params to navigation path
   get navigationParams(): any {
-    return undefined;
+    return this.navigationParamsValue;
   }
 
   // you can override this function to navigate to children, react to params, etc.

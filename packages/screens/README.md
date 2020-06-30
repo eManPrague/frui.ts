@@ -74,7 +74,7 @@ You can also use function decorator `@watchBusy`. It automates the use of `busyW
 
 There are several use cases related to navigation:
 
-## 1. Notify that application navigation has changed
+### 1. Notify that application navigation has changed
 
 Every time the application needs to update the navigation state (usually resulting in changing the URL), it raises an event. In order to streamline the event issuing, there is a helper function on `NavigationConfiguration`.
 
@@ -90,7 +90,7 @@ There are two places where `onScreenChanged` is called by default:
 1. Whenever a `ScreenBase` is activated.
 2. When a `ConductorBaseWithActiveChild` does not have an active child.
 
-You might notice that point 1 would cause problems when activating a parent conductor with already present active child (because both get activated). To handle that, there is a property `canBeNavigationActiveScreen` and function `notifyNavigationChanged()` in `ScreenBase`. The property is used as a flag if the actual `onScreenChanged` should be called. For example in `ConductorBaseWithActiveChild`, it is implemented as this:
+You might notice that point 1 would cause problems when activating a parent conductor with already present active child (because both get activated). To handle that, there is a property `canBeNavigationActiveScreen` in `ScreenBase`. The property is used as a flag if the actual `onScreenChanged` should be called. For example in `ConductorBaseWithActiveChild`, it is implemented as this:
 
 ```ts
 get canBeNavigationActiveScreen() {
@@ -98,17 +98,19 @@ get canBeNavigationActiveScreen() {
 }
 ```
 
-So, if you are creating some kind of a conductor that contains children, you should implement the property similarly. Besides that, all you need to do is call `notifyNavigationChanged()` that is available from the base class `ScreenBase` whenever you want to update the navigation state (e.g., a filter is changed).
+So, if you are creating some kind of a conductor that contains children, you should implement the property similarly.
 
-## 2. Get current navigation path
+Besides the automatic URL update when changing active VMs, you might also want to update URL on some actions within a VM (e.g., a filter is changed). For that, you just need to call `notifyNavigationChanged()` that is available from the base class `ScreenBase` whenever you want to update the navigation state.
+
+### 2. Get current navigation path
 
 When a call to `onScreenChanged` is issued, the simplest way to get the actual navigation path is to call `getNavigationPath` on the source view model. It is then its responsibility to get the proper path. The default implementation in `ScreenBase` recursively calls parent view models to get the full path.
 
-## 3. React when URL changes
+### 3. React when URL changes
 
 When the navigation path changes from outside of the application, we need the app to react. Because Frui.ts applications are composed as a hierarchical structure of view models, the navigation should start from the top-most level, i.e., the root view model. Simply call its `navigate()` function. And let it recursively activate its children along the new path.
 
-## 4. Generate local navigation links
+### 4. Generate local navigation links
 
 When you want to navigate between children of a conductor, you can use `conductor.tryActivateChild(child)`. This will work, properly update browser URL, and also react to any URL changes. However, the action will be bound to the respective user control such as a button via `onClick` handler, and thus some typical web actions such as opening the link in a new window will not work. If you need such functionality, we need to generate a navigation URL for the children.
 
@@ -126,7 +128,7 @@ const getUrl = Router.getChildUrlFactory(vm);
 
 You can also use application-wide links as described below.
 
-## 5. Generate application-wide navigation links
+### 5. Generate application-wide navigation links
 
 You can also use a navigation path for navigating to another part of the application. The hard part here is how to get the proper path.
 
@@ -185,8 +187,16 @@ router.start(rootViewModel);
 ...
 
 const url = router.getUrl("userDetail", { userId: 42 }); // "#/users/42"
-await router.navigate("userDetail", { userId: 42 }); // opens the user detail
+await router.navigate("userDetail", { userId: 42 }); // immediately navigates to the user detail
 ```
+
+## Navigation summary
+
+The chain of events when using `router.navigate` for application-wide navigation is as follows:
+
+ 1. Router generates target navigation path
+ 2. The navigation path is passed to `rootViewModel.navigate()` which recursively activates VMs through the VM hierarchy
+ 3. When the last VM is activated, it notifies that application navigation has changed which eventually updates URL in the browser's navigation bar.
 
 ## `UrlNavigationAdapter`
 

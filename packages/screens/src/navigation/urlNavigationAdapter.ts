@@ -1,5 +1,5 @@
 import { bound } from "@frui.ts/helpers";
-import { parseUrl } from "query-string";
+import { parseUrl, ParseOptions } from "query-string";
 import { IScreen } from "..";
 import NavigationConfiguration from "./navigationConfiguration";
 import { appendQueryString } from "./navigationPath";
@@ -7,9 +7,11 @@ import { ICanNavigate } from "./types";
 
 export default class UrlNavigationAdapter {
   private isNavigationSuppressed = false;
-  private lastUrl = "";
+  private lastSuppressedScreen?: IScreen & ICanNavigate;
 
   private rootViewModel?: ICanNavigate;
+
+  parseOptions?: ParseOptions;
 
   start(rootViewModel: ICanNavigate) {
     this.rootViewModel = rootViewModel;
@@ -25,14 +27,28 @@ export default class UrlNavigationAdapter {
 
   @bound
   private onScreenChanged(screen: IScreen & ICanNavigate) {
-    if (this.rootViewModel && !this.isNavigationSuppressed) {
-      const path = screen.getNavigationPath();
+    if (this.isNavigationSuppressed) {
+      this.lastSuppressedScreen = screen;
+      return;
+    }
 
+    this.updateUrl(screen);
+  }
+
+  private updateUrl(screen: IScreen & ICanNavigate) {
+    if (this.rootViewModel) {
+      const path = screen.getNavigationPath();
       const url = appendQueryString(NavigationConfiguration.hashPrefix + path.path, path.params);
 
-      if (this.lastUrl !== url) {
-        window.history.pushState(null, screen.name, url);
-        this.lastUrl = url;
+      if (window.location.hash !== url) {
+        if (url.startsWith(window.location.hash)) {
+          // we are probably navigating deeper in the previously active VM,
+          // so the new URL should not be another history entry,
+          // but just update of the previous one instead
+          window.history.replaceState(null, screen.name, url);
+        } else {
+          window.history.pushState(null, screen.name, url);
+        }
       }
     }
   }
@@ -42,16 +58,21 @@ export default class UrlNavigationAdapter {
     const hash = window.location.hash;
 
     if (this.rootViewModel && hash && hash.startsWith(NavigationConfiguration.hashPrefix)) {
-      const path = parseUrl(hash.substr(NavigationConfiguration.hashPrefix.length));
-
-      this.isNavigationSuppressed = true;
+      const path = parseUrl(hash.substr(NavigationConfiguration.hashPrefix.length), this.parseOptions);
 
       try {
+        this.lastSuppressedScreen = undefined;
+        this.isNavigationSuppressed = true;
         await this.rootViewModel.navigate(path.url, path.query);
+
+        if (this.lastSuppressedScreen) {
+          this.updateUrl(this.lastSuppressedScreen);
+        }
       } catch (error) {
         console.error(error);
+      } finally {
+        this.isNavigationSuppressed = false;
       }
-      this.isNavigationSuppressed = false;
     }
   }
 }
