@@ -168,6 +168,7 @@ import { ConductorOneChildActive, Router, ScreenBase } from "@frui.ts/screens";
 
 @Router.registerRoute({ name: "usersList", route: "users" })
 @Router.registerRoute({ name: "userDetail", route: "users/:userId" })
+@Router.registerRoute({ name: UserDetailViewModel, route: "users/:userId" }) // you can use a type or a symbol as route name as well
 export default class UsersViewModel extends ConductorSingleChild<UserDetailViewModel> {
   navigationName = "users";
 
@@ -175,6 +176,24 @@ export default class UsersViewModel extends ConductorSingleChild<UserDetailViewM
   {
     ...
   }
+}
+```
+
+Please note that if you want to use a class' type as its own route name, this will not work:
+
+```ts
+@Router.registerRoute({ name: UsersViewModel, route: "users" }) // throws ReferenceError: Cannot access 'UsersViewModel' before initialization
+export default class UsersViewModel extends ConductorSingleChild<UserDetailViewModel> {
+  ...
+}
+```
+
+However, you can use the `Router.Self` helper instead:
+
+```ts
+@Router.registerRoute({ name: Router.Self, route: "users" })
+export default class UsersViewModel extends ConductorSingleChild<UserDetailViewModel> {
+  ...
 }
 ```
 
@@ -188,15 +207,16 @@ router.start(rootViewModel);
 
 const url = router.getUrl("userDetail", { userId: 42 }); // "#/users/42"
 await router.navigate("userDetail", { userId: 42 }); // immediately navigates to the user detail
+await router.navigate(UserDetailViewModel, { userId: 42 }); // use type as route name
 ```
 
 ## Navigation summary
 
 The chain of events when using `router.navigate` for application-wide navigation is as follows:
 
- 1. Router generates target navigation path
- 2. The navigation path is passed to `rootViewModel.navigate()` which recursively activates VMs through the VM hierarchy
- 3. When the last VM is activated, it notifies that application navigation has changed which eventually updates URL in the browser's navigation bar.
+1.  Router generates target navigation path
+2.  The navigation path is passed to `rootViewModel.navigate()` which recursively activates VMs through the VM hierarchy
+3.  When the last VM is activated, it notifies that application navigation has changed which eventually updates URL in the browser's navigation bar.
 
 ## `UrlNavigationAdapter`
 

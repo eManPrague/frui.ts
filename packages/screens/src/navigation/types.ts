@@ -11,8 +11,13 @@ export interface INavigationParent<TChild> {
 }
 export type Class = { new (...args: any[]): any };
 
+const SelfLink = Symbol("Router.Self");
+export { SelfLink };
+
+export type RouteName = string | symbol | Class;
+
 export interface RouteDefinition {
-  name?: string;
+  name?: RouteName | typeof SelfLink;
   route: string;
   children?: Class[];
 }

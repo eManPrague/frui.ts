@@ -2,7 +2,7 @@ import Route from "route-parser";
 import { IScreen } from "../structure/types";
 import NavigationConfiguration from "./navigationConfiguration";
 import { appendQueryString, combinePath, combinePathString } from "./navigationPath";
-import { Class, ICanNavigate, INavigationParent, RouteDefinition } from "./types";
+import { Class, ICanNavigate, INavigationParent, RouteDefinition, RouteName, SelfLink } from "./types";
 
 /** Shared route definitions created by the Router.registerRoute decorator */
 const routeDefinitions = new Map<Class, RouteDefinition[]>();
@@ -17,7 +17,9 @@ function addRouteDefinition(viewModel: Class, route: RouteDefinition) {
 }
 
 export default class Router {
-  private routes = new Map<string, Route>();
+  static Self: typeof SelfLink = SelfLink;
+
+  private routes = new Map<RouteName, Route>();
   private rootViewModel: ICanNavigate;
 
   /**
@@ -32,7 +34,7 @@ export default class Router {
     }
   }
 
-  getPath(routeName: string, params?: any) {
+  getPath(routeName: RouteName, params?: any) {
     const route = this.routes.get(routeName);
     if (route) {
       return route.reverse(params);
@@ -41,12 +43,12 @@ export default class Router {
     }
   }
 
-  getUrl(routeName: string, routeParams?: any, queryParams?: any) {
+  getUrl(routeName: RouteName, routeParams?: any, queryParams?: any) {
     const path = this.getPath(routeName, routeParams);
     return appendQueryString(NavigationConfiguration.hashPrefix + path, queryParams);
   }
 
-  navigate(routeName: string, routeParams?: any, queryParams?: any) {
+  navigate(routeName: RouteName, routeParams?: any, queryParams?: any) {
     const path = this.getPath(routeName, routeParams);
     if (path) {
       return this.rootViewModel.navigate(path, queryParams);
@@ -63,6 +65,7 @@ export default class Router {
     return undefined;
   }
 
+  // eslint-disable-next-line @typescript-eslint/tslint/config
   private buildRoutes(key: Class, parentRoute?: string) {
     const definitions = routeDefinitions.get(key);
     if (definitions) {
@@ -71,7 +74,8 @@ export default class Router {
 
         if (routeDefinition.name) {
           const route = new Route(path);
-          this.routes.set(routeDefinition.name, route);
+          const name = routeDefinition.name === SelfLink ? key : routeDefinition.name;
+          this.routes.set(name, route);
         }
 
         if (routeDefinition.children) {
