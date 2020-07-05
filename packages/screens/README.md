@@ -70,6 +70,21 @@ These components are heavily inspired by the Caliburn.Micro framework from .NET 
 
 You can also use function decorator `@watchBusy`. It automates the use of `busyWatcher.watch()` - if the function the decorator is applied to is async or returns a promise, and the parent class also contains a property named `busyWatcher`, the function is automatically watched by the busyWatcher.
 
+```ts
+import { BusyWatcher, watchBusy } from "@frui.ts/screens";
+
+class MyViewModel {
+  busyWatcher = new BusyWatcher();
+
+  @watchBusy
+  async doLongProcess() {
+    // busyWatcher.isBusy == true
+    await someAction();
+    await anotherAction();
+  }
+}
+```
+
 # Navigation
 
 There are several use cases related to navigation:

@@ -51,6 +51,7 @@ export interface IConfig {
   rules: {
     pattern: string;
     addDecorators?: boolean;
+    registerAutoFactory?: boolean;
     scope: "none" | "singleton" | "transient";
     identifier?: "$class" | "$interface" | string;
   }[];
@@ -75,18 +76,21 @@ Default configuration file:
       "pattern": "Service$",
       "identifier": "$class",
       "addDecorators": true,
+      "registerAutoFactory": false,
       "scope": "singleton"
     },
     {
       "pattern": "ViewModel$",
       "identifier": "$class",
       "addDecorators": true,
+      "registerAutoFactory": false,
       "scope": "transient"
     },
     {
       "pattern": "Repository$",
       "identifier": "$class",
       "addDecorators": true,
+      "registerAutoFactory": false,
       "scope": "transient"
     }
   ]

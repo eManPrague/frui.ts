@@ -6,6 +6,7 @@ export default class EntityProperty {
   description?: string;
   example?: any;
   restrictions?: Map<Restriction, any>;
+  rawName?: string;
 
   addRestriction(name: Restriction, params: any) {
     if (!this.restrictions) {

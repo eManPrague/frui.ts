@@ -2,6 +2,7 @@ import EntityProperty from "./entityProperty";
 import Restriction from "./restriction";
 
 export default class ObjectEntity {
+  rawName?: string;
   constructor(public name: string, public properties: EntityProperty[]) {}
 
   addPropertyRestriction(propertyName: string, restriction: Restriction, params: any) {

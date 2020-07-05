@@ -2,6 +2,7 @@ import GeneratorBase from "../generatorBase";
 import FileGenerator from "./fileGenerator";
 import ModelProcessor from "./modelProcessor";
 import { IConfig, IGeneratorParams } from "./types";
+import NameFormatter from "./formatters/nameFormatter";
 
 export default class OpenApiGenerator extends GeneratorBase<IGeneratorParams, IConfig> {
   async run() {
@@ -12,6 +13,10 @@ export default class OpenApiGenerator extends GeneratorBase<IGeneratorParams, IC
 
     const modelProcessor = new ModelProcessor();
     const { entities, enums } = await modelProcessor.process(this.config.api);
+
+    const formatter = new NameFormatter();
+    formatter.formatEnums(enums);
+    formatter.formatEntities(entities);
 
     const fileGenerator = new FileGenerator(this.project, entities, enums);
     await fileGenerator.generate(this.params);

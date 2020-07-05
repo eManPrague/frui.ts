@@ -8,6 +8,7 @@ import ObjectEntity from "../models/objectEntity";
 import Restriction from "../models/restriction";
 import TypeDefinition from "../models/typeDefinition";
 import { IGeneratorParams } from "../types";
+import { write, stat } from "fs";
 
 export default class ObjectEntityWriter {
   constructor(private parentDirectory: Directory, private params: IGeneratorParams) {}
@@ -73,7 +74,8 @@ export default class ObjectEntityWriter {
     }
 
     if (this.params.generateConversion) {
-      writeConversionFunction(writer, definition);
+      writeFromJsonFunction(writer, definition);
+      writeToJsonFunction(writer, definition);
     }
   }
 }
@@ -150,30 +152,68 @@ function getRestrictionDefinition(restriction: Restriction, params: any) {
   }
 }
 
-function writeConversionFunction(writer: CodeBlockWriter, entity: ObjectEntity) {
-  const identifier = camelCase(entity.name);
-  const statements = entity.properties.map(x => getConversionStatement(identifier, x)).filter(x => x) as string[];
-  if (statements.length) {
-    writer
-      .blankLineIfLastNot()
-      .write("static fromJson(")
-      .write(identifier)
-      .write(": ")
-      .write(entity.name)
-      .write(") {")
-      .indent(() => statements.forEach(x => writer.writeLine(x)));
-    writer.write("}").newLine();
+function writeFromJsonFunction(writer: CodeBlockWriter, entity: ObjectEntity) {
+  writer.blankLineIfLastNot();
+
+  if (!needsFromJsonConversion(entity)) {
+    writer.writeLine(`static fromApiObject = (source: ${entity.name}) => source;`);
+    return;
   }
+
+  const statements = entity.properties.map(x => getFromJsonStatement("source", x));
+
+  writer
+    .write(`static fromApiObject(source: ${entity.name})`)
+    .block(() => {
+      writer
+        .write("return {")
+        .indent(() => statements.forEach(x => writer.writeLine(x)))
+        .write(`} as ${entity.name};`);
+    })
+    .newLineIfLastNot();
 }
 
-function getConversionStatement(identifier: string, property: EntityProperty) {
-  // eslint-disable-next-line @typescript-eslint/tslint/config
-  switch (property.type.name) {
-    case "dateTime":
-      return property.isRequired
-        ? `${identifier}.${property.name} = new Date(${identifier}.${property.name});`
-        : `${identifier}.${property.name} = !!${identifier}.${property.name} ? new Date(${identifier}.${property.name}) : undefined;`;
-    default:
-      return undefined;
+function needsFromJsonConversion(entity: ObjectEntity) {
+  return entity.properties.some(x => x.rawName || x.type.name === "dateTime");
+}
+
+function getFromJsonStatement(identifier: string, property: EntityProperty) {
+  const sourcePropertyPath = property.rawName ? `(${identifier} as any).${property.rawName}` : `${identifier}.${property.name}`;
+
+  if (property.type.name === "dateTime") {
+    return property.isRequired
+      ? `${property.name}: new Date(${sourcePropertyPath}),`
+      : `${property.name}: !!${sourcePropertyPath} ? new Date(${sourcePropertyPath}) : undefined,`;
   }
+
+  return `${property.name}: ${sourcePropertyPath},`;
+}
+
+function writeToJsonFunction(writer: CodeBlockWriter, entity: ObjectEntity) {
+  writer.blankLineIfLastNot();
+
+  if (!needsToJsonConversion(entity)) {
+    writer.writeLine(`static toApiObject = (entity: ${entity.name}) => entity;`);
+    return;
+  }
+
+  const statements = entity.properties.map(x => getToJsonStatement("entity", x));
+
+  writer
+    .write(`static toApiObject(entity: ${entity.name})`)
+    .block(() => {
+      writer
+        .write("return {")
+        .indent(() => statements.forEach(x => writer.writeLine(x)))
+        .write(`};`);
+    })
+    .newLineIfLastNot();
+}
+
+function needsToJsonConversion(entity: ObjectEntity) {
+  return entity.properties.some(x => !!x.rawName);
+}
+
+function getToJsonStatement(identifier: string, property: EntityProperty) {
+  return `${property.rawName ?? property.name}: ${identifier}.${property.name},`;
 }

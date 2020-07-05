@@ -1,6 +1,5 @@
 import { OpenAPIV2 } from "openapi-types";
 import { isArray } from "util";
-import { pascalCase } from "../../helpers";
 import ApiModel from "../models/apiModel";
 import Entity from "../models/entity";
 import EntityProperty from "../models/entityProperty";
@@ -40,8 +39,7 @@ export default class OpenApi2Parser {
     return new ApiModel(entities, enums);
   }
 
-  private parseEntity(rawName: string, definition: OpenAPIV2.SchemaObject) {
-    const name = pascalCase(rawName);
+  private parseEntity(name: string, definition: OpenAPIV2.SchemaObject) {
     if (definition.enum) {
       new Enum(name, definition.enum);
     } else if (definition.properties) {
@@ -69,7 +67,7 @@ export default class OpenApi2Parser {
   private parseEntityProperty(entityName: string, name: string, definition: OpenAPIV2.SchemaObject) {
     const type = this.parseType(definition);
     if (type.enumValues) {
-      type.name = entityName + pascalCase(name);
+      type.name = name;
     }
 
     const property = new EntityProperty(name, type);

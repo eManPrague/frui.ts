@@ -6,15 +6,15 @@ It allows **ViewModel-first** approach, which enables automated testing of compl
 
 This framework is designed to support both small and large applications with SOLID codebase. It is built on top of the [React](https://reactjs.org/) library, using [MobX](https://mobx.js.org/) and written in the modern TypeScript language.
 
-You can find **business overview** [here](OVERVIEW.md).
+You can read our [business overview](OVERVIEW.md) or jump to the [documentation](#quick-documentation-links).
 
 ## Why should you use Frui.ts?
 
 Because you can write this:
 
 `model.ts` - define your model or entities, define validation rules
-```ts
 
+```ts
 interface ICustomer {
   id: number;
   firstName: string;
@@ -30,8 +30,8 @@ const CustomerValidationRules = {
 ```
 
 `viewModel.ts` - write only the code that actually makes sense
-```ts
 
+```ts
 class CustomerViewModel {
   categories = [
     { id: 1, name: "Premium" },
@@ -59,15 +59,22 @@ class CustomerViewModel {
 ```
 
 `view.tsx` - declare how the VM should be presented
-```tsx
 
+```tsx
 const customerView: ViewComponent<CustomerViewModel> = observer(({ vm }) => (
   <form>
-    {/* Note the two-way binding here, autocomplete works for 'target' and 'property' properies */}
+    {/* Note the two-way binding here, autocomplete works for 'target' and 'property' properties */}
     <Input target={vm.customer} property="firstName" label="First name" />
     <Input target={vm.customer} property="lastName" label="Last name" />
-    <Select target={vm.customer} property="categoryId" label="Category"
-      items={vm.categories} keyProperty="id" textProperty="name" mode="key" />
+    <Select
+      target={vm.customer}
+      property="categoryId"
+      label="Category"
+      items={vm.categories}
+      keyProperty="id"
+      textProperty="name"
+      mode="key"
+    />
 
     {/* The button will be enabled/disabled as the input values change */}
     <Button onClick={vm.save} disabled={!vm.canSave}>
@@ -84,7 +91,7 @@ registerView(customerView, CustomerViewModel);
 We were not happy with the currently popular event-sourced state management, and that logic is usually dependent on the presentation structure.
 This is mainly caused by the nature of the applications that we usually develop: **data-driven admin solutions** with server backends.
 
-From our point of view, using event-sourced state management such as Redux for the presentation layer is quite hard to understand, makes the application hard to reason about, and requires a significant amount of boilerplate code. For example, take a simple master-detail screen with an edit form and validation - the code necessary for this ordinary scenario was a big issue for us. That's why we embrace the MVVM model, where the ViewModels handle the presentation state.
+From our point of view, using event-sourced state management such as Redux for the presentation layer is usually quite complex, makes the application hard to reason about, and requires a significant amount of boilerplate code. For example, take a simple master-detail screen with an edit form and validation - the code necessary for this ordinary scenario was a big issue for us. That's why we embrace the MVVM model, where ViewModels handle the presentation state.
 Please note that we are not against event sourcing, especially on the backend side. That is an entirely different story!
 
 Even though the application logic is usually separated from the presentation part, there are still many places where it leaks to the view code (e.g., navigation/routing, validation, etc.). As we see it, existing solutions seem only to fix the symptoms, not the root cause. The cause is the View-first approach. If you start with views, you need to handle navigation, application structure, and so on in views, which should not be their responsibility. That's why we wanted to **start with ViewModels**, thus model the application from the logical point of view, and just after that project it to the actual user interface.
@@ -110,7 +117,7 @@ Frui.ts is not a platform like, e.g., Angular - it does not force you to do your
 
 - [Views](packages/views/README.md) - components for binding UI to ViewModels. For example, `BindingComponent`, `View`.
 - [Data](packages/data/README.md) - helper functions for rendering data. For example, `IPagingFilter`, `pageChangedHandler`.
-- [DataViews](packages/dataviews/README.md) - higher-order components for displaying data. For example, `DataTable`, `DataRepeater`.
+- [Data Views](packages/dataviews/README.md) - higher-order components for displaying data. For example, `DataTable`, `DataRepeater`.
 
 **Data**
 
@@ -140,3 +147,34 @@ Frui.ts is not a platform like, e.g., Angular - it does not force you to do your
 ## Tips and tricks
 
 - Design the app and logic from ViewModels, not Views.
+
+# Quick documentation links
+
+- [API client](packages/apiclient/README.md)
+- [CRA template](packages/cra-template/README.md)
+- [Data](packages/data/README.md)
+- [Data Screens](packages/datascreens/README.md)
+  - [DetailViewModel](packages/datascreens/README.md#detailviewmodel)
+  - [ListViewModel](packages/datascreens/README.md#listviewmodel)
+  - [FilteredListViewModel](packages/datascreens/README.md#filteredlistviewmodel)
+- [Data Views](packages/dataviews/README.md)
+- [Dirty Check](packages/dirtycheck/README.md)
+  - [AutomaticDirtyWatcher](packages/dirtycheck/README.md#automaticdirtywatcher)
+  - [ManualDirtyWatcher](packages/dirtycheck/README.md#manualdirtywatcher)
+- [Generator](packages/generator/README.md)
+  - [Inversify configuration](packages/generator/README.md#inversify-configuration)
+  - [Views registration](packages/generator/README.md#views-registration)
+  - [OpenApi entities](packages/generator/README.md#openapi-entities)
+- [Helpers](packages/helpers/README.md)
+- [Screens](packages/screens/README.md)
+  - [Busywatcher](packages/screens/README.md#busywatcher)
+  - [Navigation overview](packages/screens/README.md#navigation)
+  - [Router](packages/screens/README.md#4-generate-local-navigation-links)
+  - [UrlNavigationAdapter](packages/screens/README.md#urlnavigationadapter)
+  - [View models](packages/screens/README.md#screens)
+- [Validation](packages/validation/README.md)
+  - [AutomaticEntityValidator](packages/validation/README.md#automaticentityvalidator)
+  - [ManualEntityValidator](packages/validation/README.md#manualentityvalidator)
+- [Views](packages/views/README.md)
+  - [BindingComponent](packages/views/README.md#bindingcomponent)
+  - [View discovery](packages/views/README.md#view-discovery)

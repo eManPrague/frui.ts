@@ -1,4 +1,6 @@
 import { ClassDeclaration, ImportDeclarationStructure, OptionalKind, SourceFile, Type } from "ts-morph";
+import { camelCase } from "lodash";
+import { pascalCase } from "./helpers";
 
 export function toSingleArray<T>(item: T | undefined) {
   return item ? [item] : undefined;
@@ -20,11 +22,11 @@ export function getImportDeclaration(
   const path = target.getRelativePathAsModuleSpecifierTo(file);
 
   if (type.isDefaultExport()) {
-    const identifier = path.replace(identifierCleanupRegex, "");
+    const identifier = camelCase(path);
     const declaration = { defaultImport: identifier, moduleSpecifier: path };
     return { identifier, declaration };
   } else {
-    const identifier = path.replace(identifierCleanupRegex, "") + type.getName();
+    const identifier = camelCase(path) + type.getName();
     const declaration = { namedImports: [{ name: type.getNameOrThrow(), alias: identifier }], moduleSpecifier: path };
     return { identifier, declaration };
   }
