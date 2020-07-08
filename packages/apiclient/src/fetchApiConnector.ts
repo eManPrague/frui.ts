@@ -4,6 +4,8 @@ import { IApiConnector } from "./types";
 
 const jsonContentType = "application/json";
 type Middleware = (response: Response) => Response | PromiseLike<Response>;
+type FetchFunction = (input: RequestInfo, init?: RequestInit) => Promise<Response>;
+type JsonSerializer = (value: any) => string;
 
 /** Creates a new RequestInit based on the provided values and with a 'Content-Type: application/json' header. */
 export function appendJsonHeader(params?: RequestInit): RequestInit {
@@ -38,7 +40,15 @@ export async function handleErrorStatusMiddleware(response: Response) {
  * custom values through the constructor.
  */
 export class FetchApiConnector implements IApiConnector {
-  constructor(private fetchFunction = bind(window.fetch, window), private middleware: Middleware = handleErrorStatusMiddleware) {}
+  private fetchFunction: FetchFunction;
+  private jsonSerializer: JsonSerializer;
+  private middleware: Middleware;
+
+  constructor(configuration?: { fetchFunction?: FetchFunction; jsonSerializer?: JsonSerializer; middleware?: Middleware }) {
+    this.fetchFunction = configuration?.fetchFunction ?? bind(window.fetch, window);
+    this.jsonSerializer = configuration?.jsonSerializer ?? JSON.stringify;
+    this.middleware = configuration?.middleware ?? handleErrorStatusMiddleware;
+  }
 
   get(url: string, params?: RequestInit): Promise<Response> {
     return this.fetchFunction(url, { ...params, method: "get" }).then(this.middleware);
@@ -49,13 +59,13 @@ export class FetchApiConnector implements IApiConnector {
   }
 
   postJson(url: string, content: any, params?: RequestInit): Promise<Response> {
-    return this.postText(url, JSON.stringify(content), appendJsonHeader(params));
+    return this.postText(url, this.jsonSerializer(content), appendJsonHeader(params));
   }
   postFormData(url: string, data: FormData, params?: RequestInit): Promise<Response> {
     return this.fetchFunction(url, { ...params, method: "post", body: data }).then(this.middleware);
   }
   putJson(url: string, content: any, params?: RequestInit): Promise<Response> {
-    return this.putText(url, JSON.stringify(content), appendJsonHeader(params));
+    return this.putText(url, this.jsonSerializer(content), appendJsonHeader(params));
   }
   putText(url: string, text: string, params?: RequestInit): Promise<Response> {
     return this.fetchFunction(url, { ...params, method: "put", body: text }).then(this.middleware);
@@ -64,7 +74,7 @@ export class FetchApiConnector implements IApiConnector {
     return this.fetchFunction(url, { ...params, method: "put", body: data }).then(this.middleware);
   }
   patchJson(url: string, content: any, params?: RequestInit): Promise<Response> {
-    return this.patchText(url, JSON.stringify(content), appendJsonHeader(params));
+    return this.patchText(url, this.jsonSerializer(content), appendJsonHeader(params));
   }
   patchText(url: string, text: string, params?: RequestInit): Promise<Response> {
     return this.fetchFunction(url, { ...params, method: "patch", body: text }).then(this.middleware);
@@ -77,7 +87,7 @@ export class FetchApiConnector implements IApiConnector {
     return this.fetchFunction(url, { ...params, method: "delete" }).then(this.middleware);
   }
   deleteJson(url: string, content: any, params?: RequestInit): Promise<Response> {
-    return this.deleteText(url, JSON.stringify(content), appendJsonHeader(params));
+    return this.deleteText(url, this.jsonSerializer(content), appendJsonHeader(params));
   }
   deleteText(url: string, text: string, params?: RequestInit): Promise<Response> {
     return this.fetchFunction(url, { ...params, method: "delete", body: text }).then(this.middleware);

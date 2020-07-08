@@ -6,6 +6,18 @@ export interface IGeneratorParams extends BaseParams {
   generateConversion: boolean;
 }
 
+interface HasExclude {
+  exclude?: string[];
+}
+
+export type ObservableConfig =
+  | boolean
+  | {
+      entities: Record<string, boolean | HasExclude>;
+      properties?: HasExclude;
+    };
+
 export interface IConfig {
   api: string;
+  observable?: ObservableConfig;
 }

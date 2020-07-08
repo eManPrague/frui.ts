@@ -3,8 +3,9 @@
 - New package @frui.ts/dataviews with higher-order components for displaying data. Check the [readme](./packages/dataviews/README.md).
 - React and Mobx made peer dependencies
 - `Router` requires root view model on `start()` instead of a constructor
--  Route name can be string, symbol, or class
+- Route name can be string, symbol, or class
 - `UrlNavigationAdapter` requires root view model on `start()` instead of a constructor
+- You can provide custom JSON serializer to `FetchApiConnector`
 
 # 0.14.1
 

@@ -1,6 +1,5 @@
-import { ClassDeclaration, ImportDeclarationStructure, OptionalKind, SourceFile, Type } from "ts-morph";
 import { camelCase } from "lodash";
-import { pascalCase } from "./helpers";
+import { ClassDeclaration, ImportDeclarationStructure, OptionalKind, SourceFile, Type } from "ts-morph";
 
 export function toSingleArray<T>(item: T | undefined) {
   return item ? [item] : undefined;
@@ -11,8 +10,6 @@ export function importType(type: ClassDeclaration, target: SourceFile) {
   target.addImportDeclaration(declaration.declaration);
   return declaration.identifier;
 }
-
-const identifierCleanupRegex = /\W/g;
 
 export function getImportDeclaration(
   type: ClassDeclaration,

@@ -7,6 +7,7 @@ export default class EntityProperty {
   example?: any;
   restrictions?: Map<Restriction, any>;
   rawName?: string;
+  tags?: Map<symbol, any>;
 
   addRestriction(name: Restriction, params: any) {
     if (!this.restrictions) {
@@ -14,6 +15,14 @@ export default class EntityProperty {
     }
 
     this.restrictions.set(name, params);
+  }
+
+  addTag(name: symbol, params: any) {
+    if (!this.tags) {
+      this.tags = new Map<symbol, any>();
+    }
+
+    this.tags.set(name, params);
   }
 
   get isRequired() {

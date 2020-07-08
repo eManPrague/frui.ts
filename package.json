@@ -34,7 +34,7 @@
     "build": "lerna run build",
     "test": "jest",
     "storybook": "yarn --cwd stories start",
-    "lint": "eslint ./{packages,examples}/**/*.{ts,tsx}",
+    "lint": "eslint ./{packages,examples}/**/*.{ts,tsx} --cache",
     "validate": "yarn run lint && yarn run cleanbuild && yarn run test && yarn run publish"
   },
   "devDependencies": {

@@ -3,12 +3,12 @@ import uniq from "lodash/uniq";
 import { CodeBlockWriter, Directory, SourceFile } from "ts-morph";
 import GeneratorBase from "../../generatorBase";
 import { entityGeneratedHeader } from "../../messages.json";
+import ObservableFormatter from "../formatters/observableFormatter";
 import EntityProperty from "../models/entityProperty";
 import ObjectEntity from "../models/objectEntity";
 import Restriction from "../models/restriction";
 import TypeDefinition from "../models/typeDefinition";
 import { IGeneratorParams } from "../types";
-import { write, stat } from "fs";
 
 export default class ObjectEntityWriter {
   constructor(private parentDirectory: Directory, private params: IGeneratorParams) {}
@@ -36,6 +36,8 @@ export default class ObjectEntityWriter {
   }
 
   private createFile(fileName: string, definition: ObjectEntity) {
+    const decoratorImports = this.getPropertyDecoratorsImports(definition.properties);
+
     const requiredImports = definition.properties.filter(x => x.type.isEntity || x.type.enumValues).map(x => x.type.name);
     requiredImports.push(
       ...definition.properties
@@ -48,12 +50,15 @@ export default class ObjectEntityWriter {
     return this.parentDirectory.createSourceFile(
       fileName,
       writer => {
+        decoratorImports.forEach(x => writer.writeLine(x));
+
         if (requiredImports.length) {
           uniq(requiredImports)
             .sort()
             .forEach(x => writer.writeLine(`import ${x} from "./${camelCase(x)}";`));
-          writer.blankLine();
         }
+
+        writer.conditionalBlankLine(writer.getLength() > 0);
 
         writer
           .writeLine(entityGeneratedHeader)
@@ -67,43 +72,77 @@ export default class ObjectEntityWriter {
   }
 
   private writeEntityBody(writer: CodeBlockWriter, definition: ObjectEntity) {
-    definition.properties.forEach(p => writeEntityProperty(writer, p));
+    definition.properties.forEach(p => this.writeEntityProperty(writer, p));
 
     if (this.params.generateValidation) {
       writeValidationEntity(writer, definition);
     }
+  }
 
-    if (this.params.generateConversion) {
-      writeFromJsonFunction(writer, definition);
-      writeToJsonFunction(writer, definition);
+  writeEntityProperty(writer: CodeBlockWriter, property: EntityProperty) {
+    this.writePropertyDoc(writer, property);
+    this.writePropertyDecorators(writer, property);
+
+    writer
+      .write(property.name)
+      .write(property.isRequired ? "!" : "?")
+      .write(": ")
+      .write(getType(property.type))
+      .write(";")
+      .newLine();
+  }
+
+  writePropertyDoc(writer: CodeBlockWriter, property: EntityProperty) {
+    if (property.description || property.example) {
+      writer.conditionalBlankLine(!writer.isAtStartOfFirstLineOfBlock()).writeLine("/**");
+
+      if (property.description) {
+        writer.write(" * ").write(property.description).newLine();
+      }
+      if (property.example) {
+        writer.writeLine(" * @example").write(" * ").write(property.example.toString()).newLine();
+      }
+
+      writer.writeLine(" */");
     }
   }
-}
 
-function writeEntityProperty(writer: CodeBlockWriter, property: EntityProperty) {
-  writePropertyDoc(writer, property);
+  getPropertyDecoratorsImports(properties: EntityProperty[]) {
+    const result = new Set<string>();
 
-  writer
-    .write(property.name)
-    .write(property.isRequired ? "!" : "?")
-    .write(": ")
-    .write(getType(property.type))
-    .write(";")
-    .newLine();
-}
-
-function writePropertyDoc(writer: CodeBlockWriter, property: EntityProperty) {
-  if (property.description || property.example) {
-    writer.conditionalBlankLine(!writer.isAtStartOfFirstLineOfBlock()).writeLine("/**");
-
-    if (property.description) {
-      writer.write(" * ").write(property.description).newLine();
-    }
-    if (property.example) {
-      writer.writeLine(" * @example").write(" * ").write(property.example.toString()).newLine();
+    if (properties.some(p => p.tags?.get(ObservableFormatter.OBSERVABLE))) {
+      result.add(`import { observable } from "mobx";`);
     }
 
-    writer.writeLine(" */");
+    if (this.params.generateConversion) {
+      if (properties.some(p => p.type.isEntity || p.type.name === "dateTime")) {
+        result.add(`import { Type } from "class-transformer";`);
+      }
+
+      if (properties.some(p => p.rawName)) {
+        result.add(`import { Expose } from "class-transformer";`);
+      }
+    }
+
+    return result;
+  }
+
+  writePropertyDecorators(writer: CodeBlockWriter, property: EntityProperty) {
+    writer.conditionalBlankLine(!writer.isAtStartOfFirstLineOfBlock() && !writer.isLastBlankLine);
+
+    if (property.tags?.get(ObservableFormatter.OBSERVABLE)) {
+      writer.writeLine("@observable");
+    }
+
+    if (this.params.generateConversion) {
+      if (property.type.isEntity || property.type.name === "dateTime") {
+        writer.writeLine(`@Type(() => ${convertType(property.type.name)})`);
+      }
+
+      if (property.rawName) {
+        writer.writeLine(`@Expose({ name: "${property.rawName}" })`);
+      }
+    }
   }
 }
 
@@ -150,70 +189,4 @@ function getRestrictionDefinition(restriction: Restriction, params: any) {
     default:
       return `${Restriction[restriction]}: ${JSON.stringify(params)}`;
   }
-}
-
-function writeFromJsonFunction(writer: CodeBlockWriter, entity: ObjectEntity) {
-  writer.blankLineIfLastNot();
-
-  if (!needsFromJsonConversion(entity)) {
-    writer.writeLine(`static fromApiObject = (source: ${entity.name}) => source;`);
-    return;
-  }
-
-  const statements = entity.properties.map(x => getFromJsonStatement("source", x));
-
-  writer
-    .write(`static fromApiObject(source: ${entity.name})`)
-    .block(() => {
-      writer
-        .write("return {")
-        .indent(() => statements.forEach(x => writer.writeLine(x)))
-        .write(`} as ${entity.name};`);
-    })
-    .newLineIfLastNot();
-}
-
-function needsFromJsonConversion(entity: ObjectEntity) {
-  return entity.properties.some(x => x.rawName || x.type.name === "dateTime");
-}
-
-function getFromJsonStatement(identifier: string, property: EntityProperty) {
-  const sourcePropertyPath = property.rawName ? `(${identifier} as any).${property.rawName}` : `${identifier}.${property.name}`;
-
-  if (property.type.name === "dateTime") {
-    return property.isRequired
-      ? `${property.name}: new Date(${sourcePropertyPath}),`
-      : `${property.name}: !!${sourcePropertyPath} ? new Date(${sourcePropertyPath}) : undefined,`;
-  }
-
-  return `${property.name}: ${sourcePropertyPath},`;
-}
-
-function writeToJsonFunction(writer: CodeBlockWriter, entity: ObjectEntity) {
-  writer.blankLineIfLastNot();
-
-  if (!needsToJsonConversion(entity)) {
-    writer.writeLine(`static toApiObject = (entity: ${entity.name}) => entity;`);
-    return;
-  }
-
-  const statements = entity.properties.map(x => getToJsonStatement("entity", x));
-
-  writer
-    .write(`static toApiObject(entity: ${entity.name})`)
-    .block(() => {
-      writer
-        .write("return {")
-        .indent(() => statements.forEach(x => writer.writeLine(x)))
-        .write(`};`);
-    })
-    .newLineIfLastNot();
-}
-
-function needsToJsonConversion(entity: ObjectEntity) {
-  return entity.properties.some(x => !!x.rawName);
-}
-
-function getToJsonStatement(identifier: string, property: EntityProperty) {
-  return `${property.rawName ?? property.name}: ${identifier}.${property.name},`;
 }

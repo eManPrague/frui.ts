@@ -19,7 +19,7 @@ function getQueryString(query: any) {
 
 const jsonContentType = "application/json,text/json";
 
-function appendAcceptJsonHeader(params?: RequestInit) {
+export function appendAcceptJsonHeader(params?: RequestInit): RequestInit {
   return {
     ...params,
     headers: {
@@ -41,12 +41,12 @@ export class RestRequestBuilder {
     this.url = this.baseUrl.replace(cleanupRegex, "");
   }
 
-  all(path: string) {
+  all(path: string): this {
     this.url += "/" + path;
     return this;
   }
 
-  one(path: string, id?: any) {
+  one(path: string, id?: any): this {
     this.url += "/" + path;
     if (id !== undefined) {
       this.url += "/" + id;
