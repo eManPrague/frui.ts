@@ -5,7 +5,9 @@
 - `Router` requires root view model on `start()` instead of a constructor
 - Route name can be string, symbol, or class
 - `UrlNavigationAdapter` requires root view model on `start()` instead of a constructor
-- You can provide custom JSON serializer to `FetchApiConnector`
+- You can provide custom JSON serializer to `FetchApiConnector
+- `initialize(): Promise<any> | void` added to `IActivatable` (and therefore to `IScreen` as well)
+- When activating a child of a conductor, it gets at least initialized when the parent is not active
 
 # 0.14.1
 

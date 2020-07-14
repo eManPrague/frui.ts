@@ -1,7 +1,7 @@
 import { bound } from "@frui.ts/helpers";
 import { IArrayWillChange, IArrayWillSplice, intercept, IObservableArray, observable, runInAction } from "mobx";
 import ConductorBaseWithActiveChild from "./conductorBaseWithActiveChild";
-import { canDeactivate, isDeactivatable } from "./helpers";
+import { canDeactivate } from "./helpers";
 import { IChild, IScreen } from "./types";
 
 export default class ConductorOneChildActive<TChild extends IScreen & IChild> extends ConductorBaseWithActiveChild<TChild> {
@@ -33,7 +33,7 @@ export default class ConductorOneChildActive<TChild extends IScreen & IChild> ex
     if (isClosing) {
       await this.closeChildCore(child);
       runInAction(() => this.children.remove(child));
-    } else if (isDeactivatable(child)) {
+    } else {
       await child.deactivate(isClosing);
     }
   }
@@ -41,13 +41,11 @@ export default class ConductorOneChildActive<TChild extends IScreen & IChild> ex
   protected async onDeactivate(isClosing: boolean) {
     if (isClosing) {
       for (const child of this.children) {
-        if (isDeactivatable(child)) {
-          await child.deactivate(isClosing);
-        }
+        await child.deactivate(isClosing);
       }
 
       this.children.clear();
-    } else if (this.activeChild && isDeactivatable(this.activeChild)) {
+    } else if (this.activeChild) {
       await this.activeChild.deactivate(isClosing);
     }
   }
@@ -69,9 +67,7 @@ export default class ConductorOneChildActive<TChild extends IScreen & IChild> ex
 
       await this.changeActiveChild(nextChild, true);
     } else {
-      if (isDeactivatable(child)) {
-        await child.deactivate(true);
-      }
+      await child.deactivate(true);
     }
   }
   private determineNextChildToActivate(children: IObservableArray<TChild>, lastIndex: number) {

@@ -1,5 +1,4 @@
 import ConductorBaseWithActiveChild from "./conductorBaseWithActiveChild";
-import { isDeactivatable } from "./helpers";
 import { IChild, IScreen } from "./types";
 
 export default abstract class ConductorSingleChild<TChild extends IScreen & IChild> extends ConductorBaseWithActiveChild<TChild> {
@@ -10,7 +9,7 @@ export default abstract class ConductorSingleChild<TChild extends IScreen & IChi
 
     if (isClosing) {
       await this.changeActiveChild(undefined, isClosing);
-    } else if (isDeactivatable(child)) {
+    } else {
       await child.deactivate(false);
     }
   }

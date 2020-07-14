@@ -1,6 +1,7 @@
 export interface IActivatable {
   isActive: boolean;
   activate(): Promise<any> | void;
+  initialize(): Promise<any> | void;
 
   canDeactivate(isClosing: boolean): Promise<boolean> | boolean;
 

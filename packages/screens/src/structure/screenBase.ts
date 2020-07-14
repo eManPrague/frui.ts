@@ -58,7 +58,21 @@ export default abstract class ScreenBase implements IScreen, IChild, ICanNavigat
     this.notifyNavigationChanged();
   }
 
-  private async initialize() {
+  private initializePromise?: Promise<void>;
+  private clearInitializePromise: () => void = () => (this.initializePromise = undefined);
+
+  initialize() {
+    if (this.isInitialized) {
+      return Promise.resolve();
+    }
+
+    return (
+      this.initializePromise ||
+      (this.initializePromise = this.initializeInner().then(this.clearInitializePromise, this.clearInitializePromise))
+    );
+  }
+
+  private async initializeInner() {
     if (!this.isInitialized) {
       try {
         await this.onInitialize();

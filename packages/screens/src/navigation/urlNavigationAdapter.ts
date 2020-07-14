@@ -23,6 +23,10 @@ export default class UrlNavigationAdapter {
 
   stop() {
     this.rootViewModel = undefined;
+    if (NavigationConfiguration.onScreenChanged === this.onScreenChanged) {
+      NavigationConfiguration.onScreenChanged = undefined;
+    }
+    window.removeEventListener("hashchange", this.onUrlChanged, false);
   }
 
   @bound

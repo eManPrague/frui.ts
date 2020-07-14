@@ -1,7 +1,7 @@
 import { computed, observable, runInAction } from "mobx";
 import NavigationConfiguration from "../navigation/navigationConfiguration";
 import ConductorBase from "./conductorBase";
-import { canDeactivate, isActivatable, isDeactivatable } from "./helpers";
+import { canDeactivate } from "./helpers";
 import { IChild, IHasActiveChild, IScreen } from "./types";
 
 export default abstract class ConductorBaseWithActiveChild<TChild extends IScreen & IChild> extends ConductorBase<TChild>
@@ -25,9 +25,10 @@ export default abstract class ConductorBaseWithActiveChild<TChild extends IScree
 
   async tryActivateChild(child: TChild) {
     if (child && this.activeChild === child) {
-      if (this.isActive && isActivatable(child)) {
+      if (this.isActive) {
         await child.activate();
       }
+
       return true;
     }
 
@@ -36,7 +37,7 @@ export default abstract class ConductorBaseWithActiveChild<TChild extends IScree
 
   protected async changeActiveChild(newChild: TChild | undefined, closePrevious: boolean): Promise<any> {
     const currentChild = this.activeChild;
-    if (currentChild && isDeactivatable(currentChild)) {
+    if (currentChild) {
       await currentChild.deactivate(closePrevious);
     }
 
@@ -45,8 +46,12 @@ export default abstract class ConductorBaseWithActiveChild<TChild extends IScree
       this.activeChildValue = newChild;
     });
 
-    if (this.isActive && newChild && isActivatable(newChild)) {
-      await newChild.activate();
+    if (newChild) {
+      if (this.isActive) {
+        await newChild.activate();
+      } else {
+        await newChild.initialize();
+      }
     }
 
     if (this.isActive && !newChild && NavigationConfiguration.onScreenChanged) {
@@ -57,7 +62,7 @@ export default abstract class ConductorBaseWithActiveChild<TChild extends IScree
   }
 
   protected async onActivate() {
-    if (this.activeChild && isActivatable(this.activeChild)) {
+    if (this.activeChild) {
       await this.activeChild.activate();
     }
   }

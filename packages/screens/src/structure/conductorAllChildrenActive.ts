@@ -1,8 +1,8 @@
 import { bound } from "@frui.ts/helpers";
 import { IArrayWillChange, IArrayWillSplice, intercept, observable, runInAction } from "mobx";
 import ConductorBase from "./conductorBase";
-import { canDeactivate, isActivatable, isDeactivatable } from "./helpers";
-import { IActivatable, IChild, IScreen } from "./types";
+import { canDeactivate, isActivatable } from "./helpers";
+import { IChild, IScreen } from "./types";
 
 export default class ConductorAllChildrenActive<TChild extends IScreen & IChild> extends ConductorBase<TChild> {
   readonly children = observable.array<TChild>(undefined, { deep: false });
@@ -27,8 +27,10 @@ export default class ConductorAllChildrenActive<TChild extends IScreen & IChild>
   async tryActivateChild(child: TChild) {
     if (child) {
       this.connectChild(child);
-      if (this.isActive && isActivatable(child)) {
+      if (this.isActive) {
         await child.activate();
+      } else {
+        await child.initialize();
       }
     }
 
@@ -36,14 +38,11 @@ export default class ConductorAllChildrenActive<TChild extends IScreen & IChild>
   }
 
   protected onActivate() {
-    const childrenToActivate = (this.children.filter(isActivatable) as any) as IActivatable[];
-    return Promise.all(childrenToActivate.map(x => x.activate()));
+    return Promise.all(this.children.map(x => x.activate()));
   }
   protected async onDeactivate(isClosing: boolean) {
     for (const child of this.children) {
-      if (isDeactivatable(child)) {
-        await child.deactivate(isClosing);
-      }
+      await child.deactivate(isClosing);
     }
 
     if (isClosing) {
@@ -69,15 +68,13 @@ export default class ConductorAllChildrenActive<TChild extends IScreen & IChild>
     if (isClosing) {
       await this.closeChildCore(child);
       runInAction(() => this.children.remove(child));
-    } else if (isDeactivatable(child)) {
+    } else {
       await child.deactivate(isClosing);
     }
   }
 
   private async closeChildCore(child: TChild) {
-    if (isDeactivatable(child)) {
-      await child.deactivate(true);
-    }
+    await child.deactivate(true);
   }
 
   @bound
