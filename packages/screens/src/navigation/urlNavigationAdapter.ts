@@ -48,6 +48,7 @@ export default class UrlNavigationAdapter {
 
       try {
         await this.rootViewModel.navigate(path.url, path.query);
+        this.lastUrl = path.url;
       } catch (error) {
         console.error(error);
       }
