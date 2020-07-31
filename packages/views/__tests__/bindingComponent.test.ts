@@ -1,9 +1,22 @@
-import { isObservableProp, observable, ObservableMap } from "mobx";
+import { computed, isObservableProp, observable, ObservableMap } from "mobx";
 import { BindingComponent, IBindingProps } from "../src/bindingComponent";
 
 type TestControlProps<TTarget> = IBindingProps<TTarget> & { otherText?: string; otherValue?: any };
 
 type Entity = { firstName?: string; lastName?: string };
+
+class ComplexEntity {
+  fullNameValue: string;
+
+  @computed
+  get fullName() {
+    return "John Doe";
+  }
+
+  set fullName(value: string) {
+    this.fullNameValue = value;
+  }
+}
 
 class TestControl<TTarget> extends BindingComponent<TTarget, TestControlProps<TTarget>> {
   readValue() {
@@ -64,6 +77,15 @@ describe("BindingComponent", () => {
       const result = control.readValue();
       expect(result).toBe("John");
     });
+
+    it("reads from property getter", () => {
+      const target = new ComplexEntity();
+
+      const control = new TestControl({ target, property: "fullName" });
+
+      const result = control.readValue();
+      expect(result).toBe("John Doe");
+    });
   });
 
   describe("BindingComponent.setValue()", () => {
@@ -110,6 +132,15 @@ describe("BindingComponent", () => {
       control.writeValue("Peter");
 
       expect(target.get("firstName")).toBe("Peter");
+    });
+
+    it("sets value on property setter", () => {
+      const target = new ComplexEntity();
+
+      const control = new TestControl({ target: target, property: "fullName" });
+      control.writeValue("Peter Doe");
+
+      expect(target.fullNameValue).toBe("Peter Doe");
     });
   });
 

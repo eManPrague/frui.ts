@@ -7,6 +7,7 @@
 - `UrlNavigationAdapter` requires root view model on `start()` instead of a constructor
 - You can provide custom JSON serializer to `FetchApiConnector
 - `initialize(): Promise<any> | void` added to `IActivatable` (and therefore to `IScreen` as well)
+- `ConductorSingleChild` required `findNavigationChild` to be implemented.
 - When activating a child of a conductor, it gets at least initialized when the parent is not active
 
 # 0.14.1

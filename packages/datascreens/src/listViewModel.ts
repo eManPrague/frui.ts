@@ -13,4 +13,8 @@ export default abstract class ListViewModel<TEntity, TDetail extends ScreenBase 
     this.items = items;
     this.currentPaging = paging;
   }
+
+  protected findNavigationChild(navigationName: string | undefined): Promise<TDetail | undefined> | TDetail | undefined {
+    return undefined;
+  }
 }

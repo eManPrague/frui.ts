@@ -18,6 +18,8 @@ export default abstract class ConductorSingleChild<TChild extends IScreen & IChi
     await this.deactivateChild(this.activeChild, isClosing);
   }
 
+  protected abstract findNavigationChild(navigationName: string | undefined): Promise<TChild | undefined> | TChild | undefined;
+
   protected async onChildNavigated(child: TChild | undefined) {
     if (!child && this.activeChild) {
       await this.closeChild(this.activeChild, false);

@@ -15,13 +15,12 @@ export class Input<TTarget, TOtherProps = unknown> extends ValidationControlBase
 > {
   @bound
   protected renderInner() {
-    const { noValidation, errorMessage, ...otherProps } = this.inheritedProps;
     const validationError = this.getValidationError();
 
     return (
       <>
         <Form.Control
-          {...otherProps}
+          {...this.inheritedProps}
           value={this.value === undefined || this.value === null ? "" : this.value}
           onChange={this.handleValueChanged}
           isInvalid={!!validationError}

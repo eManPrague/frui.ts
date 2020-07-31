@@ -46,4 +46,8 @@ export default class IssuesViewModel extends FilteredListViewModel<Issue, Issues
   private setProjects(data: PagedQueryResult<Project>) {
     this.projects = data[0].map(x => ({ value: x.id, label: x.name }));
   }
+
+  protected findNavigationChild(navigationName: string) {
+    return undefined;
+  }
 }
