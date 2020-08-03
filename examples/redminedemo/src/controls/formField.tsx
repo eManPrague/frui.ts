@@ -16,8 +16,9 @@ function getControlClassName(isValid: boolean, isDirty: boolean) {
 }
 
 const FormField: React.FunctionComponent<IFormFieldProps<any, IChildProps> & IFieldProps> = observer(props => {
-  const validationMessage = props.target && props.property && getValidationMessage(props.target, props.property);
-  const isDirty = getDirtyFlag(props.target, props.property);
+  const validationMessage =
+    props.target && typeof props.property === "string" && getValidationMessage(props.target, props.property);
+  const isDirty = typeof props.property === "string" && getDirtyFlag(props.target, props.property);
 
   const childClassName = "form-control " + getControlClassName(!validationMessage, isDirty);
 

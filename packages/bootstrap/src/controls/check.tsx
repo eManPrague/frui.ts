@@ -11,9 +11,12 @@ export class Check<TTarget> extends ValidationControlBase<TTarget, FormCheckProp
     const { noValidation, errorMessage, ...otherProps } = this.inheritedProps;
     const validationError = this.getValidationError();
 
+    const { property } = this.props;
+    const id = typeof property === "string" ? property : `${property}`;
+
     return (
       <Form.Check
-        id={this.props.property}
+        id={id}
         {...otherProps}
         checked={!!this.value}
         onChange={this.handleValueChanged}

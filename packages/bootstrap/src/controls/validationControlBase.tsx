@@ -1,3 +1,4 @@
+import { PropertyName } from "@frui.ts/helpers";
 import { getValidationMessage } from "@frui.ts/validation";
 import { BindingComponent, ExcludeBindingProps, IBindingProps } from "@frui.ts/views";
 import { Observer } from "mobx-react-lite";
@@ -25,8 +26,9 @@ export abstract class ValidationControlBase<TTarget, TOtherProps = unknown> exte
       return errorMessage;
     }
 
-    // eslint-disable-next-line @typescript-eslint/tslint/config
-    const { target, property } = this.props as IBindingProps<TTarget>;
+    const target = this.props.target as TTarget;
+    const property = this.props.property as PropertyName<TTarget>;
+
     if (target && property) {
       return getValidationMessage(target, property);
     }

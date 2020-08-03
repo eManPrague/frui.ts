@@ -32,11 +32,11 @@ export function hasValidation<TTarget>(target: any): target is IHasValidation<TT
   return !!target && (target as IHasValidation<TTarget>).__validation !== undefined;
 }
 
-export function getValidationMessage<TTarget>(target: TTarget, propertyName: PropertyName<TTarget>) {
+export function getValidationMessage<TTarget>(target: TTarget, propertyName: PropertyName<TTarget>): string | undefined {
   if (hasValidation<TTarget>(target) && target.__validation.isErrorsVisible) {
     return target.__validation.errors[propertyName];
   }
-  return null;
+  return undefined;
 }
 
 export function isValid<TTarget>(target: TTarget, propertyName?: PropertyName<TTarget>) {

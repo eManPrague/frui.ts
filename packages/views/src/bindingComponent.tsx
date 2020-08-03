@@ -1,4 +1,4 @@
-import { ensureObservableProperty, PropertyName } from "@frui.ts/helpers";
+import { ensureObservableProperty, BindingProperty, PropertyName } from "@frui.ts/helpers";
 import { action, get, isObservable, isObservableMap, isObservableProp } from "mobx";
 import * as React from "react";
 
@@ -14,7 +14,7 @@ export interface IBindingProps<TTarget> {
   target?: TTarget;
 
   /** Name of the bound property on the target entity */
-  property?: PropertyName<TTarget>;
+  property?: BindingProperty<TTarget>;
 
   /**
    * Event handler called when the value of the control is changed
@@ -23,7 +23,7 @@ export interface IBindingProps<TTarget> {
    * @param property  Name of the bound property on the target entity
    * @param target  The target entity for the binding
    */
-  onValueChanged?: (value: any, property: PropertyName<TTarget>, target: TTarget) => void;
+  onValueChanged?: (value: any, property: BindingProperty<TTarget>, target: TTarget) => void;
 }
 
 export type ExcludeBindingProps<T> = Omit<T, keyof IBindingProps<any>>;
@@ -61,7 +61,8 @@ export abstract class BindingComponent<TTarget, TProps extends IBindingProps<TTa
 
   /** Returns value of the bound property */
   protected get value() {
-    const { target, property } = this.props as IBindingProps<TTarget>;
+    const target = this.props.target as TTarget;
+    const property = this.props.property as PropertyName<TTarget>;
 
     if (!target) {
       console.warn("'target' prop has not been set");
@@ -77,7 +78,7 @@ export abstract class BindingComponent<TTarget, TProps extends IBindingProps<TTa
 
     // TODO enable disable of automatically creating observable
     if (!isObservable(target) || !isObservableProp(target, property)) {
-      ensureObservableProperty(target, property, target[property as keyof TTarget]);
+      ensureObservableProperty(target, property, target[property]);
     }
 
     return get(target, property);
@@ -86,14 +87,13 @@ export abstract class BindingComponent<TTarget, TProps extends IBindingProps<TTa
   /** Sets the provided value to the bound property  */
   @action.bound
   protected setValue(value: any) {
-    const { target, property, onValueChanged } = this.props as IBindingProps<TTarget>;
+    const target = this.props.target as TTarget;
+    const property = this.props.property as PropertyName<TTarget>;
 
     if (target && property) {
       ensureObservableProperty(target, property, value);
 
-      if (onValueChanged) {
-        onValueChanged(value, property, target);
-      }
+      this.props.onValueChanged?.(value, property as any, target);
     }
   }
 }
