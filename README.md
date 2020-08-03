@@ -8,7 +8,38 @@ This framework is designed to support both small and large applications with SOL
 
 You can read our [business overview](OVERVIEW.md) or jump to the [documentation](#quick-documentation-links).
 
-## Why should you use Frui.ts?
+# Quick documentation links
+
+- [API client](packages/apiclient/README.md)
+- [CRA template](packages/cra-template/README.md)
+- [Data](packages/data/README.md)
+- [Data Screens](packages/datascreens/README.md)
+  - [DetailViewModel](packages/datascreens/README.md#detailviewmodel)
+  - [ListViewModel](packages/datascreens/README.md#listviewmodel)
+  - [FilteredListViewModel](packages/datascreens/README.md#filteredlistviewmodel)
+- [Data Views](packages/dataviews/README.md)
+- [Dirty Check](packages/dirtycheck/README.md)
+  - [AutomaticDirtyWatcher](packages/dirtycheck/README.md#automaticdirtywatcher)
+  - [ManualDirtyWatcher](packages/dirtycheck/README.md#manualdirtywatcher)
+- [Generator](packages/generator/README.md)
+  - [Inversify configuration](packages/generator/README.md#inversify-configuration)
+  - [Views registration](packages/generator/README.md#views-registration)
+  - [OpenApi entities](packages/generator/README.md#openapi-entities)
+- [Helpers](packages/helpers/README.md)
+- [Screens](packages/screens/README.md)
+  - [Busywatcher](packages/screens/README.md#busywatcher)
+  - [Navigation overview](packages/screens/README.md#navigation)
+  - [Router](packages/screens/README.md#4-generate-local-navigation-links)
+  - [UrlNavigationAdapter](packages/screens/README.md#urlnavigationadapter)
+  - [View models](packages/screens/README.md#screens)
+- [Validation](packages/validation/README.md)
+  - [AutomaticEntityValidator](packages/validation/README.md#automaticentityvalidator)
+  - [ManualEntityValidator](packages/validation/README.md#manualentityvalidator)
+- [Views](packages/views/README.md)
+  - [BindingComponent](packages/views/README.md#bindingcomponent)
+  - [View discovery](packages/views/README.md#view-discovery)
+
+# Why should you use Frui.ts?
 
 Because you can write this:
 
@@ -147,34 +178,3 @@ Frui.ts is not a platform like, e.g., Angular - it does not force you to do your
 ## Tips and tricks
 
 - Design the app and logic from ViewModels, not Views.
-
-# Quick documentation links
-
-- [API client](packages/apiclient/README.md)
-- [CRA template](packages/cra-template/README.md)
-- [Data](packages/data/README.md)
-- [Data Screens](packages/datascreens/README.md)
-  - [DetailViewModel](packages/datascreens/README.md#detailviewmodel)
-  - [ListViewModel](packages/datascreens/README.md#listviewmodel)
-  - [FilteredListViewModel](packages/datascreens/README.md#filteredlistviewmodel)
-- [Data Views](packages/dataviews/README.md)
-- [Dirty Check](packages/dirtycheck/README.md)
-  - [AutomaticDirtyWatcher](packages/dirtycheck/README.md#automaticdirtywatcher)
-  - [ManualDirtyWatcher](packages/dirtycheck/README.md#manualdirtywatcher)
-- [Generator](packages/generator/README.md)
-  - [Inversify configuration](packages/generator/README.md#inversify-configuration)
-  - [Views registration](packages/generator/README.md#views-registration)
-  - [OpenApi entities](packages/generator/README.md#openapi-entities)
-- [Helpers](packages/helpers/README.md)
-- [Screens](packages/screens/README.md)
-  - [Busywatcher](packages/screens/README.md#busywatcher)
-  - [Navigation overview](packages/screens/README.md#navigation)
-  - [Router](packages/screens/README.md#4-generate-local-navigation-links)
-  - [UrlNavigationAdapter](packages/screens/README.md#urlnavigationadapter)
-  - [View models](packages/screens/README.md#screens)
-- [Validation](packages/validation/README.md)
-  - [AutomaticEntityValidator](packages/validation/README.md#automaticentityvalidator)
-  - [ManualEntityValidator](packages/validation/README.md#manualentityvalidator)
-- [Views](packages/views/README.md)
-  - [BindingComponent](packages/views/README.md#bindingcomponent)
-  - [View discovery](packages/views/README.md#view-discovery)
