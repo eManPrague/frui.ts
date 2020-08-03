@@ -19,7 +19,7 @@ function addRouteDefinition(viewModel: Class, route: RouteDefinition) {
 export default class Router {
   static Self: typeof SelfLink = SelfLink;
 
-  private routes = new Map<RouteName, Route>();
+  private routes: Map<RouteName, Route>;
   private rootViewModel: ICanNavigate;
 
   /**
@@ -27,6 +27,7 @@ export default class Router {
    */
   start(rootViewModel: ICanNavigate) {
     this.rootViewModel = rootViewModel;
+    this.routes = new Map<RouteName, Route>();
 
     const rootKey = this.findRootRouteKey();
     if (rootKey) {
@@ -52,6 +53,8 @@ export default class Router {
     const path = this.getPath(routeName, routeParams);
     if (path) {
       return this.rootViewModel.navigate(path, queryParams);
+    } else {
+      console.warn("Router could not find route", { routeName, routeParams, queryParams });
     }
   }
 
