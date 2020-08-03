@@ -51,45 +51,45 @@ export class FetchApiConnector implements IApiConnector {
   }
 
   get(url: string, params?: RequestInit): Promise<Response> {
-    return this.fetchFunction(url, { ...params, method: "get" }).then(this.middleware);
+    return this.fetchFunction(url, { ...params, method: "GET" }).then(this.middleware);
   }
 
   postText(url: string, text: string, params?: RequestInit): Promise<Response> {
-    return this.fetchFunction(url, { ...params, method: "post", body: text }).then(this.middleware);
+    return this.fetchFunction(url, { ...params, method: "POST", body: text }).then(this.middleware);
   }
 
   postJson(url: string, content: any, params?: RequestInit): Promise<Response> {
     return this.postText(url, this.jsonSerializer(content), appendJsonHeader(params));
   }
   postFormData(url: string, data: FormData, params?: RequestInit): Promise<Response> {
-    return this.fetchFunction(url, { ...params, method: "post", body: data }).then(this.middleware);
+    return this.fetchFunction(url, { ...params, method: "POST", body: data }).then(this.middleware);
   }
   putJson(url: string, content: any, params?: RequestInit): Promise<Response> {
     return this.putText(url, this.jsonSerializer(content), appendJsonHeader(params));
   }
   putText(url: string, text: string, params?: RequestInit): Promise<Response> {
-    return this.fetchFunction(url, { ...params, method: "put", body: text }).then(this.middleware);
+    return this.fetchFunction(url, { ...params, method: "PUT", body: text }).then(this.middleware);
   }
   putFormData(url: string, data: FormData, params?: RequestInit): Promise<Response> {
-    return this.fetchFunction(url, { ...params, method: "put", body: data }).then(this.middleware);
+    return this.fetchFunction(url, { ...params, method: "PUT", body: data }).then(this.middleware);
   }
   patchJson(url: string, content: any, params?: RequestInit): Promise<Response> {
     return this.patchText(url, this.jsonSerializer(content), appendJsonHeader(params));
   }
   patchText(url: string, text: string, params?: RequestInit): Promise<Response> {
-    return this.fetchFunction(url, { ...params, method: "patch", body: text }).then(this.middleware);
+    return this.fetchFunction(url, { ...params, method: "PATCH", body: text }).then(this.middleware);
   }
   patchFormData(url: string, data: FormData, params?: RequestInit): Promise<Response> {
-    return this.fetchFunction(url, { ...params, method: "patch", body: data }).then(this.middleware);
+    return this.fetchFunction(url, { ...params, method: "PATCH", body: data }).then(this.middleware);
   }
 
   delete(url: string, params?: RequestInit): Promise<Response> {
-    return this.fetchFunction(url, { ...params, method: "delete" }).then(this.middleware);
+    return this.fetchFunction(url, { ...params, method: "DELETE" }).then(this.middleware);
   }
   deleteJson(url: string, content: any, params?: RequestInit): Promise<Response> {
     return this.deleteText(url, this.jsonSerializer(content), appendJsonHeader(params));
   }
   deleteText(url: string, text: string, params?: RequestInit): Promise<Response> {
-    return this.fetchFunction(url, { ...params, method: "delete", body: text }).then(this.middleware);
+    return this.fetchFunction(url, { ...params, method: "DELETE", body: text }).then(this.middleware);
   }
 }
