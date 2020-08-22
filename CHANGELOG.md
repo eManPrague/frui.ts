@@ -9,6 +9,7 @@
 - `initialize(): Promise<any> | void` added to `IActivatable` (and therefore to `IScreen` as well)
 - `ConductorSingleChild` required `findNavigationChild` to be implemented.
 - When activating a child of a conductor, it gets at least initialized when the parent is not active
+- `AutomaticDirtyWatcher` can be configured to exclude specified properties
 
 # 0.14.1
 

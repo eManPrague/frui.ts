@@ -25,6 +25,18 @@ describe("AutomaticDirtyWatcher", () => {
     expect(watcher.dirtyProperties.firstName).toBeTruthy();
   });
 
+  test("property can be excluded", () => {
+    const target = observable({
+      firstName: "John",
+    });
+
+    const watcher = new AutomaticDirtyWatcher(target, false, { exclude: ["firstName"] });
+
+    target.firstName = "Tom";
+    expect(watcher.isDirty).toBeFalsy();
+    expect(watcher.dirtyProperties.firstName).toBeFalsy();
+  });
+
   test("reset() clears dirty flags", () => {
     const target = observable({
       firstName: "John",

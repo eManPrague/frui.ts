@@ -2,8 +2,11 @@ import React from "react";
 import { registerView, View, ViewComponent } from "@frui.ts/views";
 import { observer, Observer } from "mobx-react-lite";
 import RootViewModel from "../viewModels/rootViewModel";
+import { Router } from "@frui.ts/screens";
 
 const rootView: ViewComponent<RootViewModel> = observer(({ vm }) => {
+  const getUrl = Router.getChildUrlFactory(vm);
+
   return (
     <>
       <header>
@@ -11,7 +14,7 @@ const rootView: ViewComponent<RootViewModel> = observer(({ vm }) => {
         <ul>
           {vm.children.map(x => (
             <li key={x.name}>
-              <a className={vm.activeChild === x ? "active" : undefined} href="#/" onClick={() => vm.tryActivateChild(x)}>
+              <a className={vm.activeChild === x ? "active" : undefined} href={getUrl(x)}>
                 {x.name}
               </a>
             </li>

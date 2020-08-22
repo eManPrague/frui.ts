@@ -1,6 +1,10 @@
-import { ensureObservableProperty } from "@frui.ts/helpers";
+import { ensureObservableProperty, PropertyName } from "@frui.ts/helpers";
 import { action, computed, extendObservable, get, observable } from "mobx";
 import { DirtyPropertiesList, IDirtyWatcher } from "./types";
+
+export interface DirtyWatchConfig<TTarget> {
+  exclude?: PropertyName<TTarget>[];
+}
 
 /** Dirty watcher implementation that automatically observes watched entity's properties and maintains dirty flags */
 export default class AutomaticDirtyWatcher<TTarget extends Record<string, any>> implements IDirtyWatcher<TTarget> {
@@ -8,7 +12,7 @@ export default class AutomaticDirtyWatcher<TTarget extends Record<string, any>> 
   @observable dirtyProperties: DirtyPropertiesList<TTarget>;
   private checkedProperties: string[];
 
-  constructor(private target: TTarget, isDirtyFlagVisible: boolean) {
+  constructor(private target: TTarget, isDirtyFlagVisible: boolean, private config?: DirtyWatchConfig<TTarget>) {
     this.isDirtyFlagVisible = isDirtyFlagVisible;
     this.reset();
   }
@@ -25,7 +29,7 @@ export default class AutomaticDirtyWatcher<TTarget extends Record<string, any>> 
     const target = this.target;
 
     for (const propertyName in target) {
-      if (target.hasOwnProperty(propertyName)) {
+      if (target.hasOwnProperty(propertyName) && this.shouldWatchProperty(propertyName)) {
         const originalValue = target[propertyName];
 
         ensureObservableProperty(target, propertyName, originalValue);
@@ -38,5 +42,13 @@ export default class AutomaticDirtyWatcher<TTarget extends Record<string, any>> 
         });
       }
     }
+  }
+
+  private shouldWatchProperty(propertyName: string) {
+    if (this.config?.exclude?.includes(propertyName)) {
+      return false;
+    }
+
+    return true;
   }
 }
