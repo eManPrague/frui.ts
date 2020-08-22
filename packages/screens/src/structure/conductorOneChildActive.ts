@@ -12,6 +12,10 @@ export default class ConductorOneChildActive<TChild extends IScreen & IChild> ex
     intercept(this.children, this.handleChildrenChanged);
   }
 
+  get childReplacesNavigationPath() {
+    return true;
+  }
+
   async canDeactivate(isClosing: boolean) {
     const affectedChildren = isClosing ? this.children : [this.activeChild]; // optimization
 

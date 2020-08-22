@@ -19,6 +19,10 @@ export default class AllChildrenActiveViewModel extends ConductorAllChildrenActi
   }
 
   protected findNavigationChild(name: string) {
+    if (!name) {
+      return undefined;
+    }
+
     const child = this.children.find(x => x.navigationName === name);
     if (child) {
       return child;

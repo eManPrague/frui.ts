@@ -1,6 +1,6 @@
 import { bound } from "@frui.ts/helpers";
 import { parseUrl, ParseOptions } from "query-string";
-import { IScreen } from "..";
+import { IScreen, ScreenBase } from "..";
 import NavigationConfiguration from "./navigationConfiguration";
 import { appendQueryString } from "./navigationPath";
 import { ICanNavigate } from "./types";
@@ -10,6 +10,7 @@ export default class UrlNavigationAdapter {
   private lastSuppressedScreen?: IScreen & ICanNavigate;
 
   private rootViewModel?: ICanNavigate;
+  private lastActiveScreen?: IScreen;
 
   parseOptions?: ParseOptions;
 
@@ -45,7 +46,7 @@ export default class UrlNavigationAdapter {
       const url = appendQueryString(NavigationConfiguration.hashPrefix + path.path, path.params);
 
       if (window.location.hash !== url) {
-        if (url.startsWith(window.location.hash)) {
+        if ((this.lastActiveScreen as ScreenBase)?.childReplacesNavigationPath && url.startsWith(window.location.hash)) {
           // we are probably navigating deeper in the previously active VM,
           // so the new URL should not be another history entry,
           // but just update of the previous one instead
@@ -55,6 +56,8 @@ export default class UrlNavigationAdapter {
         }
       }
     }
+
+    this.lastActiveScreen = screen;
   }
 
   @bound

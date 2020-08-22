@@ -1,4 +1,4 @@
-import { BindingProperty, isSet, PropertyType } from "@frui.ts/helpers";
+import { BindingProperty, isSet } from "@frui.ts/helpers";
 import { getValue, IBindingProps, omitBindingProps } from "@frui.ts/views";
 import { action } from "mobx";
 import { observer } from "mobx-react-lite";

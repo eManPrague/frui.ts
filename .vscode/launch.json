@@ -8,9 +8,9 @@
       "type": "node",
       "request": "launch",
       "name": "Debug generator",
-      "cwd": "C:\\_Projects\\eofindr-admin-fe",
+      "cwd": "C:\\_Projects\\ppas-zp-app\\frontend\\portal",
       "runtimeArgs": ["-r", "${workspaceFolder}/packages/generator/node_modules/ts-node/register/transpile-only"],
-      "args": ["${workspaceFolder}/packages/generator/src/index.ts", "openapi", "-cgenerator.openapi.json"],
+      "args": ["${workspaceFolder}/packages/generator/src/index.ts", "inversify", "-cgenerator.inversify.json"],
       "env": {
         "TS_NODE_PROJECT": "${workspaceFolder}/packages/generator/tsconfig.json"
       }
