@@ -1,32 +1,7 @@
-import { ensureObservableProperty, BindingProperty, PropertyName } from "@frui.ts/helpers";
-import { action, get, isObservable, isObservableMap, isObservableProp } from "mobx";
+import { action } from "mobx";
 import * as React from "react";
-
-/**
- * Base props required for two-way binding.
- *
- * Every control inehriting [[BindingComponent]] should use props implementing `IBindingProps`
- *
- * @typeparam TTarget Type of the target entity
- */
-export interface IBindingProps<TTarget> {
-  /** Target entity for the binding. The entity should be Mobx `observable`. */
-  target?: TTarget;
-
-  /** Name of the bound property on the target entity */
-  property?: BindingProperty<TTarget>;
-
-  /**
-   * Event handler called when the value of the control is changed
-   *
-   * @param value  New value coming from the input control
-   * @param property  Name of the bound property on the target entity
-   * @param target  The target entity for the binding
-   */
-  onValueChanged?: (value: any, property: BindingProperty<TTarget>, target: TTarget) => void;
-}
-
-export type ExcludeBindingProps<T> = Omit<T, keyof IBindingProps<any>>;
+import { ExcludeBindingProps, IBindingProps } from "./bindingProps";
+import { getValue, setValue } from "./useBinding";
 
 /**
  * Base class for all user input controls supporting two-way binding.
@@ -61,39 +36,12 @@ export abstract class BindingComponent<TTarget, TProps extends IBindingProps<TTa
 
   /** Returns value of the bound property */
   protected get value() {
-    const target = this.props.target as TTarget;
-    const property = this.props.property as PropertyName<TTarget>;
-
-    if (!target) {
-      console.warn("'target' prop has not been set");
-      return undefined;
-    }
-    if (!property) {
-      throw new Error("'property' prop has not been set");
-    }
-
-    if (isObservableMap(target)) {
-      return target.get(property);
-    }
-
-    // TODO enable disable of automatically creating observable
-    if (!isObservable(target) || !isObservableProp(target, property)) {
-      ensureObservableProperty(target, property, target[property]);
-    }
-
-    return get(target, property);
+    return getValue(this.props);
   }
 
   /** Sets the provided value to the bound property  */
   @action.bound
   protected setValue(value: any) {
-    const target = this.props.target as TTarget;
-    const property = this.props.property as PropertyName<TTarget>;
-
-    if (target && property) {
-      ensureObservableProperty(target, property, value);
-
-      this.props.onValueChanged?.(value, property as any, target);
-    }
+    setValue(this.props, value);
   }
 }

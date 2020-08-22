@@ -1,6 +1,7 @@
 # 0.15.0
 
 - New package @frui.ts/dataviews with higher-order components for displaying data. Check the [readme](./packages/dataviews/README.md).
+- Added `useBinding`, `getValue`, and `setValue` helper functions to @frui.ts/views. You can use them when implementing functional binding components.
 - React and Mobx made peer dependencies
 - `Router` requires root view model on `start()` instead of a constructor
 - Route name can be string, symbol, or class

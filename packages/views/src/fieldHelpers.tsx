@@ -1,5 +1,5 @@
 import * as React from "react";
-import { IBindingProps } from "./bindingComponent";
+import { IBindingProps } from "./bindingProps";
 
 // either a bindable react component or a function accepting binding props and returning a component should be provided
 export interface IComponentInChildrenProps<TTarget, TChildProps> {

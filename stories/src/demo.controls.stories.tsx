@@ -5,7 +5,7 @@ import { storiesOf } from "@storybook/react";
 import { observable } from "mobx";
 import * as React from "react";
 import { fieldForType } from "./controls/formField";
-import { TextBox } from "./controls/textBox";
+import { ControlTextBox } from "./controls/controlTextbox";
 
 const observableTarget = observable({
   name: "John",
@@ -23,11 +23,11 @@ attachAutomaticDirtyWatcher(observableTarget, true);
 const Field = fieldForType(observableTarget);
 
 storiesOf("FormField", module)
-  .add("With component", () => <Field label="First name" target={observableTarget} property="name" component={TextBox} />)
+  .add("With component", () => <Field label="First name" target={observableTarget} property="name" component={ControlTextBox} />)
   .add("With component and props",
-    () => <Field label="First name" target={observableTarget} property="name" component={TextBox} componentprops={{ placeholder: "Name" }} />)
+    () => <Field label="First name" target={observableTarget} property="name" component={ControlTextBox} componentprops={{ placeholder: "Name" }} />)
   .add("With children", () => (
     <Field label="First name" target={observableTarget} property="name">
-      {(bindingProps, childProps) => <TextBox {...bindingProps} />}
+      {(bindingProps, childProps) => <ControlTextBox {...bindingProps} />}
     </Field>
   ));
