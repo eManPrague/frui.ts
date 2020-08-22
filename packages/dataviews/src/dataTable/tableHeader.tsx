@@ -29,14 +29,14 @@ function tableHeader<TItem, TContext>(props: HeaderRowProps<TItem, TContext>) {
         } else if (props.pagingFilter && column.sortable && column.property) {
           return (
             <th key={key} className="sortable" style={column.headerStyle} onClick={() => props.onColumnSort?.(column)}>
-              {column.title}
+              {column.titleFactory ? column.titleFactory(props.context) : column.title}
               <span className={getSortIndicatorClass(props.pagingFilter, column.property)}></span>
             </th>
           );
         } else {
           return (
             <th key={key} className={props.cellClassName} style={column.headerStyle}>
-              {column.title}
+              {column.titleFactory ? column.titleFactory(props.context) : column.title}
             </th>
           );
         }

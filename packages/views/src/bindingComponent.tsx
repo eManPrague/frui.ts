@@ -1,6 +1,6 @@
 import { action } from "mobx";
 import * as React from "react";
-import { ExcludeBindingProps, IBindingProps } from "./bindingProps";
+import { ExcludeBindingProps, IBindingProps, omitBindingProps } from "./bindingProps";
 import { getValue, setValue } from "./useBinding";
 
 /**
@@ -29,13 +29,11 @@ export abstract class BindingComponent<TTarget, TProps extends IBindingProps<TTa
    * ```
    */
   protected get inheritedProps(): Partial<ExcludeBindingProps<TProps>> {
-    const { target, property, onValueChanged, ...otherProps } = this.props;
-
-    return otherProps as ExcludeBindingProps<TProps>;
+    return omitBindingProps(this.props);
   }
 
   /** Returns value of the bound property */
-  protected get value() {
+  protected get value(): any {
     return getValue(this.props);
   }
 

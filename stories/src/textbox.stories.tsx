@@ -2,8 +2,8 @@ import { action } from "@storybook/addon-actions";
 import { storiesOf } from "@storybook/react";
 import { observable, configure } from "mobx";
 import { Observer } from "mobx-react-lite";
+import { Textbox } from "@frui.ts/htmlcontrols";
 import * as React from "react";
-import FunctionTextbox from "./controls/functionTextbox";
 
 configure({ enforceActions: "observed" });
 
@@ -32,16 +32,16 @@ const actionLogger = {
   onValueChanged: action("onValueChanged"),
 };
 
-storiesOf("FunctionTextBox", module)
+storiesOf("HtmlTextBox", module)
   .add("Bound to property", () => (
     <div>
-      <FunctionTextbox target={observableTarget} property="name" {...actionLogger} />
+      <Textbox target={observableTarget} property="name" {...actionLogger} />
       {dumpTargetObject(observableTarget)}
     </div>
   ))
   .add("Bound to non-observable", () => (
     <div>
-      <FunctionTextbox target={nonObservableTarget} property="name" {...actionLogger} />
+      <Textbox target={nonObservableTarget} property="name" {...actionLogger} />
       {dumpTargetObject(nonObservableTarget)}
     </div>
   ));

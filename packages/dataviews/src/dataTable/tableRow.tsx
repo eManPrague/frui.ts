@@ -2,16 +2,16 @@ import { observer } from "mobx-react-lite";
 import * as React from "react";
 import { PropsWithColumns } from "../dataTypes";
 
-export interface DataRowProps<TItem, TContext> extends PropsWithColumns<TItem, TContext> {
+export interface TableRowProps<TItem, TContext> extends PropsWithColumns<TItem, TContext> {
   item: TItem;
 
-  className?: string;
   cellClassName?: string;
+  rowProps?: (item: TItem, context: TContext) => React.ComponentPropsWithoutRef<"tr">;
 }
 
-function tableRow<TItem, TContext>({ item, columns, context, className, cellClassName }: DataRowProps<TItem, TContext>) {
+function tableRow<TItem, TContext>({ item, columns, context, rowProps, cellClassName }: TableRowProps<TItem, TContext>) {
   return (
-    <tr className={className}>
+    <tr {...rowProps?.(item, context)}>
       {columns.map((column, i) => {
         const key = column.property ?? i;
         const value = column.property ? item[column.property] : undefined;

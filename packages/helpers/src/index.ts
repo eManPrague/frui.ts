@@ -5,3 +5,4 @@ export * from "./functionHelpers";
 export * from "./nameof";
 export * from "./observableHelpers";
 export * from "./types";
+export * from "./typeHelpers";

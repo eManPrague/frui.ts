@@ -114,7 +114,7 @@ export default abstract class ScreenBase implements IScreen, IChild, ICanNavigat
   // navigation
 
   protected get canBeNavigationActiveScreen() {
-    return true;
+    return !!this.navigationName;
   }
 
   protected notifyNavigationChanged() {

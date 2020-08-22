@@ -1,11 +1,11 @@
-import { BindingProperty, ensureObservableProperty, PropertyName, PropertyType } from "@frui.ts/helpers";
+import { BindingProperty, ensureObservableProperty, PropertyName } from "@frui.ts/helpers";
 import { action, get, isObservable, isObservableMap, isObservableProp } from "mobx";
 import { IBindingProps } from "./bindingProps";
 
-export function getValue<TTarget, TProperty extends BindingProperty<TTarget>>(
-  bindingProps: IBindingProps<TTarget, TProperty>,
+export function getValue<TTarget, TProperty extends BindingProperty<TTarget>, TValue>(
+  bindingProps: IBindingProps<TTarget, TProperty, TValue>,
   ensureObservable = true
-) {
+): TValue | undefined {
   const target = bindingProps.target as TTarget;
   const property = bindingProps.property as PropertyName<TTarget>;
 
@@ -25,16 +25,16 @@ export function getValue<TTarget, TProperty extends BindingProperty<TTarget>>(
     if (ensureObservable) {
       action(ensureObservableProperty)(target, property, target[property]);
     } else {
-      return target[property];
+      return target[property] as any;
     }
   }
 
   return get(target, property);
 }
 
-export function setValue<TTarget, TProperty extends BindingProperty<TTarget>>(
-  bindingProps: IBindingProps<TTarget, TProperty>,
-  value: PropertyType<TTarget, TProperty>
+export function setValue<TTarget, TProperty extends BindingProperty<TTarget>, TValue>(
+  bindingProps: IBindingProps<TTarget, TProperty, TValue>,
+  value: TValue
 ) {
   const target = bindingProps.target as TTarget;
   const property = bindingProps.property as PropertyName<TTarget>;
@@ -46,8 +46,10 @@ export function setValue<TTarget, TProperty extends BindingProperty<TTarget>>(
   }
 }
 
-export function useBinding<TTarget, TProperty extends BindingProperty<TTarget>>(bindingProps: IBindingProps<TTarget, TProperty>) {
+export function useBinding<TTarget, TProperty extends BindingProperty<TTarget>, TValue>(
+  bindingProps: IBindingProps<TTarget, TProperty, TValue>
+) {
   const value = getValue(bindingProps);
-  const setter = (value: PropertyType<TTarget, TProperty>) => setValue(bindingProps, value);
+  const setter = (value: TValue) => setValue(bindingProps, value);
   return [value, setter] as const;
 }

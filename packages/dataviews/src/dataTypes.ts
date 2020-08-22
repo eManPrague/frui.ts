@@ -9,7 +9,7 @@ export interface KeyRenderProps {
 
 export interface ColumnRenderProps<TItem, TContext, TProperty extends PropertyKey<TItem>> {
   column: ColumnDefinition<TItem, TContext, TProperty>;
-  context?: TContext;
+  context: TContext;
 }
 
 export interface ValueRenderProps<TItem, TContext, TProperty extends PropertyKey<TItem>>
@@ -20,6 +20,7 @@ export interface ValueRenderProps<TItem, TContext, TProperty extends PropertyKey
 
 export interface ColumnDefinition<TItem, TContext = any, TProperty extends PropertyKey<TItem> = PropertyKey<TItem>> {
   title?: ReactNode;
+  titleFactory?: (context: TContext) => ReactNode;
   property?: TProperty;
   sortable?: boolean;
 
@@ -35,7 +36,7 @@ export interface ColumnDefinition<TItem, TContext = any, TProperty extends Prope
 
 export interface PropsWithColumns<TItem, TContext> {
   columns: ColumnDefinition<TItem, TContext>[];
-  context?: TContext;
+  context: TContext;
 }
 
 export interface PropsWithItems<TItem> {

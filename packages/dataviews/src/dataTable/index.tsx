@@ -2,9 +2,11 @@ import { observer } from "mobx-react-lite";
 import * as React from "react";
 import { DataTablePropsBase } from "../dataTypes";
 import TableHeader from "./tableHeader";
-import TableRow from "./tableRow";
+import TableRow, { TableRowProps } from "./tableRow";
 
-export interface DataTableProps<TItem, TContext> extends DataTablePropsBase<TItem, TContext> {
+export interface DataTableProps<TItem, TContext>
+  extends DataTablePropsBase<TItem, TContext>,
+    Pick<TableRowProps<TItem, TContext>, "rowProps"> {
   className?: string;
 
   headerRowClassName?: string;
@@ -32,7 +34,13 @@ function dataTable<TItem, TContext>(props: DataTableProps<TItem, TContext>) {
       )}
       <tbody>
         {props.items?.map(item => (
-          <TableRow key={String(item[props.itemKey])} item={item} columns={props.columns} context={props.context} />
+          <TableRow
+            key={String(item[props.itemKey])}
+            item={item}
+            columns={props.columns}
+            context={props.context}
+            rowProps={props.rowProps}
+          />
         ))}
       </tbody>
     </table>
