@@ -5,19 +5,26 @@ import { Form, FormCheckProps } from "react-bootstrap";
 import { CommonInputProps } from "./commonInputProps";
 import { ValidationControlBase } from "./validationControlBase";
 
-export class Check<TTarget> extends ValidationControlBase<TTarget, FormCheckProps & CommonInputProps & IBindingProps<TTarget>> {
+export interface CheckProps extends FormCheckProps, CommonInputProps {
+  threeState?: boolean;
+}
+
+export class Check<TTarget> extends ValidationControlBase<TTarget, CheckProps & IBindingProps<TTarget>> {
   @bound
   protected renderInner() {
-    const { noValidation, errorMessage, ...otherProps } = this.inheritedProps;
+    const { noValidation, errorMessage, threeState, ...otherProps } = this.inheritedProps;
     const validationError = this.getValidationError();
 
     const { property } = this.props;
     const id = typeof property === "string" ? property : `${property}`;
 
+    const threeStateProps = threeState && { ref: (el: HTMLInputElement) => el && (el.indeterminate = this.value === null) };
+
     return (
       <Form.Check
         id={id}
         {...otherProps}
+        {...threeStateProps}
         checked={!!this.value}
         onChange={this.handleValueChanged}
         isInvalid={!!validationError}

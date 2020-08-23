@@ -11,6 +11,7 @@
 - `ConductorSingleChild` required `findNavigationChild` to be implemented.
 - When activating a child of a conductor, it gets at least initialized when the parent is not active
 - `AutomaticDirtyWatcher` can be configured to exclude specified properties
+- `Check` in @frui.ts/bootstrap supports indeterminate state. Enable it by setting the `threeState` prop and the bound value to be `null`.
 
 # 0.14.1
 

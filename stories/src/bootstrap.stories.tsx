@@ -1,23 +1,27 @@
-
 import "!style-loader!css-loader!bootstrap/dist/css/bootstrap.css";
 import { Check, Input, Select } from "@frui.ts/bootstrap";
 import { attachAutomaticDirtyWatcher } from "@frui.ts/dirtycheck";
 import { attachAutomaticValidator, IEntityValidationRules, validatorsRepository } from "@frui.ts/validation";
 import { storiesOf } from "@storybook/react";
-import { observable } from "mobx";
+import { action, observable } from "mobx";
 import { Observer } from "mobx-react-lite";
 import * as React from "react";
-import { Form, InputGroup } from "react-bootstrap";
+import { Button, Form, InputGroup } from "react-bootstrap";
 
-const items = [{ key: 1, text: "One" }, { key: 2, text: "Two" }, { key: 3, text: "Three" }];
+const items = [
+  { key: 1, text: "One" },
+  { key: 2, text: "Two" },
+  { key: 3, text: "Three" },
+];
 
 const observableTarget = observable({
   name: "John",
   age: 5,
   isActive: true,
   isInactive: false,
-  selectedItemKey: null as string,
-  selectedItem: null as any,
+  isThreeState: null,
+  selectedItemKey: undefined as string | undefined,
+  selectedItem: undefined as any,
 });
 
 const validationRules: IEntityValidationRules<typeof observableTarget> = {
@@ -53,6 +57,14 @@ storiesOf("Bootstrap Input", module)
 
 storiesOf("Bootstrap Checkbox", module)
   .add("Checkbox", () => <Check target={observableTarget} property="isActive" label="Is Active" id="isActiveCheck" />)
+  .add("Checkbox three state", () => (
+    <div>
+      <Check target={observableTarget} property="isThreeState" label="Is three state" id="isThree" threeState />
+      <Check target={observableTarget} property="isThreeState" label="Is not" id="isNotThree" />
+      <Button onClick={action(() => (observableTarget.isThreeState = null))}>Reset</Button>
+    </div>
+  ))
+
   .add("Radio", () => (
     <div>
       <Check target={observableTarget} property="isActive" type="radio" label="Is Active" />
@@ -103,14 +115,7 @@ storiesOf("Bootstrap Select", module)
   ))
   .add("Item", () => (
     <div>
-      <Select
-        target={observableTarget}
-        property="selectedItem"
-        items={items}
-        keyProperty="key"
-        textProperty="text"
-        mode="item"
-      />
+      <Select target={observableTarget} property="selectedItem" items={items} keyProperty="key" textProperty="text" mode="item" />
       {dumpTarget()}
     </div>
   ))
