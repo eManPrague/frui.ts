@@ -9,7 +9,7 @@ describe("OpenApi2Parser", () => {
         type: "integer",
       };
 
-      const result = new OpenApi2Parser().parseType(definition);
+      const result = new OpenApi2Parser().parseType("MyType", definition);
       expect(result).toEqual({ name: "integer" });
     });
 
@@ -18,8 +18,28 @@ describe("OpenApi2Parser", () => {
         $ref: "#/definitions/Category",
       };
 
-      const result = new OpenApi2Parser().parseType(definition);
+      const result = new OpenApi2Parser().parseType("MyType", definition);
       expect(result).toEqual({ name: "Category", isEntity: true });
+    });
+
+    it("returns embedded entity", () => {
+      const definition: OpenAPIV2.SchemaObject = {
+        type: "object",
+        properties: { foo: { type: "integer" }, bar: { type: "string" } },
+      };
+
+      const parser = new OpenApi2Parser();
+      const result = parser.parseType("MyType", definition);
+      expect(result).toEqual({ name: "MyType", isEntity: true });
+
+      const entity = parser.entities[0];
+      expect(entity).toMatchObject({
+        name: "MyType",
+        properties: [
+          { name: "foo", type: { name: "integer" } },
+          { name: "bar", type: { name: "string" } },
+        ],
+      });
     });
 
     it("returns array of simple types", () => {
@@ -30,7 +50,7 @@ describe("OpenApi2Parser", () => {
         },
       };
 
-      const result = new OpenApi2Parser().parseType(definition);
+      const result = new OpenApi2Parser().parseType("MyType", definition);
       expect(result).toEqual({ name: "string", isArray: true });
     });
 
@@ -43,7 +63,7 @@ describe("OpenApi2Parser", () => {
         },
       };
 
-      const result = new OpenApi2Parser().parseType(definition);
+      const result = new OpenApi2Parser().parseType("MyType", definition);
       expect(result).toEqual({ name: "Tag", isEntity: true, isArray: true });
     });
 
@@ -53,7 +73,7 @@ describe("OpenApi2Parser", () => {
         enum: ["one", "two", "three"],
       };
 
-      const result = new OpenApi2Parser().parseType(definition);
+      const result = new OpenApi2Parser().parseType("MyType", definition);
       expect(result).toMatchObject({ enumValues: ["one", "two", "three"] } as TypeDefinition);
     });
   });
