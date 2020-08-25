@@ -6,6 +6,8 @@ export default abstract class ListViewModel<TEntity, TDetail extends ScreenBase 
   TDetail
 > {
   @observable.shallow items: TEntity[];
+
+  /** Paging information relevant to the data in `items`. */
   @observable currentPaging: IPagingInfo;
 
   @action.bound

@@ -6,9 +6,9 @@ import React from "react";
 import { Form, FormCheckProps } from "react-bootstrap";
 import { CommonInputProps } from "./commonInputProps";
 
-type SetOrArrayInnerType<TTarget, TProperty extends keyof TTarget> = TTarget[TProperty] extends Set<infer TSetValue>
+type SetOrArrayInnerType<TTarget, TProperty extends keyof TTarget> = TTarget[TProperty] extends Set<infer TSetValue> | undefined
   ? TSetValue
-  : TTarget[TProperty] extends Array<infer TArrayValue>
+  : TTarget[TProperty] extends Array<infer TArrayValue> | undefined
   ? TArrayValue
   : never;
 

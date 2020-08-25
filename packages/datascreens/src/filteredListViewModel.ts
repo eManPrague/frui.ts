@@ -1,24 +1,29 @@
+/* eslint-disable @typescript-eslint/no-empty-function */
 import { IPagingFilter, SortingDirection } from "@frui.ts/data";
 import { attachAutomaticDirtyWatcher, IHasDirtyWatcher } from "@frui.ts/dirtycheck";
 import { bound } from "@frui.ts/helpers";
 import { ScreenBase } from "@frui.ts/screens";
 import { IHasValidation, validate } from "@frui.ts/validation";
-import { action, observable } from "mobx";
+import { action, observable, isObservableArray } from "mobx";
 import ListViewModel from "./listViewModel";
 
 type OmitValidationAndDirtyWatcher<T> = Omit<T, keyof IHasDirtyWatcher<T> | keyof IHasValidation<T>>;
 
-export default abstract class FilteredListViewModel<TEntity, TFilter, TDetail extends ScreenBase> extends ListViewModel<
+export default abstract class FilteredListViewModel<
   TEntity,
-  TDetail
-> {
+  TFilter extends {},
+  TDetail extends ScreenBase
+> extends ListViewModel<TEntity, TDetail> {
   static defaultPageSize = 30;
 
+  /** Currently edited filter */
   @observable filter: TFilter & IHasDirtyWatcher<TFilter> & Partial<IHasValidation<TFilter>>;
+  /** Currently edited paging filter */
   @observable pagingFilter: IPagingFilter;
 
-  // we need to cache applied filter so that when the user changes filter but does not Load and changes page instead, the original filter is used
-  protected appliedFilter: OmitValidationAndDirtyWatcher<TFilter>;
+  /** Filter as used when last loaded data.
+   * This ensures that when, e.g., a page is changed, the original filter is used (instead of the currently edite, but not applied one). */
+  @observable.shallow appliedFilter: OmitValidationAndDirtyWatcher<TFilter>;
 
   constructor() {
     super();
@@ -32,10 +37,11 @@ export default abstract class FilteredListViewModel<TEntity, TFilter, TDetail ex
       return false;
     }
 
-    const { __dirtycheck, __validation, ...actualFilter } = this.filter;
+    const { __dirtycheck, __validation, ...clonedFilter } = this.filter;
     __dirtycheck.reset();
 
-    this.appliedFilter = actualFilter;
+    this.unbindClonedFilter(clonedFilter as any);
+    this.appliedFilter = clonedFilter;
     this.pagingFilter.offset = 0;
     return true;
   }
@@ -50,17 +56,32 @@ export default abstract class FilteredListViewModel<TEntity, TFilter, TDetail ex
   @action.bound
   resetFilter() {
     this.resetFilterValues(this.filter);
-    this.applyFilter();
   }
 
   @bound
   resetFilterAndLoad() {
     this.resetFilter();
+    this.applyFilter();
     return this.loadData();
   }
 
   abstract loadData(): Promise<any> | void;
   protected abstract resetFilterValues(filter: TFilter): void;
+
+  /** Fixes filter that has been shallowly cloned and set to appliedFilter. */
+  protected unbindClonedFilter(filter: TFilter): void {
+    // by default, clone first level of arrays
+    Object.entries(filter).forEach(([key, value]) => {
+      if (isObservableArray(value)) {
+        filter[key as keyof TFilter] = value.slice() as any;
+      }
+    });
+  }
+
+  /** Returns a new instance of the filter */
+  protected createFilter() {
+    return {} as TFilter;
+  }
 
   private initFilter() {
     this.pagingFilter = {
@@ -70,9 +91,8 @@ export default abstract class FilteredListViewModel<TEntity, TFilter, TDetail ex
       sortDirection: SortingDirection.Ascending,
     };
 
-    const filter = {} as any;
+    const filter = this.createFilter();
     this.resetFilterValues(filter);
-    attachAutomaticDirtyWatcher(filter, true);
-    this.filter = filter;
+    this.filter = attachAutomaticDirtyWatcher(filter, true);
   }
 }
