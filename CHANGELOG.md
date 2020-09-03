@@ -1,3 +1,7 @@
+# 0.16.0
+
+- OpenAPI generator refactored. Supports `allOf` and `oneOf` features.
+
 # 0.15.0
 
 - New package @frui.ts/dataviews with higher-order components for displaying data. Check the [readme](./packages/dataviews/README.md).

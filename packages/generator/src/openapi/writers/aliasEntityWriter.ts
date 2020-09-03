@@ -2,11 +2,17 @@ import camelCase from "lodash/camelCase";
 import { CodeBlockWriter, Directory, SourceFile } from "ts-morph";
 import GeneratorBase from "../../generatorBase";
 import { entityGeneratedHeader } from "../../messages.json";
-import TypeEntity from "../models/typeEntity";
-export default class TypeEntityWriter {
+import AliasEntity from "../models/aliasEntity";
+import Entity from "../models/entity";
+import Enum from "../models/enum";
+export default class AliasEntityWriter {
   constructor(private parentDirectory: Directory) {}
 
-  write(definition: TypeEntity) {
+  write(definition: AliasEntity) {
+    if (typeof definition.referencedEntity.type !== "object") {
+      return;
+    }
+
     const fileName = `${camelCase(definition.name)}.ts`;
     if (!GeneratorBase.canOverwiteFile(this.parentDirectory, fileName)) {
       return undefined;
@@ -16,15 +22,21 @@ export default class TypeEntityWriter {
     return file ? this.updateFile(file, definition) : this.createFile(fileName, definition);
   }
 
-  private updateFile(file: SourceFile, definition: TypeEntity) {
-    const currentEnum = file.getTypeAliasOrThrow(definition.name);
-    currentEnum.replaceWithText(writer => this.writeTypeAlias(writer, definition));
+  private updateFile(file: SourceFile, definition: AliasEntity) {
+    try {
+      const currentEnum = file.getTypeAliasOrThrow(definition.name);
+      currentEnum.replaceWithText(writer => this.writeTypeAlias(writer, definition));
+    } catch (error) {
+      console.error(`Error while updating alias type ${definition.name} in file ${file.getFilePath()}.`);
+      throw error;
+    }
 
     return file;
   }
 
-  private createFile(fileName: string, definition: TypeEntity) {
-    const requiredImport = definition.type.isEntity ? definition.type.name : undefined;
+  private createFile(fileName: string, definition: AliasEntity) {
+    const referencedType = definition.referencedEntity.type as Entity | Enum;
+    const requiredImport = referencedType.name;
 
     return this.parentDirectory.createSourceFile(
       fileName,
@@ -43,7 +55,8 @@ export default class TypeEntityWriter {
     );
   }
 
-  private writeTypeAlias(writer: CodeBlockWriter, definition: TypeEntity) {
-    writer.write(`type ${definition.name} = ${definition.type.name}${definition.type.isArray ? "[]" : ""};`);
+  private writeTypeAlias(writer: CodeBlockWriter, definition: AliasEntity) {
+    const referencedType = definition.referencedEntity.type as Entity | Enum;
+    writer.write(`type ${definition.name} = ${referencedType.name}${definition.isArray ? "[]" : ""};`);
   }
 }

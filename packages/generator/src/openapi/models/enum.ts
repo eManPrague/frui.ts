@@ -1,5 +1,7 @@
-export default class Enum {
-  constructor(public name: string, public items: string[]) {}
+import NamedObject from "./namedObject";
 
-  rawName?: string;
+export default class Enum extends NamedObject {
+  constructor(name: string, public items: string[]) {
+    super(name);
+  }
 }

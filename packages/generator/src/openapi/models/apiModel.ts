@@ -1,6 +1,4 @@
-import Entity from "./entity";
-import Enum from "./enum";
+import TypeReference from "./typeReference";
 
-export default class ApiModel {
-  constructor(public entities: Entity[], public enums: Enum[]) {}
-}
+type ApiModel = Map<string, TypeReference>;
+export default ApiModel;

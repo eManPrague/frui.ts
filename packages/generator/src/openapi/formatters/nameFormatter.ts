@@ -1,37 +1,31 @@
 import camelCase from "lodash/camelCase";
 import { pascalCase } from "../../helpers";
-import Entity from "../models/entity";
-import Enum from "../models/enum";
+import NamedObject from "../models/namedObject";
 import ObjectEntity from "../models/objectEntity";
+import TypeReference from "../models/typeReference";
 
 export default class NameFormatter {
-  formatEnums(items: Enum[]) {
-    for (const item of items) {
-      fixName(pascalCase, item);
+  formatNames(item: TypeReference) {
+    if (item.type instanceof ObjectEntity) {
+      this.formatEntity(item.type);
+    } else if (item.type && typeof item.type !== "string") {
+      fixName(pascalCase, item.type);
     }
   }
 
-  formatEntities(items: Entity[]) {
-    for (const entity of items) {
-      fixName(pascalCase, entity);
+  formatEntity(entity: ObjectEntity) {
+    fixName(pascalCase, entity);
 
-      if (entity instanceof ObjectEntity) {
-        this.formatObjectEntity(entity);
-      }
-    }
-  }
-
-  formatObjectEntity(item: ObjectEntity) {
-    for (const property of item.properties) {
+    for (const property of entity.properties) {
       fixName(camelCase, property);
     }
   }
 }
 
-function fixName(projection: (name: string) => string, item: { name: string; rawName?: string }) {
+function fixName(projection: (name: string) => string, item: NamedObject) {
   const fixedName = projection(item.name);
   if (fixedName !== item.name) {
-    item.rawName = item.name;
+    item.externalName = item.name;
     item.name = fixedName;
   }
 }

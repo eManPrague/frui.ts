@@ -15,5 +15,6 @@
     "properties": {
       "exclude": ["id", "created"]
     }
-  }
+  },
+  "enums": "enum"
 }

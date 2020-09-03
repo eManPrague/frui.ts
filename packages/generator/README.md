@@ -193,14 +193,46 @@ Custom configuration is expected to be a JSON file with the following structure:
 ```ts
 export interface IConfig {
   api: string;
+  observable?: ObservableConfig;
+  enums?: "enum" | "string";
 }
+
+// helper types
+
+interface HasExclude {
+  exclude?: string[];
+}
+
+export type ObservableConfig =
+  | boolean
+  | {
+      entities: Record<string, boolean | HasExclude>;
+      properties?: HasExclude;
+    };
 ```
 
 Default configuration file:
 
 ```json
 {
-  "api": "https://fruits-demo.herokuapp.com/api/swagger-json"
+  "api": "https://fruits-demo.herokuapp.com/api/swagger-json",
+  "observable": {
+    "entities": {
+      "entities": {
+        "EnumValue": false,
+        "User": {
+          "exclude": ["code"]
+        },
+        "Partner": {
+          "include": ["name"]
+        }
+      }
+    },
+    "properties": {
+      "exclude": ["id", "created"]
+    }
+  },
+  "enums": "enum"
 }
 ```
 
@@ -211,21 +243,27 @@ Generated file
 ```ts
 export default class User {
   id!: number;
+
+  @observable
   email!: string;
+
+  @observable
+  @Type(() => Date)
   createdAt!: Date;
-  updatedAt?: Date;
+
+  @observable
+  @Type(() => Date)
+  updatedAt!: Date;
+
+  @observable
   role!: number;
 
   static ValidationRules = {
     id: { required: true },
-    email: { required: true, maxLength: 250 },
+    email: { required: true },
     createdAt: { required: true },
+    updatedAt: { required: true },
     role: { required: true },
   };
-
-  static fromJson(user: User) {
-    user.createdAt = new Date(user.createdAt);
-    user.updatedAt = !!user.updatedAt ? new Date(user.updatedAt) : undefined;
-  }
 }
 ```

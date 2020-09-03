@@ -25,13 +25,13 @@ export default class ModelProcessor {
     if (isOpenAPIv2(api)) {
       const parser = new OpenApi2Parser();
       parser.parse(api);
-      return new ApiModel(parser.entities, parser.enums);
+      return parser.types;
     }
 
     if (isOpenAPIv3(api)) {
       const parser = new OpenApi3Parser();
       parser.parse(api);
-      return new ApiModel(parser.entities, parser.enums);
+      return parser.types;
     }
 
     console.error("Unknown api format", api);

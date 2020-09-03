@@ -1,31 +1,32 @@
-import { ObservableConfig } from "../types";
-import Entity from "../models/entity";
 import ObjectEntity from "../models/objectEntity";
+import TypeReference from "../models/typeReference";
+import { ObservableConfig } from "../types";
 
 type ExcludeList = string[] | undefined;
 
 export default class ObservableFormatter {
   static OBSERVABLE = Symbol("observable");
+  private globalExcludedProperties?: string[];
 
-  formatEntities(config: ObservableConfig | undefined, items: Entity[]) {
-    if (!config) {
+  constructor(private config: ObservableConfig | undefined) {
+    this.globalExcludedProperties = typeof config === "object" ? config.properties?.exclude : undefined;
+  }
+
+  format(item: TypeReference) {
+    if (!this.config) {
       return;
     }
 
-    const globalExcludedProperties = typeof config === "object" ? config.properties?.exclude : undefined;
-
-    for (const entity of items) {
-      if (entity instanceof ObjectEntity) {
-        this.formatEntity(config, globalExcludedProperties, entity);
-      }
+    if (item.type instanceof ObjectEntity) {
+      this.formatEntity(item.type);
     }
   }
 
-  formatEntity(config: ObservableConfig, globalExcludedProperties: ExcludeList, entity: ObjectEntity) {
+  formatEntity(entity: ObjectEntity) {
     let excludedProperties: ExcludeList;
 
-    if (typeof config === "object") {
-      const entityConfig = config.entities[entity.name];
+    if (typeof this.config === "object") {
+      const entityConfig = this.config.entities[entity.name];
 
       if (entityConfig === false) {
         return;
@@ -37,7 +38,8 @@ export default class ObservableFormatter {
     }
 
     for (const property of entity.properties) {
-      if (!isExcluded(excludedProperties, property.name) && !isExcluded(globalExcludedProperties, property.name)) {
+      const excluded = isExcluded(excludedProperties, property.name) || isExcluded(this.globalExcludedProperties, property.name);
+      if (!excluded) {
         property.addTag(ObservableFormatter.OBSERVABLE, true);
       }
     }

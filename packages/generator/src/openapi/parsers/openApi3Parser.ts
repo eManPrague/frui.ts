@@ -1,52 +1,117 @@
 import { OpenAPIV3 } from "openapi-types";
 import { pascalCase } from "../../helpers";
-import Entity from "../models/entity";
+import AliasEntity from "../models/aliasEntity";
 import EntityProperty from "../models/entityProperty";
 import Enum from "../models/enum";
+import InheritedEntity from "../models/inheritedEntity";
 import ObjectEntity from "../models/objectEntity";
 import Restriction from "../models/restriction";
-import TypeDefinition from "../models/typeDefinition";
-import TypeEntity from "../models/typeEntity";
-import { isArraySchemaObject, isReferenceObject, isSchemaObject } from "./helpers";
+import TypeReference from "../models/typeReference";
+import UnionEntity from "../models/unionEntity";
+import { isV3ReferenceObject, isV3SchemaObject } from "./helpers";
 
 export default class OpenApi3Parser {
-  entities: Entity[] = [];
-  enums: Enum[] = [];
+  types = new Map<string, TypeReference>();
 
   parse(api: OpenAPIV3.Document) {
     if (api.components?.schemas) {
       for (const [name, definition] of Object.entries(api.components.schemas)) {
-        if (isReferenceObject(definition)) {
-          continue;
-        }
-
-        this.parseEntity(name, definition);
+        this.parseSchemaObject(name, definition);
       }
     }
   }
 
-  private parseEntity(name: string, definition: OpenAPIV3.SchemaObject) {
-    if (definition.enum) {
-      this.enums.push(new Enum(name, definition.enum));
-    } else if (definition.type === "object") {
-      this.parseObjectEntity(name, definition);
-    } else {
-      const type = this.parseType(name, definition);
-      this.entities.push(new TypeEntity(name, type));
+  parseSchemaObject(name: string, definition: OpenAPIV3.SchemaObject | OpenAPIV3.ReferenceObject): TypeReference {
+    if (isV3ReferenceObject(definition)) {
+      return this.parseReferenceObject(definition);
+    } else if (definition.enum) {
+      return this.parseEnum(name, definition);
     }
+
+    switch (definition.type) {
+      case "array":
+        const itemName = `${name}Item`;
+        const innerType = this.parseSchemaObject(itemName, definition.items);
+
+        const arrayName = `${name}List`;
+        const aliasType = new AliasEntity(arrayName, innerType, true);
+        return this.setTypeReference(arrayName, aliasType);
+
+      case "object":
+        return this.parseObject(name, definition);
+
+      case "string":
+        // eslint-disable-next-line @typescript-eslint/tslint/config
+        switch (definition.format) {
+          case "date":
+          case "datetime":
+          case "date-time":
+            return this.setTypeReference("Date", "Date");
+          default:
+            return this.setTypeReference("string", "string");
+        }
+
+      case "integer":
+      case "number":
+        return this.setTypeReference("number", "number");
+
+      case "boolean":
+        return this.setTypeReference(definition.type, definition.type);
+    }
+
+    if (definition.oneOf || definition.allOf) {
+      return this.parseObject(name, definition);
+    }
+
+    throw new Error("Not implemented");
   }
 
-  private parseObjectEntity(name: string, definition: OpenAPIV3.BaseSchemaObject) {
-    if (!definition.properties) {
-      return;
+  private parseReferenceObject(definition: OpenAPIV3.ReferenceObject) {
+    const name = getReferencedEntityName(definition.$ref);
+    return this.setTypeReference(name, undefined);
+  }
+
+  private parseEnum(name: string, definition: OpenAPIV3.SchemaObject) {
+    const enumType = definition.enum ? new Enum(name, definition.enum) : undefined;
+    return this.setTypeReference(name, enumType);
+  }
+
+  private parseObject(name: string, definition: OpenAPIV3.SchemaObject) {
+    if (definition.allOf) {
+      return this.parseAllOfObject(name, definition);
+    }
+    if (definition.oneOf) {
+      return this.parseOneOfObject(name, definition);
     }
 
-    const properties = Object.entries(definition.properties).map(x => this.parseEntityProperty(name, x[0], x[1]));
-    const entity = new ObjectEntity(name, properties);
+    return this.parseObjectWithProperties(name, definition);
+  }
 
+  private parseAllOfObject(name: string, definition: OpenAPIV3.SchemaObject) {
+    // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+    const innerTypes = definition.allOf!.map((x, i) => this.parseSchemaObject(`${name}Parent${i + 1}`, x));
+
+    const entity = new InheritedEntity(name, innerTypes);
+    return this.setTypeReference(name, entity);
+  }
+
+  private parseOneOfObject(name: string, definition: OpenAPIV3.SchemaObject) {
+    // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+    const innerTypes = definition.oneOf!.map((x, i) => this.parseSchemaObject(`${name}Option${i + 1}`, x));
+
+    const entity = new UnionEntity(name, innerTypes);
+    return this.setTypeReference(name, entity);
+  }
+
+  private parseObjectWithProperties(name: string, definition: OpenAPIV3.SchemaObject) {
+    const properties = definition.properties
+      ? Object.entries(definition.properties).map(x => this.parseEntityProperty(name, x[0], x[1]))
+      : [];
+
+    const entity = new ObjectEntity(name, properties);
     definition.required?.forEach(property => entity.addPropertyRestriction(property, Restriction.required, true));
 
-    this.entities.push(entity);
+    return this.setTypeReference(name, entity);
   }
 
   private parseEntityProperty(
@@ -55,15 +120,10 @@ export default class OpenApi3Parser {
     definition: OpenAPIV3.ReferenceObject | OpenAPIV3.SchemaObject
   ) {
     const fallbackTypeName = entityName + pascalCase(propertyName);
-    const type = this.parseType(fallbackTypeName, definition);
-    if (type.enumValues) {
-      type.name = fallbackTypeName;
-      this.enums.push(new Enum(type.name, type.enumValues));
-    }
-
+    const type = this.parseSchemaObject(fallbackTypeName, definition);
     const property = new EntityProperty(propertyName, type);
 
-    if (isSchemaObject(definition)) {
+    if (isV3SchemaObject(definition)) {
       property.description = definition.description;
       property.example = definition.example;
 
@@ -82,72 +142,16 @@ export default class OpenApi3Parser {
     return property;
   }
 
-  // eslint-disable-next-line
-  parseType(fallbackName: string, definition: OpenAPIV3.ReferenceObject | OpenAPIV3.SchemaObject): TypeDefinition {
-    if (isReferenceObject(definition)) {
-      return {
-        name: getReferencedEntityName(definition.$ref),
-        isEntity: true,
-      };
+  private setTypeReference(name: string, type: TypeReference["type"]) {
+    const existingReference = this.types.get(name);
+    if (existingReference) {
+      existingReference.type = existingReference.type ?? type;
+      return existingReference;
     }
 
-    const typeName = definition.type as string;
-
-    if (isArraySchemaObject(definition)) {
-      const type = this.parseType(`${fallbackName}Item`, definition.items);
-      type.isArray = true;
-      return type;
-    }
-
-    if (typeName === "object") {
-      const entityName = pascalCase(fallbackName);
-      this.parseObjectEntity(entityName, definition);
-      return {
-        name: entityName,
-        isEntity: true,
-      };
-    }
-
-    if (typeName === "string" && definition.enum) {
-      return {
-        name: "ENUM",
-        enumValues: definition.enum.map(x => String(x)),
-      };
-    }
-
-    if (typeName === "string" && definition.format === "date-time") {
-      return {
-        name: "dateTime",
-        format: definition.format,
-      };
-    }
-
-    if (!typeName) {
-      if (definition.allOf) {
-        const composed = Object.assign({}, ...(definition.allOf as any[]));
-        return this.parseType(fallbackName, composed);
-      }
-
-      if (definition.oneOf) {
-        const innerTypes = definition.oneOf.map((x, i) => this.parseType(fallbackName + i, x));
-        if (innerTypes.length === 1) {
-          return innerTypes[0];
-        } else {
-          return {
-            name: innerTypes.map(x => x.name).join(" | "),
-            innerTypes: innerTypes,
-          };
-        }
-      }
-
-      console.error("OpenAPI3 parser cannot parse type. Unknown type: ", definition);
-      throw new Error("Cannot parse type");
-    }
-
-    return {
-      name: typeName,
-      format: definition.format,
-    };
+    const newReference = new TypeReference(type);
+    this.types.set(name, newReference);
+    return newReference;
   }
 }
 

@@ -1,10 +1,9 @@
 import camelCase from "lodash/camelCase";
 import { CodeBlockWriter, Directory, SourceFile } from "ts-morph";
 import GeneratorBase from "../../generatorBase";
-import { pascalCase } from "../../helpers";
 import { entityGeneratedHeader } from "../../messages.json";
 import Enum from "../models/enum";
-export default class EnumWriter {
+export default class StringLiteralWriter {
   constructor(private parentDirectory: Directory) {}
 
   write(definition: Enum) {
@@ -18,8 +17,8 @@ export default class EnumWriter {
   }
 
   private updateFile(file: SourceFile, definition: Enum) {
-    const currentEnum = file.getEnumOrThrow(definition.name);
-    currentEnum.replaceWithText(writer => this.writeEnum(writer, definition));
+    const currentEnum = file.getTypeAliasOrThrow(definition.name);
+    currentEnum.replaceWithText(writer => this.writeTypeAlias(writer, definition));
 
     return file;
   }
@@ -29,7 +28,7 @@ export default class EnumWriter {
       fileName,
       writer => {
         writer.writeLine(entityGeneratedHeader);
-        this.writeEnum(writer, definition);
+        this.writeTypeAlias(writer, definition);
         writer.newLineIfLastNot();
         writer.writeLine(`export default ${definition.name};`);
       },
@@ -37,10 +36,8 @@ export default class EnumWriter {
     );
   }
 
-  private writeEnum(writer: CodeBlockWriter, definition: Enum) {
-    writer.write(`enum ${definition.name}`);
-    writer.block(() => {
-      definition.items.forEach(item => writer.writeLine(`${pascalCase(item)} = "${item}",`));
-    });
+  private writeTypeAlias(writer: CodeBlockWriter, definition: Enum) {
+    const items = definition.items.map(x => `"${x}"`).join(" | ");
+    writer.write(`type ${definition.name} = ${items};`);
   }
 }

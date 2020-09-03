@@ -1,13 +1,16 @@
+import NamedObject from "./namedObject";
 import Restriction from "./restriction";
-import TypeDefinition from "./typeDefinition";
+import TypeReference from "./typeReference";
 
-export default class EntityProperty {
-  constructor(public name: string, public type: TypeDefinition) {}
+export default class EntityProperty extends NamedObject {
   description?: string;
   example?: any;
   restrictions?: Map<Restriction, any>;
-  rawName?: string;
   tags?: Map<symbol, any>;
+
+  constructor(name: string, public type: TypeReference) {
+    super(name);
+  }
 
   addRestriction(name: Restriction, params: any) {
     if (!this.restrictions) {

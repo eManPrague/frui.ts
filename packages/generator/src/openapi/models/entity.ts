@@ -1,6 +1,8 @@
+import AliasEntity from "./aliasEntity";
+import InheritedEntity from "./inheritedEntity";
 import ObjectEntity from "./objectEntity";
-import TypeEntity from "./typeEntity";
+import UnionEntity from "./unionEntity";
 
-type Entity = ObjectEntity | TypeEntity;
+type Entity = AliasEntity | ObjectEntity | InheritedEntity | UnionEntity;
 
 export default Entity;

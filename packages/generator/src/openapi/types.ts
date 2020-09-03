@@ -20,4 +20,5 @@ export type ObservableConfig =
 export interface IConfig {
   api: string;
   observable?: ObservableConfig;
+  enums?: "enum" | "string";
 }

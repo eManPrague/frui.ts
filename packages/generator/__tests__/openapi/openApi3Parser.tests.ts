@@ -1,43 +1,47 @@
 import { OpenAPIV3 } from "openapi-types";
-import TypeDefinition from "../../src/openapi/models/typeDefinition";
+import AliasEntity from "../../src/openapi/models/aliasEntity";
+import Enum from "../../src/openapi/models/enum";
+import InheritedEntity from "../../src/openapi/models/inheritedEntity";
+import ObjectEntity from "../../src/openapi/models/objectEntity";
+import UnionEntity from "../../src/openapi/models/unionEntity";
 import OpenApi3Parser from "../../src/openapi/parsers/openApi3Parser";
 
 describe("OpenApi3Parser", () => {
-  describe("parseType", () => {
+  describe("parseSchemaObject", () => {
     it("returns simple type", () => {
       const definition: OpenAPIV3.SchemaObject = {
         type: "integer",
       };
 
-      const result = new OpenApi3Parser().parseType("MyType", definition);
-      expect(result).toEqual({ name: "integer" });
+      const { type } = new OpenApi3Parser().parseSchemaObject("MyType", definition);
+
+      expect(type).toBe("number");
     });
 
-    it("returns entity reference", () => {
+    it("generates a placeholder for reference object", () => {
       const definition: OpenAPIV3.ReferenceObject = {
         $ref: "#/components/schemas/Category",
       };
 
-      const result = new OpenApi3Parser().parseType("MyType", definition);
-      expect(result).toEqual({ name: "Category", isEntity: true });
+      const { type } = new OpenApi3Parser().parseSchemaObject("MyType", definition);
+      expect(type).toBeUndefined();
     });
 
-    it("returns embedded entity", () => {
+    it("returns object entity", () => {
       const definition: OpenAPIV3.SchemaObject = {
         type: "object",
         properties: { foo: { type: "integer" }, bar: { type: "string" } },
       };
 
       const parser = new OpenApi3Parser();
-      const result = parser.parseType("MyType", definition);
-      expect(result).toEqual({ name: "MyType", isEntity: true });
+      const { type } = parser.parseSchemaObject("MyType", definition);
+      expect(type).toBeInstanceOf(ObjectEntity);
 
-      const entity = parser.entities[0];
-      expect(entity).toMatchObject({
+      expect(type).toMatchObject({
         name: "MyType",
         properties: [
-          { name: "foo", type: { name: "integer" } },
-          { name: "bar", type: { name: "string" } },
+          { name: "foo", type: { type: "number" } },
+          { name: "bar", type: { type: "string" } },
         ],
       });
     });
@@ -50,8 +54,9 @@ describe("OpenApi3Parser", () => {
         },
       };
 
-      const result = new OpenApi3Parser().parseType("MyType", definition);
-      expect(result).toEqual({ name: "string", isArray: true });
+      const { type } = new OpenApi3Parser().parseSchemaObject("MyType", definition);
+      expect(type).toBeInstanceOf(AliasEntity);
+      expect(type).toMatchObject({ isArray: true, referencedEntity: { type: "string" } });
     });
 
     it("returns array of entity references", () => {
@@ -62,8 +67,9 @@ describe("OpenApi3Parser", () => {
         },
       };
 
-      const result = new OpenApi3Parser().parseType("MyType", definition);
-      expect(result).toEqual({ name: "Tag", isEntity: true, isArray: true });
+      const { type } = new OpenApi3Parser().parseSchemaObject("MyType", definition);
+      expect(type).toBeInstanceOf(AliasEntity);
+      expect(type).toMatchObject({ isArray: true, referencedEntity: { type: undefined } });
     });
 
     it("returns array of embedded entities", () => {
@@ -76,15 +82,17 @@ describe("OpenApi3Parser", () => {
       };
 
       const parser = new OpenApi3Parser();
-      const result = parser.parseType("MyType", definition);
-      expect(result).toEqual({ name: "MyTypeItem", isArray: true, isEntity: true });
+      const { type } = parser.parseSchemaObject("MyType", definition);
+      expect(type).toBeInstanceOf(AliasEntity);
+      expect(type).toMatchObject({ isArray: true });
 
-      const entity = parser.entities[0];
-      expect(entity).toMatchObject({
+      const { type: innerType } = (type as AliasEntity).referencedEntity;
+      expect(innerType).toBeInstanceOf(ObjectEntity);
+      expect(innerType).toMatchObject({
         name: "MyTypeItem",
         properties: [
-          { name: "foo", type: { name: "integer" } },
-          { name: "bar", type: { name: "string" } },
+          { name: "foo", type: { type: "number" } },
+          { name: "bar", type: { type: "string" } },
         ],
       });
     });
@@ -95,8 +103,47 @@ describe("OpenApi3Parser", () => {
         enum: ["one", "two", "three"],
       };
 
-      const result = new OpenApi3Parser().parseType("MyType", definition);
-      expect(result).toMatchObject({ enumValues: ["one", "two", "three"] } as TypeDefinition);
+      const { type } = new OpenApi3Parser().parseSchemaObject("MyType", definition);
+      expect(type).toBeInstanceOf(Enum);
+      expect(type).toMatchObject({ items: ["one", "two", "three"] });
+    });
+
+    it("returns union when oneOf is used", () => {
+      const definition: OpenAPIV3.SchemaObject = {
+        type: "object",
+        oneOf: [
+          {
+            $ref: "#/components/schemas/PartOne",
+          },
+          {
+            $ref: "#/components/schemas/PartTwo",
+          },
+        ],
+      };
+
+      const { type } = new OpenApi3Parser().parseSchemaObject("MyType", definition);
+      expect(type).toBeInstanceOf(UnionEntity);
+      const union = type as UnionEntity;
+      expect(union.entities.length).toBe(2);
+    });
+
+    it("returns inherited entity when allOf is used", () => {
+      const definition: OpenAPIV3.SchemaObject = {
+        type: "object",
+        allOf: [
+          {
+            $ref: "#/components/schemas/PartOne",
+          },
+          {
+            $ref: "#/components/schemas/PartTwo",
+          },
+        ],
+      };
+
+      const { type } = new OpenApi3Parser().parseSchemaObject("MyType", definition);
+      expect(type).toBeInstanceOf(InheritedEntity);
+      const union = type as InheritedEntity;
+      expect(union.baseEntities.length).toBe(2);
     });
   });
 });

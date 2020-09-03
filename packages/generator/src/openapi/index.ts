@@ -13,16 +13,17 @@ export default class OpenApiGenerator extends GeneratorBase<IGeneratorParams, IC
     }
 
     const modelProcessor = new ModelProcessor();
-    const { entities, enums } = await modelProcessor.process(this.config.api);
+    const types = await modelProcessor.process(this.config.api);
 
     const nameFormatter = new NameFormatter();
-    nameFormatter.formatEnums(enums);
-    nameFormatter.formatEntities(entities);
+    const observableFormatter = new ObservableFormatter(this.config.observable);
+    types.forEach(x => {
+      nameFormatter.formatNames(x);
+      observableFormatter.format(x);
+    });
 
-    new ObservableFormatter().formatEntities(this.config.observable, entities);
-
-    const fileGenerator = new FileGenerator(this.project, entities, enums);
-    await fileGenerator.generate(this.params);
+    const generator = new FileGenerator(this.project, this.params, this.config);
+    await generator.generate(Array.from(types.values()));
   }
 
   protected async getDefaultConfig() {

@@ -1,44 +1,57 @@
 import { Project } from "ts-morph";
 import { createProgressBar } from "../progressBar";
-import Entity from "./models/entity";
 import Enum from "./models/enum";
+import InheritedEntity from "./models/inheritedEntity";
 import ObjectEntity from "./models/objectEntity";
-import { IGeneratorParams } from "./types";
+import TypeReference from "./models/typeReference";
+import UnionEntity from "./models/unionEntity";
+import { IConfig, IGeneratorParams } from "./types";
 import EnumWriter from "./writers/enumWriter";
 import ObjectEntityWriter from "./writers/objectEntityWriter";
-import TypeEntityWriter from "./writers/typeEntityWriter";
+import StringLiteralWriter from "./writers/stringLiteralWriter";
+import UnionEntityWriter from "./writers/unionEntityWriter";
 
 export default class FileGenerator {
-  constructor(private project: Project, private entities: Entity[], private enums: Enum[]) {}
+  constructor(private project: Project, private params: IGeneratorParams, private config: Partial<IConfig>) {}
 
-  async generate(params: IGeneratorParams) {
+  async generate(items: TypeReference[]) {
     const progress = createProgressBar("Generating");
-    progress.start(this.entities.length + this.enums.length + 2, 0);
+    const saveSteps = Math.ceil(items.length * 0.1 + 1);
+    progress.start(1 + items.length + saveSteps, 0);
 
-    const directory = this.project.createDirectory(params.outputFolder);
+    const directory = this.project.createDirectory(this.params.outputFolder);
+    const enumWriter = this.config.enums === "enum" ? new EnumWriter(directory) : new StringLiteralWriter(directory);
+    const objectWriter = new ObjectEntityWriter(directory, this.params);
+    const unionWriter = new UnionEntityWriter(directory);
 
-    const enumWriter = new EnumWriter(directory);
-    for (const definition of this.enums) {
-      enumWriter.write(definition);
-      progress.increment();
-    }
-    await this.project.save();
-    progress.increment();
+    progress.increment(1);
 
-    const objectEntityWriter = new ObjectEntityWriter(directory, params);
-    const typeEntityWriter = new TypeEntityWriter(directory);
-    for (const definition of this.entities) {
-      if (definition instanceof ObjectEntity) {
-        objectEntityWriter.write(definition);
-      } else {
-        typeEntityWriter.write(definition);
+    for (const { type } of items) {
+      if (type instanceof Enum) {
+        enumWriter.write(type);
+      } else if (type instanceof ObjectEntity) {
+        objectWriter.write(type);
+      } else if (type instanceof InheritedEntity) {
+        this.handleInheritedEntity(objectWriter, type);
+      } else if (type instanceof UnionEntity) {
+        unionWriter.write(type);
       }
+      // we can ignore AliasEntity because it is inlined
 
       progress.increment();
     }
+
     await this.project.save();
-    progress.increment();
+    progress.increment(saveSteps);
 
     progress.stop();
+  }
+
+  private handleInheritedEntity(writer: ObjectEntityWriter, source: InheritedEntity) {
+    const objects = source.baseEntities.filter(x => x.type instanceof ObjectEntity).map(x => x.type as ObjectEntity);
+
+    const properties = objects.slice(1).flatMap(x => x.properties);
+    const composedEntity = new ObjectEntity(source.name, properties);
+    writer.write(composedEntity, objects[0]);
   }
 }

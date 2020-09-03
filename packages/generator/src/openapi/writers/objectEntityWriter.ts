@@ -4,48 +4,50 @@ import { CodeBlockWriter, Directory, SourceFile } from "ts-morph";
 import GeneratorBase from "../../generatorBase";
 import { entityGeneratedHeader } from "../../messages.json";
 import ObservableFormatter from "../formatters/observableFormatter";
+import AliasEntity from "../models/aliasEntity";
 import EntityProperty from "../models/entityProperty";
+import Enum from "../models/enum";
 import ObjectEntity from "../models/objectEntity";
 import Restriction from "../models/restriction";
-import TypeDefinition from "../models/typeDefinition";
+import TypeReference from "../models/typeReference";
 import { IGeneratorParams } from "../types";
 
 export default class ObjectEntityWriter {
   constructor(private parentDirectory: Directory, private params: IGeneratorParams) {}
 
-  write(definition: ObjectEntity) {
+  write(definition: ObjectEntity, baseClass?: ObjectEntity) {
     const fileName = `${camelCase(definition.name)}.ts`;
     if (!GeneratorBase.canOverwiteFile(this.parentDirectory, fileName)) {
       return undefined;
     }
 
     const file = this.parentDirectory.getSourceFile(fileName);
-    return file ? this.updateFile(file, definition) : this.createFile(fileName, definition);
+    return file ? this.updateFile(file, definition, baseClass) : this.createFile(fileName, definition, baseClass);
   }
 
-  private updateFile(file: SourceFile, definition: ObjectEntity) {
+  private updateFile(file: SourceFile, definition: ObjectEntity, baseClass?: ObjectEntity) {
     const currentClass = file.getClass(definition.name);
     if (currentClass) {
       currentClass.removeText();
       currentClass.insertText(currentClass.getEnd() - 1, writer =>
-        writer.newLineIfLastNot().indent(() => this.writeEntityBody(writer, definition))
+        writer.newLineIfLastNot().indent(() => this.writeEntityBody(writer, definition, baseClass))
       );
+
+      if (baseClass) {
+        currentClass.setExtends(baseClass.name);
+      }
     }
 
     return file;
   }
 
-  private createFile(fileName: string, definition: ObjectEntity) {
+  private createFile(fileName: string, definition: ObjectEntity, baseClass: ObjectEntity | undefined) {
     const decoratorImports = this.getPropertyDecoratorsImports(definition.properties);
+    const requiredImports = definition.properties.filter(x => typeof x.type.type === "object").map(x => getImport(x.type));
 
-    const requiredImports = definition.properties.filter(x => x.type.isEntity || x.type.enumValues).map(x => x.type.name);
-    requiredImports.push(
-      ...definition.properties
-        .filter(x => x.type.innerTypes)
-        // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
-        .flatMap(x => x.type.innerTypes!)
-        .map(x => x.name)
-    );
+    if (baseClass) {
+      requiredImports.push(baseClass.name);
+    }
 
     return this.parentDirectory.createSourceFile(
       fileName,
@@ -64,22 +66,24 @@ export default class ObjectEntityWriter {
           .writeLine(entityGeneratedHeader)
           .write("export default class ")
           .write(definition.name)
-          .block(() => this.writeEntityBody(writer, definition))
+          .conditionalWrite(!!baseClass, ` extends ${baseClass?.name}`)
+          .block(() => this.writeEntityBody(writer, definition, baseClass))
           .newLineIfLastNot();
       },
       { overwrite: true }
     );
   }
 
-  private writeEntityBody(writer: CodeBlockWriter, definition: ObjectEntity) {
+  private writeEntityBody(writer: CodeBlockWriter, definition: ObjectEntity, baseClass: ObjectEntity | undefined) {
     definition.properties.forEach(p => this.writeEntityProperty(writer, p));
 
     if (this.params.generateValidation) {
-      writeValidationEntity(writer, definition);
+      writeValidationEntity(writer, definition, baseClass);
     }
   }
 
   writeEntityProperty(writer: CodeBlockWriter, property: EntityProperty) {
+    writer.conditionalBlankLine(!writer.isAtStartOfFirstLineOfBlock());
     this.writePropertyDoc(writer, property);
     this.writePropertyDecorators(writer, property);
 
@@ -87,15 +91,14 @@ export default class ObjectEntityWriter {
       .write(property.name)
       .write(property.isRequired ? "!" : "?")
       .write(": ")
-      .write(getType(property.type))
+      .write(getType(property.type, true) ?? "UNKNOWN")
       .write(";")
       .newLine();
   }
 
   writePropertyDoc(writer: CodeBlockWriter, property: EntityProperty) {
     if (property.description || property.example) {
-      writer.conditionalBlankLine(!writer.isAtStartOfFirstLineOfBlock()).writeLine("/**");
-
+      writer.writeLine("/**");
       if (property.description) {
         writer.write(" * ").write(property.description).newLine();
       }
@@ -115,11 +118,11 @@ export default class ObjectEntityWriter {
     }
 
     if (this.params.generateConversion) {
-      if (properties.some(p => p.type.isEntity || p.type.name === "dateTime")) {
+      if (properties.some(p => needsTypeConversion(p.type))) {
         result.add(`import { Type } from "class-transformer";`);
       }
 
-      if (properties.some(p => p.rawName)) {
+      if (properties.some(p => p.externalName)) {
         result.add(`import { Expose } from "class-transformer";`);
       }
     }
@@ -135,23 +138,39 @@ export default class ObjectEntityWriter {
     }
 
     if (this.params.generateConversion) {
-      if (property.type.isEntity || property.type.name === "dateTime") {
-        writer.writeLine(`@Type(() => ${convertType(property.type.name)})`);
+      if (needsTypeConversion(property.type)) {
+        writer.writeLine(`@Type(() => ${getType(property.type, false)})`);
       }
 
-      if (property.rawName) {
-        writer.writeLine(`@Expose({ name: "${property.rawName}" })`);
+      if (property.externalName) {
+        writer.writeLine(`@Expose({ name: "${property.externalName}" })`);
       }
     }
   }
 }
 
-function writeValidationEntity(writer: CodeBlockWriter, entity: ObjectEntity) {
-  if (entity.properties.some(p => p.restrictions?.size)) {
-    writer.blankLineIfLastNot().write("static ValidationRules = {");
-    writer.indent(() => entity.properties.forEach(p => writeValidationProperty(writer, p)));
-    writer.write("};").newLine();
+function writeValidationEntity(writer: CodeBlockWriter, entity: ObjectEntity, baseClass: ObjectEntity | undefined) {
+  if (hasValidation(entity)) {
+    if (baseClass && hasValidation(baseClass)) {
+      writer.blankLineIfLastNot().writeLine("static ValidationRules = Object.assign(");
+      writer.indent(() => {
+        writer.inlineBlock(() => entity.properties.forEach(p => writeValidationProperty(writer, p)));
+        writer.write(",").newLine();
+        writer.writeLine(`${baseClass.name}.ValidationRules`);
+      });
+      writer.writeLine(");");
+    } else {
+      writer.blankLineIfLastNot().write("static ValidationRules = {");
+      writer.indent(() => entity.properties.forEach(p => writeValidationProperty(writer, p)));
+      writer.write("};").newLine();
+    }
+  } else if (baseClass && hasValidation(baseClass)) {
+    writer.blankLineIfLastNot().writeLine(`static ValidationRules = ${baseClass.name}.ValidationRules;`);
   }
+}
+
+function hasValidation(entity: ObjectEntity) {
+  return entity.properties.some(p => p.restrictions?.size);
 }
 
 function writeValidationProperty(writer: CodeBlockWriter, property: EntityProperty) {
@@ -166,27 +185,31 @@ function writeValidationProperty(writer: CodeBlockWriter, property: EntityProper
   }
 }
 
-function getType(type: TypeDefinition) {
-  const name = convertType(type.name);
-
-  return type.isArray ? name + "[]" : name;
-}
-
-function convertType(type: string) {
-  switch (type) {
-    case "integer":
-      return "number";
-    case "dateTime":
-      return "Date";
-    default:
-      return type;
-  }
-}
-
 function getRestrictionDefinition(restriction: Restriction, params: any) {
   // eslint-disable-next-line @typescript-eslint/tslint/config
   switch (restriction) {
     default:
       return `${Restriction[restriction]}: ${JSON.stringify(params)}`;
+  }
+}
+
+function needsTypeConversion(reference: TypeReference) {
+  return (typeof reference.type === "object" && !(reference.type instanceof Enum)) || reference.type === "Date";
+}
+
+function getImport(reference: TypeReference) {
+  if (reference.type instanceof AliasEntity) {
+    return reference.type.referencedEntity.getTypeName();
+  } else {
+    return reference.getTypeName();
+  }
+}
+
+function getType(reference: TypeReference, includeArraySign: boolean) {
+  if (reference.type instanceof AliasEntity) {
+    const type = reference.type.referencedEntity.getTypeName();
+    return reference.type.isArray && includeArraySign ? `${type}[]` : type;
+  } else {
+    return reference.getTypeName();
   }
 }
