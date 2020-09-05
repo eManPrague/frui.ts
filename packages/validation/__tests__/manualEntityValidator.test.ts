@@ -1,5 +1,6 @@
 /* eslint-disable @typescript-eslint/tslint/config */
-import ManualEntityValidator from "../src/manualEntityValidator";
+import ManualEntityValidator, { addError, removeError } from "../src/manualEntityValidator";
+import { attachManualValidator, validate } from "../src/helpers";
 
 interface ITarget {
   firstName: string;
@@ -35,5 +36,23 @@ describe("ManualEntityValidator", () => {
     validator.clearErrors();
     expect(validator.errors.firstName).toBeUndefined();
     expect(validator.isValid).toBeTruthy();
+  });
+
+  test("Github Issue #11", () => {
+    const target = {
+      firstName: "John",
+    };
+
+    attachManualValidator(target, false);
+    expect(validate(target)).toBeTruthy();
+
+    addError(target, "firstName", "This is not valid");
+    expect(validate(target)).toBeFalsy();
+
+    removeError(target, "firstName");
+    expect(validate(target)).toBeTruthy();
+
+    addError(target, "firstName", "This is not valid again");
+    expect(validate(target)).toBeFalsy();
   });
 });
