@@ -1,15 +1,15 @@
-import { FunctionComponent } from "react";
+import { ComponentType } from "react";
 
 type constructor<T> = new (...args: any[]) => T;
-type functionalView<TViewModel> = FunctionComponent<{ vm: TViewModel }>;
+type viewComponent<TViewModel> = ComponentType<{ vm: TViewModel }>;
 
 const DEFAULT_CONTEXT = "default";
 
 // viewsRegistry is singleton
-const viewsRegistry = new Map<constructor<unknown>, Record<string, functionalView<any>>>();
+const viewsRegistry = new Map<constructor<unknown>, Record<string, viewComponent<any>>>();
 
 export function registerView<TViewModel>(
-  view: functionalView<TViewModel>,
+  view: viewComponent<TViewModel>,
   viewModelConstructor: constructor<TViewModel>,
   context = DEFAULT_CONTEXT
 ) {
