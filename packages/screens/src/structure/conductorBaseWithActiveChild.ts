@@ -3,6 +3,7 @@ import NavigationConfiguration from "../navigation/navigationConfiguration";
 import ConductorBase from "./conductorBase";
 import { canDeactivate } from "./helpers";
 import { IChild, IHasActiveChild, IScreen } from "./types";
+import { ScreenBase } from "..";
 
 export default abstract class ConductorBaseWithActiveChild<TChild extends IScreen & IChild> extends ConductorBase<TChild>
   implements IHasActiveChild<TChild> {
@@ -12,7 +13,12 @@ export default abstract class ConductorBaseWithActiveChild<TChild extends IScree
   }
 
   get canBeNavigationActiveScreen() {
-    return !this.activeChildValue;
+    if (this.activeChildValue) {
+      const childCanBeActiveScreen = ((this.activeChildValue as any) as ScreenBase).canBeNavigationActiveScreen;
+      return childCanBeActiveScreen === false;
+    } else {
+      return true;
+    }
   }
 
   async canDeactivate(isClosing: boolean) {
