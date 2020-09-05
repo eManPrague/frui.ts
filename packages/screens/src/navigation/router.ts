@@ -16,20 +16,23 @@ function addRouteDefinition(viewModel: Class, route: RouteDefinition) {
   }
 }
 
+type NavigationRoot = Pick<ICanNavigate, "navigate">;
+
 export default class Router {
   static Self: typeof SelfLink = SelfLink;
 
   private routes: Map<RouteName, Route>;
-  private rootViewModel: ICanNavigate;
+
+  private navigationRoot: NavigationRoot;
 
   /**
    * Initializes the Router and builds defined routes
    */
-  start(rootViewModel: ICanNavigate) {
-    this.rootViewModel = rootViewModel;
+  start(rootViewModel: ICanNavigate, navigationAdapter?: NavigationRoot) {
     this.routes = new Map<RouteName, Route>();
+    this.navigationRoot = navigationAdapter ?? rootViewModel;
 
-    const rootKey = this.findRootRouteKey();
+    const rootKey = this.findRouteKeyForInstance(rootViewModel);
     if (rootKey) {
       this.buildRoutes(rootKey);
     }
@@ -52,15 +55,15 @@ export default class Router {
   navigate(routeName: RouteName, routeParams?: any, queryParams?: any) {
     const path = this.getPath(routeName, routeParams);
     if (path) {
-      return this.rootViewModel.navigate(path, queryParams);
+      return this.navigationRoot.navigate(path, queryParams);
     } else {
       console.warn("Router could not find route", { routeName, routeParams, queryParams });
     }
   }
 
-  private findRootRouteKey() {
+  private findRouteKeyForInstance(instance: any) {
     for (const key of routeDefinitions.keys()) {
-      if (this.rootViewModel instanceof key) {
+      if (instance instanceof key) {
         return key;
       }
     }

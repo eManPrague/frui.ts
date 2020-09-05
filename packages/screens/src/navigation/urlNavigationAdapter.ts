@@ -64,13 +64,18 @@ export default class UrlNavigationAdapter {
   public async onUrlChanged() {
     const hash = window.location.hash;
 
-    if (this.rootViewModel && hash && hash.startsWith(NavigationConfiguration.hashPrefix)) {
+    if (hash && hash.startsWith(NavigationConfiguration.hashPrefix)) {
       const path = parseUrl(hash.substr(NavigationConfiguration.hashPrefix.length), this.parseOptions);
+      await this.navigate(path.url, path.query);
+    }
+  }
 
+  public async navigate(path: string | undefined, params: any) {
+    if (this.rootViewModel) {
       try {
         this.lastSuppressedScreen = undefined;
         this.isNavigationSuppressed = true;
-        await this.rootViewModel.navigate(path.url, path.query);
+        await this.rootViewModel.navigate(path, params);
 
         if (this.lastSuppressedScreen) {
           this.updateUrl(this.lastSuppressedScreen);
