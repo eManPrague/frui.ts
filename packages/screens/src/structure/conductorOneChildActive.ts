@@ -48,7 +48,7 @@ export default class ConductorOneChildActive<TChild extends IScreen & IChild> ex
         await child.deactivate(isClosing);
       }
 
-      this.children.clear();
+      runInAction(() => this.children.clear());
     } else if (this.activeChild) {
       await this.activeChild.deactivate(isClosing);
     }

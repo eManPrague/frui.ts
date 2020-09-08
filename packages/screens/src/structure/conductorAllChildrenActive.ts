@@ -46,7 +46,7 @@ export default class ConductorAllChildrenActive<TChild extends IScreen & IChild>
     }
 
     if (isClosing) {
-      this.children.clear();
+      runInAction(() => this.children.clear());
     }
   }
 
