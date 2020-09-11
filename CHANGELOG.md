@@ -9,10 +9,10 @@
 - `UrlNavigationAdapter` requires root view model on `start()` instead of the constructor
 - You can provide custom JSON serializer to `FetchApiConnector`
 - `initialize(): Promise<any> | void` added to `IActivatable` (and therefore to `IScreen` as well)
-- `ConductorSingleChild` requires `findNavigationChild` to be implemented. You return `undefined`, which was the original default, if you don't need navigation to child screens.
+- `ConductorSingleChild` requires `findNavigationChild` to be implemented. You can return `undefined`, which was the original default, if you don't need navigation to child screens.
 - When activating a child of a conductor, it gets at least initialized when the parent is not active
 - `AutomaticDirtyWatcher` can be configured to exclude specified properties
-- `Check` in @frui.ts/bootstrap supports indeterminate state. Enable it by setting the `threeState` prop and the bound value to be `null`.
+- `Check` in @frui.ts/bootstrap supports indeterminate state. Enable it by setting the `threeState` prop. The state id displayed when the bound value is `null`.
 - `Check` in @frui.ts/bootstrap supports `value` property so that it can set custom values to the bound property (not only `boolean`).
 
 # 0.14.1
