@@ -3,15 +3,17 @@
 - New package @frui.ts/dataviews with higher-order components for displaying data. Check the [readme](./packages/dataviews/README.md).
 - Added `useBinding`, `getValue`, and `setValue` helper functions to @frui.ts/views. You can use them when implementing functional binding components.
 - React and Mobx made peer dependencies
-- `Router` requires root view model on `start()` instead of a constructor
+- `Router` requires root view model on `start()` instead of the constructor
+- `Router` accepts a navigation adapter on `start()`, which enables proper cooperation of the two components
 - Route name can be string, symbol, or class
-- `UrlNavigationAdapter` requires root view model on `start()` instead of a constructor
-- You can provide custom JSON serializer to `FetchApiConnector
+- `UrlNavigationAdapter` requires root view model on `start()` instead of the constructor
+- You can provide custom JSON serializer to `FetchApiConnector`
 - `initialize(): Promise<any> | void` added to `IActivatable` (and therefore to `IScreen` as well)
-- `ConductorSingleChild` required `findNavigationChild` to be implemented.
+- `ConductorSingleChild` requires `findNavigationChild` to be implemented. You return `undefined`, which was the original default, if you don't need navigation to child screens.
 - When activating a child of a conductor, it gets at least initialized when the parent is not active
 - `AutomaticDirtyWatcher` can be configured to exclude specified properties
 - `Check` in @frui.ts/bootstrap supports indeterminate state. Enable it by setting the `threeState` prop and the bound value to be `null`.
+- `Check` in @frui.ts/bootstrap supports `value` property so that it can set custom values to the bound property (not only `boolean`).
 
 # 0.14.1
 

@@ -56,19 +56,53 @@ storiesOf("Bootstrap Input", module)
   ));
 
 storiesOf("Bootstrap Checkbox", module)
-  .add("Checkbox", () => <Check target={observableTarget} property="isActive" label="Is Active" id="isActiveCheck" />)
+  .add("Checkbox", () => (
+    <div>
+      <Check target={observableTarget} property="isActive" label="Is Active" id="isActiveCheck" />
+      <dl>
+        <dt>Checked</dt>
+        <Observer>{() => <dd>{JSON.stringify(observableTarget.isActive)}</dd>}</Observer>
+      </dl>
+    </div>
+  ))
   .add("Checkbox three state", () => (
     <div>
       <Check target={observableTarget} property="isThreeState" label="Is three state" id="isThree" threeState />
       <Check target={observableTarget} property="isThreeState" label="Is not" id="isNotThree" />
       <Button onClick={action(() => (observableTarget.isThreeState = null))}>Reset</Button>
+      <dl>
+        <dt>Checked</dt>
+        <Observer>{() => <dd>{JSON.stringify(observableTarget.isThreeState)}</dd>}</Observer>
+      </dl>
+    </div>
+  ))
+  .add("Switch", () => (
+    <div>
+      <Check target={observableTarget} type="switch" property="isActive" label="Is Active" id="isActiveCheck" />
+      <dl>
+        <dt>Checked</dt>
+        <Observer>{() => <dd>{JSON.stringify(observableTarget.isActive)}</dd>}</Observer>
+      </dl>
     </div>
   ))
 
   .add("Radio", () => (
     <div>
-      <Check target={observableTarget} property="isActive" type="radio" label="Is Active" />
-      <Check target={observableTarget} property="isInactive" type="radio" label="Is Inactive" />
+      <Check target={observableTarget} property="isActive" type="radio" label="True" />
+      <Check target={observableTarget} property="isActive" value={false} type="radio" label="False" />
+      <dl>
+        <dt>Checked</dt>
+        <Observer>{() => <dd>{JSON.stringify(observableTarget.isActive)}</dd>}</Observer>
+      </dl>
+
+      <br />
+
+      <Check target={observableTarget} property="name" value="John" type="radio" label="John" />
+      <Check target={observableTarget} property="name" value="David" type="radio" label="David" />
+      <dl>
+        <dt>Name</dt>
+        <Observer>{() => <dd>{JSON.stringify(observableTarget.name)}</dd>}</Observer>
+      </dl>
     </div>
   ));
 
