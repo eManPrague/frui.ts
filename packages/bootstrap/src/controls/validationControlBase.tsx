@@ -15,6 +15,12 @@ export abstract class ValidationControlBase<TTarget, TOtherProps = unknown> exte
 
   protected abstract renderInner(): JSX.Element;
 
+  protected get inheritedProps() {
+    const { target, property, onValueChanged, noValidation, errorMessage, ...otherProps } = this.props;
+
+    return otherProps as any;
+  }
+
   protected getValidationError() {
     const { noValidation, errorMessage } = this.props;
 
