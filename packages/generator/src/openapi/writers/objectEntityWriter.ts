@@ -1,5 +1,6 @@
 import camelCase from "lodash/camelCase";
 import uniq from "lodash/uniq";
+import { stringify } from "querystring";
 import { CodeBlockWriter, Directory, SourceFile } from "ts-morph";
 import GeneratorBase from "../../generatorBase";
 import { entityGeneratedHeader } from "../../messages.json";
@@ -43,7 +44,7 @@ export default class ObjectEntityWriter {
 
   private createFile(fileName: string, definition: ObjectEntity, baseClass: ObjectEntity | undefined) {
     const decoratorImports = this.getPropertyDecoratorsImports(definition.properties);
-    const requiredImports = definition.properties.filter(x => typeof x.type.type === "object").map(x => getImport(x.type));
+    const requiredImports = definition.properties.filter(x => needsImport(x.type)).map(x => getImport(x.type));
 
     if (baseClass) {
       requiredImports.push(baseClass.name);
@@ -193,8 +194,24 @@ function getRestrictionDefinition(restriction: Restriction, params: any) {
   }
 }
 
-function needsTypeConversion(reference: TypeReference) {
-  return (typeof reference.type === "object" && !(reference.type instanceof Enum)) || reference.type === "Date";
+function needsTypeConversion(reference: TypeReference): boolean {
+  if (reference.type instanceof Enum) {
+    return false;
+  }
+
+  if (reference.type instanceof AliasEntity) {
+    return needsTypeConversion(reference.type.referencedEntity);
+  }
+
+  return typeof reference.type === "object" || reference.type === "Date";
+}
+
+function needsImport(reference: TypeReference): boolean {
+  if (reference.type instanceof AliasEntity) {
+    return needsImport(reference.type.referencedEntity);
+  } else {
+    return typeof reference.type === "object";
+  }
 }
 
 function getImport(reference: TypeReference) {
