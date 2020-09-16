@@ -22,7 +22,7 @@ export interface CollectionCheckProps<TTarget, TProperty extends BindingProperty
 function useCollection<TTarget, TProperty extends BindingProperty<TTarget>>(
   props: CollectionCheckProps<TTarget, TProperty>
 ): [boolean, () => void] {
-  const collection = getValue(props);
+  const collection = getValue(props.target, props.property);
 
   if (!collection) {
     throw new Error("The target value must be an array or a Set");

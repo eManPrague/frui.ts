@@ -1,3 +1,4 @@
+import { BindingProperty } from "@frui.ts/helpers";
 import { action } from "mobx";
 import * as React from "react";
 import { ExcludeBindingProps, IBindingProps, omitBindingProps } from "./bindingProps";
@@ -33,13 +34,19 @@ export abstract class BindingComponent<TTarget, TProps extends IBindingProps<TTa
   }
 
   /** Returns value of the bound property */
-  protected get value(): any {
-    return getValue(this.props);
+  protected get value() {
+    if (!this.props.target) {
+      console.warn("'target' has not been set");
+      return undefined;
+    }
+    return getValue(this.props.target as TTarget, this.props.property);
   }
 
   /** Sets the provided value to the bound property  */
   @action.bound
   protected setValue(value: any) {
-    setValue(this.props, value);
+    const { target, property, onValueChanged } = this.props;
+    setValue(target as TTarget, property, value);
+    onValueChanged?.(value, property as BindingProperty<TTarget>, target as TTarget);
   }
 }

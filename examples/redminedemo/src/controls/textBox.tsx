@@ -7,7 +7,9 @@ export class TextBox<TTarget> extends BindingComponent<TTarget, IBindingProps<TT
   render() {
     return (
       <Observer>
-        {() => <input {...this.inheritedProps} type="text" value={this.value || ""} onChange={this.handleValueChanged} />}
+        {() => (
+          <input {...this.inheritedProps} type="text" value={(this.value as string) || ""} onChange={this.handleValueChanged} />
+        )}
       </Observer>
     );
   }

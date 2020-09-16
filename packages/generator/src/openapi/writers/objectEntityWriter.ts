@@ -1,6 +1,5 @@
 import camelCase from "lodash/camelCase";
 import uniq from "lodash/uniq";
-import { stringify } from "querystring";
 import { CodeBlockWriter, Directory, SourceFile } from "ts-morph";
 import GeneratorBase from "../../generatorBase";
 import { entityGeneratedHeader } from "../../messages.json";

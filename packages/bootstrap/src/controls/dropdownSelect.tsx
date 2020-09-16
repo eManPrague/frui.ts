@@ -19,7 +19,7 @@ interface DropdownBaseProps {
 
 export interface DropdownSelectProps<TTarget, TProperty extends BindingProperty<TTarget>, TItem>
   extends DropdownBaseProps,
-    IBindingProps<TTarget, TProperty, TItem | any> {
+    IBindingProps<TTarget, TProperty> {
   items: TItem[];
   keyProperty?: (keyof TItem & string) | "";
   textProperty?: (keyof TItem & string) | "";
@@ -34,9 +34,9 @@ function propertyValue(target: any, key: any) {
 function DropdownSelectImpl<TTarget, TProperty extends BindingProperty<TTarget>, TItem>(
   props: DropdownSelectProps<TTarget, TProperty, TItem>
 ) {
-  const { mode, items, keyProperty, textProperty, onChanged } = props;
+  const { target, property, mode, items, keyProperty, textProperty, onChanged } = props;
 
-  const [value, setValue] = useBinding(props);
+  const [value, setValue] = useBinding(target, property);
 
   const selectedItem = mode === "item" ? (value as TItem) : items.find(x => propertyValue(x, keyProperty) === value);
   const title = propertyValue(selectedItem, textProperty);
