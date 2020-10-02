@@ -11,8 +11,8 @@ type OmitValidationAndDirtyWatcher<T> = Omit<T, keyof IHasDirtyWatcher<T> | keyo
 
 export default abstract class FilteredListViewModel<
   TEntity,
-  TFilter extends {},
-  TDetail extends ScreenBase
+  TFilter extends {} = {},
+  TDetail extends ScreenBase = ScreenBase
 > extends ListViewModel<TEntity, TDetail> {
   static defaultPageSize = 30;
 
@@ -83,7 +83,7 @@ export default abstract class FilteredListViewModel<
     return {} as TFilter;
   }
 
-  private initFilter() {
+  protected initFilter() {
     this.pagingFilter = {
       offset: 0,
       limit: FilteredListViewModel.defaultPageSize,

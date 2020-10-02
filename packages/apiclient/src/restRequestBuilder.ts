@@ -31,83 +31,96 @@ export function appendAcceptJsonHeader(params?: RequestInit): RequestInit {
 
 /** Fluent URL builder that makes the network call with the underlying IApiConnector */
 export class RestRequestBuilder {
-  protected url: string;
+  protected urlValue: string;
+
+  get url() {
+    return this.urlValue;
+  }
 
   constructor(protected apiConnector: IApiConnector, private baseUrl: string, protected params?: RequestInit) {
     this.reset();
   }
 
   reset() {
-    this.url = this.baseUrl.replace(cleanupRegex, "");
+    this.urlValue = this.baseUrl.replace(cleanupRegex, "");
+  }
+
+  path(path: string): this {
+    this.urlValue += "/" + path;
+    return this;
   }
 
   all(path: string): this {
-    this.url += "/" + path;
+    this.urlValue += "/" + path;
     return this;
   }
 
   one(path: string, id?: any): this {
-    this.url += "/" + path;
+    this.urlValue += "/" + path;
     if (id !== undefined) {
-      this.url += "/" + id;
+      this.urlValue += "/" + id;
     }
     return this;
   }
 
   get<T>(queryParams?: any): Promise<T> {
-    const requestUrl = this.appendQuery(this.url, queryParams);
+    const requestUrl = this.appendQuery(this.urlValue, queryParams);
     const params = appendAcceptJsonHeader(this.params);
     return this.apiConnector.get(requestUrl, params).then(x => x.json());
   }
 
   getRaw(queryParams?: any) {
-    const requestUrl = this.appendQuery(this.url, queryParams);
+    const requestUrl = this.appendQuery(this.urlValue, queryParams);
     return this.apiConnector.get(requestUrl, this.params);
   }
 
   post<T>(content: any): Promise<T> {
     const params = appendAcceptJsonHeader(this.params);
-    return this.apiConnector.postJson(this.url, content, params).then(x => x.json());
+    return this.apiConnector.postJson(this.urlValue, content, params).then(x => x.json());
   }
 
   postOnly(content: any) {
-    return this.apiConnector.postJson(this.url, content, this.params);
+    return this.apiConnector.postJson(this.urlValue, content, this.params);
   }
 
-  postFormData(data: FormData) {
-    return this.apiConnector.postFormData(this.url, data, this.params);
+  postData(data?: BodyInit) {
+    return this.apiConnector.post(this.urlValue, data, this.params);
   }
 
   put<T>(content: any): Promise<T> {
     const params = appendAcceptJsonHeader(this.params);
-    return this.apiConnector.putJson(this.url, content, params).then(x => x.json());
+    return this.apiConnector.putJson(this.urlValue, content, params).then(x => x.json());
   }
 
   putOnly(content: any) {
-    return this.apiConnector.putJson(this.url, content, this.params);
+    return this.apiConnector.putJson(this.urlValue, content, this.params);
   }
 
-  putFormData(data: FormData) {
-    return this.apiConnector.putFormData(this.url, data, this.params);
+  putData(data?: BodyInit) {
+    return this.apiConnector.put(this.urlValue, data, this.params);
   }
 
   patch<T>(content: any): Promise<T> {
     const params = appendAcceptJsonHeader(this.params);
-    return this.apiConnector.patchJson(this.url, content, params).then(x => x.json());
+    return this.apiConnector.patchJson(this.urlValue, content, params).then(x => x.json());
   }
 
   patchOnly(content: any) {
-    return this.apiConnector.patchJson(this.url, content, this.params);
+    return this.apiConnector.patchJson(this.urlValue, content, this.params);
+  }
+
+  patchData(data?: BodyInit) {
+    return this.apiConnector.patch(this.urlValue, data, this.params);
   }
 
   delete(content?: any) {
     return content
-      ? this.apiConnector.deleteJson(this.url, content, this.params)
-      : this.apiConnector.delete(this.url, this.params);
+      ? this.apiConnector.deleteJson(this.urlValue, content, this.params)
+      : this.apiConnector.delete(this.urlValue, undefined, this.params);
   }
 
   withBaseUrl(url: string) {
-    this.url = url;
+    this.urlValue = url;
     return this;
   }
 

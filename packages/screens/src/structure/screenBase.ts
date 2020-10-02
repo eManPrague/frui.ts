@@ -1,6 +1,6 @@
 /* eslint-disable @typescript-eslint/no-empty-function */
 import { bound } from "@frui.ts/helpers";
-import { computed, observable } from "mobx";
+import { computed, observable, runInAction } from "mobx";
 import { isNavigationParent } from "../navigation/helpers";
 import NavigationConfiguration from "../navigation/navigationConfiguration";
 import { NavigationPath } from "../navigation/navigationPath";
@@ -25,7 +25,11 @@ export default abstract class ScreenBase implements IScreen, IChild, ICanNavigat
 
   // activation
 
-  private isInitialized = false;
+  @observable protected isInitializedValue = false;
+  @computed get isInitialized() {
+    return this.isInitializedValue;
+  }
+
   @observable protected isActiveValue = false;
   @computed get isActive() {
     return this.isActiveValue;
@@ -80,7 +84,7 @@ export default abstract class ScreenBase implements IScreen, IChild, ICanNavigat
         console.error(error);
       }
 
-      this.isInitialized = true;
+      runInAction(() => (this.isInitializedValue = true));
     }
   }
 

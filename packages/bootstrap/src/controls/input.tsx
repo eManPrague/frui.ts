@@ -7,6 +7,8 @@ export interface InputProps {
   onBlur?: (e: React.FormEvent<any>) => void;
   onFocus?: (e: React.FormEvent<any>) => void;
   onKeyDown?: (e: React.KeyboardEvent<any>) => void;
+  as?: React.ElementType;
+  rows?: number;
 }
 
 export class Input<TTarget, TOtherProps = unknown> extends ValidationControlBase<

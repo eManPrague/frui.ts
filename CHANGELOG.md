@@ -1,6 +1,16 @@
 # 0.16.0
 
 - OpenAPI generator refactored. Supports `allOf` and `oneOf` features.
+- `Input` in @frui.ts/bootstrap supports new props: `as` and `rows`.
+- `ScreenBase.isInitialized` is now public.
+- `IApiConnector` and `FetchApiConnector` changes:
+  - `fetchFunction`, `jsonSerializer`, and `middleware` properties are now protected and thus available to inheriting classes
+  - BREAKING: `postText`, `postFormData` replaced by `post`. The same goest for `putText`, `putFormData`, `patchText`, `patchFormData`, `deleteText`, and `deleteJson`.
+  - BREAKING: `delete` now contains `body` argument.
+- `RestRequestBuilder` changes:
+  - BREAKING: `postFormData` replaced by `postData`, `putFormData` replaced by `putData`
+  - added `path(path: string)` for fluent URL building
+  - added `url:string` property for reading current URL
 
 # 0.15.0
 
