@@ -15,7 +15,7 @@ const observableTarget = observable({
 });
 
 const MyComponent = observer(() => {
-  const [name, setName] = useBinding(observableTarget, "name");
+  const [name, setName] = useBinding({ target: observableTarget, property: "name" });
 
   return <input value={name} onChange={e => setName(e.target.value)} />;
 });

@@ -22,6 +22,17 @@ describe("appendUrl", () => {
   });
 });
 
+describe("getQueryString", () => {
+  it("flattens any object", () => {
+    const connector = mock<IApiConnector>();
+    const builder = new RestRequestBuilder(connector, "www.base.url", {});
+
+    const query = { foo: "param1", bar: 123 };
+    const result = builder.getQueryString(query);
+    expect(result).toBe("bar=123&foo=param1");
+  });
+});
+
 describe("RestRequestBuilder", () => {
   it("calls the api connector with composed URL", () => {
     const connector = mock<IApiConnector>();

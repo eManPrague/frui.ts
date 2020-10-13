@@ -11,6 +11,12 @@
   - BREAKING: `postFormData` replaced by `postData`, `putFormData` replaced by `putData`
   - added `path(path: string)` for fluent URL building
   - added `url:string` property for reading current URL
+  - uses `query-string` package for creating query strings (you can use the `queryStringOptions` property to customize the stringification process - see https://github.com/sindresorhus/query-string#stringifyobject-options)
+- Added `ContinuousListViewModel` to @frui.ts/datascreens. It covers the case of 'endless' lists.
+- Added `ManualPromise` to @frui.ts/helpers.
+- BREAKING: Props of `<View />` changed: `fallbackMode: "message" | "children"`. In case `"children"` is set, the children props of the `<View />` component is rendered when no view is found.
+- BREAKING: `getValue` and `setValue` hooks accept `target` and `property` arguments instead of single `props`.
+- Binding types changed. You can use the third type parameter of `IBindingProps<TTarget, TProperty, TValue>` to restrict the binding target value type.
 
 # 0.15.0
 

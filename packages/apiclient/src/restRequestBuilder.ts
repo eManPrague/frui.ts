@@ -1,21 +1,7 @@
 import { IApiConnector } from "./types";
+import { stringify, StringifyOptions } from "query-string";
 
 const cleanupRegex = /\/+$/g; // removes trailing slash
-
-function getValueForUri(input: any) {
-  if (input instanceof Date) {
-    return input.toISOString();
-  } else {
-    return input;
-  }
-}
-
-function getQueryString(query: any) {
-  return Object.keys(query)
-    .filter(prop => query[prop] || query[prop] === 0)
-    .map(prop => `${encodeURIComponent(prop)}=${encodeURIComponent(getValueForUri(query[prop]))}`)
-    .join("&");
-}
 
 const jsonContentType = "application/json,text/json";
 
@@ -29,9 +15,20 @@ export function appendAcceptJsonHeader(params?: RequestInit): RequestInit {
   };
 }
 
+export function appendUrl(base: string, ...segments: any[]) {
+  let result = base.replace(cleanupRegex, "");
+  segments.forEach(x => {
+    result += "/" + x;
+  });
+  return result;
+}
+
 /** Fluent URL builder that makes the network call with the underlying IApiConnector */
 export class RestRequestBuilder {
+  static DefaultQueryStringOptions: StringifyOptions = { skipNull: true };
+
   protected urlValue: string;
+  queryStringOptions?: StringifyOptions;
 
   get url() {
     return this.urlValue;
@@ -124,15 +121,11 @@ export class RestRequestBuilder {
     return this;
   }
 
-  protected appendQuery(url: string, query?: any) {
-    return query ? `${url}?${getQueryString(query)}` : url;
+  getQueryString(query: any) {
+    return stringify(query, this.queryStringOptions ?? RestRequestBuilder.DefaultQueryStringOptions);
   }
-}
 
-export function appendUrl(base: string, ...segments: any[]) {
-  let result = base.replace(cleanupRegex, "");
-  segments.forEach(x => {
-    result += "/" + x;
-  });
-  return result;
+  protected appendQuery(url: string, query?: any) {
+    return query ? `${url}?${this.getQueryString(query)}` : url;
+  }
 }

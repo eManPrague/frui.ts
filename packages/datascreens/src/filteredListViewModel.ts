@@ -91,8 +91,10 @@ export default abstract class FilteredListViewModel<
       sortDirection: SortingDirection.Ascending,
     };
 
-    const filter = this.createFilter();
-    this.resetFilterValues(filter);
-    this.filter = attachAutomaticDirtyWatcher(filter, true);
+    if (!this.filter) {
+      const filter = this.createFilter();
+      this.resetFilterValues(filter);
+      this.filter = attachAutomaticDirtyWatcher(filter, true);
+    }
   }
 }

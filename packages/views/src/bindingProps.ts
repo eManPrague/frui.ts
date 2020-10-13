@@ -9,7 +9,11 @@ import { BindingProperty, PropertyType } from "@frui.ts/helpers";
  * @typeparam TProperty Helper type of the property key. This shall be inferred in most cases.
  * @typeparam TValue Type of the value assigned in `TTarget[TProperty]`. Use this to restrict possible value types if needed.
  */
-export interface IBindingProps<TTarget, TProperty extends BindingProperty<TTarget> = BindingProperty<TTarget>> {
+export interface IBindingProps<
+  TTarget,
+  TProperty extends BindingProperty<TTarget> = BindingProperty<TTarget>,
+  TValue = PropertyType<TTarget, TProperty>
+> {
   /** Target entity for the binding. The entity should be Mobx `observable`. */
   target?: TTarget;
 
@@ -23,7 +27,7 @@ export interface IBindingProps<TTarget, TProperty extends BindingProperty<TTarge
    * @param property  Name of the bound property on the target entity
    * @param target  The target entity for the binding
    */
-  onValueChanged?: (value: PropertyType<TTarget, TProperty>, property: TProperty, target: TTarget) => void;
+  onValueChanged?: (value: TValue, property: TProperty, target: TTarget) => void;
 }
 
 export type ExcludeBindingProps<T> = Omit<T, keyof IBindingProps<any>>;

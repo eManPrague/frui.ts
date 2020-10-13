@@ -49,3 +49,8 @@ Syntactic sugar for creating strings that are also a key of a type.
 ```ts
 this.pagingFilter.sortColumn = nameof<User>("login"); // the same as ="login", but checked on compile time that the class 'User' actually has a 'login' field
 ```
+
+
+## `ManualPromise`
+
+TODO

@@ -32,6 +32,7 @@
     "build": "tsc"
   },
   "dependencies": {
-    "@frui.ts/helpers": "^999.0.0"
+    "@frui.ts/helpers": "^999.0.0",
+    "query-string": "^6.9.0"
   }
 }

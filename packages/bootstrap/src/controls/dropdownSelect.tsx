@@ -34,9 +34,8 @@ function propertyValue(target: any, key: any) {
 function DropdownSelectImpl<TTarget, TProperty extends BindingProperty<TTarget>, TItem>(
   props: DropdownSelectProps<TTarget, TProperty, TItem>
 ) {
-  const { target, property, mode, items, keyProperty, textProperty, onChanged } = props;
-
-  const [value, setValue] = useBinding(target, property);
+  const { mode, items, keyProperty, textProperty, onChanged } = props;
+  const [value, setValue] = useBinding(props);
 
   const selectedItem = mode === "item" ? (value as TItem) : items.find(x => propertyValue(x, keyProperty) === value);
   const title = propertyValue(selectedItem, textProperty);

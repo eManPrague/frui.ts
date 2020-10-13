@@ -67,6 +67,12 @@ If needed, you can attach a validator to `filter` in the constructor. There is n
 activePage={Math.ceil(vm.currentPaging.offset / vm.currentPaging.limit) + 1} />
 ```
 
+## `ContinuousListViewModel`
+
+This base class updates the logic of `setData` to support appending the new data to the existing list of items.
+
+TODO
+
 ## `DetailViewModel`
 
 ### Useful functionality
