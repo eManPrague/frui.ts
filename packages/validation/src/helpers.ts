@@ -55,6 +55,10 @@ export function hasVisibleErrors<TTarget>(target: TTarget) {
   }
 }
 
+export function hasErrorsVisibilityEnabled<TTarget>(target: TTarget) {
+  return hasValidation(target) && target.__validation.isErrorsVisible;
+}
+
 export function validate<TTarget>(target: TTarget) {
   if (hasValidation(target)) {
     runInAction(() => (target.__validation.isErrorsVisible = true));

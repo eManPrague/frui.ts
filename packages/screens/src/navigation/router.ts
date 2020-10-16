@@ -61,6 +61,17 @@ export default class Router {
     }
   }
 
+  dumpRoutes() {
+    const result = [] as { name: RouteName; path: string }[];
+    this.routes.forEach((route, name) =>
+      result.push({
+        name,
+        path: (route as any).spec,
+      })
+    );
+    return result;
+  }
+
   private findRouteKeyForInstance(instance: any) {
     for (const key of routeDefinitions.keys()) {
       if (instance instanceof key) {
