@@ -143,6 +143,7 @@ storiesOf("Bootstrap Select", module)
         textProperty="text"
         mode="key"
         allowEmpty
+        emptyText="Empty value"
       />
       {dumpTarget()}
     </div>

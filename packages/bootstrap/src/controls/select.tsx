@@ -9,6 +9,7 @@ export interface SelectProps<TItem> {
   textProperty?: keyof TItem & string;
   mode?: "key" | "item";
   allowEmpty?: boolean;
+  emptyText?: string;
   isNumeric?: boolean;
 }
 
@@ -29,7 +30,17 @@ export class Select<TTarget, TItem> extends ValidationControlBase<TTarget, FormC
 
   @bound
   protected renderInner() {
-    const { noValidation, errorMessage, items, keyProperty, textProperty, mode, allowEmpty, ...otherProps } = this.inheritedProps;
+    const {
+      noValidation,
+      errorMessage,
+      items,
+      keyProperty,
+      textProperty,
+      mode,
+      allowEmpty,
+      emptyText,
+      ...otherProps
+    } = this.inheritedProps;
     const validationError = this.getValidationError();
 
     const options = items.map((x: any) => (
@@ -45,7 +56,7 @@ export class Select<TTarget, TItem> extends ValidationControlBase<TTarget, FormC
           value={this.selectedValue ?? EMPTY_VALUE}
           onChange={this.handleValueChanged}
           isInvalid={!!validationError}>
-          {(allowEmpty || !this.hasValidValue) && <option value={EMPTY_VALUE} />}
+          {(allowEmpty || !this.hasValidValue) && <option value={EMPTY_VALUE}>{emptyText}</option>}
           {options}
         </Form.Control>
         {validationError && <Form.Control.Feedback type="invalid">{validationError}</Form.Control.Feedback>}

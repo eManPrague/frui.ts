@@ -3,14 +3,16 @@ import { stringify, StringifyOptions } from "query-string";
 
 const cleanupRegex = /\/+$/g; // removes trailing slash
 
-const jsonContentType = "application/json,text/json";
+export const ContentTypes = {
+  json: "application/json,text/json",
+};
 
-export function appendAcceptJsonHeader(params?: RequestInit): RequestInit {
+export function appendAcceptHeader(params: RequestInit | undefined, acceptContentType: string): RequestInit {
   return {
     ...params,
     headers: {
       ...(params || {}).headers,
-      Accept: jsonContentType,
+      Accept: acceptContentType,
     },
   };
 }
@@ -62,7 +64,7 @@ export class RestRequestBuilder {
 
   get<T>(queryParams?: any): Promise<T> {
     const requestUrl = this.appendQuery(this.urlValue, queryParams);
-    const params = appendAcceptJsonHeader(this.params);
+    const params = appendAcceptHeader(this.params, ContentTypes.json);
     return this.apiConnector.get(requestUrl, params).then(x => x.json());
   }
 
@@ -72,7 +74,7 @@ export class RestRequestBuilder {
   }
 
   post<T>(content: any): Promise<T> {
-    const params = appendAcceptJsonHeader(this.params);
+    const params = appendAcceptHeader(this.params, ContentTypes.json);
     return this.apiConnector.postJson(this.urlValue, content, params).then(x => x.json());
   }
 
@@ -85,7 +87,7 @@ export class RestRequestBuilder {
   }
 
   put<T>(content: any): Promise<T> {
-    const params = appendAcceptJsonHeader(this.params);
+    const params = appendAcceptHeader(this.params, ContentTypes.json);
     return this.apiConnector.putJson(this.urlValue, content, params).then(x => x.json());
   }
 
@@ -98,7 +100,7 @@ export class RestRequestBuilder {
   }
 
   patch<T>(content: any): Promise<T> {
-    const params = appendAcceptJsonHeader(this.params);
+    const params = appendAcceptHeader(this.params, ContentTypes.json);
     return this.apiConnector.patchJson(this.urlValue, content, params).then(x => x.json());
   }
 
