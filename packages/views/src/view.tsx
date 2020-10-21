@@ -1,5 +1,5 @@
+import { isActivatable, isDeactivatable } from "@frui.ts/screens";
 import * as React from "react";
-import useScreenLifecycle from "./useScreenLifecycle";
 import { getView, tryGetView } from "./viewLocator";
 
 interface ViewProps {
@@ -7,26 +7,61 @@ interface ViewProps {
   context?: string;
   useLifecycle?: boolean;
   fallbackMode?: "message" | "children";
+  onError?: (error: Error, errorInfo: React.ErrorInfo) => void;
 }
 
-const View: React.FunctionComponent<ViewProps> = ({ vm, context, useLifecycle, fallbackMode, children }) => {
-  if (!vm) {
-    return <React.Fragment>{children}</React.Fragment>;
+interface ViewState {
+  hasError: boolean;
+}
+
+export default class View extends React.PureComponent<ViewProps, ViewState> {
+  static getDerivedStateFromError(error: any) {
+    return { hasError: true };
   }
 
-  const FoundView = fallbackMode ? tryGetView(vm.constructor, context) : getView(vm.constructor, context);
-
-  if (!FoundView) {
-    return fallbackMode === "message" ? (
-      <span>Could not find a view for {vm.constructor.name}</span>
-    ) : (
-      <React.Fragment>{children}</React.Fragment>
-    );
+  componentDidCatch(error: Error, errorInfo: React.ErrorInfo) {
+    this.props.onError?.(error, errorInfo);
   }
 
-  if (!!useLifecycle) {
-    useScreenLifecycle(vm);
+  componentDidMount() {
+    if (this.props.useLifecycle) {
+      const { vm } = this.props;
+      if (vm && isActivatable(vm)) {
+        vm.activate();
+      }
+    }
   }
-  return <FoundView vm={vm} />;
-};
-export default View;
+
+  componentWillUnmount() {
+    if (this.props.useLifecycle) {
+      const { vm } = this.props;
+      if (vm && isDeactivatable(vm)) {
+        vm.deactivate(true);
+      }
+    }
+  }
+
+  render() {
+    if (this.state?.hasError) {
+      return <p>Something went wrong :-(</p>;
+    }
+
+    const { vm, context, fallbackMode, children } = this.props;
+
+    if (!vm) {
+      return <React.Fragment>{children}</React.Fragment>;
+    }
+
+    const FoundView = fallbackMode ? tryGetView(vm.constructor, context) : getView(vm.constructor, context);
+
+    if (!FoundView) {
+      return fallbackMode === "message" ? (
+        <p>Could not find a view for {vm.constructor.name}</p>
+      ) : (
+        <React.Fragment>{children}</React.Fragment>
+      );
+    }
+
+    return <FoundView vm={vm} />;
+  }
+}
