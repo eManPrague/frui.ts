@@ -16,6 +16,8 @@ function addRouteDefinition(viewModel: Class, route: RouteDefinition) {
   }
 }
 
+const EMPTY = "EMPTY"; // route-parser does not support empty routes,
+
 type NavigationRoot = Pick<ICanNavigate, "navigate">;
 
 export default class Router {
@@ -41,10 +43,16 @@ export default class Router {
   getPath(routeName: RouteName, params?: any) {
     const route = this.routes.get(routeName);
     if (route) {
-      return route.reverse(params);
-    } else {
-      return undefined;
+      const path = route.reverse(params);
+
+      // it would be ok to return empty string (thus checking for false)
+      if (path !== false) {
+        // ...but current route-parser does not support empty paths, so we need a placeholder
+        return path === EMPTY ? "" : path;
+      }
     }
+
+    return undefined;
   }
 
   getUrl(routeName: RouteName, routeParams?: any, queryParams?: any) {
@@ -54,11 +62,15 @@ export default class Router {
 
   navigate(routeName: RouteName, routeParams?: any, queryParams?: any) {
     const path = this.getPath(routeName, routeParams);
-    if (path) {
+    if (path !== undefined) {
       return this.navigationRoot.navigate(path, queryParams);
     } else {
       console.warn("Router could not find route", { routeName, routeParams, queryParams });
     }
+  }
+
+  navigatePath(path: string, queryParams?: any) {
+    return this.navigationRoot.navigate(path, queryParams);
   }
 
   dumpRoutes() {
@@ -90,7 +102,7 @@ export default class Router {
         const path = combinePathString(parentRoute, routeDefinition.route);
 
         if (routeDefinition.name) {
-          const route = new Route(path);
+          const route = new Route(path || EMPTY);
           const name = routeDefinition.name === SelfLink ? key : routeDefinition.name;
           this.routes.set(name, route);
         }
