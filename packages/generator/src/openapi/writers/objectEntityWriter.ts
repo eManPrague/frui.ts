@@ -43,7 +43,7 @@ export default class ObjectEntityWriter {
 
   private createFile(fileName: string, definition: ObjectEntity, baseClass: ObjectEntity | undefined) {
     const decoratorImports = this.getPropertyDecoratorsImports(definition.properties);
-    const requiredImports = definition.properties.filter(x => needsImport(x.type)).map(x => getImport(x.type));
+    const requiredImports = definition.properties.filter(x => needsImport(x.type)).map(x => x.type.getTypeName());
 
     if (baseClass) {
       requiredImports.push(baseClass.name);
@@ -91,7 +91,7 @@ export default class ObjectEntityWriter {
       .write(property.name)
       .write(property.isRequired ? "!" : "?")
       .write(": ")
-      .write(getType(property.type, true) ?? "UNKNOWN")
+      .write(property.type.getTypeDeclaration() ?? "UNKNOWN")
       .write(";")
       .newLine();
   }
@@ -139,7 +139,7 @@ export default class ObjectEntityWriter {
 
     if (this.params.generateConversion) {
       if (needsTypeConversion(property.type)) {
-        writer.writeLine(`@Type(() => ${getType(property.type, false)})`);
+        writer.writeLine(`@Type(() => ${property.type.getTypeName()})`);
       }
 
       if (property.externalName) {
@@ -210,22 +210,5 @@ function needsImport(reference: TypeReference): boolean {
     return needsImport(reference.type.referencedEntity);
   } else {
     return typeof reference.type === "object";
-  }
-}
-
-function getImport(reference: TypeReference) {
-  if (reference.type instanceof AliasEntity) {
-    return reference.type.referencedEntity.getTypeName();
-  } else {
-    return reference.getTypeName();
-  }
-}
-
-function getType(reference: TypeReference, includeArraySign: boolean) {
-  if (reference.type instanceof AliasEntity) {
-    const type = reference.type.referencedEntity.getTypeName();
-    return reference.type.isArray && includeArraySign ? `${type}[]` : type;
-  } else {
-    return reference.getTypeName();
   }
 }

@@ -49,7 +49,7 @@ export default class UnionEntityWriter {
   }
 
   private writeTypeAlias(writer: CodeBlockWriter, definition: UnionEntity) {
-    const names = definition.entities.map(x => x.getTypeName());
+    const names = definition.entities.map(x => x.getTypeDeclaration());
     writer.write(`type ${definition.name} = ${names.join(" | ")};`);
   }
 }

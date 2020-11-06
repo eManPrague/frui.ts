@@ -33,7 +33,7 @@ export default class OpenApi3Parser {
         const itemName = `${name}Item`;
         const innerType = this.parseSchemaObject(itemName, definition.items);
 
-        const arrayName = `${name}List`;
+        const arrayName = `${name}`;
         const aliasType = new AliasEntity(arrayName, innerType, true);
         return this.setTypeReference(arrayName, aliasType);
 
