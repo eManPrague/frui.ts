@@ -1,6 +1,7 @@
 # 0.16.0
 
 - Added `ManualPromise`, `groupBy()` to @frui.ts/helpers.
+- Added `hideValidationErrors()` to @frui.ts/validation.
 - OpenAPI generator refactored. Supports `allOf` and `oneOf` features.
 
 - `Input` in @frui.ts/bootstrap supports new props: `as` and `rows`.

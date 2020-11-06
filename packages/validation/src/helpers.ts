@@ -29,7 +29,7 @@ export function attachManualValidator<TTarget>(target: TTarget, errorsImmediatel
 }
 
 export function hasValidation<TTarget>(target: any): target is IHasValidation<TTarget> {
-  return !!target && (target as IHasValidation<TTarget>).__validation !== undefined;
+  return !!target && (target as IHasValidation<TTarget>).__validation.isErrorsVisible !== undefined;
 }
 
 export function getValidationMessage<TTarget>(target: TTarget, propertyName: PropertyName<TTarget>): string | undefined {
@@ -47,7 +47,7 @@ export function isValid<TTarget>(target: TTarget, propertyName?: PropertyName<TT
   }
 }
 
-export function hasVisibleErrors<TTarget>(target: TTarget) {
+export function hasVisibleErrors(target: any) {
   if (hasValidation(target)) {
     return target.__validation.isErrorsVisible && !target.__validation.isValid;
   } else {
@@ -55,11 +55,17 @@ export function hasVisibleErrors<TTarget>(target: TTarget) {
   }
 }
 
-export function hasErrorsVisibilityEnabled<TTarget>(target: TTarget) {
+export function hasErrorsVisibilityEnabled(target: any) {
   return hasValidation(target) && target.__validation.isErrorsVisible;
 }
 
-export function validate<TTarget>(target: TTarget) {
+export function hideValidationErrors(target: any) {
+  if (hasValidation(target) && target.__validation.isErrorsVisible) {
+    runInAction(() => (target.__validation.isErrorsVisible = false));
+  }
+}
+
+export function validate(target: any) {
   if (hasValidation(target)) {
     runInAction(() => (target.__validation.isErrorsVisible = true));
     return target.__validation.isValid;
