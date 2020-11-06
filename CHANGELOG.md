@@ -1,6 +1,6 @@
 # 0.16.0
 
-- Added `ManualPromise` to @frui.ts/helpers.
+- Added `ManualPromise`, `groupBy()` to @frui.ts/helpers.
 - OpenAPI generator refactored. Supports `allOf` and `oneOf` features.
 
 - `Input` in @frui.ts/bootstrap supports new props: `as` and `rows`.
