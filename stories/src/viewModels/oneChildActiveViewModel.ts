@@ -18,7 +18,7 @@ export default class OneChildActiveViewModel extends ConductorOneChildActive<Chi
     return newChild;
   }
 
-  protected findNavigationChild(name: string) {
+  protected findNavigationChild(name: string | undefined) {
     if (!name) {
       return undefined;
     }

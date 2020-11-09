@@ -56,7 +56,7 @@ export default class ConductorAllChildrenActive<TChild extends IScreen & IChild>
     }
   }
 
-  protected findNavigationChild(name: string): Promise<TChild | undefined> | TChild | undefined {
+  protected findNavigationChild(name: string | undefined): Promise<TChild | undefined> | TChild | undefined {
     return this.children.find(x => x.navigationName === name);
   }
 

@@ -127,7 +127,7 @@ export class RestRequestBuilder {
     return stringify(query, this.queryStringOptions ?? RestRequestBuilder.DefaultQueryStringOptions);
   }
 
-  protected appendQuery(url: string, query?: any) {
+  appendQuery(url: string, query?: any) {
     return query ? `${url}?${this.getQueryString(query)}` : url;
   }
 }
