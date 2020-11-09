@@ -7,6 +7,8 @@ import { ICanNavigate } from "./types";
 
 export default class UrlNavigationAdapter {
   private isNavigationSuppressed = false;
+
+  // this is used when navigate() is called, to eventually call updateUrl() only for the last VM (not its parents that are activated as well along the path)
   private lastSuppressedScreen?: IScreen & ICanNavigate;
 
   private rootViewModel?: ICanNavigate;
@@ -46,7 +48,12 @@ export default class UrlNavigationAdapter {
       const url = appendQueryString(NavigationConfiguration.hashPrefix + path.path, path.params);
 
       if (window.location.hash !== url) {
-        if ((this.lastActiveScreen as ScreenBase)?.childReplacesNavigationPath && url.startsWith(window.location.hash)) {
+        const shouldReplaceUrl =
+          window.location.hash &&
+          url.startsWith(window.location.hash) &&
+          (!this.lastActiveScreen || (this.lastActiveScreen as ScreenBase).childReplacesNavigationPath);
+
+        if (shouldReplaceUrl) {
           // we are probably navigating deeper in the previously active VM,
           // so the new URL should not be another history entry,
           // but just update of the previous one instead
@@ -62,6 +69,9 @@ export default class UrlNavigationAdapter {
 
   @bound
   public async onUrlChanged() {
+    // navigation is initialized by a URL change, the new parent is unknown
+    this.lastActiveScreen = undefined;
+
     const hash = window.location.hash;
 
     if (hash && hash.startsWith(NavigationConfiguration.hashPrefix)) {
