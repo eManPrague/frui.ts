@@ -14,5 +14,5 @@ export function ensureObservableProperty(target: any, property: any, value: any)
     extendObservable(target, {});
   }
 
-  set(target, property, value !== undefined ? value : null);
+  set(target, property, value);
 }

@@ -33,6 +33,14 @@ describe("ensureObservableProperty", () => {
   it("creates new property on a non-observable object", () => {
     const target = {} as any;
 
+    ensureObservableProperty(target, "firstName", undefined);
+    expect(target.firstName).toBeUndefined();
+    expect(isObservableProp(target, "firstName")).toBeTruthy();
+  });
+
+  it("creates new property with default value on a non-observable object", () => {
+    const target = {} as any;
+
     ensureObservableProperty(target, "firstName", "Peter");
     expect(target.firstName).toBe("Peter");
     expect(isObservableProp(target, "firstName")).toBeTruthy();
