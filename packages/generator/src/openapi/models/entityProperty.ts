@@ -27,8 +27,4 @@ export default class EntityProperty extends NamedObject {
 
     this.tags.set(name, params);
   }
-
-  get isRequired() {
-    return this.restrictions?.has(Restriction.required);
-  }
 }

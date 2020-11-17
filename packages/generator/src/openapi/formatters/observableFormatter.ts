@@ -1,4 +1,5 @@
 import ObjectEntity from "../models/objectEntity";
+import Restriction from "../models/restriction";
 import TypeReference from "../models/typeReference";
 import { ObservableConfig } from "../types";
 
@@ -39,8 +40,13 @@ export default class ObservableFormatter {
 
     for (const property of entity.properties) {
       const excluded = isExcluded(excludedProperties, property.name) || isExcluded(this.globalExcludedProperties, property.name);
-      if (!excluded) {
+      const readOnly = property.restrictions?.has(Restriction.readOnly);
+      if (!excluded && !readOnly) {
         property.addTag(ObservableFormatter.OBSERVABLE, true);
+      }
+
+      if (property.type.getTypeName() === "number") {
+        property.addRestriction(Restriction.number, true);
       }
     }
   }

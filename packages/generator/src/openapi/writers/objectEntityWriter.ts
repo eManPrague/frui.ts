@@ -87,9 +87,14 @@ export default class ObjectEntityWriter {
     this.writePropertyDoc(writer, property);
     this.writePropertyDecorators(writer, property);
 
+    const readOnly = property.restrictions?.has(Restriction.readOnly);
+    const nullable = property.restrictions?.get(Restriction.nullable);
+    const required = nullable === false || (property.restrictions?.has(Restriction.required) && nullable !== true);
+
     writer
+      .conditionalWrite(readOnly, "readonly ")
       .write(property.name)
-      .write(property.isRequired ? "!" : "?")
+      .write(required ? "!" : "?")
       .write(": ")
       .write(property.type.getTypeDeclaration() ?? "UNKNOWN")
       .write(";")
@@ -175,19 +180,34 @@ function hasValidation(entity: ObjectEntity) {
 
 function writeValidationProperty(writer: CodeBlockWriter, property: EntityProperty) {
   if (property.restrictions?.size) {
-    writer.write(property.name).write(": { ");
-
-    Array.from(property.restrictions).forEach(([key, params], index) => {
-      writer.conditionalWrite(index > 0, ", ").write(getRestrictionDefinition(key, params));
+    const definitions: string[] = [];
+    property.restrictions.forEach((params, key) => {
+      const definition = getRestrictionDefinition(key, params);
+      if (definition && !definitions.includes(definition)) {
+        definitions.push(definition);
+      }
     });
 
-    writer.write(" },").newLine();
+    if (definitions.length) {
+      writer.write(property.name).write(": { ");
+      definitions.forEach((x, i) => writer.conditionalWrite(i > 0, ", ").write(x));
+      writer.write(" },").newLine();
+    }
   }
 }
 
 function getRestrictionDefinition(restriction: Restriction, params: any) {
   // eslint-disable-next-line @typescript-eslint/tslint/config
   switch (restriction) {
+    case Restriction.nullable: {
+      if (params === false) {
+        return `required: true`;
+      }
+      break;
+    }
+    case Restriction.readOnly: {
+      return undefined;
+    }
     default:
       return `${Restriction[restriction]}: ${JSON.stringify(params)}`;
   }

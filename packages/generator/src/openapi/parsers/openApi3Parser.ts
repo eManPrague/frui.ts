@@ -33,7 +33,7 @@ export default class OpenApi3Parser {
         const itemName = `${name}Item`;
         const innerType = this.parseSchemaObject(itemName, definition.items);
 
-        const arrayName = `${name}`;
+        const arrayName = `${name}Array`;
         const aliasType = new AliasEntity(arrayName, innerType, true);
         return this.setTypeReference(arrayName, aliasType);
 
@@ -43,7 +43,8 @@ export default class OpenApi3Parser {
       case "string":
         // eslint-disable-next-line @typescript-eslint/tslint/config
         switch (definition.format) {
-          // TODO case "binary" // https://github.com/OAI/OpenAPI-Specification/blob/master/versions/3.0.3.md#data-types
+          case "binary":
+            return this.setTypeReference("Blob", "Blob");
           case "date":
           case "datetime":
           case "date-time":
@@ -137,6 +138,12 @@ export default class OpenApi3Parser {
       }
       if (definition.pattern) {
         property.addRestriction(Restriction.pattern, definition.pattern);
+      }
+      if (definition.nullable !== undefined) {
+        property.addRestriction(Restriction.nullable, definition.nullable);
+      }
+      if (definition.readOnly) {
+        property.addRestriction(Restriction.readOnly, definition.readOnly);
       }
     }
 

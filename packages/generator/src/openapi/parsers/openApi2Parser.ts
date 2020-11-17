@@ -47,6 +47,8 @@ export default class OpenApi2Parser {
       case "string":
         // eslint-disable-next-line @typescript-eslint/tslint/config
         switch (definition.format) {
+          case "binary":
+            return this.setTypeReference("Blob", "Blob");
           case "date":
           case "datetime":
           case "date-time":
