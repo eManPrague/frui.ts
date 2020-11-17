@@ -43,6 +43,7 @@ export default class OpenApi3Parser {
       case "string":
         // eslint-disable-next-line @typescript-eslint/tslint/config
         switch (definition.format) {
+          // TODO case "binary" // https://github.com/OAI/OpenAPI-Specification/blob/master/versions/3.0.3.md#data-types
           case "date":
           case "datetime":
           case "date-time":
@@ -63,7 +64,7 @@ export default class OpenApi3Parser {
       return this.parseObject(name, definition);
     }
 
-    throw new Error("Not implemented");
+    throw new Error(`Could not parse object '${name}'`);
   }
 
   private parseReferenceObject(definition: OpenAPIV3.ReferenceObject) {

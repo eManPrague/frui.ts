@@ -67,7 +67,7 @@ export default class OpenApi2Parser {
       return this.parseObject(name, definition);
     }
 
-    throw new Error("Not implemented");
+    throw new Error(`Could not parse object '${name}'`);
   }
 
   private parseReferenceObject(definition: OpenAPIV2.ReferenceObject) {

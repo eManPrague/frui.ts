@@ -11,7 +11,13 @@ export default abstract class ListViewModel<TEntity, TDetail extends ScreenBase 
   @observable currentPaging: IPagingInfo;
 
   @action.bound
-  protected setData([items, paging]: PagedQueryResult<TEntity>) {
+  protected setData(data: PagedQueryResult<TEntity>) {
+    // since @action.bound decorated functions cannot be overriden, we need to use another function
+    this.setDataImpl(data);
+  }
+
+  /** Override this function to customize the setData logic */
+  protected setDataImpl([items, paging]: PagedQueryResult<TEntity>) {
     this.items = items;
     this.currentPaging = paging;
   }

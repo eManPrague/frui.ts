@@ -12,7 +12,9 @@ export default abstract class DetailViewModel<TEntity> extends ScreenBase {
 
   async onInitialize() {
     const item = await this.loadDetail();
-    this.setItem(item);
+    if (item) {
+      this.setItem(item);
+    }
   }
-  protected abstract loadDetail(): Promise<TEntity> | TEntity;
+  protected abstract loadDetail(): Promise<TEntity | undefined> | TEntity | undefined;
 }

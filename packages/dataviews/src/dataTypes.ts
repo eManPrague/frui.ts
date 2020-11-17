@@ -31,6 +31,7 @@ export interface ColumnDefinition<TItem, TContext = any, TProperty extends Prope
   // you can either use valueFormatter to format the value displayed, or cellFormatter to override the whole node
   valueFormatter?: (props: ValueRenderProps<TItem, TContext, TProperty>) => ReactNode;
   cellStyle?: React.CSSProperties;
+  cellClassName?: string;
   cellFormatter?: (props: ValueRenderProps<TItem, TContext, TProperty> & KeyRenderProps) => ReactNode;
 }
 

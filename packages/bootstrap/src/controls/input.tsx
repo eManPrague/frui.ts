@@ -11,6 +11,18 @@ export interface InputProps {
   rows?: number;
 }
 
+export function formatValueForControl(value: any) {
+  if (value === undefined || value === null) {
+    return "";
+  }
+
+  if (value instanceof Date) {
+    return value.toISOString().substring(0, 10);
+  }
+
+  return value;
+}
+
 export class Input<TTarget, TOtherProps = unknown> extends ValidationControlBase<
   TTarget,
   InputProps & FormControlProps & TOtherProps
@@ -23,7 +35,7 @@ export class Input<TTarget, TOtherProps = unknown> extends ValidationControlBase
       <>
         <Form.Control
           {...this.inheritedProps}
-          value={this.value === undefined || this.value === null ? "" : this.value}
+          value={formatValueForControl(this.value)}
           onChange={this.handleValueChanged}
           isInvalid={!!validationError}
         />
@@ -35,16 +47,30 @@ export class Input<TTarget, TOtherProps = unknown> extends ValidationControlBase
   @bound
   protected handleValueChanged(e: React.FormEvent<any>) {
     const target = e.target as HTMLInputElement;
-    if (this.props.type === "number") {
-      this.setNumber(target.value);
-    } else {
-      this.setValue(target.value);
+    switch (this.props.type) {
+      case "number":
+        this.setNumber(target.value);
+        break;
+      case "date":
+        this.setDate(target.value);
+        break;
+      default:
+        this.setValue(target.value);
+        break;
     }
   }
 
   private setNumber(value: string) {
     if (value) {
       this.setValue(+value);
+    } else {
+      this.setValue(value === "" ? undefined : value);
+    }
+  }
+
+  private setDate(value: string) {
+    if (value) {
+      this.setValue(new Date(value));
     } else {
       this.setValue(value === "" ? undefined : value);
     }

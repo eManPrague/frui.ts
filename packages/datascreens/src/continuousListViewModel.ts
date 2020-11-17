@@ -1,6 +1,5 @@
 import { PagedQueryResult } from "@frui.ts/data";
 import { ScreenBase } from "@frui.ts/screens";
-import { action } from "mobx";
 import { FilteredListViewModel } from ".";
 
 export default abstract class ContinuousListViewModel<
@@ -12,8 +11,7 @@ export default abstract class ContinuousListViewModel<
     return this.currentPaging && this.items.length < this.currentPaging.totalItems;
   }
 
-  @action
-  protected setData([items, paging]: PagedQueryResult<TEntity>) {
+  protected setDataImpl([items, paging]: PagedQueryResult<TEntity>) {
     if (!this.items?.length || paging.offset === 0) {
       this.items = items;
     } else {

@@ -1,4 +1,5 @@
 import { bound } from "@frui.ts/helpers";
+import { has } from "mobx";
 import { parseUrl, ParseOptions } from "query-string";
 import { IScreen, ScreenBase } from "..";
 import NavigationConfiguration from "./navigationConfiguration";
@@ -74,7 +75,9 @@ export default class UrlNavigationAdapter {
 
     const hash = window.location.hash;
 
-    if (hash && hash.startsWith(NavigationConfiguration.hashPrefix)) {
+    if (!hash) {
+      await this.navigate(undefined, undefined);
+    } else if (hash.startsWith(NavigationConfiguration.hashPrefix)) {
       const path = parseUrl(hash.substr(NavigationConfiguration.hashPrefix.length), this.parseOptions);
       await this.navigate(path.url, path.query);
     }

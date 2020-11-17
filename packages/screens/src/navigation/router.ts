@@ -139,4 +139,10 @@ export default class Router {
       return NavigationConfiguration.hashPrefix + url;
     };
   }
+
+  static getScreenUrl(screen: ICanNavigate, query?: any) {
+    const screenPath = screen.getNavigationPath();
+    const url = screenPath.path ? appendQueryString(screenPath.path, query ?? screenPath.params) : undefined;
+    return NavigationConfiguration.hashPrefix + url;
+  }
 }

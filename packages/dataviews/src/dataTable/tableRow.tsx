@@ -5,11 +5,10 @@ import { PropsWithColumns } from "../dataTypes";
 export interface TableRowProps<TItem, TContext> extends PropsWithColumns<TItem, TContext> {
   item: TItem;
 
-  cellClassName?: string;
   rowProps?: (item: TItem, context: TContext) => React.ComponentPropsWithoutRef<"tr">;
 }
 
-function tableRow<TItem, TContext>({ item, columns, context, rowProps, cellClassName }: TableRowProps<TItem, TContext>) {
+function tableRow<TItem, TContext>({ item, columns, context, rowProps }: TableRowProps<TItem, TContext>) {
   return (
     <tr {...rowProps?.(item, context)}>
       {columns.map((column, i) => {
@@ -20,7 +19,7 @@ function tableRow<TItem, TContext>({ item, columns, context, rowProps, cellClass
           return column.cellFormatter({ key, value, item, column, context });
         } else {
           return (
-            <td key={key} className={cellClassName} style={column.cellStyle}>
+            <td key={key} className={column.cellClassName} style={column.cellStyle}>
               {column.valueFormatter ? column.valueFormatter({ value, item, column, context }) : value}
             </td>
           );

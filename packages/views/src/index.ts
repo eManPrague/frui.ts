@@ -1,3 +1,4 @@
+export { default as assignDefaultProps } from "./assignDefaultProps";
 export * from "./bindingComponent";
 export * from "./bindingProps";
 export { default as createDataIdHandler } from "./dataIdHandler";
