@@ -9,6 +9,7 @@
 
 - `ScreenBase.isInitialized` is now public.
 - Added `ContinuousListViewModel` to @frui.ts/datascreens. It covers the case of 'endless' lists.
+- `FilteredListViewModel` in @frui.ts/datascreens has new extension/customization points: `cloneFilterForApply()` and `createFilter()`.
 
 - BREAKING: Props of `<View />` changed: `fallbackMode: "message" | "children"`. In case `"children"` is set, the children props of the `<View />` component is rendered when no view is found. You can use `"children"` instead of the original `"empty"`.
 - BREAKING: `getValue` and `setValue` hooks accept `target` and `property` arguments instead of single `props`.

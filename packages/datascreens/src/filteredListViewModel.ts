@@ -1,6 +1,6 @@
 /* eslint-disable @typescript-eslint/no-empty-function */
 import { IPagingFilter, SortingDirection } from "@frui.ts/data";
-import { attachAutomaticDirtyWatcher, IHasDirtyWatcher } from "@frui.ts/dirtycheck";
+import { attachAutomaticDirtyWatcher, IHasDirtyWatcher, resetDirty } from "@frui.ts/dirtycheck";
 import { bound } from "@frui.ts/helpers";
 import { ScreenBase } from "@frui.ts/screens";
 import { IHasValidation, validate } from "@frui.ts/validation";
@@ -31,19 +31,31 @@ export default abstract class FilteredListViewModel<
     this.initFilter();
   }
 
+  abstract loadData(): Promise<any> | void;
+
   @action.bound
   applyFilter() {
     if (!validate(this.filter)) {
       return false;
     }
 
-    const { __dirtycheck, __validation, ...clonedFilter } = this.filter;
-    __dirtycheck.reset();
-
-    this.unbindClonedFilter(clonedFilter as any);
-    this.appliedFilter = clonedFilter;
+    this.appliedFilter = this.cloneFilterForApply(this.filter);
     this.pagingFilter.offset = 0;
+    resetDirty(this.filter);
     return true;
+  }
+
+  protected cloneFilterForApply(filter: TFilter): OmitValidationAndDirtyWatcher<TFilter> {
+    const { __dirtycheck, __validation, ...clonedFilter } = this.filter;
+
+    // we need to clone array properties so that they are not shared with the original filter
+    Object.entries(clonedFilter).forEach(([key, value]) => {
+      if (isObservableArray(value)) {
+        clonedFilter[key as keyof OmitValidationAndDirtyWatcher<TFilter>] = value.slice() as any;
+      }
+    });
+
+    return clonedFilter;
   }
 
   @bound
@@ -61,26 +73,15 @@ export default abstract class FilteredListViewModel<
   @bound
   resetFilterAndLoad() {
     this.resetFilter();
-    this.applyFilter();
-    return this.loadData();
+    if (this.applyFilter()) {
+      return this.loadData();
+    }
   }
 
-  abstract loadData(): Promise<any> | void;
-  protected abstract resetFilterValues(filter: TFilter): void;
-
-  /** Fixes filter that has been shallowly cloned and set to appliedFilter. */
-  protected unbindClonedFilter(filter: TFilter): void {
-    // by default, clone first level of arrays
-    Object.entries(filter).forEach(([key, value]) => {
-      if (isObservableArray(value)) {
-        filter[key as keyof TFilter] = value.slice() as any;
-      }
-    });
-  }
-
-  /** Returns a new instance of the filter */
-  protected createFilter() {
-    return {} as TFilter;
+  protected resetFilterValues(filter: TFilter) {
+    for (const property in filter) {
+      filter[property] = undefined as any;
+    }
   }
 
   protected initFilter() {
@@ -96,5 +97,10 @@ export default abstract class FilteredListViewModel<
       this.resetFilterValues(filter);
       this.filter = attachAutomaticDirtyWatcher(filter, true);
     }
+  }
+
+  /** Returns a new instance of the filter */
+  protected createFilter() {
+    return {} as TFilter;
   }
 }
