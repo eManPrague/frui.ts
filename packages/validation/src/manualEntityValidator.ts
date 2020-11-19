@@ -1,5 +1,5 @@
 import { PropertyName } from "@frui.ts/helpers";
-import { action, computed, observable, remove, set, values, keys } from "mobx";
+import { action, computed, observable, set, values, keys } from "mobx";
 import { IHasManualValidation, IManualEntityValidator, ValidationErrors } from "./types";
 
 /** Entity validator implementation acting as a simple validation errors list that needs to be manually maintained */
@@ -13,7 +13,7 @@ export default class ManualEntityValidator<TTarget> implements IManualEntityVali
 
   @action
   clearErrors() {
-    keys(this.errors).forEach(prop => remove(this.errors, prop));
+    keys(this.errors).forEach(prop => set(this.errors, prop, ""));
   }
 
   @action
@@ -23,7 +23,7 @@ export default class ManualEntityValidator<TTarget> implements IManualEntityVali
 
   @action
   removeError(propertyName: PropertyName<TTarget>) {
-    remove(this.errors, propertyName);
+    set(this.errors, propertyName, "");
   }
 
   @computed get isValid() {
