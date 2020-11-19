@@ -1,5 +1,5 @@
 import { PropertyName } from "@frui.ts/helpers";
-import { runInAction } from "mobx";
+import { get, runInAction } from "mobx";
 import AutomaticEntityValidator from "./automaticEntityValidator";
 import ManualEntityValidator from "./manualEntityValidator";
 import { IEntityValidationRules, IHasManualValidation, IHasValidation } from "./types";
@@ -34,14 +34,14 @@ export function hasValidation<TTarget>(target: any): target is IHasValidation<TT
 
 export function getValidationMessage<TTarget>(target: TTarget, propertyName: PropertyName<TTarget>): string | undefined {
   if (hasValidation<TTarget>(target) && target.__validation.isErrorsVisible) {
-    return target.__validation.errors[propertyName];
+    return get(target.__validation.errors, propertyName);
   }
   return undefined;
 }
 
 export function isValid<TTarget>(target: TTarget, propertyName?: PropertyName<TTarget>) {
   if (hasValidation<TTarget>(target)) {
-    return propertyName ? !target.__validation.errors[propertyName] : target.__validation.isValid;
+    return propertyName ? !get(target.__validation.errors, propertyName) : target.__validation.isValid;
   } else {
     return true;
   }

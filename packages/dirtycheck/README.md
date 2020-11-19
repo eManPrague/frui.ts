@@ -78,7 +78,7 @@ Implements the interface `IDirtyWatcher`, but you have to set dirty flags on pro
 ```ts
 // direct usage
 const target = { firstName: "John" };
-const watcher = new ManualDirtyWatcher(target, false);
+const watcher = new ManualDirtyWatcher(false);
 
 watcher.setDirty("firstName");
 

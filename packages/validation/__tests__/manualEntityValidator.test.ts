@@ -1,6 +1,7 @@
 /* eslint-disable @typescript-eslint/tslint/config */
+import { autorun } from "mobx";
+import { attachManualValidator, getValidationMessage, validate } from "../src/helpers";
 import ManualEntityValidator, { addError, removeError } from "../src/manualEntityValidator";
-import { attachManualValidator, validate } from "../src/helpers";
 
 interface ITarget {
   firstName: string;
@@ -54,5 +55,28 @@ describe("ManualEntityValidator", () => {
 
     addError(target, "firstName", "This is not valid again");
     expect(validate(target)).toBeFalsy();
+  });
+
+  test("Github Issue #27", () => {
+    const target = {
+      firstName: "John",
+    };
+
+    let lastError = "Unknown" as string | undefined;
+
+    attachManualValidator(target, true);
+    const dispose = autorun(() => (lastError = getValidationMessage(target, "firstName")));
+    expect(lastError).toBeUndefined();
+
+    addError(target, "firstName", "This is not valid");
+    expect(lastError).toBe("This is not valid");
+
+    removeError(target, "firstName");
+    expect(lastError).toBeUndefined();
+
+    addError(target, "firstName", "This is not valid again");
+    expect(lastError).toBe("This is not valid again");
+
+    dispose();
   });
 });

@@ -1,5 +1,5 @@
 import { PropertyName } from "@frui.ts/helpers";
-import { runInAction } from "mobx";
+import { get, runInAction } from "mobx";
 import AutomaticDirtyWatcher from "./automaticDirtyWatcher";
 import ManualDirtyWatcher from "./manualDirtyWatcher";
 import { IHasDirtyWatcher, IHasManualDirtyWatcher } from "./types";
@@ -20,7 +20,7 @@ export function attachAutomaticDirtyWatcher<TTarget>(target: TTarget, dirtyFlags
  */
 export function attachManualDirtyWatcher<TTarget>(target: TTarget, dirtyFlagsImmediatelyVisible = false) {
   const typedTarget = target as TTarget & IHasManualDirtyWatcher<TTarget>;
-  typedTarget.__dirtycheck = new ManualDirtyWatcher(target, dirtyFlagsImmediatelyVisible);
+  typedTarget.__dirtycheck = new ManualDirtyWatcher<TTarget>(dirtyFlagsImmediatelyVisible);
   return typedTarget;
 }
 
@@ -30,7 +30,7 @@ export function hasDirtyWatcher<TTarget>(target: any): target is IHasDirtyWatche
 
 export function isDirty<TTarget>(target: TTarget, propertyName?: PropertyName<TTarget>) {
   if (hasDirtyWatcher<TTarget>(target)) {
-    return propertyName ? !!target.__dirtycheck.dirtyProperties[propertyName] : target.__dirtycheck.isDirty;
+    return propertyName ? !!get(target.__dirtycheck.dirtyProperties, propertyName) : target.__dirtycheck.isDirty;
   } else {
     return false;
   }
@@ -40,7 +40,7 @@ export function hasVisibleDirtyChanges<TTarget>(target: TTarget, propertyName?: 
   if (hasDirtyWatcher<TTarget>(target)) {
     return (
       target.__dirtycheck.isDirtyFlagVisible &&
-      (propertyName ? !!target.__dirtycheck.dirtyProperties[propertyName] : target.__dirtycheck.isDirty)
+      (propertyName ? !!get(target.__dirtycheck.dirtyProperties, propertyName) : target.__dirtycheck.isDirty)
     );
   } else {
     return false;
