@@ -147,6 +147,9 @@ export default class OpenApi2Parser {
       if (definition.pattern) {
         property.addRestriction(Restriction.pattern, definition.pattern);
       }
+      if (definition.format) {
+        property.addRestriction(Restriction.format, definition.format);
+      }
     }
 
     return property;

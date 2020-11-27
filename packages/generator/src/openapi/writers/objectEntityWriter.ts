@@ -10,10 +10,10 @@ import Enum from "../models/enum";
 import ObjectEntity from "../models/objectEntity";
 import Restriction from "../models/restriction";
 import TypeReference from "../models/typeReference";
-import { IGeneratorParams } from "../types";
+import { IConfig, IGeneratorParams } from "../types";
 
 export default class ObjectEntityWriter {
-  constructor(private parentDirectory: Directory, private params: IGeneratorParams) {}
+  constructor(private parentDirectory: Directory, private params: IGeneratorParams, private config: Partial<IConfig>) {}
 
   write(definition: ObjectEntity, baseClass?: ObjectEntity) {
     const fileName = `${camelCase(definition.name)}.ts`;
@@ -123,8 +123,10 @@ export default class ObjectEntityWriter {
     }
 
     if (this.params.generateConversion) {
-      if (properties.some(p => needsTypeConversion(p.type))) {
-        result.add(`import { Type } from "class-transformer";`);
+      for (const property of properties) {
+        for (const importStatement of this.getPropertyTypeConversionImports(property.type)) {
+          result.add(importStatement);
+        }
       }
 
       if (properties.some(p => p.externalName)) {
@@ -143,12 +145,69 @@ export default class ObjectEntityWriter {
     }
 
     if (this.params.generateConversion) {
-      if (needsTypeConversion(property.type)) {
-        writer.writeLine(`@Type(() => ${property.type.getTypeName()})`);
-      }
+      this.writePropertyTypeConversion(writer, property);
 
       if (property.externalName) {
         writer.writeLine(`@Expose({ name: "${property.externalName}" })`);
+      }
+    }
+  }
+
+  getPropertyTypeConversionImports(reference: TypeReference): string[] {
+    if (reference.type instanceof AliasEntity) {
+      return this.getPropertyTypeConversionImports(reference.type.referencedEntity);
+    }
+
+    const result: string[] = [];
+
+    if (reference.type instanceof Enum) {
+      return result;
+    }
+
+    if (typeof reference.type === "object") {
+      result.push(`import { Type } from "class-transformer";`);
+    }
+
+    if (reference.type === "Date") {
+      if (this.config.dates === "date-fns") {
+        result.push(`import { Transform } from "class-transformer";`, `import formatISO from "date-fns/formatISO";`);
+      } else {
+        result.push(`import { Type } from "class-transformer";`);
+      }
+    }
+
+    return result;
+  }
+
+  writePropertyTypeConversion(writer: CodeBlockWriter, property: EntityProperty) {
+    let type = property.type.type;
+
+    if (type instanceof AliasEntity) {
+      type = type.referencedEntity.type;
+    }
+
+    if (type instanceof Enum) {
+      return;
+    }
+
+    if (typeof type === "object") {
+      writer.writeLine(`@Type(() => ${property.type.getTypeName()})`);
+    }
+
+    if (type === "Date") {
+      if (this.config.dates === "date-fns") {
+        writer.writeLine(`@Transform(value => new Date(value), { toClassOnly: true })`);
+
+        const format = property.restrictions?.get(Restriction.format);
+        if (format === "date") {
+          writer.writeLine(
+            `@Transform(value => (value ? formatISO(value, { representation: "date" }) : undefined), { toPlainOnly: true })`
+          );
+        } else {
+          writer.writeLine(`@Transform(value => (value ? formatISO(value) : undefined), { toPlainOnly: true })`);
+        }
+      } else {
+        writer.writeLine(`@Type(() => Date)`);
       }
     }
   }
@@ -205,24 +264,13 @@ function getRestrictionDefinition(restriction: Restriction, params: any) {
       }
       break;
     }
+    case Restriction.format:
     case Restriction.readOnly: {
       return undefined;
     }
     default:
       return `${Restriction[restriction]}: ${JSON.stringify(params)}`;
   }
-}
-
-function needsTypeConversion(reference: TypeReference): boolean {
-  if (reference.type instanceof Enum) {
-    return false;
-  }
-
-  if (reference.type instanceof AliasEntity) {
-    return needsTypeConversion(reference.type.referencedEntity);
-  }
-
-  return typeof reference.type === "object" || reference.type === "Date";
 }
 
 function needsImport(reference: TypeReference): boolean {

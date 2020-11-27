@@ -3,9 +3,9 @@ import FetchError from "./fetchError";
 import { IApiConnector } from "./types";
 
 const jsonContentType = "application/json";
-type Middleware = (response: Response) => Response | PromiseLike<Response>;
-type FetchFunction = (input: RequestInfo, init?: RequestInit) => Promise<Response>;
-type JsonSerializer = (value: any) => string;
+export type Middleware = (response: Response) => Response | PromiseLike<Response>;
+export type FetchFunction = (input: RequestInfo, init?: RequestInit) => Promise<Response>;
+export type JsonSerializer = (value: any) => string;
 
 /** Creates a new RequestInit based on the provided values and with a 'Content-Type: application/json' header. */
 export function appendJsonHeader(params?: RequestInit): RequestInit {

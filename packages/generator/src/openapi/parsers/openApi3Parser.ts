@@ -145,6 +145,9 @@ export default class OpenApi3Parser {
       if (definition.readOnly) {
         property.addRestriction(Restriction.readOnly, definition.readOnly);
       }
+      if (definition.format) {
+        property.addRestriction(Restriction.format, definition.format);
+      }
     }
 
     return property;

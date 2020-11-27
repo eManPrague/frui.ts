@@ -3,6 +3,7 @@
 - Added `ManualPromise`, `groupBy()` to @frui.ts/helpers.
 - Added `hideValidationErrors()` to @frui.ts/validation.
 - OpenAPI generator refactored. Supports `allOf` and `oneOf` features.
+- OpenAPI generator supports Date conversion with date-fns. Use `dates: "date-fns"` in the config file.
 
 - `Input` in @frui.ts/bootstrap supports new props: `as` and `rows`.
 - `Select` in @frui.ts/bootstrap supports new props: `emptyText`.

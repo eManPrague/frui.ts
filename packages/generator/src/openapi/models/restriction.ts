@@ -6,5 +6,6 @@ enum Restriction {
   pattern,
   nullable,
   readOnly,
+  format,
 }
 export default Restriction;

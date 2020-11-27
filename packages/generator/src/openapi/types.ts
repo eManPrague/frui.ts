@@ -21,4 +21,5 @@ export interface IConfig {
   api: string;
   observable?: ObservableConfig;
   enums?: "enum" | "string";
+  dates?: "native" | "date-fns";
 }

@@ -21,7 +21,7 @@ export default class FileGenerator {
 
     const directory = this.project.createDirectory(this.params.outputFolder);
     const enumWriter = this.config.enums === "enum" ? new EnumWriter(directory) : new StringLiteralWriter(directory);
-    const objectWriter = new ObjectEntityWriter(directory, this.params);
+    const objectWriter = new ObjectEntityWriter(directory, this.params, this.config);
     const unionWriter = new UnionEntityWriter(directory);
 
     progress.increment(1);

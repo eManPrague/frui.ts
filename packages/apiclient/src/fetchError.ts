@@ -1,5 +1,7 @@
-export default class FetchError extends Error {
-  constructor(public response: Response, public content?: any) {
-    super();
+export default class FetchError<TContent = any> extends Error {
+  handled = false;
+
+  constructor(public response: Response, public content?: TContent) {
+    super(response.statusText);
   }
 }
