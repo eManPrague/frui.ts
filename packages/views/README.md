@@ -86,3 +86,7 @@ export class TextBox<TTarget> extends BindingComponent<TTarget, IBindingProps<TT
 // in view
 <TextBox target="{vm.item}" property="firstName" placeholder="First name" />
 ```
+
+## Binding to properties
+
+Note that you can bind to properties with custom getter and setter. This is useful when the format of bound values needs some conversion between the input control and target object. You just need to mark the getter with a `@computed` decorator (which is not needed for read-only computed getters because Mobx adds it implicitly).

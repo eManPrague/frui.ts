@@ -15,6 +15,10 @@ interface ViewState {
 }
 
 export default class View extends React.PureComponent<ViewProps, ViewState> {
+  static defaultProps: Partial<ViewProps> = {
+    fallbackMode: "children",
+  };
+
   static getDerivedStateFromError(error: any) {
     return { hasError: true };
   }
