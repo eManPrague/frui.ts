@@ -1,4 +1,5 @@
 export { default as bound } from "./bound";
+export { default as combineClassNames } from "./combineClassNames";
 export { default as createMap } from "./createMap";
 export * from "./disposable";
 export * from "./functionHelpers";

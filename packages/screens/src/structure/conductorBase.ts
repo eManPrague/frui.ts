@@ -28,13 +28,14 @@ export default abstract class ConductorBase<TChild extends IScreen & IChild> ext
 
   protected childNavigationPathClosed = false;
 
-  getChildNavigationPath(child: TChild, childParams?: any) {
+  getChildNavigationPath(child: TChild | string | number, childParams?: any) {
     const currentPath = this.getNavigationPath();
 
     if (this.childNavigationPathClosed) {
       return currentPath;
     } else {
-      return combinePath(currentPath, child.navigationName, childParams);
+      const childNavigationName = (child as TChild).navigationName ?? (child as string);
+      return combinePath(currentPath, childNavigationName, childParams);
     }
   }
 

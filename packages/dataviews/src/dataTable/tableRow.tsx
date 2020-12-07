@@ -19,7 +19,7 @@ function tableRow<TItem, TContext>({ item, columns, context, rowProps }: TableRo
           return column.cellFormatter({ key, value, item, column, context });
         } else {
           return (
-            <td key={key} className={column.cellClassName} style={column.cellStyle}>
+            <td key={key} className={column.cellClassName} {...column.cellProps?.({ value, item, column, context })}>
               {column.valueFormatter ? column.valueFormatter({ value, item, column, context }) : value}
             </td>
           );

@@ -50,7 +50,7 @@ function dataRepeater<
   const Wrapper = props.wrapperType ?? "table";
   const ItemWrapper = props.bodyWrapperType ?? "tbody";
   return (
-    <Wrapper {...props.wrapperProps}>
+    <Wrapper id={props.id} {...props.wrapperProps}>
       {props.displayHeader && (
         <RepeaterHeader
           columns={props.columns}

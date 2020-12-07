@@ -41,17 +41,16 @@ function repeaterHeader<TItem, TContext, TWrapper extends React.ElementType, TIt
           return (
             <Item
               key={key}
-              className="sortable"
+              className={column.headerClassName ? `sortable ${column.headerClassName}` : "sortable"}
               onClick={() => props.onColumnSort?.(column)}
-              {...props.itemCellProps}
-              style={column.headerStyle}>
+              {...props.itemCellProps}>
               {column.titleFactory ? column.titleFactory(context) : column.title}
               <span className={getSortIndicatorClass(props.pagingFilter, column.property)}></span>
             </Item>
           );
         } else {
           return (
-            <Item key={key} {...props.itemCellProps} style={column.headerStyle}>
+            <Item key={key} className={column.headerClassName} {...props.itemCellProps}>
               {column.titleFactory ? column.titleFactory(context) : column.title}
             </Item>
           );

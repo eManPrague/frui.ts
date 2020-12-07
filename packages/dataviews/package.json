@@ -37,7 +37,8 @@
     "postbuild": "copyfiles src/**/*.scss styles -f"
   },
   "dependencies": {
-    "@frui.ts/data": "^0.14.0-beta.2",
+    "@frui.ts/data": "^999.0.0",
+    "@frui.ts/helpers": "^999.0.0",
     "mobx-react-lite": "^2.0.6"
   },
   "devDependencies": {

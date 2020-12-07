@@ -24,15 +24,21 @@ export interface ColumnDefinition<TItem, TContext = any, TProperty extends Prope
   property?: TProperty;
   sortable?: boolean;
 
-  // you can use either headerStyle and pass CSS styles, or provide headerFormatter to override the whole node
-  headerStyle?: React.CSSProperties;
+  // you can use either headerClassName and pass CSS class, or provide headerFormatter to override the whole node
+  headerClassName?: string;
   headerFormatter?: (props: ColumnRenderProps<TItem, TContext, TProperty> & KeyRenderProps) => ReactNode;
 
   // you can either use valueFormatter to format the value displayed, or cellFormatter to override the whole node
   valueFormatter?: (props: ValueRenderProps<TItem, TContext, TProperty>) => ReactNode;
-  cellStyle?: React.CSSProperties;
   cellClassName?: string;
   cellFormatter?: (props: ValueRenderProps<TItem, TContext, TProperty> & KeyRenderProps) => ReactNode;
+  cellProps?: (props: ValueRenderProps<TItem, TContext, TProperty>) => any;
+}
+
+export interface ResponsiveColumnDefinition<TItem, TContext> extends ColumnDefinition<TItem, TContext> {
+  responsiveTitle?: string | false;
+  responsiveTitleFactory?: (context: TContext) => string;
+  responsiveVisible?: boolean;
 }
 
 export interface PropsWithColumns<TItem, TContext> {
@@ -46,6 +52,7 @@ export interface PropsWithItems<TItem> {
 }
 
 export interface DataTablePropsBase<TItem, TContext> extends PropsWithColumns<TItem, TContext>, PropsWithItems<TItem> {
+  id?: string;
   pagingFilter?: IPagingFilter;
   onColumnSort?: (column: ColumnDefinition<TItem, TContext>) => any;
   displayHeader?: boolean;

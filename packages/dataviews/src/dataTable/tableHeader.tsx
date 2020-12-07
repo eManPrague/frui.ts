@@ -8,7 +8,6 @@ export interface HeaderRowProps<TItem, TContext> extends PropsWithColumns<TItem,
   onColumnSort?: (column: ColumnDefinition<TItem, TContext>) => any;
 
   className?: string;
-  cellClassName?: string;
 }
 
 function getSortIndicatorClass(pagingFilter: IPagingFilter, columnName: string | number) {
@@ -28,14 +27,17 @@ function tableHeader<TItem, TContext>(props: HeaderRowProps<TItem, TContext>) {
           return column.headerFormatter({ key, column, context: props.context });
         } else if (props.pagingFilter && column.sortable && column.property) {
           return (
-            <th key={key} className="sortable" style={column.headerStyle} onClick={() => props.onColumnSort?.(column)}>
+            <th
+              key={key}
+              className={column.headerClassName ? `sortable ${column.headerClassName}` : "sortable"}
+              onClick={() => props.onColumnSort?.(column)}>
               {column.titleFactory ? column.titleFactory(props.context) : column.title}
               <span className={getSortIndicatorClass(props.pagingFilter, column.property)}></span>
             </th>
           );
         } else {
           return (
-            <th key={key} className={props.cellClassName} style={column.headerStyle}>
+            <th key={key} className={column.headerClassName}>
               {column.titleFactory ? column.titleFactory(props.context) : column.title}
             </th>
           );

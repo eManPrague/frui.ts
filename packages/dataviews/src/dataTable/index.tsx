@@ -10,7 +10,6 @@ export interface DataTableProps<TItem, TContext>
   className?: string;
 
   headerRowClassName?: string;
-  headerCellClassName?: string;
 }
 
 const defaultProps: Partial<DataTableProps<any, any>> = {
@@ -19,7 +18,7 @@ const defaultProps: Partial<DataTableProps<any, any>> = {
 
 function dataTable<TItem, TContext>(props: DataTableProps<TItem, TContext>) {
   return (
-    <table className={props.className}>
+    <table id={props.id} className={props.className}>
       {props.displayHeader && (
         <thead>
           <TableHeader
@@ -28,7 +27,6 @@ function dataTable<TItem, TContext>(props: DataTableProps<TItem, TContext>) {
             pagingFilter={props.pagingFilter}
             onColumnSort={props.onColumnSort}
             className={props.headerRowClassName}
-            cellClassName={props.headerCellClassName}
           />
         </thead>
       )}

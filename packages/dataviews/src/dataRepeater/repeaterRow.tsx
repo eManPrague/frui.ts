@@ -31,7 +31,11 @@ function repeaterRow<TItem, TContext, TWrapper extends React.ElementType, TItemC
           return column.cellFormatter({ key, value, item, column, context });
         } else {
           return (
-            <Item key={key} {...itemCellProps}>
+            <Item
+              key={key}
+              className={column.cellClassName}
+              {...itemCellProps}
+              {...column.cellProps?.({ value, item, column, context })}>
               {column.valueFormatter ? column.valueFormatter({ value, item, column, context }) : value}
             </Item>
           );

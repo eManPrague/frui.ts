@@ -40,7 +40,7 @@ export default class Router {
     }
   }
 
-  getPath(routeName: RouteName, params?: any) {
+  private getPath(routeName: RouteName, params?: any) {
     const route = this.routes.get(routeName);
     if (route) {
       const path = route.reverse(params);

@@ -2,6 +2,7 @@
 
 - Added `ManualPromise`, `groupBy()` to @frui.ts/helpers.
 - Added `hideValidationErrors()` to @frui.ts/validation.
+- Added `ResponsiveTable` and `DataList` controls to @frui.ts/dataviews.
 - OpenAPI generator refactored. Supports `allOf` and `oneOf` features.
 - OpenAPI generator supports Date conversion with date-fns. Use `dates: "date-fns"` in the config file.
 

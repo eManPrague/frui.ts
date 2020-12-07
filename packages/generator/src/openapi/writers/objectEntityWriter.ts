@@ -196,7 +196,7 @@ export default class ObjectEntityWriter {
 
     if (type === "Date") {
       if (this.config.dates === "date-fns") {
-        writer.writeLine(`@Transform(value => value ? new Date(value) : undefined, { toClassOnly: true })`);
+        writer.writeLine(`@Transform(value => (value ? new Date(value) : undefined), { toClassOnly: true })`);
 
         const format = property.restrictions?.get(Restriction.format);
         if (format === "date") {
