@@ -19,12 +19,12 @@
     "inversify": "^5.0.1",
     "mobx": "4",
     "mobx-react-lite": "^1.5.2",
-    "node-sass": "^4.13.1",
     "react": "^16.13.0",
     "react-bootstrap": "^1.0.1",
     "react-dom": "^16.13.0",
     "react-scripts": "3.4.0",
     "reflect-metadata": "^0.1.13",
+    "sass": "^1.30.0",
     "typescript": "~3.7.2"
   },
   "devDependencies": {

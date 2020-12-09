@@ -2,7 +2,7 @@
 
 Let's add some styling to our app.
 
-    yarn add node-sass bootstrap
+    yarn add sass bootstrap
 
 `assets/themes/deafult.theme.scss`
 

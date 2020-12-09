@@ -1,5 +1,5 @@
 /* eslint-disable @typescript-eslint/tslint/config */
-import { autorun } from "mobx";
+import { autorun, get } from "mobx";
 import { attachManualValidator, getValidationMessage, validate } from "../src/helpers";
 import ManualEntityValidator, { addError, removeError } from "../src/manualEntityValidator";
 
@@ -37,6 +37,29 @@ describe("ManualEntityValidator", () => {
     validator.clearErrors();
     expect(validator.errors.firstName).toBeUndefined();
     expect(validator.isValid).toBeTruthy();
+  });
+
+  test("Reaction works without validator initialization", () => {
+    const validator = new ManualEntityValidator<ITarget>(false);
+
+    let lastError = "Unknown" as string | undefined;
+
+    const dispose = autorun(() => (lastError = get(validator.errors, "firstName")));
+    expect(lastError).toBeUndefined();
+
+    validator.addError("firstName", "one");
+    expect(lastError).toBe("one");
+
+    validator.addError("firstName", "two");
+    expect(lastError).toBe("two");
+
+    validator.removeError("firstName");
+    expect(lastError).toBeUndefined();
+
+    validator.addError("firstName", "three");
+    expect(lastError).toBe("three");
+
+    dispose();
   });
 
   test("Github Issue #11", () => {
