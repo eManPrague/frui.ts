@@ -14,7 +14,7 @@
 - `FilteredListViewModel` in @frui.ts/datascreens has new extension/customization points: `cloneFilterForApply()` and `createFilter()`.
 
 - BREAKING: Props of `<View />` changed: `fallbackMode: "message" | "children"`. In case `"children"` is set, the children props of the `<View />` component is rendered when no view is found. You can use `"children"` instead of the original `"empty"`.
-- BREAKING: `getValue` and `setValue` hooks accept `target` and `property` arguments instead of single `props`.
+- BREAKING: `getValue` and `setValue` hooks accept `target` and `property` arguments instead of a single `props`.
 - Binding types changed. You can use the third type parameter of `IBindingProps<TTarget, TProperty, TValue>` to restrict the binding target value type.
 
 - `IApiConnector` and `FetchApiConnector` changes:

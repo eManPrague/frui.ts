@@ -2,6 +2,11 @@
 # yarn lockfile v1
 
 
+"@frui.ts/helpers@^999.0.0":
+  version "0.16.0"
+  resolved "https://registry.yarnpkg.com/@frui.ts/helpers/-/helpers-0.16.0.tgz#61ccfd368ee3563a2dda7dad1807534b4addbe8c"
+  integrity sha512-xNqIWOiSg58YGYcGqPWoNkGwL22qO9qBAL8QYp+v+EREPXoKE2YaDctBy+AqRwqsOXZXuU49Xet0Xs+f3gLDgg==
+
 decode-uri-component@^0.2.0:
   version "0.2.0"
   resolved "https://registry.yarnpkg.com/decode-uri-component/-/decode-uri-component-0.2.0.tgz#eb3913333458775cb84cd1a1fae062106bb87545"

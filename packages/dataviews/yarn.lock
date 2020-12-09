@@ -2,11 +2,6 @@
 # yarn lockfile v1
 
 
-"@frui.ts/data@^0.14.0-beta.2":
-  version "0.14.0-beta.2"
-  resolved "https://registry.yarnpkg.com/@frui.ts/data/-/data-0.14.0-beta.2.tgz#d133b6357724ce93b75a601aeab15a6db50e60db"
-  integrity sha512-O/S8TIwiE+6NDDkLxkRZSLnDSWezBn4O2zTP8ja0bV2Z1AD1asmVVI8Ym5NsJU81Gi4xW8TjK67z/oUYJIKb/w==
-
 "@types/color-name@^1.1.1":
   version "1.1.1"
   resolved "https://registry.yarnpkg.com/@types/color-name/-/color-name-1.1.1.tgz#1c1261bbeaa10a8055bbc5d8ab84b7b2afc846a0"

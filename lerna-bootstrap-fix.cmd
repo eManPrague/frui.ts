@@ -12,6 +12,5 @@ call yarn lerna bootstrap --scope=@frui.ts/screens --force-local
 call yarn lerna bootstrap --scope=@frui.ts/validation --force-local
 call yarn lerna bootstrap --scope=@frui.ts/views --force-local
 call yarn lerna bootstrap --scope=@frui.ts/example-complexdemo --force-local
-call yarn lerna bootstrap --scope=@frui.ts/examples-redminedemo --force-local
 call yarn lerna bootstrap --scope=@frui.ts/examples-simpletodolist --force-local
 call yarn lerna bootstrap --scope=@frui.ts/stories --force-local
