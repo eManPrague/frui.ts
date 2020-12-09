@@ -4,7 +4,8 @@ import ConductorBase from "./conductorBase";
 import { canDeactivate } from "./helpers";
 import { IChild, IHasActiveChild, IScreen } from "./types";
 
-export default abstract class ConductorBaseWithActiveChild<TChild extends IScreen & IChild> extends ConductorBase<TChild>
+export default abstract class ConductorBaseWithActiveChild<TChild extends IScreen & IChild>
+  extends ConductorBase<TChild>
   implements IHasActiveChild<TChild> {
   @observable private activeChildValue?: TChild;
   @computed get activeChild() {

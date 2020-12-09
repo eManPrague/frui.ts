@@ -1,5 +1,5 @@
 import { PropertyName } from "@frui.ts/helpers";
-import { action, computed, get, keys, observable, remove, set, values } from "mobx";
+import { action, computed, keys, observable, remove, set, values } from "mobx";
 import { DirtyPropertiesList, IHasManualDirtyWatcher, IManualDirtyWatcher } from "./types";
 
 /** Dirty watcher implementation acting as a simple dirty flags list that needs to be manually maintained */

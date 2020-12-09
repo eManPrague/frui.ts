@@ -5,7 +5,8 @@ import { canDeactivate } from "./helpers";
 import ScreenBase from "./screenBase";
 import { IChild, IConductor, IScreen } from "./types";
 
-export default abstract class ConductorBase<TChild extends IScreen & IChild> extends ScreenBase
+export default abstract class ConductorBase<TChild extends IScreen & IChild>
+  extends ScreenBase
   implements IConductor<TChild>, ICanNavigate, INavigationParent<TChild> {
   abstract tryActivateChild(child: TChild): Promise<boolean> | boolean;
   protected abstract deactivateChild(child: TChild, isClosing: boolean): Promise<any>;

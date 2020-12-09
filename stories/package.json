@@ -22,15 +22,13 @@
     "start": "start-storybook -p 9001 -c .storybook"
   },
   "devDependencies": {
-    "@storybook/addon-actions": "^5.3.19",
-    "@storybook/addon-console": "^1.2.1",
-    "@storybook/addon-info": "^5.3.19",
-    "@storybook/addon-storysource": "^5.3.19",
-    "@storybook/preset-typescript": "^3.0.0",
-    "@storybook/react": "^5.3.19",
-    "babel-loader": "^8.0.6",
-    "react-docgen-typescript-loader": "^3.6.0",
-    "ts-loader": "^6.2.1"
+    "@babel/core": "^7.12.9",
+    "@storybook/addon-actions": "^6.2.0-alpha.5",
+    "@storybook/addon-essentials": "^6.2.0-alpha.5",
+    "@storybook/addon-links": "^6.2.0-alpha.5",
+    "@storybook/react": "^6.2.0-alpha.5",
+    "babel-loader": "^8.2.2",
+    "typescript": "^3.7.5"
   },
   "dependencies": {
     "@frui.ts/bootstrap": "^999.0.0",
@@ -43,8 +41,8 @@
     "bootstrap": "^4.5.0",
     "mobx": "^4.15.4",
     "mobx-react-lite": "^1.5.2",
-    "react": "^16.13.0",
+    "react": "^17.0.1",
     "react-bootstrap": "^1.0.1",
-    "react-dom": "^16.13.0"
+    "react-dom": "^17.0.1"
   }
 }

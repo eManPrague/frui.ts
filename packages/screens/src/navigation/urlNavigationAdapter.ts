@@ -1,6 +1,5 @@
 import { bound } from "@frui.ts/helpers";
-import { has } from "mobx";
-import { parseUrl, ParseOptions } from "query-string";
+import { ParseOptions, parseUrl } from "query-string";
 import { IScreen, ScreenBase } from "..";
 import NavigationConfiguration from "./navigationConfiguration";
 import { appendQueryString } from "./navigationPath";
