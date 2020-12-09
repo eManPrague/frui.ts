@@ -42,7 +42,7 @@
     "@frui.ts/validation": "^999.0.0",
     "@frui.ts/views": "^999.0.0",
     "bootstrap": "^4.5.0",
-    "mobx-react-lite": "^1.5.2",
+    "mobx-react-lite": "^2.2.2",
     "react-bootstrap": "^1.0.1"
   },
   "peerDependencies": {

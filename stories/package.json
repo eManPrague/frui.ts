@@ -28,7 +28,7 @@
     "@storybook/addon-links": "^6.2.0-alpha.5",
     "@storybook/react": "^6.2.0-alpha.5",
     "babel-loader": "^8.2.2",
-    "typescript": "^3.7.5"
+    "typescript": "^4.1.2"
   },
   "dependencies": {
     "@frui.ts/bootstrap": "^999.0.0",
@@ -40,7 +40,7 @@
     "@frui.ts/views": "^999.0.0",
     "bootstrap": "^4.5.0",
     "mobx": "^4.15.4",
-    "mobx-react-lite": "^1.5.2",
+    "mobx-react-lite": "^2.2.2",
     "react": "^17.0.1",
     "react-bootstrap": "^1.0.1",
     "react-dom": "^17.0.1"

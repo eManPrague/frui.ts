@@ -22,7 +22,7 @@
     "@frui.ts/screens": "^999.0.0",
     "@frui.ts/views": "^999.0.0",
     "mobx": "^4.15.4",
-    "mobx-react-lite": "^1.5.2",
+    "mobx-react-lite": "^2.2.2",
     "react": "^16.13.0",
     "react-dom": "^16.13.0",
     "todomvc-app-css": "^2.3.0",

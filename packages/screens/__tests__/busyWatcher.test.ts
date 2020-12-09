@@ -1,4 +1,5 @@
 import BusyWatcher from "../src/structure/busyWatcher";
+import { ManualPromise } from "@frui.ts/helpers";
 
 describe("BusyWatcher", () => {
   test("new busyWatcher is not busy", () => {
@@ -53,17 +54,13 @@ describe("BusyWatcher", () => {
     it("clears busy when promise resolved", async () => {
       const watcher = new BusyWatcher();
 
-      // eslint-disable-next-line @typescript-eslint/no-empty-function
-      let handler = () => {};
-      const promise = new Promise((resolve, reject) => {
-        handler = resolve;
-      });
-      watcher.watch(promise);
+      const promise = new ManualPromise<any>();
+      watcher.watch(promise.promise);
 
       expect(watcher.isBusy).toBeTruthy();
 
-      handler();
-      await promise;
+      promise.resolve(undefined);
+      await promise.promise;
       expect(watcher.isBusy).toBeFalsy();
     });
 

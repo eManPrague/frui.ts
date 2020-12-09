@@ -1,6 +1,6 @@
 export default class ManualPromise<T = any> {
   promise: Promise<T>;
-  resolve: (result?: T | PromiseLike<T>) => void;
+  resolve: (result: T | PromiseLike<T>) => void;
   reject: (reason: any) => void;
 
   constructor() {

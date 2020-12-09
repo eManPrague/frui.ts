@@ -1,6 +1,5 @@
+import { ManualPromise } from "@frui.ts/helpers";
 import ScreenBase from "../../src/structure/screenBase";
-
-type func = () => void;
 
 export default class TestScreen extends ScreenBase {
   activated = 0;
@@ -10,16 +9,14 @@ export default class TestScreen extends ScreenBase {
   stopOnActivate = false;
   stopOnDeactivate = false;
 
-  private activateResolves: func[] = [];
-  private deactivateResolves: func[] = [];
+  private _activatePromise = new ManualPromise<any>();
+  private _deactivatePromise = new ManualPromise<any>();
 
   onActivate() {
     this.activated++;
 
     if (this.stopOnActivate) {
-      return new Promise(resolve => {
-        this.activateResolves.push(resolve);
-      });
+      return this._activatePromise.promise;
     } else {
       return undefined;
     }
@@ -31,25 +28,19 @@ export default class TestScreen extends ScreenBase {
     this.deactivated++;
 
     if (this.stopOnDeactivate) {
-      return new Promise(resolve => {
-        this.deactivateResolves.push(resolve);
-      });
+      return this._deactivatePromise.promise;
     } else {
       return undefined;
     }
   }
 
   finishActivate() {
-    const toCall = this.activateResolves;
-    this.activateResolves = [];
-
-    toCall.forEach(x => x());
+    this._activatePromise.resolve(undefined);
+    this._activatePromise = new ManualPromise<any>();
   }
 
   finishDeactivate() {
-    const toCall = this.deactivateResolves;
-    this.deactivateResolves = [];
-
-    toCall.forEach(x => x());
+    this._deactivatePromise.resolve(undefined);
+    this._deactivatePromise = new ManualPromise<any>();
   }
 }
