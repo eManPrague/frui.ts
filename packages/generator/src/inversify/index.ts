@@ -51,7 +51,9 @@ export default class IversifyGenerator extends GeneratorBase<IGeneratorParams, I
   }
 
   protected async getDefaultConfig() {
+    // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
     const config = await import("./defaultConfig.json");
+    // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access
     return config.default as IConfig;
   }
 

@@ -9,6 +9,7 @@ function createMap<TSource, TKey, TValue>(
   keySelector: (item: TSource) => TKey,
   valueSelector?: (item: TSource) => TValue
 ) {
+  // eslint-disable-next-line @typescript-eslint/no-unsafe-return
   const getValue = valueSelector ?? ((x: TSource) => x as any);
 
   const result = new Map<TKey, TValue>();

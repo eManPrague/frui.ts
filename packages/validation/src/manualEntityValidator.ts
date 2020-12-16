@@ -13,7 +13,7 @@ export default class ManualEntityValidator<TTarget> implements IManualEntityVali
 
   @action
   clearErrors() {
-    keys(this.errors).forEach(prop => remove(this.errors, prop));
+    keys(this.errors).forEach(prop => void remove(this.errors, prop));
   }
 
   @action

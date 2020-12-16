@@ -1,4 +1,5 @@
 import { extendObservable, isObservable, set } from "mobx";
+import { BindingTarget } from "./types";
 
 /**
  * Makes sure the target entity is a Mobx `observable` with observable property
@@ -8,7 +9,7 @@ import { extendObservable, isObservable, set } from "mobx";
  * @param value Value of the property to set
  */
 export function ensureObservableProperty<K, V>(target: Map<K, V>, property: K, value: V): void;
-export function ensureObservableProperty(target: {}, property: string, value: any): void;
+export function ensureObservableProperty(target: BindingTarget, property: string, value: any): void;
 export function ensureObservableProperty(target: any, property: any, value: any) {
   if (!isObservable(target)) {
     extendObservable(target, {});

@@ -3,7 +3,7 @@ import { storiesOf } from "@storybook/react";
 import { observable, configure } from "mobx";
 import { Observer } from "mobx-react-lite";
 import { Textbox } from "@frui.ts/htmlcontrols";
-import * as React from "react";
+import React from "react";
 
 configure({ enforceActions: "observed" });
 

@@ -1,4 +1,3 @@
-/* eslint-disable @typescript-eslint/tslint/config */
 import { mock } from "jest-mock-extended";
 import { appendUrl, IApiConnector, RestRequestBuilder } from "../src";
 
@@ -38,7 +37,7 @@ describe("RestRequestBuilder", () => {
     const connector = mock<IApiConnector>();
     const builder = new RestRequestBuilder(connector, "www.base.url", {});
 
-    builder.one("users", 123).all("invoices").getRaw();
+    void builder.one("users", 123).all("invoices").getRaw();
     expect(connector.get).toHaveBeenCalledWith("www.base.url/users/123/invoices", {});
   });
 
@@ -47,11 +46,11 @@ describe("RestRequestBuilder", () => {
       const connector = mock<IApiConnector>();
       const builder = new RestRequestBuilder(connector, "www.base.url", {});
 
-      builder.one("users", 123).all("invoices").getRaw();
+      void builder.one("users", 123).all("invoices").getRaw();
 
       builder.reset();
 
-      builder.one("customers", 567).getRaw();
+      void builder.one("customers", 567).getRaw();
 
       expect(connector.get).toHaveBeenLastCalledWith("www.base.url/customers/567", {});
     });

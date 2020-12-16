@@ -34,7 +34,7 @@ export function hasValidation<TTarget>(target: any): target is IHasValidation<TT
 
 export function getValidationMessage<TTarget>(target: TTarget, propertyName: PropertyName<TTarget>): string | undefined {
   if (hasValidation<TTarget>(target) && target.__validation.isErrorsVisible) {
-    return get(target.__validation.errors, propertyName);
+    return get(target.__validation.errors, propertyName) as string | undefined;
   }
   return undefined;
 }
@@ -75,5 +75,5 @@ export function validate(target: any) {
 }
 
 export function validateAll(items: any[]) {
-  return items.reduce((acc, item) => validate(item) && acc, true);
+  return items.reduce((acc: boolean, item) => validate(item) && acc, true);
 }

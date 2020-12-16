@@ -1,5 +1,5 @@
 import { observer } from "mobx-react-lite";
-import * as React from "react";
+import React from "react";
 import { PropsWithColumns } from "../dataTypes";
 
 export interface DataRowProps<TItem, TContext, TWrapper extends React.ElementType, TItemCell extends React.ElementType>

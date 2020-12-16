@@ -1,4 +1,3 @@
-/* eslint-disable @typescript-eslint/tslint/config */
 import { autorun, get } from "mobx";
 import { attachManualValidator, getValidationMessage, validate } from "../src/helpers";
 import ManualEntityValidator, { addError, removeError } from "../src/manualEntityValidator";

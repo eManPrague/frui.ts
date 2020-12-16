@@ -19,7 +19,7 @@ export default class TypeReference {
 
   getTypeDeclaration() {
     const name = this.getTypeName();
-    if (this.type instanceof AliasEntity && this.type.isArray) {
+    if (name && this.type instanceof AliasEntity && this.type.isArray) {
       return `${name}[]`;
     }
 

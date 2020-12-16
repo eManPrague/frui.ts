@@ -1,10 +1,9 @@
-/* eslint-disable @typescript-eslint/tslint/config */
 import { observable } from "mobx";
 import AutomaticEntityValidator, { createPropertyValidatorFromRules } from "../src/automaticEntityValidator";
 import validatorsRepository from "../src/validatorsRepository";
 
 beforeAll(() => {
-  validatorsRepository.set("required", value => (!!value ? undefined : "Value is required"));
+  validatorsRepository.set("required", value => (value ? undefined : "Value is required"));
   validatorsRepository.set("mustBeJohn", (value, propertyName) =>
     value === "John" ? undefined : `${propertyName} must be John`
   );

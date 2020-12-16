@@ -13,7 +13,7 @@ export default class ManualDirtyWatcher<TTarget> implements IManualDirtyWatcher<
 
   @action
   reset() {
-    keys(this.dirtyProperties).forEach(prop => remove(this.dirtyProperties, prop));
+    keys(this.dirtyProperties).forEach(prop => void remove(this.dirtyProperties, prop));
   }
 
   @action

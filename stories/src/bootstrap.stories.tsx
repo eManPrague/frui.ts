@@ -5,7 +5,7 @@ import { attachAutomaticValidator, IEntityValidationRules, validatorsRepository 
 import { storiesOf } from "@storybook/react";
 import { action, observable } from "mobx";
 import { Observer } from "mobx-react-lite";
-import * as React from "react";
+import React from "react";
 import { Button, Form, InputGroup } from "react-bootstrap";
 
 const items = [

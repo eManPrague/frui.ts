@@ -28,8 +28,8 @@ describe("Screen", () => {
 
       await screen.activate();
 
-      screen.deactivate(true);
-      screen.deactivate(true);
+      void screen.deactivate(true);
+      void screen.deactivate(true);
 
       screen.finishDeactivate();
 

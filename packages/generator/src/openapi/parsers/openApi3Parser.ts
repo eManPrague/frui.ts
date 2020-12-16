@@ -29,19 +29,19 @@ export default class OpenApi3Parser {
     }
 
     switch (definition.type) {
-      case "array":
+      case "array": {
         const itemName = `${name}Item`;
         const innerType = this.parseSchemaObject(itemName, definition.items);
 
         const arrayName = `${name}Array`;
         const aliasType = new AliasEntity(arrayName, innerType, true);
         return this.setTypeReference(arrayName, aliasType);
+      }
 
       case "object":
         return this.parseObject(name, definition);
 
       case "string":
-        // eslint-disable-next-line @typescript-eslint/tslint/config
         switch (definition.format) {
           case "binary":
             return this.setTypeReference("Blob", "Blob");
@@ -127,7 +127,7 @@ export default class OpenApi3Parser {
 
     if (isV3SchemaObject(definition)) {
       property.description = definition.description;
-      property.example = definition.example;
+      property.example = definition.example as unknown;
 
       // TODO add more validation restrictions here
       if (definition.maxLength) {

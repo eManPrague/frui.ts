@@ -1,5 +1,5 @@
-import { bound } from "@frui.ts/helpers";
-import * as React from "react";
+import { BindingTarget, bound } from "@frui.ts/helpers";
+import React from "react";
 import { Form, FormControlProps } from "react-bootstrap";
 import { ValidationControlBase } from "./validationControlBase";
 
@@ -20,10 +20,10 @@ export function formatValueForControl(value: any) {
     return value.toISOString().substring(0, 10);
   }
 
-  return value;
+  return value as string;
 }
 
-export class Input<TTarget, TOtherProps = unknown> extends ValidationControlBase<
+export class Input<TTarget extends BindingTarget, TOtherProps = unknown> extends ValidationControlBase<
   TTarget,
   InputProps & FormControlProps & TOtherProps
 > {

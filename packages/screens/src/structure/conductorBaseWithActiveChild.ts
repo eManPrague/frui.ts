@@ -36,7 +36,7 @@ export default abstract class ConductorBaseWithActiveChild<TChild extends IScree
     return await this.changeActiveChild(child, false);
   }
 
-  protected async changeActiveChild(newChild: TChild | undefined, closePrevious: boolean): Promise<any> {
+  protected async changeActiveChild(newChild: TChild | undefined, closePrevious: boolean): Promise<boolean> {
     const currentChild = this.activeChild;
     if (currentChild) {
       await currentChild.deactivate(closePrevious);

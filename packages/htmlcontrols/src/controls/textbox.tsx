@@ -1,12 +1,18 @@
-import { BindingProperty } from "@frui.ts/helpers";
+import { BindingProperty, BindingTarget } from "@frui.ts/helpers";
 import { IBindingProps, useBinding } from "@frui.ts/views";
 import { observer } from "mobx-react-lite";
 import React from "react";
 
-type TextboxProps<TTarget, TProperty extends BindingProperty<TTarget>> = IBindingProps<TTarget, TProperty, string> &
+type TextboxProps<TTarget extends BindingTarget, TProperty extends BindingProperty<TTarget>> = IBindingProps<
+  TTarget,
+  TProperty,
+  string
+> &
   React.InputHTMLAttributes<HTMLInputElement>;
 
-function textbox<TTarget, TProperty extends BindingProperty<TTarget>>(props: TextboxProps<TTarget, TProperty>) {
+function textbox<TTarget extends BindingTarget, TProperty extends BindingProperty<TTarget>>(
+  props: TextboxProps<TTarget, TProperty>
+) {
   const [value, setValue] = useBinding(props);
   const handleValueChanged = (e: React.ChangeEvent<HTMLInputElement>) => setValue(e.target.value);
 

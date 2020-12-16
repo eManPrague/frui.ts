@@ -1,6 +1,6 @@
 import { registerView, ViewComponent } from "@frui.ts/views";
 import { observer } from "mobx-react-lite";
-import * as React from "react";
+import React from "react";
 import DemoViewModel from "../../viewModels/demo/demoViewModel";
 
 const ModuleView: ViewComponent<DemoViewModel> = observer(({ vm }) => {

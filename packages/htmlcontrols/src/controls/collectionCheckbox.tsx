@@ -1,4 +1,4 @@
-import { BindingProperty, isSet } from "@frui.ts/helpers";
+import { BindingProperty, BindingTarget, isSet } from "@frui.ts/helpers";
 import { getValue, IBindingProps, omitBindingProps } from "@frui.ts/views";
 import { action } from "mobx";
 import { observer } from "mobx-react-lite";
@@ -10,15 +10,15 @@ type SetOrArrayInnerType<TTarget, TProperty extends keyof TTarget> = TTarget[TPr
   ? TArrayValue
   : never;
 
-export interface CollectionCheckboxProps<TTarget, TProperty extends BindingProperty<TTarget>>
+export interface CollectionCheckboxProps<TTarget extends BindingTarget, TProperty extends BindingProperty<TTarget>>
   extends IBindingProps<TTarget, TProperty> {
   value: TProperty extends keyof TTarget ? SetOrArrayInnerType<TTarget, TProperty> : any;
 }
 
-function useCollection<TTarget, TProperty extends BindingProperty<TTarget>>(
+function useCollection<TTarget extends BindingTarget, TProperty extends BindingProperty<TTarget>>(
   props: CollectionCheckboxProps<TTarget, TProperty>
 ): [boolean, () => void] {
-  const collection = getValue(props.target, props.property);
+  const collection = getValue(props.target, props.property) as unknown;
 
   if (!collection) {
     throw new Error("The target value must be an array or a Set");
@@ -45,7 +45,7 @@ function useCollection<TTarget, TProperty extends BindingProperty<TTarget>>(
   }
 }
 
-function collectionCheckbox<TTarget, TProperty extends BindingProperty<TTarget>>(
+function collectionCheckbox<TTarget extends BindingTarget, TProperty extends BindingProperty<TTarget>>(
   props: CollectionCheckboxProps<TTarget, TProperty>
 ) {
   const [checked, toggle] = useCollection(props);

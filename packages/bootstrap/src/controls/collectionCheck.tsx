@@ -1,6 +1,6 @@
-import { BindingProperty, isSet } from "@frui.ts/helpers";
+import { BindingProperty, BindingTarget, isSet } from "@frui.ts/helpers";
 import { getValue, IBindingProps, omitBindingProps } from "@frui.ts/views";
-import { action } from "mobx";
+import { action, isArrayLike } from "mobx";
 import { observer } from "mobx-react-lite";
 import React from "react";
 import { Form, FormCheckProps } from "react-bootstrap";
@@ -12,17 +12,17 @@ type SetOrArrayInnerType<TTarget, TProperty extends keyof TTarget> = TTarget[TPr
   ? TArrayValue
   : never;
 
-export interface CollectionCheckProps<TTarget, TProperty extends BindingProperty<TTarget>>
+export interface CollectionCheckProps<TTarget extends BindingTarget, TProperty extends BindingProperty<TTarget>>
   extends FormCheckProps,
     CommonInputProps,
     IBindingProps<TTarget, TProperty> {
   value: TProperty extends keyof TTarget ? SetOrArrayInnerType<TTarget, TProperty> : any;
 }
 
-function useCollection<TTarget, TProperty extends BindingProperty<TTarget>>(
+function useCollection<TTarget extends BindingTarget, TProperty extends BindingProperty<TTarget>>(
   props: CollectionCheckProps<TTarget, TProperty>
 ): [boolean, () => void] {
-  const collection = getValue(props.target, props.property);
+  const collection = getValue(props.target, props.property) as unknown;
 
   if (!collection) {
     throw new Error("The target value must be an array or a Set");
@@ -34,25 +34,29 @@ function useCollection<TTarget, TProperty extends BindingProperty<TTarget>>(
     const checked = collection.has(key);
     const toggle = () => (collection.has(key) ? collection.delete(key) : collection.add(key));
     return [checked, action(toggle)];
-  } else {
-    const array = collection as typeof key[];
-    const checked = array.includes(key);
+  } else if (isArrayLike(collection)) {
+    const checked = collection.includes(key);
     const toggle = () => {
-      const index = array.indexOf(key);
+      const index = collection.indexOf(key);
       if (index >= 0) {
-        array.splice(index, 1);
+        collection.splice(index, 1);
       } else {
-        array.push(key);
+        collection.push(key);
       }
     };
     return [checked, action(toggle)];
+  } else {
+    throw new Error("Target value must be either a Set or an Array");
   }
 }
 
-function collectionCheck<TTarget, TProperty extends BindingProperty<TTarget>>(props: CollectionCheckProps<TTarget, TProperty>) {
+function collectionCheck<TTarget extends BindingTarget, TProperty extends BindingProperty<TTarget>>(
+  props: CollectionCheckProps<TTarget, TProperty>
+) {
   const [checked, toggle] = useCollection(props);
 
   const { value, ...otherProps } = omitBindingProps(props);
+  // eslint-disable-next-line @typescript-eslint/restrict-template-expressions
   const id = `${value}`;
 
   return <Form.Check id={id} {...otherProps} checked={checked} onChange={toggle} />;

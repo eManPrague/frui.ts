@@ -1,6 +1,6 @@
 import { View } from "@frui.ts/views";
 import { storiesOf } from "@storybook/react";
-import * as React from "react";
+import React from "react";
 import AllChildrenActiveViewModel from "./viewModels/allChildrenActiveViewModel";
 import OneChildActiveViewModel from "./viewModels/oneChildActiveViewModel";
 import SingleChildViewModel from "./viewModels/singleChildViewModel";

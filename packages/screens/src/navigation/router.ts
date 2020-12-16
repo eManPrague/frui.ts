@@ -57,10 +57,10 @@ export default class Router {
 
   getUrl(routeName: RouteName, routeParams?: any, queryParams?: any) {
     const path = this.getPath(routeName, routeParams);
-    return appendQueryString(NavigationConfiguration.hashPrefix + path, queryParams);
+    return appendQueryString(NavigationConfiguration.hashPrefix + (path ?? ""), queryParams);
   }
 
-  navigate(routeName: RouteName, routeParams?: any, queryParams?: any) {
+  navigate(routeName: RouteName, routeParams?: Record<string, any>, queryParams?: Record<string, any>) {
     const path = this.getPath(routeName, routeParams);
     if (path !== undefined) {
       return this.navigationRoot.navigate(path, queryParams);
@@ -78,7 +78,7 @@ export default class Router {
     this.routes.forEach((route, name) =>
       result.push({
         name,
-        path: (route as any).spec,
+        path: ((route as unknown) as { spec: string }).spec,
       })
     );
     return result;
@@ -94,7 +94,7 @@ export default class Router {
     return undefined;
   }
 
-  // eslint-disable-next-line @typescript-eslint/tslint/config
+  // eslint-disable-next-line sonarjs/cognitive-complexity
   private buildRoutes(key: Class, parentRoute?: string) {
     const definitions = routeDefinitions.get(key);
     if (definitions) {
@@ -135,14 +135,14 @@ export default class Router {
     return (child: TChild | string | number, childParams?: any) => {
       const navigationName = (child as TChild).navigationName || (child as string);
       const path = combinePath(currentPath, navigationName, childParams);
-      const url = path.path ? appendQueryString(path.path, childParams ? path.params : defaultParams || path.params) : undefined;
+      const url = path.path ? appendQueryString(path.path, childParams ? path.params : defaultParams || path.params) : "";
       return NavigationConfiguration.hashPrefix + url;
     };
   }
 
   static getScreenUrl(screen: ICanNavigate, query?: any) {
     const screenPath = screen.getNavigationPath();
-    const url = screenPath.path ? appendQueryString(screenPath.path, query ?? screenPath.params) : undefined;
+    const url = screenPath.path ? appendQueryString(screenPath.path, query ?? screenPath.params) : "";
     return NavigationConfiguration.hashPrefix + url;
   }
 }

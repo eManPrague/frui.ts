@@ -26,6 +26,7 @@ export async function handleErrorStatusMiddleware(response: Response) {
 
   let content: any;
   try {
+    // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
     content = await response.json();
   } catch {
     throw new FetchError(response);

@@ -23,7 +23,7 @@ export function getImportDeclaration(
     const declaration = { defaultImport: identifier, moduleSpecifier: path };
     return { identifier, declaration };
   } else {
-    const identifier = camelCase(path) + type.getName();
+    const identifier = camelCase(path) + (type.getName() ?? "");
     const declaration = { namedImports: [{ name: type.getNameOrThrow(), alias: identifier }], moduleSpecifier: path };
     return { identifier, declaration };
   }

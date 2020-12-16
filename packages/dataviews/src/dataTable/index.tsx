@@ -1,5 +1,5 @@
 import { observer } from "mobx-react-lite";
-import * as React from "react";
+import React from "react";
 import { DataTablePropsBase } from "../dataTypes";
 import TableHeader from "./tableHeader";
 import TableRow, { TableRowProps } from "./tableRow";

@@ -4,7 +4,7 @@ import { FilteredListViewModel } from ".";
 
 export default abstract class ContinuousListViewModel<
   TEntity,
-  TFilter extends {} = {},
+  TFilter extends Record<string, any> = Record<string, any>,
   TDetail extends ScreenBase = ScreenBase
 > extends FilteredListViewModel<TEntity, TFilter, TDetail> {
   get canLoadData() {

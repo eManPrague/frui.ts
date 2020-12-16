@@ -7,7 +7,7 @@ export default class AuthorizationService {
 
   async tryPersistedLogin() {
     // TODO try to refresh the persisted login credentials and return whether the user is logged in
-    return false;
+    await Promise.resolve(false);
   }
 
   async login(userName: string, password: string, persistLogin: boolean) {

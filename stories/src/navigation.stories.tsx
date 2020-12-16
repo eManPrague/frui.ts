@@ -1,7 +1,7 @@
 import { View } from "@frui.ts/views";
 import { storiesOf } from "@storybook/react";
 import { Observer } from "mobx-react-lite";
-import * as React from "react";
+import React from "react";
 import RootViewModel from "./viewModels/rootViewModel";
 import "./views/childView";
 

@@ -84,14 +84,14 @@ export default class ConductorAllChildrenActive<TChild extends IScreen & IChild>
         for (const newItem of change.added) {
           super.connectChild(newItem);
           if (this.isActive && isActivatable(newItem)) {
-            newItem.activate();
+            void newItem.activate();
           }
         }
         break;
       case "update":
         super.connectChild(change.newValue);
         if (this.isActive && isActivatable(change.newValue)) {
-          change.newValue.activate();
+          void change.newValue.activate();
         }
         break;
     }

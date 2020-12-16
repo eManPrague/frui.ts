@@ -3,7 +3,7 @@ import { attachAutomaticDirtyWatcher } from "@frui.ts/dirtycheck";
 import { validatorsRepository } from "@frui.ts/validation";
 import { storiesOf } from "@storybook/react";
 import { observable } from "mobx";
-import * as React from "react";
+import React from "react";
 import { fieldForType } from "./controls/formField";
 import { Textbox } from "@frui.ts/htmlcontrols";
 

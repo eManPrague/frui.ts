@@ -7,8 +7,6 @@ export interface BaseParams {
   config: string;
 }
 
-type MapForEachCallback<K, V> = (value: V, key: K, map: ReadonlyMap<K, V>) => void;
-
 export default abstract class GeneratorBase<TParams extends BaseParams, TConfig> {
   protected project: Project;
   protected config: Partial<TConfig>;
@@ -26,6 +24,7 @@ export default abstract class GeneratorBase<TParams extends BaseParams, TConfig>
 
     if (this.params.config) {
       const configPath = path.join(process.cwd(), this.params.config);
+      // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
       this.config = await import(configPath);
     } else {
       this.config = await this.getDefaultConfig();

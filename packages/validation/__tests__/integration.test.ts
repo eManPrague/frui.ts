@@ -12,6 +12,7 @@ beforeAll(() => {
     !params || value ? undefined : `${propertyName} is required`
   );
   validatorsRepository.set("equals", (value, propertyName, entity, params) =>
+    // eslint-disable-next-line @typescript-eslint/restrict-template-expressions
     value === params.expectedValue ? undefined : `${propertyName} should be '${params.expectedValue}'`
   );
 });

@@ -1,4 +1,4 @@
-import { BindingProperty } from "@frui.ts/helpers";
+import { BindingProperty, BindingTarget } from "@frui.ts/helpers";
 import { IBindingProps, useBinding } from "@frui.ts/views";
 import { observer } from "mobx-react-lite";
 import React from "react";
@@ -17,7 +17,7 @@ interface DropdownBaseProps {
   renderOnMount?: boolean;
 }
 
-export interface DropdownSelectProps<TTarget, TProperty extends BindingProperty<TTarget>, TItem>
+export interface DropdownSelectProps<TTarget extends BindingTarget, TProperty extends BindingProperty<TTarget>, TItem>
   extends DropdownBaseProps,
     IBindingProps<TTarget, TProperty> {
   items: TItem[];
@@ -28,24 +28,26 @@ export interface DropdownSelectProps<TTarget, TProperty extends BindingProperty<
 }
 
 function propertyValue(target: any, key: any) {
-  return key ? target[key] : target;
+  // eslint-disable-next-line @typescript-eslint/no-unsafe-return, @typescript-eslint/no-unsafe-member-access
+  return target && key ? target[key] : target;
 }
 
-function DropdownSelectImpl<TTarget, TProperty extends BindingProperty<TTarget>, TItem>(
+function DropdownSelectImpl<TTarget extends BindingTarget, TProperty extends BindingProperty<TTarget>, TItem>(
   props: DropdownSelectProps<TTarget, TProperty, TItem>
 ) {
   const { mode, items, keyProperty, textProperty, onChanged } = props;
+  // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
   const [value, setValue] = useBinding(props);
 
   const selectedItem = mode === "item" ? (value as TItem) : items.find(x => propertyValue(x, keyProperty) === value);
-  const title = propertyValue(selectedItem, textProperty);
+  const title = propertyValue(selectedItem, textProperty) as string;
 
   const onClickHandler = (item: TItem) => () => {
     setValue(mode === "item" ? item : propertyValue(item, keyProperty));
     onChanged?.(item);
   };
   const children = items.map(x => (
-    <DropdownBootstrap.Item key={propertyValue(x, keyProperty)} onClick={onClickHandler(x)}>
+    <DropdownBootstrap.Item key={propertyValue(x, keyProperty) as string | number} onClick={onClickHandler(x)}>
       {propertyValue(x, textProperty)}
     </DropdownBootstrap.Item>
   ));

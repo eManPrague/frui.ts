@@ -30,22 +30,24 @@ export default class OpenApi2Parser {
     }
 
     switch (definition.type) {
-      case "array":
+      case "array": {
         if (isArray(definition.items)) {
           throw new Error("Multiple 'items' types in array are not supported yet.");
         }
+        if (!definition.items) {
+          throw new Error("'Array' definition is missing 'items' property.");
+        }
 
         const fallbackName = `${name}Item`;
-        // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
-        const innerType = this.parseSchemaObject(fallbackName, definition.items!);
+        const innerType = this.parseSchemaObject(fallbackName, definition.items);
         const aliasType = new AliasEntity(name, innerType, true);
         return this.setTypeReference(name, aliasType);
+      }
 
       case "object":
         return this.parseObject(name, definition);
 
       case "string":
-        // eslint-disable-next-line @typescript-eslint/tslint/config
         switch (definition.format) {
           case "binary":
             return this.setTypeReference("Blob", "Blob");
@@ -135,7 +137,7 @@ export default class OpenApi2Parser {
 
     if (isV2SchemaObject(definition)) {
       property.description = definition.description;
-      property.example = definition.example;
+      property.example = definition.example as unknown;
 
       // TODO add more validation restrictions here
       if (definition.maxLength) {

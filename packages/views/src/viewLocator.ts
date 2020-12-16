@@ -1,6 +1,6 @@
 import { ComponentType } from "react";
+import { constructor } from "./types";
 
-type constructor<T> = new (...args: any[]) => T;
 type viewComponent<TViewModel> = ComponentType<{ vm: TViewModel }>;
 
 const DEFAULT_CONTEXT = "default";
@@ -12,7 +12,7 @@ export function registerView<TViewModel>(
   view: viewComponent<TViewModel>,
   viewModelConstructor: constructor<TViewModel>,
   context = DEFAULT_CONTEXT
-) {
+): viewComponent<TViewModel> {
   const currentViewModelViews = viewsRegistry.get(viewModelConstructor);
   if (currentViewModelViews) {
     currentViewModelViews[context] = view;
@@ -23,7 +23,10 @@ export function registerView<TViewModel>(
 }
 
 // todo memoize
-export function getView(viewModelConstructor: constructor<unknown>, context = DEFAULT_CONTEXT) {
+export function getView<TViewModel = unknown>(
+  viewModelConstructor: constructor<TViewModel>,
+  context = DEFAULT_CONTEXT
+): viewComponent<TViewModel> {
   const currentViewModelViews = viewsRegistry.get(viewModelConstructor);
 
   if (!currentViewModelViews) {
@@ -38,7 +41,10 @@ export function getView(viewModelConstructor: constructor<unknown>, context = DE
   return view;
 }
 
-export function tryGetView(viewModelConstructor: constructor<unknown>, context = DEFAULT_CONTEXT) {
+export function tryGetView<TViewModel = unknown>(
+  viewModelConstructor: constructor<TViewModel>,
+  context = DEFAULT_CONTEXT
+): viewComponent<TViewModel> | null {
   const currentViewModelViews = viewsRegistry.get(viewModelConstructor);
 
   if (!currentViewModelViews) {

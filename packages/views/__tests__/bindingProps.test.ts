@@ -7,8 +7,9 @@ interface MyProps<TTarget, TProperty extends BindingProperty<TTarget>> extends I
 }
 
 function testComponent<TTarget, TProperty extends BindingProperty<TTarget>>(props: MyProps<TTarget, TProperty>) {
-  // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
-  props.onValueChanged?.([99], props.property!, props.target!);
+  if (props.property && props.target) {
+    props.onValueChanged?.([99], props.property, props.target);
+  }
 
   const value = getValue(props.target, props.property);
   setValue(props.target, props.property, [99]);

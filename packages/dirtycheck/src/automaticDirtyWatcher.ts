@@ -29,7 +29,7 @@ export default class AutomaticDirtyWatcher<TTarget extends Record<string, any>> 
     const target = this.target;
 
     for (const propertyName in target) {
-      if (target.hasOwnProperty(propertyName) && this.shouldWatchProperty(propertyName)) {
+      if (this.shouldWatchProperty(propertyName)) {
         const originalValue = target[propertyName];
 
         ensureObservableProperty(target, propertyName, originalValue);

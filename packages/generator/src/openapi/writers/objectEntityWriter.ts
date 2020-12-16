@@ -43,7 +43,10 @@ export default class ObjectEntityWriter {
 
   private createFile(fileName: string, definition: ObjectEntity, baseClass: ObjectEntity | undefined) {
     const decoratorImports = this.getPropertyDecoratorsImports(definition.properties);
-    const requiredImports = definition.properties.filter(x => needsImport(x.type)).map(x => x.type.getTypeName());
+    const requiredImports = definition.properties
+      .filter(x => needsImport(x.type))
+      .map(x => x.type.getTypeName())
+      .filter(x => x) as string[];
 
     if (baseClass) {
       requiredImports.push(baseClass.name);
@@ -66,7 +69,8 @@ export default class ObjectEntityWriter {
           .writeLine(entityGeneratedHeader)
           .write("export default class ")
           .write(definition.name)
-          .conditionalWrite(!!baseClass, ` extends ${baseClass?.name}`)
+          // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+          .conditionalWrite(!!baseClass, ` extends ${baseClass!.name}`)
           .block(() => this.writeEntityBody(writer, definition, baseClass))
           .newLineIfLastNot();
       },
@@ -108,7 +112,7 @@ export default class ObjectEntityWriter {
         writer.write(" * ").write(property.description).newLine();
       }
       if (property.example) {
-        writer.writeLine(" * @example").write(" * ").write(property.example.toString()).newLine();
+        writer.writeLine(" * @example").write(" * ").write(property.example).newLine();
       }
 
       writer.writeLine(" */");
@@ -191,7 +195,10 @@ export default class ObjectEntityWriter {
     }
 
     if (typeof type === "object") {
-      writer.writeLine(`@Type(() => ${property.type.getTypeName()})`);
+      const typeName = property.type.getTypeName();
+      if (typeName) {
+        writer.writeLine(`@Type(() => ${typeName})`);
+      }
     }
 
     if (type === "Date") {
@@ -256,7 +263,6 @@ function writeValidationProperty(writer: CodeBlockWriter, property: EntityProper
 }
 
 function getRestrictionDefinition(restriction: Restriction, params: any) {
-  // eslint-disable-next-line @typescript-eslint/tslint/config
   switch (restriction) {
     case Restriction.nullable: {
       if (params === false) {

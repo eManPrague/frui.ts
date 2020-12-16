@@ -1,9 +1,10 @@
 import { isActivatable, isDeactivatable } from "@frui.ts/screens";
-import * as React from "react";
+import React from "react";
 import { getView, tryGetView } from "./viewLocator";
 
-interface ViewProps {
-  vm: any;
+// eslint-disable-next-line @typescript-eslint/ban-types
+interface ViewProps<TViewModel extends { constructor: any } = { constructor: any }> {
+  vm: TViewModel;
   context?: string;
   useLifecycle?: boolean;
   fallbackMode?: "message" | "children";
@@ -31,7 +32,7 @@ export default class View extends React.PureComponent<ViewProps, ViewState> {
     if (this.props.useLifecycle) {
       const { vm } = this.props;
       if (vm && isActivatable(vm)) {
-        vm.activate();
+        void vm.activate();
       }
     }
   }
@@ -40,7 +41,7 @@ export default class View extends React.PureComponent<ViewProps, ViewState> {
     if (this.props.useLifecycle) {
       const { vm } = this.props;
       if (vm && isDeactivatable(vm)) {
-        vm.deactivate(true);
+        void vm.deactivate(true);
       }
     }
   }
@@ -60,6 +61,7 @@ export default class View extends React.PureComponent<ViewProps, ViewState> {
 
     if (!FoundView) {
       return fallbackMode === "message" ? (
+        // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access
         <p>Could not find a view for {vm.constructor.name}</p>
       ) : (
         <React.Fragment>{children}</React.Fragment>

@@ -1,6 +1,6 @@
 import { ViewComponent } from "@frui.ts/views";
 import { observer } from "mobx-react-lite";
-import * as React from "react";
+import React from "react";
 import TodoListViewModel from "../../viewModels/todoListViewModel";
 import { pluralize } from "../helpers";
 

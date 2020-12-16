@@ -31,7 +31,7 @@ export default class RegistrationsProcessor {
     };
   }
   private processService(service: ServiceRegistration) {
-    if (!!service.rule.addDecorators) {
+    if (service.rule.addDecorators) {
       this.decorateServiceInjectable(service.declaration);
     }
 
@@ -85,11 +85,12 @@ export default class RegistrationsProcessor {
         serviceIdentifier = importStatement.identifier;
         bindType = "toSelf()";
         break;
-      case "$interface":
+      case "$interface": {
         const impl = declaration.getImplements()[0];
-        serviceIdentifier = impl ? `"${impl?.getText()}"` : "NoInterfaceImplemented";
+        serviceIdentifier = impl ? `"${impl.getText()}"` : "NoInterfaceImplemented";
         bindType = `to(${importStatement.identifier})`;
         break;
+      }
       default:
         serviceIdentifier = `"${rule.identifier}"`;
         bindType = `to(${importStatement.identifier})`;
@@ -108,7 +109,7 @@ export default class RegistrationsProcessor {
     if (rule.registerAutoFactory) {
       this.registrations.push({
         importStatements: [],
-        statements: [`container.bind("Factory<${declaration.getName()}>").toAutoFactory(${serviceIdentifier});`],
+        statements: [`container.bind("Factory<${declaration.getName() ?? ""}>").toAutoFactory(${serviceIdentifier});`],
       });
     }
 
@@ -185,7 +186,9 @@ export default class RegistrationsProcessor {
         return {
           importStatements: [],
           statements: [
-            `decorate(${injectDecorator}("Factory<${sourceType.getName()}>") as any, ${parentClassIdentifier}, ${parameterIndex});`,
+            `decorate(${injectDecorator}("Factory<${
+              sourceType.getName() ?? ""
+            }>") as any, ${parentClassIdentifier}, ${parameterIndex});`,
           ],
         };
       }

@@ -1,6 +1,6 @@
-import { BindingProperty } from "@frui.ts/helpers";
+import { BindingProperty, BindingTarget } from "@frui.ts/helpers";
 import { action } from "mobx";
-import * as React from "react";
+import React from "react";
 import { ExcludeBindingProps, IBindingProps, omitBindingProps } from "./bindingProps";
 import { getValue, setValue } from "./useBinding";
 
@@ -18,7 +18,10 @@ import { getValue, setValue } from "./useBinding";
  * @typeparam TTarget Type of the targete entity for binding
  * @typeparam TProps Type of the props. Should implement [[IBindingProps]] with information required for binding.
  */
-export abstract class BindingComponent<TTarget, TProps extends IBindingProps<TTarget>> extends React.Component<TProps> {
+export abstract class BindingComponent<
+  TTarget extends BindingTarget,
+  TProps extends IBindingProps<TTarget>
+> extends React.Component<TProps> {
   /**
    * Returns `props` excluding properties required for binding.
    *
@@ -39,6 +42,7 @@ export abstract class BindingComponent<TTarget, TProps extends IBindingProps<TTa
       console.warn("'target' has not been set");
       return undefined;
     }
+    // eslint-disable-next-line @typescript-eslint/no-unsafe-return
     return getValue(this.props.target as TTarget, this.props.property);
   }
 

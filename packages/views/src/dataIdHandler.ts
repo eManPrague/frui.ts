@@ -1,5 +1,5 @@
 import memoize from "lodash/memoize";
-import * as React from "react";
+import React from "react";
 
 function dataIdHandler(handler: (id: number) => any) {
   return (e: React.MouseEvent<HTMLElement>) => {

@@ -1,23 +1,26 @@
-import { PropertyName } from "@frui.ts/helpers";
+import { BindingTarget, PropertyName } from "@frui.ts/helpers";
 import { getValidationMessage } from "@frui.ts/validation";
 import { BindingComponent, ExcludeBindingProps, IBindingProps } from "@frui.ts/views";
 import { Observer } from "mobx-react-lite";
-import * as React from "react";
+import React from "react";
 import { CommonInputProps } from "./commonInputProps";
 
-export abstract class ValidationControlBase<TTarget, TOtherProps = unknown> extends BindingComponent<
+type TProps<TTarget, TOtherProps> = ExcludeBindingProps<CommonInputProps & TOtherProps> & IBindingProps<TTarget>;
+
+export abstract class ValidationControlBase<TTarget extends BindingTarget, TOtherProps = unknown> extends BindingComponent<
   TTarget,
-  ExcludeBindingProps<CommonInputProps & TOtherProps> & IBindingProps<TTarget>
+  TProps<TTarget, TOtherProps>
 > {
   render() {
     return <Observer render={this.renderInner} />;
   }
 
-  protected abstract renderInner(): JSX.Element;
+  protected abstract renderInner(): React.ReactElement | null;
 
-  protected get inheritedProps() {
+  protected get inheritedProps(): Partial<TProps<TTarget, TOtherProps>> {
     const { target, property, onValueChanged, noValidation, errorMessage, ...otherProps } = this.props;
 
+    // eslint-disable-next-line @typescript-eslint/no-unsafe-return
     return otherProps as any;
   }
 

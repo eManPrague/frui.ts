@@ -10,7 +10,7 @@ function renderViewModel(viewModel: any) {
   ReactDOM.render(<View vm={viewModel} useLifecycle />, document.getElementById("root"));
 }
 
-async function renderRoot(container: Container, initializationService: InitializationService) {
+function renderRoot(container: Container, initializationService: InitializationService) {
   if (!initializationService.isInitialized) {
     initializationService.initialize();
     renderViewModel(initializationService);

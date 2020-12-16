@@ -1,3 +1,5 @@
+/* eslint-disable @typescript-eslint/no-unsafe-member-access */
+import { isArrayLike } from "mobx";
 import { ScreenBase } from "..";
 
 interface ViewModelInfo {
@@ -16,10 +18,10 @@ export function inspectViewModelHierarchy(vm: any): ViewModelInfo {
     name: screen.name,
     navigationPath: typeof screen.getNavigationPath === "function" ? screen.getNavigationPath()?.path : undefined,
     navigationName: screen.navigationName,
-    navigationParams: screen.navigationParams,
-    instance: vm,
+    navigationParams: screen.navigationParams as unknown,
+    instance: vm as unknown,
     activeChild: vm.activeChild ? inspectViewModelHierarchy(vm.activeChild) : undefined,
-    children: typeof vm.children?.map === "function" ? vm.children.map(inspectViewModelHierarchy) : undefined,
+    children: isArrayLike(vm.children) ? (vm.children as Array<any>).map(inspectViewModelHierarchy) : undefined,
   };
 }
 
@@ -28,6 +30,7 @@ export function dumpViewModelHierarchy(vm: any) {
 
   const dump = (item: ViewModelInfo) => {
     rows.push(
+      // eslint-disable-next-line @typescript-eslint/restrict-template-expressions
       `/${item.navigationPath || ""} - ${item.name || item.navigationName || ""} (${item.instance?.constructor?.name || ""})`
     );
     if (item.activeChild) {

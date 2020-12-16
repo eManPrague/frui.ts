@@ -2,7 +2,7 @@ import { useBinding } from "@frui.ts/views";
 import { storiesOf } from "@storybook/react";
 import { action, observable } from "mobx";
 import { observer, Observer } from "mobx-react-lite";
-import * as React from "react";
+import React from "react";
 import "./views/allChildrenActiveView";
 import "./views/childView";
 import "./views/oneChildActiveView";

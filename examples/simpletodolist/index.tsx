@@ -1,13 +1,13 @@
-import * as React from "react";
-import * as ReactDOM from "react-dom";
+import { UrlNavigationAdapter } from "@frui.ts/screens";
+import React from "react";
+import ReactDOM from "react-dom";
+import "todomvc-app-css/index.css";
 import TodoListViewModel from "./viewModels/todoListViewModel";
 import TodoListView from "./views/todoListView";
-import "todomvc-app-css/index.css";
-import { UrlNavigationAdapter } from "@frui.ts/screens";
 
 const viewModel = new TodoListViewModel();
 
-const urlAdapter = new UrlNavigationAdapter(viewModel);
-urlAdapter.start();
+const urlAdapter = new UrlNavigationAdapter();
+void urlAdapter.start(viewModel);
 
 ReactDOM.render(<TodoListView vm={viewModel} />, document.getElementById("root"));

@@ -3,7 +3,7 @@
  * This ensures that 'this' within the decorated function will always be the class instance.
  */
 export default function bound(target: any, propertyKey: string, descriptor: PropertyDescriptor) {
-  const fn = descriptor.value;
+  const fn = descriptor.value as () => any;
 
   if (typeof fn !== "function") {
     throw new Error(`@bound decorator can only be applied to methods, not ${typeof fn}`);
@@ -17,7 +17,8 @@ export default function bound(target: any, propertyKey: string, descriptor: Prop
   return {
     configurable: true,
     get() {
-      if (definingProperty || this === target.prototype || this.hasOwnProperty(propertyKey)) {
+      // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access
+      if (definingProperty || this === target.prototype || Object.prototype.hasOwnProperty.call(this, propertyKey)) {
         return fn;
       }
 

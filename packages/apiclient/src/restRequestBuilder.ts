@@ -1,5 +1,5 @@
-import { IApiConnector } from "./types";
 import { stringify, StringifyOptions } from "query-string";
+import { IApiConnector } from "./types";
 
 const cleanupRegex = /\/+$/g; // removes trailing slash
 
@@ -18,11 +18,8 @@ export function appendAcceptHeader(params: RequestInit | undefined, acceptConten
 }
 
 export function appendUrl(base: string, ...segments: any[]) {
-  let result = base.replace(cleanupRegex, "");
-  segments.forEach(x => {
-    result += "/" + x;
-  });
-  return result;
+  const basePath = base.replace(cleanupRegex, "");
+  return segments.length ? `${basePath}/${segments.join("/")}` : basePath;
 }
 
 /** Fluent URL builder that makes the network call with the underlying IApiConnector */
@@ -57,7 +54,8 @@ export class RestRequestBuilder {
   one(path: string, id?: any): this {
     this.urlValue += "/" + path;
     if (id !== undefined) {
-      this.urlValue += "/" + id;
+      // eslint-disable-next-line @typescript-eslint/restrict-template-expressions
+      this.urlValue += `/${id}`;
     }
     return this;
   }
@@ -65,7 +63,7 @@ export class RestRequestBuilder {
   get<T>(queryParams?: any): Promise<T> {
     const requestUrl = this.appendQuery(this.urlValue, queryParams);
     const params = appendAcceptHeader(this.params, ContentTypes.json);
-    return this.apiConnector.get(requestUrl, params).then(x => x.json());
+    return this.apiConnector.get(requestUrl, params).then(x => x.json() as Promise<T>);
   }
 
   getRaw(queryParams?: any) {
@@ -75,7 +73,7 @@ export class RestRequestBuilder {
 
   post<T>(content: any): Promise<T> {
     const params = appendAcceptHeader(this.params, ContentTypes.json);
-    return this.apiConnector.postJson(this.urlValue, content, params).then(x => x.json());
+    return this.apiConnector.postJson(this.urlValue, content, params).then(x => x.json() as Promise<T>);
   }
 
   postOnly(content: any) {
@@ -88,7 +86,7 @@ export class RestRequestBuilder {
 
   put<T>(content: any): Promise<T> {
     const params = appendAcceptHeader(this.params, ContentTypes.json);
-    return this.apiConnector.putJson(this.urlValue, content, params).then(x => x.json());
+    return this.apiConnector.putJson(this.urlValue, content, params).then(x => x.json() as Promise<T>);
   }
 
   putOnly(content: any) {
@@ -101,7 +99,7 @@ export class RestRequestBuilder {
 
   patch<T>(content: any): Promise<T> {
     const params = appendAcceptHeader(this.params, ContentTypes.json);
-    return this.apiConnector.patchJson(this.urlValue, content, params).then(x => x.json());
+    return this.apiConnector.patchJson(this.urlValue, content, params).then(x => x.json() as Promise<T>);
   }
 
   patchOnly(content: any) {

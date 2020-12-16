@@ -233,7 +233,8 @@ Default configuration file:
       "exclude": ["id", "created"]
     }
   },
-  "enums": "enum"
+  "enums": "enum",
+  "dates": "native"
 }
 ```
 

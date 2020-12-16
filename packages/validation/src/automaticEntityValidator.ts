@@ -11,20 +11,18 @@ export function createPropertyValidatorFromRules(propertyName: string, propertyR
   let finalValidator: IPropertyBoundValidator | undefined;
 
   for (const ruleName in propertyRules) {
-    if (propertyRules.hasOwnProperty(ruleName)) {
-      const validator = validatorsRepository.get(ruleName);
-      if (!validator) {
-        throw new Error(`Unknown validator ${ruleName}. The validator must be registered in 'validatorsRepository'`);
-      }
+    const validator = validatorsRepository.get(ruleName);
+    if (!validator) {
+      throw new Error(`Unknown validator ${ruleName}. The validator must be registered in 'validatorsRepository'`);
+    }
 
-      const params = propertyRules[ruleName];
-      if (finalValidator) {
-        const temp = finalValidator;
-        finalValidator = (propertyValue, entity) =>
-          validator(propertyValue, propertyName, entity, params) || temp(propertyValue, entity);
-      } else {
-        finalValidator = (propertyValue, entity) => validator(propertyValue, propertyName, entity, params);
-      }
+    const params = propertyRules[ruleName] as unknown;
+    if (finalValidator) {
+      const temp = finalValidator;
+      finalValidator = (propertyValue, entity) =>
+        validator(propertyValue, propertyName, entity, params) || temp(propertyValue, entity);
+    } else {
+      finalValidator = (propertyValue, entity) => validator(propertyValue, propertyName, entity, params);
     }
   }
 
@@ -42,23 +40,21 @@ export default class AutomaticEntityValidator<TTarget extends Record<string, any
     this.isErrorsVisible = isErrorsVisible;
 
     for (const propertyName in entityValidationRules) {
-      if (entityValidationRules.hasOwnProperty(propertyName)) {
-        const rules = (entityValidationRules as Record<string, IPropertyValidationRules>)[propertyName];
+      const rules = (entityValidationRules as Record<string, IPropertyValidationRules>)[propertyName];
 
-        const validator = createPropertyValidatorFromRules(propertyName, rules);
-        if (!validator) {
-          continue;
-        }
-
-        ensureObservableProperty(target, propertyName, (target as any)[propertyName]);
-        this.validatedProperties.push(propertyName);
-
-        extendObservable(this.errors, {
-          get [propertyName]() {
-            return validator(get(target, propertyName), target);
-          },
-        });
+      const validator = createPropertyValidatorFromRules(propertyName, rules);
+      if (!validator) {
+        continue;
       }
+
+      ensureObservableProperty(target, propertyName, target[propertyName]);
+      this.validatedProperties.push(propertyName);
+
+      extendObservable(this.errors, {
+        get [propertyName]() {
+          return validator(get(target, propertyName), target);
+        },
+      });
     }
   }
 

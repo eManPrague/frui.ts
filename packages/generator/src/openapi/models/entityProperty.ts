@@ -5,7 +5,7 @@ import TypeReference from "./typeReference";
 export default class EntityProperty extends NamedObject {
   description?: string;
   example?: any;
-  restrictions?: Map<Restriction, any>;
+  restrictions?: Map<Restriction, unknown>;
   tags?: Map<symbol, any>;
 
   constructor(name: string, public type: TypeReference) {

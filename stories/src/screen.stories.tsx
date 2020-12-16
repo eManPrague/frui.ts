@@ -2,7 +2,7 @@ import { registerView, View } from "@frui.ts/views";
 import { storiesOf } from "@storybook/react";
 import { observable, runInAction } from "mobx";
 import { Observer } from "mobx-react-lite";
-import * as React from "react";
+import React from "react";
 import InheritedTestViewModel from "./viewModels/inheritedTestViewModel";
 
 const config = observable({

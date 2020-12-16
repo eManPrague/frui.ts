@@ -1,4 +1,4 @@
-import { BindingProperty, PropertyType } from "@frui.ts/helpers";
+import { BindingTarget, BindingProperty, PropertyType } from "@frui.ts/helpers";
 
 /**
  * Base props required for two-way binding.
@@ -10,7 +10,7 @@ import { BindingProperty, PropertyType } from "@frui.ts/helpers";
  * @typeparam TValue Type of the value assigned in `TTarget[TProperty]`. Use this to restrict possible value types if needed.
  */
 export interface IBindingProps<
-  TTarget,
+  TTarget extends BindingTarget,
   TProperty extends BindingProperty<TTarget> = BindingProperty<TTarget>,
   TValue = PropertyType<TTarget, TProperty>
 > {
@@ -33,6 +33,7 @@ export interface IBindingProps<
 export type ExcludeBindingProps<T> = Omit<T, keyof IBindingProps<any>>;
 
 export function omitBindingProps<TProps extends IBindingProps<any, any>>(props: TProps): ExcludeBindingProps<TProps> {
+  // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
   const { target, property, onValueChanged, ...rest } = props;
 
   return rest;

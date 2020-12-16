@@ -1,13 +1,13 @@
-import { bound } from "@frui.ts/helpers";
-import * as React from "react";
+import { BindingTarget, bound } from "@frui.ts/helpers";
+import React from "react";
 import { Form, FormControlProps } from "react-bootstrap";
 import { ValidationControlBase } from "./validationControlBase";
 
 export interface SelectProps<TItem> {
   items: TItem[];
-  keyProperty?: keyof TItem & string;
-  textProperty?: keyof TItem & string;
-  mode?: "key" | "item";
+  keyProperty: keyof TItem & string;
+  textProperty: keyof TItem & string;
+  mode: "key" | "item";
   allowEmpty?: boolean;
   emptyText?: string;
   isNumeric?: boolean;
@@ -15,7 +15,10 @@ export interface SelectProps<TItem> {
 
 const EMPTY_VALUE = "";
 
-export class Select<TTarget, TItem> extends ValidationControlBase<TTarget, FormControlProps & SelectProps<TItem>> {
+export class Select<TTarget extends BindingTarget, TItem> extends ValidationControlBase<
+  TTarget,
+  FormControlProps & SelectProps<TItem>
+> {
   static defaultProps: Partial<SelectProps<any>> = {
     keyProperty: "id",
     textProperty: "label",
@@ -43,9 +46,10 @@ export class Select<TTarget, TItem> extends ValidationControlBase<TTarget, FormC
     } = this.inheritedProps;
     const validationError = this.getValidationError();
 
-    const options = items.map((x: any) => (
-      <option key={x[keyProperty]} value={x[keyProperty]}>
-        {!!textProperty ? x[textProperty] : x}
+    const options = items.map(x => (
+      // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
+      <option key={x[keyProperty] as any} value={x[keyProperty] as any}>
+        {textProperty ? x[textProperty] : x}
       </option>
     ));
     return (
@@ -64,16 +68,16 @@ export class Select<TTarget, TItem> extends ValidationControlBase<TTarget, FormC
     );
   }
 
-  get selectedValue(): any {
+  get selectedValue(): string | number {
     const { mode, keyProperty } = this.props;
-    // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
-    return mode === "item" && this.value ? (this.value as TItem)[keyProperty!] : this.value;
+    // eslint-disable-next-line @typescript-eslint/no-unsafe-return
+    return mode === "item" && this.value ? (this.value as TItem)[keyProperty] : this.value;
   }
 
   get hasValidValue() {
     const { items, keyProperty } = this.props;
-
-    return items.findIndex((x: any) => x[keyProperty] == this.selectedValue) !== -1; // key might be a number, compare with '==' only
+    const selectedValue = this.selectedValue;
+    return items.findIndex(x => (x[keyProperty] as any) == selectedValue) !== -1; // key might be a number, compare with '==' only
   }
 
   @bound
@@ -88,7 +92,7 @@ export class Select<TTarget, TItem> extends ValidationControlBase<TTarget, FormC
 
     if (this.props.mode === "item") {
       const { items, keyProperty } = this.props;
-      const selectedItem = items.find((x: any) => x[keyProperty] == selectedKey); // key might be a number, compare with '==' only
+      const selectedItem = items.find(x => (x[keyProperty] as any) == selectedKey); // key might be a number, compare with '==' only
       this.setValue(selectedItem);
     } else {
       this.setValue(this.props.isNumeric ? parseInt(selectedKey, 10) : selectedKey);

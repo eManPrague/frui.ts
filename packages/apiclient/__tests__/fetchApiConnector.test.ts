@@ -1,4 +1,3 @@
-/* eslint-disable @typescript-eslint/tslint/config */
 import { appendJsonHeader } from "../src/fetchApiConnector";
 
 describe("fetchApiConnector", () => {

@@ -1,8 +1,8 @@
-import React from "react";
+import { Router } from "@frui.ts/screens";
 import { registerView, View, ViewComponent } from "@frui.ts/views";
 import { observer, Observer } from "mobx-react-lite";
+import React from "react";
 import RootViewModel from "../viewModels/rootViewModel";
-import { Router } from "@frui.ts/screens";
 
 const rootView: ViewComponent<RootViewModel> = observer(({ vm }) => {
   const getUrl = Router.getChildUrlFactory(vm);

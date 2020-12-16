@@ -29,7 +29,10 @@ export default class UnionEntityWriter {
   }
 
   private createFile(fileName: string, definition: UnionEntity) {
-    const requiredImports = definition.entities.filter(x => typeof x.type === "object").map(x => x.getTypeName());
+    const requiredImports = definition.entities
+      .filter(x => typeof x.type === "object")
+      .map(x => x.getTypeName())
+      .filter(x => x) as string[];
 
     return this.parentDirectory.createSourceFile(
       fileName,

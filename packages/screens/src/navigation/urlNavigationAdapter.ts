@@ -19,6 +19,7 @@ export default class UrlNavigationAdapter {
   start(rootViewModel: ICanNavigate) {
     this.rootViewModel = rootViewModel;
     NavigationConfiguration.onScreenChanged = this.onScreenChanged;
+    // eslint-disable-next-line @typescript-eslint/no-misused-promises
     window.addEventListener("hashchange", this.onUrlChanged, false);
 
     return this.onUrlChanged();
@@ -29,6 +30,7 @@ export default class UrlNavigationAdapter {
     if (NavigationConfiguration.onScreenChanged === this.onScreenChanged) {
       NavigationConfiguration.onScreenChanged = undefined;
     }
+    // eslint-disable-next-line @typescript-eslint/no-misused-promises
     window.removeEventListener("hashchange", this.onUrlChanged, false);
   }
 
@@ -45,7 +47,7 @@ export default class UrlNavigationAdapter {
   private updateUrl(screen: IScreen & ICanNavigate) {
     if (this.rootViewModel) {
       const path = screen.getNavigationPath();
-      const url = appendQueryString(NavigationConfiguration.hashPrefix + path.path, path.params);
+      const url = appendQueryString(NavigationConfiguration.hashPrefix + (path.path ?? ""), path.params);
 
       if (window.location.hash !== url) {
         const shouldReplaceUrl =

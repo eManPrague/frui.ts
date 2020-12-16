@@ -1,4 +1,3 @@
-/* eslint-disable @typescript-eslint/tslint/config */
 import TodoListViewModel from "../todoListViewModel";
 
 describe("TodoListViewModel", () => {

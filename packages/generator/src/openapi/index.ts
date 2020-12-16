@@ -1,9 +1,9 @@
 import GeneratorBase from "../generatorBase";
 import FileGenerator from "./fileGenerator";
-import ModelProcessor from "./modelProcessor";
-import { IConfig, IGeneratorParams } from "./types";
 import NameFormatter from "./formatters/nameFormatter";
 import ObservableFormatter from "./formatters/observableFormatter";
+import ModelProcessor from "./modelProcessor";
+import { IConfig, IGeneratorParams } from "./types";
 
 export default class OpenApiGenerator extends GeneratorBase<IGeneratorParams, IConfig> {
   async run() {
@@ -27,7 +27,9 @@ export default class OpenApiGenerator extends GeneratorBase<IGeneratorParams, IC
   }
 
   protected async getDefaultConfig() {
+    // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
     const config = await import("./defaultConfig.json");
+    // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access
     return config.default as IConfig;
   }
 }

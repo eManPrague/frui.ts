@@ -46,7 +46,7 @@ describe("BusyWatcher", () => {
       const watcher = new BusyWatcher();
 
       const promise = new Promise((resolve, reject) => null);
-      watcher.watch(promise);
+      void watcher.watch(promise);
 
       expect(watcher.isBusy).toBeTruthy();
     });
@@ -55,7 +55,7 @@ describe("BusyWatcher", () => {
       const watcher = new BusyWatcher();
 
       const promise = new ManualPromise<any>();
-      watcher.watch(promise.promise);
+      void watcher.watch(promise.promise);
 
       expect(watcher.isBusy).toBeTruthy();
 
@@ -72,7 +72,7 @@ describe("BusyWatcher", () => {
       const promise = new Promise((resolve, reject) => {
         handler = reject;
       });
-      watcher.watch(promise);
+      void watcher.watch(promise);
 
       expect(watcher.isBusy).toBeTruthy();
 

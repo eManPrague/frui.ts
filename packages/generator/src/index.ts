@@ -1,8 +1,10 @@
 #!/usr/bin/env node
-/* eslint-disable @typescript-eslint/tslint/config */
 import { program } from "commander";
 import { BaseParams } from "./generatorBase";
 import PackageInfo from "../package.json";
+/* eslint-disable sonarjs/no-duplicate-string */
+/* eslint-disable @typescript-eslint/no-unsafe-assignment */
+/* eslint-disable @typescript-eslint/no-unsafe-member-access */
 
 program.name("fruits-generate").version(PackageInfo.version).description(PackageInfo.description);
 

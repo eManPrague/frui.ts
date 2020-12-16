@@ -1,6 +1,6 @@
 import { IPagingFilter, SortingDirection } from "@frui.ts/data";
 import { observer } from "mobx-react-lite";
-import * as React from "react";
+import React from "react";
 import { ColumnDefinition, PropsWithColumns } from "../dataTypes";
 
 export interface HeaderRowProps<TItem, TContext> extends PropsWithColumns<TItem, TContext> {
@@ -30,7 +30,7 @@ function tableHeader<TItem, TContext>(props: HeaderRowProps<TItem, TContext>) {
             <th
               key={key}
               className={column.headerClassName ? `sortable ${column.headerClassName}` : "sortable"}
-              onClick={() => props.onColumnSort?.(column)}>
+              onClick={() => void props.onColumnSort?.(column)}>
               {column.titleFactory ? column.titleFactory(props.context) : column.title}
               <span className={getSortIndicatorClass(props.pagingFilter, column.property)}></span>
             </th>

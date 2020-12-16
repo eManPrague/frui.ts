@@ -4,14 +4,14 @@ import { attachAutomaticDirtyWatcher, IHasDirtyWatcher, resetDirty } from "@frui
 import { bound } from "@frui.ts/helpers";
 import { ScreenBase } from "@frui.ts/screens";
 import { IHasValidation, validate } from "@frui.ts/validation";
-import { action, observable, isObservableArray } from "mobx";
+import { action, isObservableArray, observable } from "mobx";
 import ListViewModel from "./listViewModel";
 
 type OmitValidationAndDirtyWatcher<T> = Omit<T, keyof IHasDirtyWatcher<T> | keyof IHasValidation<T>>;
 
 export default abstract class FilteredListViewModel<
   TEntity,
-  TFilter extends {} = {},
+  TFilter extends Record<string, any> = Record<string, any>,
   TDetail extends ScreenBase = ScreenBase
 > extends ListViewModel<TEntity, TDetail> {
   static defaultPageSize = 30;
@@ -51,6 +51,7 @@ export default abstract class FilteredListViewModel<
     // we need to clone array properties so that they are not shared with the original filter
     Object.entries(clonedFilter).forEach(([key, value]) => {
       if (isObservableArray(value)) {
+        // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
         clonedFilter[key as keyof OmitValidationAndDirtyWatcher<TFilter>] = value.slice() as any;
       }
     });
@@ -78,9 +79,10 @@ export default abstract class FilteredListViewModel<
     }
   }
 
-  protected resetFilterValues(filter: TFilter) {
+  protected resetFilterValues(filter: Partial<TFilter>) {
     for (const property in filter) {
-      filter[property] = undefined as any;
+      // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
+      filter[property] = undefined;
     }
   }
 

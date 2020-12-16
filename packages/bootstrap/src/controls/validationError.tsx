@@ -1,8 +1,8 @@
-import { bound } from "@frui.ts/helpers";
-import * as React from "react";
+import { BindingTarget, bound } from "@frui.ts/helpers";
+import React from "react";
 import { ValidationControlBase } from "./validationControlBase";
 
-export class ValidationError<TTarget> extends ValidationControlBase<TTarget> {
+export class ValidationError<TTarget extends BindingTarget> extends ValidationControlBase<TTarget> {
   @bound
   protected renderInner() {
     const validationError = this.getValidationError();
