@@ -32,7 +32,15 @@ function useCollection<TTarget, TProperty extends BindingProperty<TTarget>>(
 
   if (isSet(collection)) {
     const checked = collection.has(key);
-    const toggle = () => (collection.has(key) ? collection.delete(key) : collection.add(key));
+    const toggle = () => {
+      if (collection.has(key)) {
+        collection.delete(key);
+      } else {
+        collection.add(key);
+      }
+      // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+      props.onValueChanged?.(key, props.property!, props.target!);
+    };
     return [checked, action(toggle)];
   } else {
     const array = collection as typeof key[];
@@ -44,6 +52,8 @@ function useCollection<TTarget, TProperty extends BindingProperty<TTarget>>(
       } else {
         array.push(key);
       }
+      // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+      props.onValueChanged?.(key, props.property!, props.target!);
     };
     return [checked, action(toggle)];
   }

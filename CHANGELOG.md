@@ -1,3 +1,7 @@
+# 0.16.1
+
+- Fixed a bug in `CollectionCheck` that `onValueChanged` is not called on change.
+
 # 0.16.0
 
 - Added `ManualPromise`, `groupBy()` to @frui.ts/helpers.
