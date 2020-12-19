@@ -2,19 +2,20 @@
   "api": "https://fruits-demo.herokuapp.com/api/swagger-json",
   "observable": {
     "entities": {
-      "entities": {
-        "EnumValue": false,
-        "User": {
-          "exclude": ["code"]
-        },
-        "Partner": {
-          "include": ["name"]
-        }
+      "EnumValue": false,
+      "User": {
+        "exclude": ["code"]
+      },
+      "Partner": {
+        "include": ["name"]
       }
     },
     "properties": {
       "exclude": ["id", "created"]
     }
   },
-  "enums": "enum"
+  "enums": "enum",
+  "validations": {
+    "readOnly": false
+  }
 }

@@ -10,7 +10,7 @@ import Enum from "../models/enum";
 import ObjectEntity from "../models/objectEntity";
 import Restriction from "../models/restriction";
 import TypeReference from "../models/typeReference";
-import { IConfig, IGeneratorParams } from "../types";
+import { IConfig, IGeneratorParams, ValidationConfig } from "../types";
 
 export default class ObjectEntityWriter {
   constructor(private parentDirectory: Directory, private params: IGeneratorParams, private config: Partial<IConfig>) {}
@@ -78,7 +78,7 @@ export default class ObjectEntityWriter {
     definition.properties.forEach(p => this.writeEntityProperty(writer, p));
 
     if (this.params.generateValidation) {
-      writeValidationEntity(writer, definition, baseClass);
+      this.writeValidationEntity(writer, definition, baseClass);
     }
   }
 
@@ -89,7 +89,7 @@ export default class ObjectEntityWriter {
 
     const readOnly = property.restrictions?.has(Restriction.readOnly);
     const nullable = property.restrictions?.get(Restriction.nullable);
-    const required = nullable === false || (property.restrictions?.has(Restriction.required) && nullable !== true);
+    const required = nullable !== true && property.restrictions?.has(Restriction.required);
 
     writer
       .conditionalWrite(readOnly, "readonly ")
@@ -211,25 +211,59 @@ export default class ObjectEntityWriter {
       }
     }
   }
-}
 
-function writeValidationEntity(writer: CodeBlockWriter, entity: ObjectEntity, baseClass: ObjectEntity | undefined) {
-  if (hasValidation(entity)) {
-    if (baseClass && hasValidation(baseClass)) {
-      writer.blankLineIfLastNot().writeLine("static ValidationRules = Object.assign(");
-      writer.indent(() => {
-        writer.inlineBlock(() => entity.properties.forEach(p => writeValidationProperty(writer, p)));
-        writer.write(",").newLine();
-        writer.writeLine(`${baseClass.name}.ValidationRules`);
-      });
-      writer.writeLine(");");
-    } else {
-      writer.blankLineIfLastNot().write("static ValidationRules = {");
-      writer.indent(() => entity.properties.forEach(p => writeValidationProperty(writer, p)));
-      writer.write("};").newLine();
+  private writeValidationEntity(writer: CodeBlockWriter, entity: ObjectEntity, baseClass: ObjectEntity | undefined) {
+    if (hasValidation(entity)) {
+      if (baseClass && hasValidation(baseClass)) {
+        writer.blankLineIfLastNot().writeLine("static ValidationRules = Object.assign(");
+        writer.indent(() => {
+          writer.inlineBlock(() => entity.properties.forEach(p => this.writeValidationProperty(writer, p)));
+          writer.write(",").newLine();
+          writer.writeLine(`${baseClass.name}.ValidationRules`);
+        });
+        writer.writeLine(");");
+      } else {
+        writer.blankLineIfLastNot().write("static ValidationRules = {");
+        writer.indent(() => entity.properties.forEach(p => this.writeValidationProperty(writer, p)));
+        writer.write("};").newLine();
+      }
+    } else if (baseClass && hasValidation(baseClass)) {
+      writer.blankLineIfLastNot().writeLine(`static ValidationRules = ${baseClass.name}.ValidationRules;`);
     }
-  } else if (baseClass && hasValidation(baseClass)) {
-    writer.blankLineIfLastNot().writeLine(`static ValidationRules = ${baseClass.name}.ValidationRules;`);
+  }
+
+  private writeValidationProperty(writer: CodeBlockWriter, property: EntityProperty) {
+    if (property.restrictions?.size) {
+      const definitions: string[] = [];
+      property.restrictions.forEach((params, key) => {
+        const definition = this.getRestrictionDefinition(key, params);
+        if (definition && !definitions.includes(definition)) {
+          definitions.push(definition);
+        }
+      });
+
+      if (definitions.length) {
+        writer.write(property.name).write(": { ");
+        definitions.forEach((x, i) => writer.conditionalWrite(i > 0, ", ").write(x));
+        writer.write(" },").newLine();
+      }
+    }
+  }
+
+  private getRestrictionDefinition(restriction: Restriction, params: any) {
+    const restrictionName = Restriction[restriction];
+    const restrictionConfiguration = this.config.validations?.[restrictionName];
+    if (restrictionConfiguration === false) {
+      return undefined;
+    }
+
+    const validationParams = JSON.stringify(params);
+    if (!shouldWriteValidation(restrictionConfiguration, validationParams)) {
+      return undefined;
+    }
+
+    const validationName = getValidationName(restrictionConfiguration) ?? restrictionName;
+    return `${validationName}: ${validationParams}`;
   }
 }
 
@@ -237,46 +271,28 @@ function hasValidation(entity: ObjectEntity) {
   return entity.properties.some(p => p.restrictions?.size);
 }
 
-function writeValidationProperty(writer: CodeBlockWriter, property: EntityProperty) {
-  if (property.restrictions?.size) {
-    const definitions: string[] = [];
-    property.restrictions.forEach((params, key) => {
-      const definition = getRestrictionDefinition(key, params);
-      if (definition && !definitions.includes(definition)) {
-        definitions.push(definition);
-      }
-    });
-
-    if (definitions.length) {
-      writer.write(property.name).write(": { ");
-      definitions.forEach((x, i) => writer.conditionalWrite(i > 0, ", ").write(x));
-      writer.write(" },").newLine();
-    }
-  }
-}
-
-function getRestrictionDefinition(restriction: Restriction, params: any) {
-  // eslint-disable-next-line @typescript-eslint/tslint/config
-  switch (restriction) {
-    case Restriction.nullable: {
-      if (params === false) {
-        return `required: true`;
-      }
-      break;
-    }
-    case Restriction.format:
-    case Restriction.readOnly: {
-      return undefined;
-    }
-    default:
-      return `${Restriction[restriction]}: ${JSON.stringify(params)}`;
-  }
-}
-
 function needsImport(reference: TypeReference): boolean {
   if (reference.type instanceof AliasEntity) {
     return needsImport(reference.type.referencedEntity);
   } else {
     return typeof reference.type === "object";
+  }
+}
+
+function getValidationName(config?: ValidationConfig) {
+  if (typeof config === "string") {
+    return config;
+  }
+  if (typeof config === "object") {
+    return config.name;
+  }
+  return undefined;
+}
+
+function shouldWriteValidation(config: ValidationConfig | undefined, value: string) {
+  if (typeof config === "object" && config.filter) {
+    return !!value.match(config.filter);
+  } else {
+    return true;
   }
 }

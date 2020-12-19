@@ -1,4 +1,3 @@
-import AliasEntity from "../models/aliasEntity";
 import ObjectEntity from "../models/objectEntity";
 import Restriction from "../models/restriction";
 import TypeReference from "../models/typeReference";
@@ -44,11 +43,6 @@ export default class ObservableFormatter {
       const readOnly = property.restrictions?.has(Restriction.readOnly);
       if (!excluded && !readOnly) {
         property.addTag(ObservableFormatter.OBSERVABLE, true);
-      }
-
-      const isPropertyArray = property.type.type instanceof AliasEntity && property.type.type.isArray;
-      if (property.type.getTypeName() === "number" && !isPropertyArray) {
-        property.addRestriction(Restriction.number, true);
       }
     }
   }

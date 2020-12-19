@@ -196,6 +196,7 @@ export interface IConfig {
   observable?: ObservableConfig;
   enums?: "enum" | "string";
   dates?: "native" | "date-fns";
+  validations?: Record<string, ValidationConfig>;
 }
 
 // helper types
@@ -203,6 +204,13 @@ export interface IConfig {
 interface HasExclude {
   exclude?: string[];
 }
+
+export type ObservableConfig =
+  | boolean
+  | {
+      entities: Record<string, boolean | HasExclude>;
+      properties?: HasExclude;
+    };
 
 export type ObservableConfig =
   | boolean
@@ -219,14 +227,12 @@ Default configuration file:
   "api": "https://fruits-demo.herokuapp.com/api/swagger-json",
   "observable": {
     "entities": {
-      "entities": {
-        "EnumValue": false,
-        "User": {
-          "exclude": ["code"]
-        },
-        "Partner": {
-          "include": ["name"]
-        }
+      "EnumValue": false,
+      "User": {
+        "exclude": ["code"]
+      },
+      "Partner": {
+        "include": ["name"]
       }
     },
     "properties": {
@@ -239,6 +245,35 @@ Default configuration file:
 
 ### Example
 
+```json
+{
+  "api": "openapi/swagger.yml",
+  "observable": {
+    "entities": {
+      "EnumValue": false,
+      "User": {
+        "exclude": ["code"]
+      },
+      "Partner": {
+        "include": ["name"]
+      }
+    },
+    "properties": {
+      "exclude": ["id", "created"]
+    }
+  },
+  "enums": "enum",
+  "dates": "date-fns",
+  "validations": {
+    "number": "isNumber",
+    "readOnly": false,
+    "nullable": {
+      "filter": "false"
+    }
+  }
+}
+```
+
 Generated file
 
 ```ts
@@ -249,11 +284,13 @@ export default class User {
   email!: string;
 
   @observable
-  @Type(() => Date)
+  @Transform(value => (value ? new Date(value) : undefined), { toClassOnly: true })
+  @Transform(value => (value ? formatISO(value, { representation: "date" }) : undefined), { toPlainOnly: true })
   createdAt!: Date;
 
   @observable
-  @Type(() => Date)
+  @Transform(value => (value ? new Date(value) : undefined), { toClassOnly: true })
+  @Transform(value => (value ? formatISO(value, { representation: "date" }) : undefined), { toPlainOnly: true })
   updatedAt!: Date;
 
   @observable
