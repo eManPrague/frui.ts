@@ -16,7 +16,7 @@ export function formatValueForControl(value: any) {
     return "";
   }
 
-  if (value instanceof Date) {
+  if (value instanceof Date && !isNaN(value.valueOf())) {
     return value.toISOString().substring(0, 10);
   }
 
@@ -69,10 +69,15 @@ export class Input<TTarget, TOtherProps = unknown> extends ValidationControlBase
   }
 
   private setDate(value: string) {
-    if (value) {
-      this.setValue(new Date(value));
-    } else {
-      this.setValue(value === "" ? undefined : value);
+    // if the input is manual (safari), do not parse the date until at least yyyy-mm- is filled
+    if (value && value.length >= 8) {
+      const date = new Date(value);
+      if (!isNaN(date.valueOf())) {
+        this.setValue(date);
+        return;
+      }
     }
+
+    this.setValue(value === "" ? undefined : value);
   }
 }
