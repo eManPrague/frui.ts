@@ -13,7 +13,7 @@ type SetOrArrayInnerType<TTarget, TProperty extends keyof TTarget> = TTarget[TPr
   : never;
 
 export interface CollectionCheckProps<TTarget extends BindingTarget, TProperty extends BindingProperty<TTarget>>
-  extends FormCheckProps,
+  extends Omit<FormCheckProps, "property">,
     CommonInputProps,
     IBindingProps<TTarget, TProperty> {
   value: TProperty extends keyof TTarget ? SetOrArrayInnerType<TTarget, TProperty> : any;

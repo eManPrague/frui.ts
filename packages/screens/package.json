@@ -35,7 +35,7 @@
   },
   "dependencies": {
     "@frui.ts/helpers": "^999.0.0",
-    "query-string": "^6.9.0",
+    "query-string": "^6.13.7",
     "route-parser": "^0.0.5"
   },
   "devDependencies": {

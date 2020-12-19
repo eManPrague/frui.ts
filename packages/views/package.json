@@ -41,7 +41,7 @@
   "dependencies": {
     "@frui.ts/helpers": "^999.0.0",
     "@frui.ts/screens": "^999.0.0",
-    "lodash": "^4.17.15"
+    "lodash": "4.17.20"
   },
   "peerDependencies": {
     "mobx": "^4.0.0 || ^5.0.0",
