@@ -24,11 +24,14 @@ export default abstract class GeneratorBase<TParams extends BaseParams, TConfig>
       },
     });
 
+    const defaultConfig = await this.getDefaultConfig();
+
     if (this.params.config) {
       const configPath = path.join(process.cwd(), this.params.config);
-      this.config = await import(configPath);
+      const customConfig = await import(configPath);
+      this.config = Object.assign({}, defaultConfig, customConfig);
     } else {
-      this.config = await this.getDefaultConfig();
+      this.config = defaultConfig;
     }
   }
 
