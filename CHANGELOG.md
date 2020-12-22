@@ -1,3 +1,14 @@
+# 0.16.2
+
+- `ManualPromise` has observable `State` property
+- Generator shallowly merges default configuration with custom config file
+- OpenAPI generator can configure validation rules
+- Bootstrap input's support for date improved
+
+# 0.16.1
+
+- Fixed a bug in `CollectionCheck` that `onValueChanged` is not called on change.
+
 # 0.16.0
 
 - Added `ManualPromise`, `groupBy()` to @frui.ts/helpers.

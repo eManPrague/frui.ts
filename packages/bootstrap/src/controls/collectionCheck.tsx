@@ -32,7 +32,14 @@ function useCollection<TTarget extends BindingTarget, TProperty extends BindingP
 
   if (isSet(collection)) {
     const checked = collection.has(key);
-    const toggle = () => (collection.has(key) ? collection.delete(key) : collection.add(key));
+    const toggle = () => {
+      if (collection.has(key)) {
+        collection.delete(key);
+      } else {
+        collection.add(key);
+      }
+      props.onValueChanged?.(key, props.property as TProperty, props.target as TTarget);
+    };
     return [checked, action(toggle)];
   } else if (isArrayLike(collection)) {
     const checked = collection.includes(key);
@@ -43,6 +50,7 @@ function useCollection<TTarget extends BindingTarget, TProperty extends BindingP
       } else {
         collection.push(key);
       }
+      props.onValueChanged?.(key, props.property as TProperty, props.target as TTarget);
     };
     return [checked, action(toggle)];
   } else {

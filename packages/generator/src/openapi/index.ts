@@ -2,6 +2,7 @@ import GeneratorBase from "../generatorBase";
 import FileGenerator from "./fileGenerator";
 import NameFormatter from "./formatters/nameFormatter";
 import ObservableFormatter from "./formatters/observableFormatter";
+import ValidationsFormatter from "./formatters/validationsFormatter";
 import ModelProcessor from "./modelProcessor";
 import { IConfig, IGeneratorParams } from "./types";
 
@@ -17,9 +18,11 @@ export default class OpenApiGenerator extends GeneratorBase<IGeneratorParams, IC
 
     const nameFormatter = new NameFormatter();
     const observableFormatter = new ObservableFormatter(this.config.observable);
+    const validationsFormatter = new ValidationsFormatter();
     types.forEach(x => {
       nameFormatter.formatNames(x);
       observableFormatter.format(x);
+      validationsFormatter.format(x);
     });
 
     const generator = new FileGenerator(this.project, this.params, this.config);
@@ -27,9 +30,7 @@ export default class OpenApiGenerator extends GeneratorBase<IGeneratorParams, IC
   }
 
   protected async getDefaultConfig() {
-    // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
-    const config = await import("./defaultConfig.json");
-    // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access
-    return config.default as IConfig;
+    const config = (await import("./defaultConfig.json")) as { default: IConfig };
+    return config.default;
   }
 }

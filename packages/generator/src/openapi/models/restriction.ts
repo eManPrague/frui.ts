@@ -2,6 +2,7 @@
 enum Restriction {
   required,
   number,
+  date,
   maxLength,
   minLength,
   pattern,

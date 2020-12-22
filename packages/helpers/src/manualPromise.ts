@@ -1,12 +1,31 @@
-export default class ManualPromise<T = any> {
+import { action, observable } from "mobx";
+export default class ManualPromise<T = unknown> {
   promise: Promise<T>;
-  resolve: (value: T | PromiseLike<T>) => void;
-  reject: (reason?: any) => void;
+
+  @observable status: "new" | "resolved" | "rejected" = "new";
+
+  private resolveCallback: (result: T | PromiseLike<T>) => void;
+  private rejectCallback: (reason: any) => void;
 
   constructor() {
     this.promise = new Promise<T>((resolve, reject) => {
-      this.resolve = resolve;
-      this.reject = reject;
+      this.resolveCallback = resolve;
+      this.rejectCallback = reject;
     });
+  }
+
+  resolve(result: T | PromiseLike<T>): void;
+  resolve(): void;
+
+  @action.bound
+  resolve(result?: any): void {
+    this.resolveCallback(result);
+    this.status = "resolved";
+  }
+
+  @action.bound
+  reject(reason: any) {
+    this.rejectCallback(reason);
+    this.status = "rejected";
   }
 }

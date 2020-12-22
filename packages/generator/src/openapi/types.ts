@@ -17,9 +17,18 @@ export type ObservableConfig =
       properties?: HasExclude;
     };
 
+export type ValidationConfig =
+  | string
+  | boolean
+  | {
+      name?: string;
+      filter?: string;
+    };
+
 export interface IConfig {
   api: string;
   observable?: ObservableConfig;
   enums?: "enum" | "string";
   dates?: "native" | "date-fns";
+  validations?: Record<string, ValidationConfig>;
 }
