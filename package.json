@@ -34,7 +34,7 @@
     "build": "lerna run build",
     "test": "jest",
     "storybook": "yarn --cwd stories start",
-    "lint": "eslint ./{packages,examples}/**/*.{ts,tsx} --cache",
+    "lint": "eslint \"./{packages,examples}/**/*.{ts,tsx}\" --cache",
     "validate": "yarn run lint && yarn run cleanbuild && yarn run test && yarn run publish",
     "lernaupdate": "lernaupdate",
     "deps:outdated": "yarn outdated & lerna exec --stream --no-bail -- \"copy package.json package.bak && findstr /v \"@frui.ts/\" package.bak > package.json & yarn install & npx yarn-deduplicate yarn.lock & yarn outdated & move /Y package.bak package.json\""
