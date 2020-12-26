@@ -20,9 +20,9 @@ jobs:
           tagRegexGroup: 1
       - run: yarn install
       - run: yarn run lerna bootstrap
-      - run: yarn run lint
       - run: yarn run build
       - run: yarn test
+      - run: yarn run lint
       - run: yarn run lerna publish ${{ steps.tagName.outputs.tag }} --yes --no-git-tag-version --no-push
         env:
           NODE_AUTH_TOKEN: ${{secrets.npm_token}}
