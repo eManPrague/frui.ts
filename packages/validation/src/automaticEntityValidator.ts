@@ -50,6 +50,7 @@ export default class AutomaticEntityValidator<TTarget extends Record<string, any
           continue;
         }
 
+        // TODO just add warning that the target property is not observable
         ensureObservableProperty(target, propertyName, (target as any)[propertyName]);
         this.validatedProperties.push(propertyName);
 
