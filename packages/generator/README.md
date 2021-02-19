@@ -212,11 +212,12 @@ export type ObservableConfig =
       properties?: HasExclude;
     };
 
-export type ObservableConfig =
-  | boolean
+export type ValidationConfig =
+  | string // generated rule name
+  | boolean // 'false' disables rule generation
   | {
-      entities: Record<string, boolean | HasExclude>;
-      properties?: HasExclude;
+      name?: string; // generated rule name
+      filter?: string; // regex string matched against the rule param
     };
 ```
 
@@ -243,6 +244,19 @@ Default configuration file:
 }
 ```
 
+#### Validations
+
+You can control what validation rules are generated and how. The `validations` property of the configuration is a key-value with the following meaning:
+
+ - **key** - name of the validation rule. Available rules are defined in the `Restrictions` [enum](./src/openapi/models/restriction.ts)
+ - **value** - configuration of the following type:
+   - *object* - detailed configuration:
+     - *name* - name of the resulting validation rule (by default is the same as the key/restriction name)
+     - *filter* - validation rule will be generated only if its param matches this regex string
+   - *string* - name of the resulting validation rule. Shortcut for ` { name: 'foo' } `
+   - *boolean* - if set to `false`, the rule will not be generated.
+
+
 ### Example
 
 ```json
@@ -259,7 +273,7 @@ Default configuration file:
       }
     },
     "properties": {
-      "exclude": ["id", "created"]
+      "exclude": ["id", "createdAt"]
     }
   },
   "enums": "enum",
@@ -269,7 +283,7 @@ Default configuration file:
     "readOnly": false,
     "nullable": {
       "filter": "false"
-    }
+    },
   }
 }
 ```
@@ -283,7 +297,6 @@ export default class User {
   @observable
   email!: string;
 
-  @observable
   @Transform(value => (value ? new Date(value) : undefined), { toClassOnly: true })
   @Transform(value => (value ? formatISO(value, { representation: "date" }) : undefined), { toPlainOnly: true })
   createdAt!: Date;
@@ -297,11 +310,11 @@ export default class User {
   role!: number;
 
   static ValidationRules = {
-    id: { required: true },
-    email: { required: true },
+    id: { required: true, isNumber: true },
+    email: { required: true, format: "email" },
     createdAt: { required: true },
     updatedAt: { required: true },
-    role: { required: true },
+    role: { required: true, isNumber: true },
   };
 }
 ```
