@@ -28,3 +28,6 @@ Make sure that you have regenerated the DI-related code (`yarn generate`).
  - Check `yarn.lock` for multiple versions of the package (look for `@types/react@` text). You will need to unify the referenced versions either manually, or you can try `npx yarn-deduplicate yarn.lock`
 
 
+## Runtime Warning: Cannot update a component (`Observer`) while rendering a different component (`Observer`)...otherProps
+
+You are probably binding a two-way control to an entity that is NOT observable. The current version of Frui.ts tries to create the observable target property for you. Since this happens during a view render, you get the weird warning.

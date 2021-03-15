@@ -5,12 +5,12 @@ import { BaseParams } from "./generatorBase";
 import PackageInfo from "../package.json";
 
 program.name("fruits-generate").version(PackageInfo.version).description(PackageInfo.description);
-
 program
   .command("inversify")
   .description("Generate Inversify configuration files")
   .option("-p, --project <fileName>", "TS project file", "./tsconfig.json")
   .option("-c, --config <fileName>", "Custom configuration file")
+  .option("-d, --debug", "Output extra debugging")
   .option("--no-decorators", "Do not generate decorators file")
   .option("--decorators-output <relativePath>", "Decorators output file path", "src/di.decorators.ts")
   .option("--no-registry", "Do not generate registry file")
@@ -20,6 +20,7 @@ program
     const params: any = {
       project: options.project,
       config: options.config,
+      debug: options.debug,
     } as BaseParams;
 
     if (options.decorators) {
@@ -39,12 +40,14 @@ program
   .command("views")
   .description("Generate view registrations")
   .option("-p, --project <fileName>", "TS project file", "./tsconfig.json")
+  .option("-d, --debug", "Output extra debugging")
   .option("-o, --output <relativePath>", "Output file path", "src/views/index.ts")
   .action(async options => {
     const params = {
       project: options.project,
       config: options.config,
       output: options.output,
+      debug: options.debug,
     };
 
     const GeneratorType = await import("./views");
@@ -59,6 +62,7 @@ program
   .description("Generate OpenAPI client files")
   .option("-p, --project <fileName>", "TS project file", "./tsconfig.json")
   .option("-c, --config <fileName>", "Custom configuration file")
+  .option("-d, --debug", "Output extra debugging")
   .option("-o, --output <relativePath>", "Output folder path", "src/entities")
   .option("--no-validation", "Do not generate validation rules")
   .option("--no-conversion", "Do not generate conversion function")
@@ -69,6 +73,7 @@ program
       outputFolder: options.output,
       generateValidation: options.validation,
       generateConversion: options.conversion,
+      debug: options.debug,
     };
 
     const GeneratorType = await import("./openapi");

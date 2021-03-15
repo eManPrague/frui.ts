@@ -18,11 +18,11 @@ export type ObservableConfig =
     };
 
 export type ValidationConfig =
-  | string
-  | boolean
+  | string // generated rule name
+  | boolean // 'false' disables rule generation
   | {
-      name?: string;
-      filter?: string;
+      name?: string; // generated rule name
+      filter?: string; // regex matched against the rule param
     };
 
 export interface IConfig {
