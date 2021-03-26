@@ -9,7 +9,6 @@ import { IChild, IConductor, IScreen } from "./types";
 
 export default abstract class ScreenBase implements IScreen, IChild, ICanNavigate {
   navigationName: string;
-  @observable name: string;
   parent: IConductor<ScreenBase>;
 
   // child
@@ -21,6 +20,17 @@ export default abstract class ScreenBase implements IScreen, IChild, ICanNavigat
   @bound
   requestClose(): Promise<boolean> | boolean {
     return this.parent?.closeChild(this) ?? false;
+  }
+
+  // name
+  @observable protected nameValue: string;
+  @computed
+  get name() {
+    return this.nameValue;
+  }
+
+  set name(name: string) {
+    this.nameValue = name;
   }
 
   // activation
