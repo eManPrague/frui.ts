@@ -6,7 +6,7 @@ export default class DemoViewModel extends ScreenBase {
   constructor(private repository: DemoRepository) {
     super();
     this.navigationName = "module";
-    this.name = "First Frui.ts module";
+    this.nameValue = "First Frui.ts module";
   }
 
   @bound

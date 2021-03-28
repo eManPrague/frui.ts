@@ -13,12 +13,9 @@ const vm1 = new InheritedTestViewModel("View Model 1");
 const vm2 = new InheritedTestViewModel("View Model 2");
 
 const toggleDisplay = () => runInAction(() => (config.display = !config.display));
-const selectVM = (e: React.ChangeEvent<HTMLInputElement>) =>
-  runInAction(() => (config.vm = e.target.value === "1" ? vm1 : vm2));
+const selectVM = (e: React.ChangeEvent<HTMLInputElement>) => runInAction(() => (config.vm = e.target.value === "1" ? vm1 : vm2));
 
-const testView: React.FunctionComponent<{ vm: InheritedTestViewModel }> = ({ vm }) => (
-  <p>This is a view for {vm.name}.</p>
-);
+const testView: React.FunctionComponent<{ vm: InheritedTestViewModel }> = ({ vm }) => <p>This is a view for {vm.name}.</p>;
 registerView(testView, InheritedTestViewModel);
 
 storiesOf("ScreenBase", module)

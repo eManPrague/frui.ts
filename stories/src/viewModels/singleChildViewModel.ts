@@ -7,17 +7,22 @@ export default class SingleChildViewModel extends ConductorSingleChild<ChildView
   private child1: ChildViewModel;
   private child2: ChildViewModel;
 
+  @action
+  setName(value: string) {
+    this.nameValue = value;
+  }
+
   constructor() {
     super();
 
     this.child1 = new ChildViewModel();
     this.child1.navigationName = "One";
-    this.child1.name = "Child One";
+    this.child1.setName("Child One");
     this.child1.text = "View Model One";
 
     this.child2 = new ChildViewModel();
     this.child2.navigationName = "Two";
-    this.child2.name = "Child Two";
+    this.child2.setName("Child Two");
     this.child2.text = "View Model Two";
   }
 

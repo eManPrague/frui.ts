@@ -13,13 +13,13 @@ export default class RootViewModel extends ConductorOneChildActive<any> {
     this.navigationName = "";
 
     const module1 = new SingleChildViewModel();
-    module1.name = "Module 1";
+    module1.setName("Module 1");
     module1.navigationName = "ModuleOne";
     const module2 = new OneChildActiveViewModel();
-    module2.name = "Module 2";
+    module2.setName("Module 2");
     module2.navigationName = "ModuleTwo";
     const module3 = new AllChildrenActiveViewModel();
-    module3.name = "Module 3";
+    module3.setName("Module 3");
     module3.navigationName = "ModuleThree";
 
     this.children.push(module1, module2, module3);
