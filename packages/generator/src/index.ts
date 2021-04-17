@@ -76,4 +76,6 @@ program
     await generator.run();
   });
 
-program.parse();
+program.parseAsync().catch(error => {
+  console.error(error);
+});

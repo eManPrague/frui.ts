@@ -24,5 +24,16 @@
   "enums": "enum",
   "validations": {
     "readOnly": false
+  },
+  "templates": {
+    "enumEntity": "@enumEntity.hbs",
+    "enumEntityFile": "@enumEntityFile.hbs",
+    "objectEntityContent": "@objectEntityContent.hbs",
+    "objectEntityFile": "@objectEntityFile.hbs",
+    "generatedEntityHeader": "@generatedEntityHeader.hbs",
+    "stringLiteralEntity": "@stringLiteralEntity.hbs",
+    "stringLiteralEntityFile": "@stringLiteralEntityFile.hbs",
+    "unionEntity": "@unionEntity.hbs",
+    "unionEntityFile": "@unionEntityFile.hbs"
   }
 }

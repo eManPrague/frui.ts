@@ -34,4 +34,6 @@ export interface IConfig {
 
   validation?: boolean;
   conversion?: boolean;
+
+  templates: Record<string, string>;
 }
