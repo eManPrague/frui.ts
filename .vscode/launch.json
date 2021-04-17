@@ -16,6 +16,50 @@
       }
     },
     {
+      "type": "node",
+      "request": "launch",
+      "name": "Debug openapi generator - veralink admin",
+      "cwd": "C:\\_Projects\\veralink-admin-fe",
+      "runtimeArgs": ["-r", "${workspaceFolder}/packages/generator/node_modules/ts-node/register/transpile-only"],
+      "args": ["${workspaceFolder}/packages/generator/src/index.ts", "openapi", "-copenapi/generator.openapi-auth.json"],
+      "env": {
+        "TS_NODE_PROJECT": "${workspaceFolder}/packages/generator/tsconfig.json"
+      }
+    },
+    {
+      "type": "node",
+      "request": "launch",
+      "name": "Debug openapi generator - ppas",
+      "cwd": "C:\\_Projects\\ppas-zp-app\\frontend\\portal",
+      "runtimeArgs": ["-r", "${workspaceFolder}/packages/generator/node_modules/ts-node/register/transpile-only"],
+      "args": ["${workspaceFolder}/packages/generator/src/index.ts", "openapi", "-cgenerator.openapi.json"],
+      "env": {
+        "TS_NODE_PROJECT": "${workspaceFolder}/packages/generator/tsconfig.json"
+      }
+    },
+    {
+      "type": "node",
+      "request": "launch",
+      "name": "Debug openapi generator - myPPL",
+      "cwd": "C:\\_Projects\\myparcelshop-fe",
+      "runtimeArgs": ["-r", "${workspaceFolder}/packages/generator/node_modules/ts-node/register/transpile-only"],
+      "args": ["${workspaceFolder}/packages/generator/src/index.ts", "openapi", "-cgenerator.openapi.json"],
+      "env": {
+        "TS_NODE_PROJECT": "${workspaceFolder}/packages/generator/tsconfig.json"
+      }
+    },
+    {
+      "type": "node",
+      "request": "launch",
+      "name": "Debug inversify generator - myPPL",
+      "cwd": "C:\\_Projects\\myparcelshop-fe",
+      "runtimeArgs": ["-r", "${workspaceFolder}/packages/generator/node_modules/ts-node/register/transpile-only"],
+      "args": ["${workspaceFolder}/packages/generator/src/index.ts", "inversify", "-cgenerator.inversify.json", "-d"],
+      "env": {
+        "TS_NODE_PROJECT": "${workspaceFolder}/packages/generator/tsconfig.json"
+      }
+    },
+    {
       "type": "chrome",
       "request": "attach",
       "name": "Attach to Chrome",

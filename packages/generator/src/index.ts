@@ -1,8 +1,8 @@
 #!/usr/bin/env node
 /* eslint-disable @typescript-eslint/tslint/config */
 import { program } from "commander";
-import { BaseParams } from "./generatorBase";
 import PackageInfo from "../package.json";
+import { BaseParams } from "./generatorBase";
 
 program.name("fruits-generate").version(PackageInfo.version).description(PackageInfo.description);
 program
@@ -63,16 +63,10 @@ program
   .option("-p, --project <fileName>", "TS project file", "./tsconfig.json")
   .option("-c, --config <fileName>", "Custom configuration file")
   .option("-d, --debug", "Output extra debugging")
-  .option("-o, --output <relativePath>", "Output folder path", "src/entities")
-  .option("--no-validation", "Do not generate validation rules")
-  .option("--no-conversion", "Do not generate conversion function")
   .action(async options => {
     const params = {
       project: options.project,
       config: options.config,
-      outputFolder: options.output,
-      generateValidation: options.validation,
-      generateConversion: options.conversion,
       debug: options.debug,
     };
 

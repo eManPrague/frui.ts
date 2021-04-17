@@ -1,5 +1,12 @@
 {
   "api": "https://fruits-demo.herokuapp.com/api/swagger-json",
+
+  "entitiesPath": "src/entities",
+  "repositoriesPath": "src/repositories",
+
+  "validation": true,
+  "conversion": true,
+
   "observable": {
     "entities": {
       "EnumValue": false,

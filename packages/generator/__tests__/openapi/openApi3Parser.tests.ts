@@ -6,6 +6,10 @@ import ObjectEntity from "../../src/openapi/models/objectEntity";
 import UnionEntity from "../../src/openapi/models/unionEntity";
 import OpenApi3Parser from "../../src/openapi/parsers/openApi3Parser";
 
+function createParser() {
+  return new OpenApi3Parser({} as any);
+}
+
 describe("OpenApi3Parser", () => {
   describe("parseSchemaObject", () => {
     it("returns simple type", () => {
@@ -13,7 +17,7 @@ describe("OpenApi3Parser", () => {
         type: "integer",
       };
 
-      const { type } = new OpenApi3Parser().parseSchemaObject("MyType", definition);
+      const { type } = createParser().parseSchemaObject("MyType", definition);
 
       expect(type).toBe("number");
     });
@@ -23,7 +27,7 @@ describe("OpenApi3Parser", () => {
         $ref: "#/components/schemas/Category",
       };
 
-      const { type } = new OpenApi3Parser().parseSchemaObject("MyType", definition);
+      const { type } = createParser().parseSchemaObject("MyType", definition);
       expect(type).toBeUndefined();
     });
 
@@ -33,8 +37,7 @@ describe("OpenApi3Parser", () => {
         properties: { foo: { type: "integer" }, bar: { type: "string" } },
       };
 
-      const parser = new OpenApi3Parser();
-      const { type } = parser.parseSchemaObject("MyType", definition);
+      const { type } = createParser().parseSchemaObject("MyType", definition);
       expect(type).toBeInstanceOf(ObjectEntity);
 
       expect(type).toMatchObject({
@@ -54,7 +57,7 @@ describe("OpenApi3Parser", () => {
         },
       };
 
-      const { type } = new OpenApi3Parser().parseSchemaObject("MyType", definition);
+      const { type } = createParser().parseSchemaObject("MyType", definition);
       expect(type).toBeInstanceOf(AliasEntity);
       expect(type).toMatchObject({ isArray: true, referencedEntity: { type: "string" } });
     });
@@ -67,7 +70,7 @@ describe("OpenApi3Parser", () => {
         },
       };
 
-      const { type } = new OpenApi3Parser().parseSchemaObject("MyType", definition);
+      const { type } = createParser().parseSchemaObject("MyType", definition);
       expect(type).toBeInstanceOf(AliasEntity);
       expect(type).toMatchObject({ isArray: true, referencedEntity: { type: undefined } });
     });
@@ -81,7 +84,7 @@ describe("OpenApi3Parser", () => {
         },
       };
 
-      const parser = new OpenApi3Parser();
+      const parser = createParser();
       const { type } = parser.parseSchemaObject("MyType", definition);
       expect(type).toBeInstanceOf(AliasEntity);
       expect(type).toMatchObject({ isArray: true });
@@ -103,7 +106,7 @@ describe("OpenApi3Parser", () => {
         enum: ["one", "two", "three"],
       };
 
-      const { type } = new OpenApi3Parser().parseSchemaObject("MyType", definition);
+      const { type } = createParser().parseSchemaObject("MyType", definition);
       expect(type).toBeInstanceOf(Enum);
       expect(type).toMatchObject({ items: ["one", "two", "three"] });
     });
@@ -121,7 +124,7 @@ describe("OpenApi3Parser", () => {
         ],
       };
 
-      const { type } = new OpenApi3Parser().parseSchemaObject("MyType", definition);
+      const { type } = createParser().parseSchemaObject("MyType", definition);
       expect(type).toBeInstanceOf(UnionEntity);
       const union = type as UnionEntity;
       expect(union.entities.length).toBe(2);
@@ -140,7 +143,7 @@ describe("OpenApi3Parser", () => {
         ],
       };
 
-      const { type } = new OpenApi3Parser().parseSchemaObject("MyType", definition);
+      const { type } = createParser().parseSchemaObject("MyType", definition);
       expect(type).toBeInstanceOf(InheritedEntity);
       const union = type as InheritedEntity;
       expect(union.baseEntities.length).toBe(2);

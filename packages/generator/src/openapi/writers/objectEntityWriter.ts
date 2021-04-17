@@ -43,7 +43,7 @@ export default class ObjectEntityWriter {
 
   private createFile(fileName: string, definition: ObjectEntity, baseClass: ObjectEntity | undefined) {
     const decoratorImports = this.getPropertyDecoratorsImports(definition.properties);
-    const requiredImports = definition.properties.filter(x => needsImport(x.type)).map(x => x.type.getTypeName());
+    const requiredImports = definition.properties.filter(x => x.type.isImportRequired).map(x => x.type.getTypeName());
 
     if (baseClass) {
       requiredImports.push(baseClass.name);
@@ -77,7 +77,7 @@ export default class ObjectEntityWriter {
   private writeEntityBody(writer: CodeBlockWriter, definition: ObjectEntity, baseClass: ObjectEntity | undefined) {
     definition.properties.forEach(p => this.writeEntityProperty(writer, p));
 
-    if (this.params.generateValidation) {
+    if (this.config.validation !== false) {
       this.writeValidationEntity(writer, definition, baseClass);
     }
   }
@@ -122,7 +122,7 @@ export default class ObjectEntityWriter {
       result.add(`import { observable } from "mobx";`);
     }
 
-    if (this.params.generateConversion) {
+    if (this.config.conversion !== false) {
       for (const property of properties) {
         for (const importStatement of this.getPropertyTypeConversionImports(property.type)) {
           result.add(importStatement);
@@ -144,7 +144,7 @@ export default class ObjectEntityWriter {
       writer.writeLine("@observable");
     }
 
-    if (this.params.generateConversion) {
+    if (this.config.conversion !== false) {
       this.writePropertyTypeConversion(writer, property);
 
       if (property.externalName) {
@@ -269,14 +269,6 @@ export default class ObjectEntityWriter {
 
 function hasValidation(entity: ObjectEntity) {
   return entity.properties.some(p => p.restrictions?.size);
-}
-
-function needsImport(reference: TypeReference): boolean {
-  if (reference.type instanceof AliasEntity) {
-    return needsImport(reference.type.referencedEntity);
-  } else {
-    return typeof reference.type === "object";
-  }
 }
 
 function getValidationName(config?: ValidationConfig) {

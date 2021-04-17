@@ -1,6 +1,7 @@
 import path from "path";
 import { Directory, IndentationText, Project, SourceFile, ts } from "ts-morph";
 import { fileGeneratedHeader } from "./messages.json";
+import { createProgressBar } from "./progressBar";
 
 export interface BaseParams {
   project: string;
@@ -8,15 +9,16 @@ export interface BaseParams {
   debug: boolean;
 }
 
-type MapForEachCallback<K, V> = (value: V, key: K, map: ReadonlyMap<K, V>) => void;
-
 export default abstract class GeneratorBase<TParams extends BaseParams, TConfig> {
   protected project: Project;
-  protected config: Partial<TConfig>;
+  protected config: TConfig;
 
   constructor(protected params: TParams) {}
 
   public async init() {
+    const progress = createProgressBar("Parsing");
+    progress.start(2, 0);
+
     // TODO make formatting configurable or load from settings
     this.project = new Project({
       tsConfigFilePath: this.params.project,
@@ -24,6 +26,8 @@ export default abstract class GeneratorBase<TParams extends BaseParams, TConfig>
         indentationText: IndentationText.TwoSpaces,
       },
     });
+
+    progress.increment();
 
     if (this.params.debug) {
       this.logDiagnostics();
@@ -38,6 +42,9 @@ export default abstract class GeneratorBase<TParams extends BaseParams, TConfig>
     } else {
       this.config = defaultConfig;
     }
+
+    progress.increment();
+    progress.stop();
   }
 
   protected async saveFile(file: SourceFile) {
