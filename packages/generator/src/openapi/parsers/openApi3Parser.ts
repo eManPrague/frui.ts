@@ -216,7 +216,7 @@ export default class OpenApi3Parser implements ApiModel {
     endpoint.path = path;
     endpoint.method = method;
     endpoint.repository = action.tags?.[0] ?? "General";
-    endpoint.description = action.description ?? action.summary;
+    endpoint.description = action.description?.trim() ?? action.summary?.trim();
 
     const parameters =
       action.parameters?.filter(

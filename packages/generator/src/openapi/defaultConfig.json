@@ -31,6 +31,8 @@
     "objectEntityContent": "@objectEntityContent.hbs",
     "objectEntityFile": "@objectEntityFile.hbs",
     "generatedEntityHeader": "@generatedEntityHeader.hbs",
+    "repositoryAction": "@repositoryAction.hbs",
+    "repositoryFile": "@repositoryFile.hbs",
     "stringLiteralEntity": "@stringLiteralEntity.hbs",
     "stringLiteralEntityFile": "@stringLiteralEntityFile.hbs",
     "unionEntity": "@unionEntity.hbs",

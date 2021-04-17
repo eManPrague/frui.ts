@@ -1,10 +1,9 @@
 /* eslint-disable @typescript-eslint/tslint/config */
 import camelCase from "lodash/camelCase";
 import uniq from "lodash/uniq";
-import { ClassDeclaration, CodeBlockWriter, Directory, SourceFile } from "ts-morph";
+import { CodeBlockWriter, Directory, SourceFile } from "ts-morph";
 import GeneratorBase from "../../generatorBase";
 import { pascalCase } from "../../helpers";
-import { entityGeneratedHeader } from "../../messages.json";
 import Endpoint from "../models/endpoint";
 import TypeReference from "../models/typeReference";
 
@@ -13,7 +12,11 @@ export interface RepositoryWriterConfig {
 }
 
 export default class RepositoryWriter {
-  constructor(private parentDirectory: Directory, private config: RepositoryWriterConfig) {}
+  constructor(
+    private parentDirectory: Directory,
+    private config: RepositoryWriterConfig,
+    private templates: Record<"repositoryAction" | "repositoryFile", Handlebars.TemplateDelegate>
+  ) {}
 
   write(repositoryBaseName: string, actions: Endpoint[]) {
     const repositoryName = `${pascalCase(repositoryBaseName)}Repository`;
@@ -24,77 +27,67 @@ export default class RepositoryWriter {
     }
 
     const existingFile = this.parentDirectory.getSourceFile(fileName);
-    const actualFile = existingFile
+    return existingFile
       ? this.updateFile(existingFile, repositoryName, actions)
       : this.createFile(fileName, repositoryName, actions);
-
-    actualFile.formatText();
-    return actualFile;
   }
 
   private updateFile(file: SourceFile, repositoryName: string, actions: Endpoint[]) {
-    const currentClass = file.getClassOrThrow(pascalCase(repositoryName));
-    this.updateClass(currentClass, actions);
+    const repository = file.getClassOrThrow(pascalCase(repositoryName));
+
+    for (const action of actions) {
+      const method = repository.getMethod(camelCase(action.name));
+
+      if (!method) {
+        repository.addMember(this.getActionContent(action));
+      }
+    }
 
     return file;
   }
 
   private createFile(fileName: string, repositoryName: string, actions: Endpoint[]) {
-    return this.parentDirectory.createSourceFile(
-      fileName,
-      writer => {
-        writer.writeLine(entityGeneratedHeader);
-        writer.writeLine(`import RepositoryBase from "./repositoryBase";`);
-        this.writeEntityImports(writer, actions);
+    const result = this.templates.repositoryFile({
+      repositoryName,
+      imports: this.getRequiredImports(actions),
+      actions: () => actions.map(x => this.getActionContent(x)),
+    });
 
-        writer.blankLineIfLastNot();
-        writer.writeLine(`export default class ${repositoryName} extends RepositoryBase {`);
-
-        for (const action of actions) {
-          this.writeAction(writer, action);
-        }
-
-        writer.writeLine("}");
-      },
-      { overwrite: true }
-    );
+    return this.parentDirectory.createSourceFile(fileName, result, { overwrite: true });
   }
 
-  private updateClass(repository: ClassDeclaration, actions: Endpoint[]) {
-    for (const action of actions) {
-      const method = repository.getMethod(camelCase(action.name));
-
-      if (!method) {
-        repository.addMember(writer => {
-          this.writeAction(writer, action);
-        });
-      }
-    }
-  }
-
-  private writeEntityImports(writer: CodeBlockWriter, actions: Endpoint[]) {
-    const entitiesToImport = uniq(
+  private getRequiredImports(actions: Endpoint[]) {
+    return uniq(
       actions
         .flatMap(action => [action.queryParam, action.requestBody?.typeReference, getMainResponse(action)?.typeReference])
         .filter((x): x is TypeReference => !!x && x.isImportRequired)
-    );
-
-    entitiesToImport.forEach(entity => {
+    ).map(entity => {
       const name = entity.getTypeName();
-      writer.writeLine(`import ${name} from "${this.config.entitiesRelativePath}/${camelCase(name)}";`);
+      return `import ${name} from "${this.config.entitiesRelativePath}/${camelCase(name)}";`;
     });
   }
 
-  private writeAction(writer: CodeBlockWriter, action: Endpoint) {
-    writer.conditionalWriteLine(!!action.description, `/** ${action.description} */`);
-    writer.write(camelCase(action.name));
-    writer.write("(");
+  private getActionContent(action: Endpoint) {
+    const mainResponse = getMainResponse(action);
 
-    const parameters = Array.from(this.getMethodParameters(action));
-    writer.write(parameters.join(", "));
+    const context = {
+      action,
+      path: getPathStringWithPlaceholders(action),
+      parameters: this.getMethodParameters(action),
+      requestContentType: action.requestBody?.contentType,
+      response: mainResponse,
+      isResponseArray: mainResponse?.typeReference.isArray,
+      responseType: mainResponse?.typeReference.getTypeName(),
+      responseTypeDeclaration: mainResponse?.typeReference.getTypeDeclaration(),
+      responses:
+        action.responses &&
+        Object.entries(action.responses).map(([statusCode, resultType]) => ({
+          statusCode,
+          returnType: resultType?.typeReference.getTypeDeclaration(),
+        })),
+    };
 
-    writer.write(")");
-    writer.block(() => this.writeMethodBody(writer, action));
+    return this.templates.repositoryAction(context);
   }
 
   private *getMethodParameters(action: Endpoint) {
@@ -109,64 +102,6 @@ export default class RepositoryWriter {
     if (action.requestBody) {
       yield `payload: ${action.requestBody.typeReference.getTypeDeclaration()}`;
     }
-  }
-
-  private writeMethodBody(writer: CodeBlockWriter, action: Endpoint) {
-    const response = getMainResponse(action);
-
-    switch (action.method) {
-      case "get":
-        // const isPaged = isPagedListAction(action);
-
-        this.writeApiCall(writer, action, () => {
-          if (response) {
-            const queryParameterText = action.queryParam ? ", query" : "";
-            if (response.typeReference.isArray) {
-              writer.write(`.getEntities(${response.typeReference.getTypeName()}${queryParameterText})`);
-            } else {
-              writer.write(`.getEntity(${response.typeReference.getTypeName()}${queryParameterText})`);
-            }
-          }
-        });
-        break;
-
-      case "post":
-      case "put":
-      case "patch":
-        const isPayloadFormsData = action.requestBody?.contentType === "multipart/form-data";
-        if (isPayloadFormsData) {
-          writer.writeLine(`entityToFormData(payload);`);
-        }
-
-        this.writeApiCall(writer, action, () => {
-          if (action.requestBody) {
-            writer.write(`.${action.method}${isPayloadFormsData ? "Data" : "Entity"}(payload`);
-            writer.conditionalWrite(!!response, `, ${response?.typeReference.getTypeDeclaration()}`);
-            writer.write(`)`);
-          } else {
-            writer.write(`.${action.method}({})`);
-          }
-        });
-        break;
-
-      default:
-        writer.writeLine(`// ${action.method} ${action.path}`);
-        break;
-    }
-
-    if (action.responses) {
-      for (const [result, resultType] of Object.entries(action.responses)) {
-        writer.writeLine(`// ${result}: ${resultType?.typeReference.getTypeDeclaration()}`);
-      }
-    }
-  }
-
-  private writeApiCall(writer: CodeBlockWriter, action: Endpoint, additionalContent: () => void) {
-    const path = getPathStringWithPlaceholders(action);
-    writer.write(`return this.callApi(api => api.path(${path})`);
-    additionalContent();
-    writer.write(`);`);
-    writer.newLine();
   }
 }
 
@@ -198,5 +133,5 @@ function getPathStringWithPlaceholders(action: Endpoint) {
     path = path.replace(`{${param.externalName || param.name}}`, "${" + param.name + "}");
   }
 
-  return "`" + path + "`";
+  return path;
 }

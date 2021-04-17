@@ -96,11 +96,19 @@ export default class FileGenerator {
     const saveSteps = Math.ceil(repositories.length * 0.1 + 1);
     progress.start(1 + repositories.length + saveSteps, 0);
 
-    const directory = this.project.createDirectory(this.config.repositoriesPath);
+    const templates = {
+      repositoryAction: await this.readTemplate("repositoryAction"),
+      repositoryFile: await this.readTemplate("repositoryFile"),
+    };
 
-    const writer = new RepositoryWriter(directory, {
-      entitiesRelativePath: getRelativePath(this.config.repositoriesPath, this.config.entitiesPath),
-    });
+    const directory = this.project.createDirectory(this.config.repositoriesPath);
+    const writer = new RepositoryWriter(
+      directory,
+      {
+        entitiesRelativePath: getRelativePath(this.config.repositoriesPath, this.config.entitiesPath),
+      },
+      templates
+    );
 
     progress.increment(1);
 
