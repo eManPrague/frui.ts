@@ -13,7 +13,7 @@ describe("helpers", () => {
     });
 
     it("returns local path when source and target is same", () => {
-      const result = getRelativePath("src/repositories", "src/repositories");
+      const result = getRelativePath("src/data", "src/data");
       expect(result).toBe("./");
     });
   });

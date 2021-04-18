@@ -1,8 +1,7 @@
 import camelCase from "lodash/camelCase";
 import uniq from "lodash/uniq";
-import { CodeBlockWriter, Directory, SourceFile } from "ts-morph";
+import { Directory, SourceFile } from "ts-morph";
 import GeneratorBase from "../../generatorBase";
-import { entityGeneratedHeader } from "../../messages.json";
 import ObservableFormatter from "../formatters/observableFormatter";
 import AliasEntity from "../models/aliasEntity";
 import EntityProperty from "../models/entityProperty";

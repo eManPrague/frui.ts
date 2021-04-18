@@ -1,7 +1,7 @@
 /* eslint-disable @typescript-eslint/tslint/config */
 import camelCase from "lodash/camelCase";
 import uniq from "lodash/uniq";
-import { CodeBlockWriter, Directory, SourceFile } from "ts-morph";
+import { Directory, SourceFile } from "ts-morph";
 import GeneratorBase from "../../generatorBase";
 import { pascalCase } from "../../helpers";
 import Endpoint from "../models/endpoint";
