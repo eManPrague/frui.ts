@@ -50,7 +50,10 @@ Let's add our first view model and present it with a view.
 import { ScreenBase } from "@frui.ts/screens";
 
 export default class TodoListViewModel extends ScreenBase {
-  name = "TODO List";
+  constructor() {
+    super();
+    this.nameValue = "TODO List";
+  }
 }
 ```
 
@@ -100,7 +103,6 @@ Now, let's add the functionality we require from the view model:
 import { observable, action, computed } from "mobx";
 
 export default class TodoListViewModel extends ScreenBase {
-  name = "TODO List";
   @observable list: TodoItem[] = [];
   ...
 }

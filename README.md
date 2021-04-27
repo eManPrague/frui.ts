@@ -10,6 +10,8 @@ You can read our [business overview](OVERVIEW.md) or jump to the [documentation]
 
 # Quick documentation links
 
+- [Guidelines](GUIDELINES.md)
+- [Troubleshooting](TROUBLE.md)
 - [API client](packages/apiclient/README.md)
 - [CRA template](packages/cra-template/README.md)
 - [Data](packages/data/README.md)
@@ -174,7 +176,3 @@ Frui.ts is not a platform like, e.g., Angular - it does not force you to do your
 
 - [Simple TODO list](examples/simpletodolist/README.md)
 - [Complex application](examples/complexdemo/README.md)
-
-## Tips and tricks
-
-- Design the app and logic from ViewModels, not Views.

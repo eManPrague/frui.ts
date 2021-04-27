@@ -78,7 +78,7 @@ errorsVisible = hasVisibleErrors(target); // true
 
 ## ManualEntityValidator
 
-Basic implementation of `IValidator` interface where you need to manually add validation errors. This is useful when the validation is handled by a server.
+Basic implementation of `IValidator` interface where you need to manually add validation errors. This is useful when the validation is handled by the server.
 
 ### Usage
 
@@ -137,6 +137,40 @@ errorsVisible = hasVisibleErrors(target); // true
 clearErrors(target);
 ```
 
+## Combined validation
+
+In order to combine automatic and manual validation, you can create an automatic validation rule called `manualValidation` that accepts a manual validator as its params. With that, you can add and remove errors through the manual validator and they will be reflected through the automatic validator as well. Thus, you should attach the automatic validator to the entity (so that all errors are properly picked by any inputs and other observers), and keep the reference to the manual validator only for custom changes.
+
+```ts
+import { get } from "mobx";
+
+// define the 'manualErrors' validation rule
+validatorsRepository.set("manualValidation", (value, propertyName, entity, params) =>
+  // note that the 'params' argument here is the manual validator
+  get(params.errors, propertyName);
+);
+```
+
+You can then use the rule as follows. Keep in mind that each target entity should have its own instance of the manual validator as you probably don't want to share validation errors among multiple entities.
+
+```ts
+const target = { firstName: "John" };
+
+const customManualValidator = new ManualEntityValidator<typeof target>(false);
+
+const validationRules = {
+  firstName: {
+    required: true,
+    manualValidation: customManualValidator
+  }
+}
+attachAutomaticValidator(target, validationRules);
+
+// later
+customManualValidator.addError("firstName", "First name is wrong");
+```
+
+Frui.ts v2 will include a refactored architecture of validators that will bring a more straightforward solution using composed validators.
+
 ## TODO
- - Composed validator to use client and server-side validation
- - Async validators for long validation calls
+ - Async validators for long validation calls.

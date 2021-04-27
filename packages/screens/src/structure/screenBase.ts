@@ -9,7 +9,13 @@ import { IChild, IConductor, IScreen } from "./types";
 
 export default abstract class ScreenBase implements IScreen, IChild, ICanNavigate {
   navigationName: string;
-  @observable name: string;
+  @observable protected nameValue: string;
+
+  @computed
+  get name() {
+    return this.nameValue;
+  }
+
   parent: IConductor<ScreenBase>;
 
   // child

@@ -29,10 +29,11 @@ export default class FileGenerator {
     for (const { type } of items) {
       if (type instanceof Enum) {
         enumWriter.write(type);
+      } else if (type instanceof InheritedEntity) {
+        const baseEntity = type.baseEntities.map(x => x.type).filter(x => x instanceof ObjectEntity)[0] as ObjectEntity;
+        objectWriter.write(type, baseEntity);
       } else if (type instanceof ObjectEntity) {
         objectWriter.write(type);
-      } else if (type instanceof InheritedEntity) {
-        this.handleInheritedEntity(objectWriter, type);
       } else if (type instanceof UnionEntity) {
         unionWriter.write(type);
       }
@@ -45,13 +46,5 @@ export default class FileGenerator {
     progress.increment(saveSteps);
 
     progress.stop();
-  }
-
-  private handleInheritedEntity(writer: ObjectEntityWriter, source: InheritedEntity) {
-    const objects = source.baseEntities.filter(x => x.type instanceof ObjectEntity).map(x => x.type as ObjectEntity);
-
-    const properties = objects.slice(1).flatMap(x => x.properties);
-    const composedEntity = new ObjectEntity(source.name, properties);
-    writer.write(composedEntity, objects[0]);
   }
 }

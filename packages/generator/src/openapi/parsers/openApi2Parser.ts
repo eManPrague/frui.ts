@@ -97,17 +97,31 @@ export default class OpenApi2Parser {
 
   private parseAllOfObject(name: string, definition: OpenAPIV2.SchemaObject) {
     // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
-    const innerTypes = definition.allOf!.map((x, i) =>
-      this.parseSchemaObject(`${name}Parent${i + 1}`, x as OpenAPIV2.SchemaObject | OpenAPIV2.ItemsObject)
+    const subTypes = definition.allOf!;
+
+    const plainObjects = subTypes.filter(
+      x => !isV2ReferenceObject(x) && x.type === "object" && !x.allOf && !x.oneOf
+    ) as OpenAPIV2.SchemaObject[];
+
+    const otherParents = subTypes
+      .filter(x => !plainObjects.includes(x as any))
+      .map((x, i) => this.parseSchemaObject(`${name}Parent${i + 1}`, x as OpenAPIV2.SchemaObject));
+
+    const properties = plainObjects.flatMap(x => this.extractObjectProperties(name, x));
+
+    const entity = new InheritedEntity(name, otherParents, properties);
+
+    plainObjects.forEach(object =>
+      object.required?.forEach(property => entity.addPropertyRestriction(property, Restriction.required, true))
     );
 
-    const entity = new InheritedEntity(name, innerTypes);
     return this.setTypeReference(name, entity);
   }
 
   private parseOneOfObject(name: string, definition: OpenAPIV2.SchemaObject) {
     // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
-    const innerTypes = definition.oneOf!.map((x, i) =>
+    const subTypes = definition.oneOf!;
+    const innerTypes = subTypes.map((x, i) =>
       this.parseSchemaObject(`${name}Option${i + 1}`, x as OpenAPIV2.SchemaObject | OpenAPIV2.ItemsObject)
     );
 
@@ -116,14 +130,18 @@ export default class OpenApi2Parser {
   }
 
   private parseObjectWithProperties(name: string, definition: OpenAPIV2.SchemaObject) {
-    const properties = definition.properties
-      ? Object.entries(definition.properties).map(x => this.parseEntityProperty(name, x[0], x[1]))
-      : [];
+    const properties = this.extractObjectProperties(name, definition);
 
     const entity = new ObjectEntity(name, properties);
     definition.required?.forEach(property => entity.addPropertyRestriction(property, Restriction.required, true));
 
     return this.setTypeReference(name, entity);
+  }
+
+  private extractObjectProperties(entityName: string, definition: OpenAPIV2.SchemaObject) {
+    return definition.properties
+      ? Object.entries(definition.properties).map(x => this.parseEntityProperty(entityName, x[0], x[1]))
+      : [];
   }
 
   private parseEntityProperty(

@@ -1,8 +1,9 @@
 import { ScreenBase } from "@frui.ts/screens";
 
 export default class InheritedTestViewModel extends ScreenBase {
-  constructor(public name = "InheritedTestViewModel") {
+  constructor(name = "InheritedTestViewModel") {
     super();
+    this.nameValue = name;
   }
 
   protected onInitialize() {

@@ -5,6 +5,7 @@ import { fileGeneratedHeader } from "./messages.json";
 export interface BaseParams {
   project: string;
   config: string;
+  debug: boolean;
 }
 
 export default abstract class GeneratorBase<TParams extends BaseParams, TConfig> {
@@ -21,6 +22,10 @@ export default abstract class GeneratorBase<TParams extends BaseParams, TConfig>
         indentationText: IndentationText.TwoSpaces,
       },
     });
+
+    if (this.params.debug) {
+      this.logDiagnostics();
+    }
 
     const defaultConfig = await this.getDefaultConfig();
 
@@ -51,6 +56,23 @@ export default abstract class GeneratorBase<TParams extends BaseParams, TConfig>
 
   protected writeGeneratedHeader(file: SourceFile) {
     file.insertText(0, x => x.writeLine(fileGeneratedHeader));
+  }
+
+  protected getDiagnostics() {
+    const entries = this.project.getPreEmitDiagnostics();
+    return entries.map(x => ({
+      message: x.getMessageText(),
+      source: x.getSource(),
+      lineNumber: x.getLineNumber(),
+      code: x.getCode(),
+      category: x.getCategory,
+    }));
+  }
+
+  protected logDiagnostics() {
+    for (const row of this.getDiagnostics()) {
+      console.warn(row);
+    }
   }
 
   protected abstract getDefaultConfig(): Promise<TConfig>;

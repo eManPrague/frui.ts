@@ -6,8 +6,6 @@ import { uuid } from "uuidv4";
 type FilterType = "all" | "completed" | "active";
 
 export default class TodoListViewModel extends ScreenBase {
-  name = "TODO List";
-
   @observable list: TodoItem[] = [];
   @observable newItem: TodoItem;
   @observable editedItem?: TodoItem;
@@ -35,6 +33,8 @@ export default class TodoListViewModel extends ScreenBase {
   constructor() {
     super();
     this.setNewItem();
+
+    this.nameValue = "TODO List";
   }
 
   @action private setNewItem() {

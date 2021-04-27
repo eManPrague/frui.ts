@@ -121,11 +121,16 @@ export class RestRequestBuilder {
     return this;
   }
 
-  getQueryString(query: any) {
-    return stringify(query, this.queryStringOptions ?? RestRequestBuilder.DefaultQueryStringOptions);
+  getQueryString(query: any, queryStringOptions?: StringifyOptions) {
+    return stringify(query, queryStringOptions ?? this.queryStringOptions ?? RestRequestBuilder.DefaultQueryStringOptions);
   }
 
-  appendQuery(url: string, query?: any) {
-    return query ? `${url}?${this.getQueryString(query)}` : url;
+  appendQuery(url: string, query?: any, queryStringOptions?: StringifyOptions) {
+    if (!query) {
+      return url;
+    }
+
+    const queryString = typeof query === "string" ? query : this.getQueryString(query, queryStringOptions);
+    return `${url}?${queryString}`;
   }
 }

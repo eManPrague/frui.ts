@@ -1,4 +1,4 @@
-import { ensureObservableProperty } from "@frui.ts/helpers";
+﻿import { ensureObservableProperty } from "@frui.ts/helpers";
 import { computed, extendObservable, get, observable } from "mobx";
 import { IEntityValidationRules, IEntityValidator, IPropertyValidationRules, ValidationErrors } from "./types";
 import validatorsRepository from "./validatorsRepository";
@@ -47,6 +47,7 @@ export default class AutomaticEntityValidator<TTarget extends Record<string, any
         continue;
       }
 
+      // TODO just add warning that the target property is not observable
       ensureObservableProperty(target, propertyName, target[propertyName]);
       this.validatedProperties.push(propertyName);
 

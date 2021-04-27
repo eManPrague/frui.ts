@@ -6,11 +6,16 @@ import "./helpers";
 export default class OneChildActiveViewModel extends ConductorOneChildActive<ChildViewModel> {
   private childCounter = 1;
 
+  @action
+  setName(value: string) {
+    this.nameValue = value;
+  }
+
   @action.bound
   addChild() {
     const newChild = new ChildViewModel();
     newChild.navigationName = this.childCounter.toString();
-    newChild.name = `Child ${this.childCounter}`;
+    newChild.setName(`Child ${this.childCounter}`);
     newChild.text = `This is content of child #${this.childCounter}`;
     this.children.push(newChild);
 
