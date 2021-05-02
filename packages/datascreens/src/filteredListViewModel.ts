@@ -3,11 +3,11 @@ import { IPagingFilter, SortingDirection } from "@frui.ts/data";
 import { attachAutomaticDirtyWatcher, IHasDirtyWatcher, resetDirty } from "@frui.ts/dirtycheck";
 import { bound } from "@frui.ts/helpers";
 import { ScreenBase } from "@frui.ts/screens";
-import { IHasValidation, validate } from "@frui.ts/validation";
 import { action, isObservableArray, observable } from "mobx";
 import ListViewModel from "./listViewModel";
+import { validate } from "@frui.ts/validation";
 
-type OmitValidationAndDirtyWatcher<T> = Omit<T, keyof IHasDirtyWatcher<T> | keyof IHasValidation<T>>;
+type OmitValidationAndDirtyWatcher<T> = Omit<T, keyof IHasDirtyWatcher<T>>;
 
 export default abstract class FilteredListViewModel<
   TEntity,
@@ -17,7 +17,7 @@ export default abstract class FilteredListViewModel<
   static defaultPageSize = 30;
 
   /** Currently edited filter */
-  @observable filter: TFilter & IHasDirtyWatcher<TFilter> & Partial<IHasValidation<TFilter>>;
+  @observable filter: TFilter & IHasDirtyWatcher<TFilter>;
   /** Currently edited paging filter */
   @observable pagingFilter: IPagingFilter;
 
@@ -46,7 +46,7 @@ export default abstract class FilteredListViewModel<
   }
 
   protected cloneFilterForApply(filter: TFilter): OmitValidationAndDirtyWatcher<TFilter> {
-    const { __dirtycheck, __validation, ...clonedFilter } = this.filter;
+    const { __dirtycheck, ...clonedFilter } = this.filter;
 
     // we need to clone array properties so that they are not shared with the original filter
     Object.entries(clonedFilter).forEach(([key, value]) => {

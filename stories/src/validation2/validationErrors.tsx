@@ -1,5 +1,5 @@
 import { observer } from "mobx-react-lite";
-import { EntityValidator } from "@frui.ts/validation2";
+import { EntityValidator } from "@frui.ts/validation";
 import React from "react";
 
 function validationErrors({ validator, property }: { validator: EntityValidator<any>; property: string }) {

@@ -10,7 +10,6 @@ call yarn lerna bootstrap --scope=@frui.ts/helpers --force-local
 call yarn lerna bootstrap --scope=@frui.ts/htmlcontrols --force-local
 call yarn lerna bootstrap --scope=@frui.ts/screens --force-local
 call yarn lerna bootstrap --scope=@frui.ts/validation --force-local
-call yarn lerna bootstrap --scope=@frui.ts/validation2 --force-local
 call yarn lerna bootstrap --scope=@frui.ts/views --force-local
 call yarn lerna bootstrap --scope=@frui.ts/example-complexdemo --force-local
 call yarn lerna bootstrap --scope=@frui.ts/examples-simpletodolist --force-local

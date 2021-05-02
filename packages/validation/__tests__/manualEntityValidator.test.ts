@@ -1,103 +1,96 @@
-import { autorun, get } from "mobx";
-import { attachManualValidator, getValidationMessage, validate } from "../src/helpers";
-import ManualEntityValidator, { addError, removeError } from "../src/manualEntityValidator";
+import { autorun } from "mobx";
+import ManualEntityValidator from "../src/manualEntityValidator";
+import { ValidationResult } from "../src/types";
+import { testCoreValidatorFunctions, expectInvalid, expectValid } from "./testHelpers";
 
 interface ITarget {
   firstName: string;
 }
 
 describe("ManualEntityValidator", () => {
-  test("initial state is valid", () => {
-    const validator = new ManualEntityValidator<ITarget>(false);
+  testCoreValidatorFunctions(
+    () => {
+      const validator = new ManualEntityValidator<ITarget>();
+      validator.setResult("firstName", { code: "required", isValid: true });
+      return validator;
+    },
+    () => {
+      const validator = new ManualEntityValidator<ITarget>();
+      validator.setResult("firstName", { code: "required", isValid: false });
+      return validator;
+    },
 
-    expect(validator.errors.firstName).toBeUndefined();
-    expect(validator.isValid).toBeTruthy();
-  });
+    () => {
+      return new ManualEntityValidator<ITarget>();
+    }
+  );
 
   test("adding and removing errors changes valid state", () => {
     const validator = new ManualEntityValidator<ITarget>(false);
 
-    validator.addError("firstName", "First name is wrong");
-    expect(validator.errors.firstName).toBe("First name is wrong");
-    expect(validator.isValid).toBeFalsy();
-
-    validator.removeError("firstName");
-    expect(validator.errors.firstName).toBeUndefined();
+    validator.setResult("firstName", { code: "nameCheck", isValid: true });
     expect(validator.isValid).toBeTruthy();
+    expect(validator.checkValid("firstName")).toBeTruthy();
+    expectValid(validator.getResults("firstName"));
+
+    validator.setResult("firstName", { code: "nameCheck", isValid: false });
+    expect(validator.isValid).toBeFalsy();
+    expect(validator.checkValid("firstName")).toBeFalsy();
+    expectInvalid(validator.getResults("firstName"));
+
+    validator.clearResult("firstName", "nameCheck");
+    expect(validator.isValid).toBeTruthy();
+    expect(validator.checkValid("firstName")).toBeTruthy();
+    expectValid(validator.getResults("firstName"));
   });
 
-  test("clearErrors() removes all validation errors", () => {
+  test("clearResults(propertyName) removes validation results for property", () => {
     const validator = new ManualEntityValidator<ITarget>(false);
 
-    validator.addError("firstName", "First name is wrong");
-    expect(validator.errors.firstName).toBe("First name is wrong");
+    validator.setResult("firstName", { code: "nameCheck", isValid: false });
     expect(validator.isValid).toBeFalsy();
+    expect(validator.checkValid("firstName")).toBeFalsy();
+    expectInvalid(validator.getResults("firstName"));
 
-    validator.clearErrors();
-    expect(validator.errors.firstName).toBeUndefined();
+    validator.clearResults("firstName");
     expect(validator.isValid).toBeTruthy();
+    expect(validator.checkValid("firstName")).toBeTruthy();
+    expectValid(validator.getResults("firstName"));
+  });
+
+  test("clearResults() removes all validation results", () => {
+    const validator = new ManualEntityValidator<ITarget>(false);
+
+    validator.setResult("firstName", { code: "nameCheck", isValid: false });
+    expect(validator.isValid).toBeFalsy();
+    expect(validator.checkValid("firstName")).toBeFalsy();
+    expectInvalid(validator.getResults("firstName"));
+
+    validator.clearResults();
+    expect(validator.isValid).toBeTruthy();
+    expect(validator.checkValid("firstName")).toBeTruthy();
+    expectValid(validator.getResults("firstName"));
   });
 
   test("Reaction works without validator initialization", () => {
     const validator = new ManualEntityValidator<ITarget>(false);
 
-    let lastError = "Unknown" as string | undefined;
+    let lastResults: Iterable<ValidationResult> | undefined = undefined;
 
-    const dispose = autorun(() => (lastError = get(validator.errors, "firstName")));
-    expect(lastError).toBeUndefined();
+    const dispose = autorun(() => (lastResults = validator.getResults("firstName")));
+    expectValid(lastResults);
 
-    validator.addError("firstName", "one");
-    expect(lastError).toBe("one");
+    validator.setResult("firstName", { code: "nameCheck", isValid: false });
+    expectInvalid(lastResults);
 
-    validator.addError("firstName", "two");
-    expect(lastError).toBe("two");
+    validator.setResult("firstName", { code: "nameCheck", isValid: true });
+    expectValid(lastResults);
 
-    validator.removeError("firstName");
-    expect(lastError).toBeUndefined();
+    validator.setResult("firstName", { code: "required", isValid: false });
+    expectInvalid(lastResults);
 
-    validator.addError("firstName", "three");
-    expect(lastError).toBe("three");
-
-    dispose();
-  });
-
-  test("Github Issue #11", () => {
-    const target = {
-      firstName: "John",
-    };
-
-    attachManualValidator(target, false);
-    expect(validate(target)).toBeTruthy();
-
-    addError(target, "firstName", "This is not valid");
-    expect(validate(target)).toBeFalsy();
-
-    removeError(target, "firstName");
-    expect(validate(target)).toBeTruthy();
-
-    addError(target, "firstName", "This is not valid again");
-    expect(validate(target)).toBeFalsy();
-  });
-
-  test("Github Issue #27", () => {
-    const target = {
-      firstName: "John",
-    };
-
-    let lastError = "Unknown" as string | undefined;
-
-    attachManualValidator(target, true);
-    const dispose = autorun(() => (lastError = getValidationMessage(target, "firstName")));
-    expect(lastError).toBeUndefined();
-
-    addError(target, "firstName", "This is not valid");
-    expect(lastError).toBe("This is not valid");
-
-    removeError(target, "firstName");
-    expect(lastError).toBeUndefined();
-
-    addError(target, "firstName", "This is not valid again");
-    expect(lastError).toBe("This is not valid again");
+    validator.clearResults();
+    expectValid(lastResults);
 
     dispose();
   });

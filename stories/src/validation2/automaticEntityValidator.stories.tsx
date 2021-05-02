@@ -1,5 +1,5 @@
 import { Check, Input } from "@frui.ts/bootstrap";
-import { AutomaticEntityValidator, Configuration, EntityValidationRules, ValidationResult } from "@frui.ts/validation2";
+import { AutomaticEntityValidator, Configuration, EntityValidationRules, ValidationResult } from "@frui.ts/validation";
 import { storiesOf } from "@storybook/react";
 import { action, observable } from "mobx";
 import { Observer } from "mobx-react-lite";
@@ -12,9 +12,9 @@ import "!style-loader!css-loader!./style.css";
 Configuration.valueValidators.set("required", (value, context) => {
   console.log("validating 'required'", value, context);
   if (value) {
-    return { code: "required", isValid: true };
-  } else {
     return undefined;
+  } else {
+    return { code: "required", isValid: false };
   }
 });
 Configuration.valueValidators.set("isJohn", (value, context) => {

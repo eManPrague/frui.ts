@@ -1,3 +1,4 @@
+import { PropertyName } from "@frui.ts/helpers";
 import { runInAction } from "mobx";
 import { Configuration } from ".";
 import { AggregatedValidationResult, EntityValidator } from "./types";
@@ -10,6 +11,25 @@ export function attachValidator<TEntity>(target: TEntity, validator: EntityValid
 export function getValidator<TEntity>(target: TEntity) {
   // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access
   return (target as any)[Configuration.validatorAttachedProperty] as EntityValidator<TEntity> | undefined;
+}
+
+/**
+ * @deprecated Used for back-compatibility with the previous version of @frui.ts/validation
+ */
+export function getValidationMessage<TEntity>(target: TEntity, propertyName: PropertyName<TEntity>): string | undefined {
+  const validator = getValidator(target);
+  if (validator) {
+    for (const result of validator.getVisibleResults(propertyName)) {
+      if (!result.isValid) {
+        const message = result.message || result.code;
+        if (message) {
+          return message;
+        }
+      }
+    }
+  }
+
+  return undefined;
 }
 
 export function checkValid(target: unknown): AggregatedValidationResult {

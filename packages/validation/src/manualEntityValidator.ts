@@ -1,58 +1,53 @@
 import { PropertyName } from "@frui.ts/helpers";
-import { action, computed, observable, remove, set, values, keys } from "mobx";
-import { IHasManualValidation, IManualEntityValidator, ValidationErrors } from "./types";
+import { action, observable } from "mobx";
+import EntityValidatorBase, { emptyResults } from "./entityValidatorBase";
+import { ValidationResult } from "./types";
 
-/** Entity validator implementation acting as a simple validation errors list that needs to be manually maintained */
-export default class ManualEntityValidator<TTarget> implements IManualEntityValidator<TTarget> {
-  @observable isErrorsVisible: boolean;
-  @observable errors: ValidationErrors<TTarget> = {};
+export default class ManualEntityValidator<TEntity = any> extends EntityValidatorBase<TEntity> {
+  protected validationResults = observable.map<PropertyName<TEntity>, ValidationResult[]>();
 
-  constructor(isErrorsVisible: boolean) {
-    this.isErrorsVisible = isErrorsVisible;
+  getAllResults(): Iterable<[PropertyName<TEntity>, ValidationResult[]]> {
+    return (this.isEnabled && this.validationResults.entries()) || emptyResults;
+  }
+
+  getResults(propertyName: PropertyName<TEntity>): Iterable<ValidationResult> {
+    return (this.isEnabled && this.validationResults.get(propertyName)) || emptyResults;
   }
 
   @action
-  clearErrors() {
-    keys(this.errors).forEach(prop => void remove(this.errors, prop));
+  setResult(propertyName: PropertyName<TEntity>, result: ValidationResult) {
+    const results = this.validationResults.get(propertyName);
+    if (results) {
+      const index = results.findIndex(x => x.code === result.code);
+      if (index < 0) {
+        results.push(result);
+      } else {
+        results.splice(index, 1, result);
+      }
+    } else {
+      this.validationResults.set(propertyName, observable.array([result]));
+    }
   }
 
   @action
-  addError(propertyName: PropertyName<TTarget>, message: string) {
-    set(this.errors, propertyName, message);
+  clearResult(propertyName: PropertyName<TEntity>, resultCode: string) {
+    const results = this.validationResults.get(propertyName);
+    if (results) {
+      const index = results.findIndex(x => x.code === resultCode);
+      if (index >= 0) {
+        results.splice(index, 1);
+      }
+    }
   }
 
+  clearResults(): void;
+  clearResults(propertyName: PropertyName<TEntity>): void;
   @action
-  removeError(propertyName: PropertyName<TTarget>) {
-    remove(this.errors, propertyName);
-  }
-
-  @computed get isValid() {
-    return values(this.errors).every(x => !x);
-  }
-}
-
-export function hasManualEntityValidator<TTarget>(target: any): target is IHasManualValidation<TTarget> {
-  return (
-    !!target &&
-    (target as IHasManualValidation<TTarget>).__validation !== undefined &&
-    typeof (target as IHasManualValidation<TTarget>).__validation.addError === "function"
-  );
-}
-
-export function clearErrors<TTarget>(target: TTarget) {
-  if (hasManualEntityValidator<TTarget>(target)) {
-    target.__validation.clearErrors();
-  }
-}
-
-export function addError<TTarget>(target: TTarget, propertyName: PropertyName<TTarget>, message: string) {
-  if (hasManualEntityValidator<TTarget>(target)) {
-    target.__validation.addError(propertyName, message);
-  }
-}
-
-export function removeError<TTarget>(target: TTarget, propertyName: PropertyName<TTarget>) {
-  if (hasManualEntityValidator<TTarget>(target)) {
-    target.__validation.removeError(propertyName);
+  clearResults(propertyName?: PropertyName<TEntity>) {
+    if (propertyName) {
+      this.validationResults.delete(propertyName);
+    } else {
+      this.validationResults.clear();
+    }
   }
 }

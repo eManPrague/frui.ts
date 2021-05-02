@@ -1,65 +1,102 @@
-﻿import { ensureObservableProperty } from "@frui.ts/helpers";
-import { computed, extendObservable, get, observable } from "mobx";
-import { IEntityValidationRules, IEntityValidator, IPropertyValidationRules, ValidationErrors } from "./types";
-import validatorsRepository from "./validatorsRepository";
+import { PropertyName } from "@frui.ts/helpers";
+import { get, observable } from "mobx";
+import { EntityValidationRules, ValidationFunction } from "./automaticValidatorTypes";
+import DefaultConfiguration from "./configuration";
+import EntityValidatorBase, { emptyResults } from "./entityValidatorBase";
+import { ValidationResult } from "./types";
+import { attachValidator } from "./utils";
 
-type IPropertyBoundValidator = (propertyValue: any, entity: any) => string | undefined;
-const TrueValidator: IPropertyBoundValidator = _ => undefined;
-
-/** Creates actual validator function for a particular property based on the provided validation rules */
-export function createPropertyValidatorFromRules(propertyName: string, propertyRules: IPropertyValidationRules) {
-  let finalValidator: IPropertyBoundValidator | undefined;
-
-  for (const ruleName in propertyRules) {
-    const validator = validatorsRepository.get(ruleName);
-    if (!validator) {
-      throw new Error(`Unknown validator ${ruleName}. The validator must be registered in 'validatorsRepository'`);
-    }
-
-    const params = propertyRules[ruleName] as unknown;
-    if (finalValidator) {
-      const temp = finalValidator;
-      finalValidator = (propertyValue, entity) =>
-        validator(propertyValue, propertyName, entity, params) || temp(propertyValue, entity);
-    } else {
-      finalValidator = (propertyValue, entity) => validator(propertyValue, propertyName, entity, params);
-    }
-  }
-
-  return finalValidator || TrueValidator;
+interface AutomaticEntityValidatorConfiguration {
+  valueValidators: Map<string, ValidationFunction>;
+  resultMiddleware?: (result: ValidationResult) => ValidationResult;
 }
 
-/** Entity validator implementation that automatically observes validated entity's properties and maintains validation errors */
-export default class AutomaticEntityValidator<TTarget extends Record<string, any>> implements IEntityValidator<TTarget> {
-  @observable isErrorsVisible: boolean;
+export default class AutomaticEntityValidator<TEntity = any> extends EntityValidatorBase<TEntity> {
+  private _results: Readonly<Partial<Record<PropertyName<TEntity>, ValidationResult[]>>>;
+  private _validatedProperties: PropertyName<TEntity>[] = [];
 
-  @observable errors: ValidationErrors<TTarget> = {};
-  private validatedProperties: string[] = [];
+  constructor(
+    target: TEntity,
+    validationRules: EntityValidationRules<TEntity>,
+    isVisible = false,
+    private configuration: AutomaticEntityValidatorConfiguration = DefaultConfiguration
+  ) {
+    super(isVisible);
 
-  constructor(target: TTarget, entityValidationRules: IEntityValidationRules<TTarget>, isErrorsVisible: boolean) {
-    this.isErrorsVisible = isErrorsVisible;
+    this.buildObservableResults(target, validationRules);
+  }
 
-    for (const propertyName in entityValidationRules) {
-      const rules = (entityValidationRules as Record<string, IPropertyValidationRules>)[propertyName];
+  *getAllResults(): Iterable<[PropertyName<TEntity>, Iterable<ValidationResult>]> {
+    if (!this.isEnabled) {
+      return;
+    }
 
-      const validator = createPropertyValidatorFromRules(propertyName, rules);
-      if (!validator) {
-        continue;
+    for (const propertyName of this._validatedProperties) {
+      const propertyResults = get(this._results, propertyName) as ValidationResult[] | undefined;
+      if (propertyResults) {
+        yield [propertyName, propertyResults];
       }
-
-      // TODO just add warning that the target property is not observable
-      ensureObservableProperty(target, propertyName, target[propertyName]);
-      this.validatedProperties.push(propertyName);
-
-      extendObservable(this.errors, {
-        get [propertyName]() {
-          return validator(get(target, propertyName), target);
-        },
-      });
     }
   }
 
-  @computed get isValid() {
-    return this.validatedProperties.every(prop => !get(this.errors, prop));
+  getResults(propertyName: PropertyName<TEntity>): ValidationResult[] {
+    return (this.isEnabled && (get(this._results, propertyName) as ValidationResult[])) || emptyResults;
   }
+
+  private buildObservableResults(target: TEntity, entityValidationRules: EntityValidationRules<TEntity>) {
+    const errors: Partial<Record<PropertyName<TEntity>, ValidationResult[]>> = {};
+
+    for (const [name, propertyRules] of Object.entries<Record<string, unknown> | undefined>(entityValidationRules)) {
+      if (propertyRules) {
+        const propertyName = name as PropertyName<TEntity>;
+        this._validatedProperties.push(propertyName);
+
+        Object.defineProperty(errors, propertyName, {
+          get: buildAggregatedErrorGetter<TEntity>(target, propertyName, propertyRules, this.configuration),
+        });
+      }
+    }
+
+    this._results = observable(errors);
+  }
+}
+
+export function buildAggregatedErrorGetter<TEntity>(
+  entity: TEntity,
+  propertyName: PropertyName<TEntity>,
+  rules: Record<string, unknown>,
+  { valueValidators, resultMiddleware }: AutomaticEntityValidatorConfiguration
+): () => ValidationResult[] {
+  const validationCalls = Object.entries(rules).map(([validatorName, parameters]) => {
+    const validator = valueValidators.get(validatorName) as ValidationFunction<unknown, unknown, TEntity> | undefined;
+
+    if (!validator) {
+      throw new Error(
+        `Unknown validator '${validatorName}'. The validator must be registered in 'configuration.valueValidators'`
+      );
+    }
+
+    const validationContext = {
+      parameters,
+      entity,
+      propertyName,
+    };
+
+    return (value: unknown) => validator(value, validationContext);
+  });
+
+  return () => {
+    const value = get(entity, propertyName) as unknown;
+    const results = validationCalls.flatMap(x => x(value)).filter((x): x is ValidationResult => !!x); // TODO optimize with Iterable?
+    return resultMiddleware ? results.map(resultMiddleware) : results;
+  };
+}
+
+export function attachAutomaticValidator<TEntity>(
+  target: TEntity,
+  validationRules: EntityValidationRules<TEntity>,
+  isVisible = false
+) {
+  const automaticValidator = new AutomaticEntityValidator(target, validationRules, isVisible);
+  attachValidator(target, automaticValidator);
 }

@@ -1,94 +1,37 @@
-import { PropertyName } from "@frui.ts/helpers";
+import type { PropertyName } from "@frui.ts/helpers";
+import type { ValidationLoading } from "./configuration";
 
-/**
- * Contains validation errors for an entity.
- * Each key is a property name and value is error message for the respective property.
- *
- * Example:
- * ```ts
- * {
- *  firstName: "The value is required",
- *  age: "Age must be a positive number"
- * }
- * ```
- */
-export type ValidationErrors<TTarget> = Partial<Record<PropertyName<TTarget>, string>>;
+export interface ValidationResult {
+  readonly code: string;
+  readonly isValid: boolean;
+  readonly isLoading?: boolean;
 
-/** Validator attached to an entity reponsible for maintaining validation errors */
-export interface IEntityValidator<TTarget> {
-  /** Returns `true` when the validated entity has no validation errors, otherwise `false` */
-  isValid: boolean;
-
-  /** Indicates whether existing validation errors should be displayed to the user */
-  isErrorsVisible: boolean;
-
-  /** Validation errors for the validated entity */
-  errors: Readonly<ValidationErrors<TTarget>>;
+  message?: string;
+  messageParameters?: Record<string, unknown>;
 }
 
-/** Validator with manually maintained validation errors */
-export interface IManualEntityValidator<TTarget> extends IEntityValidator<TTarget> {
-  addError(propertyName: PropertyName<TTarget>, message: string): void;
-  removeError(propertyName: PropertyName<TTarget>): void;
-  clearErrors(): void;
+export interface AsyncValidationResult extends ValidationResult {
+  readonly isLoading: false;
 }
 
-/**
- * Contains validation definition for the whole entity.
- * Each key represents a single validated property.
- *
- * Example:
- * ```ts
- * {
- *  firstName: {
- *    required: true,
- *    maxLength: 20
- *  },
- *  age: {
- *    range: { min: 0,, max: 99 }
- *  }
- * }
- * ```
- */
-export type IEntityValidationRules<TTarget, TRuleNames = string> = Partial<
-  Record<PropertyName<TTarget>, IPropertyValidationRules<TRuleNames>>
->;
+export type AggregatedValidationResult = boolean | typeof ValidationLoading;
 
-/**
- * Contains validation definition for the whole entity.
- * Each key represents a single validated property.
- */
-export type ITypedEntityValidationRules<TTarget, TRules> = Partial<
-  Record<PropertyName<TTarget>, ITypedPropertyValidationRules<TRules>>
->;
+export type EntityValidationResults<TEntity> = Partial<Record<PropertyName<TEntity>, ValidationResult[]>>;
 
-/**
- * Contains validation rules for a single property.
- * Each key represents a validation rule, with rule-specific params as value.
- * You can restrict the list of possible keys
- *
- * Example:
- * ```ts
- * {
- *  required: true,
- *  range: { min: 0,, max: 99 }
- * }
- * ```
- */
-export type IPropertyValidationRules<TRuleNames = string> = Partial<Record<string & TRuleNames, any>>;
+export interface EntityValidator<TEntity> {
+  isEnabled: boolean;
+  isVisible: boolean;
+  readonly isValid: AggregatedValidationResult;
 
-/**
- * Contains validation rules for a single property,
- * based on a TRules type with all rules and parameters.
- */
-export type ITypedPropertyValidationRules<TRules> = IPropertyValidationRules<keyof TRules> & Partial<TRules>;
+  getAllResults(): Iterable<[PropertyName<TEntity>, Iterable<ValidationResult>]>;
+  getResults(propertyName: PropertyName<TEntity>): Iterable<ValidationResult>;
 
-/** Represents an entity with attached entity validator */
-export interface IHasValidation<TTarget> {
-  __validation: IEntityValidator<TTarget>;
-}
+  getAllVisibleResults(): Iterable<[PropertyName<TEntity>, Iterable<ValidationResult>]>;
+  getVisibleResults(propertyName: PropertyName<TEntity>): Iterable<ValidationResult>;
 
-/** Represents an entity with attached manual entity validator */
-export interface IHasManualValidation<TTarget> extends IHasValidation<TTarget> {
-  __validation: IManualEntityValidator<TTarget>;
+  checkValid(): AggregatedValidationResult;
+  checkValid(propertyName: PropertyName<TEntity>): AggregatedValidationResult;
+
+  checkValidAsync(): Promise<AggregatedValidationResult>;
+  checkValidAsync(propertyName: PropertyName<TEntity>): Promise<AggregatedValidationResult>;
 }

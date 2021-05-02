@@ -1,5 +1,5 @@
 import { Check, Input } from "@frui.ts/bootstrap";
-import { AutomaticEntityValidator, Configuration, EntityValidationRules, ValidationResult } from "@frui.ts/validation2";
+import { AutomaticEntityValidator, Configuration, EntityValidationRules, ValidationResult } from "@frui.ts/validation";
 import { storiesOf } from "@storybook/react";
 import { action, observable } from "mobx";
 import { Observer } from "mobx-react-lite";

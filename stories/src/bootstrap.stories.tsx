@@ -1,7 +1,7 @@
 import "!style-loader!css-loader!bootstrap/dist/css/bootstrap.css";
 import { Check, Input, Select } from "@frui.ts/bootstrap";
 import { attachAutomaticDirtyWatcher } from "@frui.ts/dirtycheck";
-import { attachAutomaticValidator, IEntityValidationRules, validatorsRepository } from "@frui.ts/validation";
+import { attachAutomaticValidator, Configuration, EntityValidationRules } from "@frui.ts/validation";
 import { storiesOf } from "@storybook/react";
 import { action, observable } from "mobx";
 import { Observer } from "mobx-react-lite";
@@ -21,10 +21,18 @@ const observableTarget = observable({
   isInactive: false,
   isThreeState: null,
   selectedItemKey: undefined as string | undefined,
-  selectedItem: undefined as any,
+  selectedItem: undefined as unknown,
 });
 
-const validationRules: IEntityValidationRules<typeof observableTarget> = {
+Configuration.valueValidators.set("required", (value, context) => {
+  if (value) {
+    return undefined;
+  } else {
+    return { code: "required", isValid: false, message: `${context.propertyName} is required` };
+  }
+});
+
+const validationRules: EntityValidationRules<typeof observableTarget> = {
   name: {
     required: true,
   },
@@ -32,9 +40,7 @@ const validationRules: IEntityValidationRules<typeof observableTarget> = {
     required: true,
   },
 };
-validatorsRepository.set("required", (value, propertyName, entity, params) =>
-  !params || value ? undefined : `${propertyName} is required.`
-);
+
 attachAutomaticValidator(observableTarget, validationRules, true);
 attachAutomaticDirtyWatcher(observableTarget, true);
 

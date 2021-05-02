@@ -1,4 +1,4 @@
-import type { ValidationFunction, AsyncValidationFunction } from "./automaticValidatorTypes";
+import type { AsyncValidationFunction, ValidationFunction } from "./automaticValidatorTypes";
 
 const ValidationLoading = Symbol("Validation loading");
 
