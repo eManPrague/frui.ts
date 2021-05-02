@@ -1,6 +1,4 @@
 module.exports = {
-  preset: 'ts-jest',
-  modulePathIgnorePatterns: [
-    'mocks/'
-  ]
+  preset: "ts-jest",
+  modulePathIgnorePatterns: ["mocks/", "testHelpers"],
 };

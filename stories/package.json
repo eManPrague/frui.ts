@@ -37,6 +37,7 @@
     "@frui.ts/htmlcontrols": "^999.0.0",
     "@frui.ts/screens": "^999.0.0",
     "@frui.ts/validation": "^999.0.0",
+    "@frui.ts/validation2": "^999.0.0",
     "@frui.ts/views": "^999.0.0",
     "bootstrap": "^4.5.3",
     "mobx": "^4.15.7",

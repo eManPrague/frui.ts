@@ -1,7 +1,7 @@
 import { ScreenBase } from "@frui.ts/screens";
 import { action, computed, observable } from "mobx";
 import TodoItem from "../models/todoItem";
-import { uuid } from "uuidv4";
+import { v4 as uuidv4 } from "uuid";
 
 type FilterType = "all" | "completed" | "active";
 
@@ -38,7 +38,7 @@ export default class TodoListViewModel extends ScreenBase {
   }
 
   @action private setNewItem() {
-    this.newItem = { id: uuid(), title: "", completed: false };
+    this.newItem = { id: uuidv4(), title: "", completed: false };
   }
 
   @action.bound addItem() {

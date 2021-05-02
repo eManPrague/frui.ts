@@ -111,11 +111,11 @@ export default class TodoListViewModel extends ScreenBase {
 - The VM should allow a new item to be edited. This item should be available when the VM is opened.
 
 ```
-yarn add uuidv4
+yarn add uuid
 ```
 
 ```ts
-import { uuid } from "uuidv4";
+import { v4 as uuidv4 } from "uuidv4";
 
 ...
 
