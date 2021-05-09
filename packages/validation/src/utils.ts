@@ -1,6 +1,6 @@
 import { PropertyName } from "@frui.ts/helpers";
 import { runInAction } from "mobx";
-import { Configuration } from ".";
+import Configuration from "./configuration";
 import { AggregatedValidationResult, EntityValidator } from "./types";
 
 export function attachValidator<TEntity>(target: TEntity, validator: EntityValidator<TEntity>) {

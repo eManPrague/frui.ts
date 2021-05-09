@@ -1,54 +1,101 @@
-import { ensureObservableProperty, PropertyName } from "@frui.ts/helpers";
-import { action, computed, extendObservable, get, observable } from "mobx";
-import { DirtyPropertiesList, IDirtyWatcher } from "./types";
+import { PropertyName } from "@frui.ts/helpers";
+import { get, observable } from "mobx";
+import DirtyWatcherBase from "./dirtyWatcherBase";
+import { attachDirtyWatcher } from "./utils";
 
-export interface DirtyWatchConfig<TTarget> {
-  exclude?: PropertyName<TTarget>[];
+export interface AutomaticDirtyWatcherParams<TEntity> {
+  isVisible?: boolean;
+  includedProperties?: PropertyName<TEntity>[];
+  excludedProperties?: PropertyName<TEntity>[];
 }
 
-/** Dirty watcher implementation that automatically observes watched entity's properties and maintains dirty flags */
-export default class AutomaticDirtyWatcher<TTarget extends Record<string, any>> implements IDirtyWatcher<TTarget> {
-  @observable isDirtyFlagVisible: boolean;
-  @observable dirtyProperties: DirtyPropertiesList<TTarget>;
-  private checkedProperties: string[];
+export default class AutomaticDirtyWatcher<TEntity = any> extends DirtyWatcherBase<TEntity> {
+  private _includedProperties?: PropertyName<TEntity>[];
+  private _excludedProperties?: PropertyName<TEntity>[];
 
-  constructor(private target: TTarget, isDirtyFlagVisible: boolean, private config?: DirtyWatchConfig<TTarget>) {
-    this.isDirtyFlagVisible = isDirtyFlagVisible;
+  private _results: Readonly<Partial<Record<PropertyName<TEntity>, boolean>>>;
+  private _watchedProperties: PropertyName<TEntity>[] = [];
+
+  constructor(private target: TEntity, params?: AutomaticDirtyWatcherParams<TEntity>) {
+    super(params?.isVisible);
+
+    if (typeof params === "object") {
+      this._includedProperties = params.includedProperties;
+      this._excludedProperties = params.excludedProperties;
+    }
+
     this.reset();
   }
 
-  @computed get isDirty() {
-    return this.checkedProperties.some(prop => !!get(this.dirtyProperties, prop));
+  checkDirty(): boolean;
+  checkDirty(propertyName: PropertyName<TEntity>): boolean;
+  checkDirty(propertyName?: any): boolean {
+    if (!this.isEnabled) {
+      return false;
+    }
+
+    if (propertyName) {
+      return !!this._results[propertyName as PropertyName<TEntity>];
+    } else {
+      for (const propertyName of this._watchedProperties) {
+        if (this._results[propertyName]) {
+          return true;
+        }
+      }
+
+      return false;
+    }
   }
 
-  @action
-  reset() {
-    this.dirtyProperties = {};
-    this.checkedProperties = [];
+  *getDirtyProperties(): Iterable<PropertyName<TEntity>> {
+    if (!this.isEnabled) {
+      return;
+    }
 
-    const target = this.target;
-
-    for (const propertyName in target) {
-      if (this.shouldWatchProperty(propertyName)) {
-        const originalValue = target[propertyName];
-
-        ensureObservableProperty(target, propertyName, originalValue);
-        this.checkedProperties.push(propertyName);
-
-        extendObservable(this.dirtyProperties, {
-          get [propertyName]() {
-            return get(target, propertyName) !== originalValue;
-          },
-        });
+    for (const propertyName of this._watchedProperties) {
+      if (this._results[propertyName]) {
+        yield propertyName;
       }
     }
   }
 
-  private shouldWatchProperty(propertyName: string) {
-    if (this.config?.exclude?.includes(propertyName)) {
-      return false;
+  reset() {
+    const resultsObject: Partial<Record<PropertyName<TEntity>, boolean>> = {};
+    this._watchedProperties.length = 0;
+
+    for (const name of Object.keys(this.target)) {
+      const propertyName = name as PropertyName<TEntity>;
+      if (
+        (!this._includedProperties || this._includedProperties.includes(propertyName)) &&
+        (!this._excludedProperties || !this._excludedProperties.includes(propertyName))
+      ) {
+        this._watchedProperties.push(propertyName);
+        const entity = this.target;
+        const originalValue = get(entity, propertyName) as unknown;
+        Object.defineProperty(resultsObject, propertyName, {
+          get: () => {
+            const currentValue = get(entity, propertyName) as unknown;
+            return originalValue !== currentValue;
+          },
+        });
+      }
     }
 
-    return true;
+    this._results = observable(resultsObject);
   }
+}
+
+export function attachAutomaticDirtyWatcher<TEntity>(target: TEntity): AutomaticDirtyWatcher<TEntity>;
+export function attachAutomaticDirtyWatcher<TEntity>(target: TEntity, isVisible: boolean): AutomaticDirtyWatcher<TEntity>;
+export function attachAutomaticDirtyWatcher<TEntity>(
+  target: TEntity,
+  params: AutomaticDirtyWatcherParams<TEntity>
+): AutomaticDirtyWatcher<TEntity>;
+export function attachAutomaticDirtyWatcher<TEntity>(
+  target: TEntity,
+  params?: AutomaticDirtyWatcherParams<TEntity> | boolean
+): AutomaticDirtyWatcher<TEntity> {
+  const automaticDirtyWatcher = new AutomaticDirtyWatcher(target, params as any);
+  attachDirtyWatcher(target, automaticDirtyWatcher);
+  return automaticDirtyWatcher;
 }

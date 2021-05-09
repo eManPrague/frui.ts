@@ -1,13 +1,11 @@
 /* eslint-disable @typescript-eslint/no-empty-function */
 import { IPagingFilter, SortingDirection } from "@frui.ts/data";
-import { attachAutomaticDirtyWatcher, IHasDirtyWatcher, resetDirty } from "@frui.ts/dirtycheck";
+import { attachAutomaticDirtyWatcher, EntityDirtyWatcher } from "@frui.ts/dirtycheck";
 import { bound } from "@frui.ts/helpers";
 import { ScreenBase } from "@frui.ts/screens";
+import { validate } from "@frui.ts/validation";
 import { action, isObservableArray, observable } from "mobx";
 import ListViewModel from "./listViewModel";
-import { validate } from "@frui.ts/validation";
-
-type OmitValidationAndDirtyWatcher<T> = Omit<T, keyof IHasDirtyWatcher<T>>;
 
 export default abstract class FilteredListViewModel<
   TEntity,
@@ -17,13 +15,15 @@ export default abstract class FilteredListViewModel<
   static defaultPageSize = 30;
 
   /** Currently edited filter */
-  @observable filter: TFilter & IHasDirtyWatcher<TFilter>;
+  @observable filter: TFilter;
+  filterDirtyWatcher: EntityDirtyWatcher<TFilter>;
+
   /** Currently edited paging filter */
   @observable pagingFilter: IPagingFilter;
 
   /** Filter as used when last loaded data.
    * This ensures that when, e.g., a page is changed, the original filter is used (instead of the currently edite, but not applied one). */
-  @observable.shallow appliedFilter: OmitValidationAndDirtyWatcher<TFilter>;
+  @observable.shallow appliedFilter: TFilter;
 
   constructor() {
     super();
@@ -41,18 +41,18 @@ export default abstract class FilteredListViewModel<
 
     this.appliedFilter = this.cloneFilterForApply(this.filter);
     this.pagingFilter.offset = 0;
-    resetDirty(this.filter);
+    this.filterDirtyWatcher.reset();
     return true;
   }
 
-  protected cloneFilterForApply(filter: TFilter): OmitValidationAndDirtyWatcher<TFilter> {
-    const { __dirtycheck, ...clonedFilter } = this.filter;
+  protected cloneFilterForApply(filter: TFilter): TFilter {
+    const clonedFilter = { ...this.filter };
 
     // we need to clone array properties so that they are not shared with the original filter
     Object.entries(clonedFilter).forEach(([key, value]) => {
       if (isObservableArray(value)) {
         // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
-        clonedFilter[key as keyof OmitValidationAndDirtyWatcher<TFilter>] = value.slice() as any;
+        clonedFilter[key as keyof TFilter] = value.slice() as any;
       }
     });
 
@@ -97,7 +97,8 @@ export default abstract class FilteredListViewModel<
     if (!this.filter) {
       const filter = this.createFilter();
       this.resetFilterValues(filter);
-      this.filter = attachAutomaticDirtyWatcher(filter, true);
+      this.filterDirtyWatcher = attachAutomaticDirtyWatcher(filter);
+      this.filter = filter;
     }
   }
 
