@@ -114,7 +114,7 @@ function defineArrayDirtyWatchProperty<TEntity>(
 
 function defineSetDirtyCheckProperty<TEntity>(
   resultsObject: Partial<Record<PropertyName<TEntity>, boolean>>,
-  originalValue: Set<any>,
+  originalValue: Set<unknown>,
   propertyName: PropertyName<TEntity>,
   entity: TEntity
 ) {

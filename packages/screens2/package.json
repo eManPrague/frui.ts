@@ -1,0 +1,47 @@
+{
+  "name": "@frui.ts/screens2",
+  "publishConfig": {
+    "access": "public"
+  },
+  "version": "999.0.0",
+  "description": "Frui.ts core classes for application structure and navigation",
+  "keywords": [
+    "front-end",
+    "framework",
+    "mvvm",
+    "router",
+    "mobx"
+  ],
+  "homepage": "https://github.com/eManPrague/frui.ts",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/eManPrague/frui.ts.git"
+  },
+  "bugs": {
+    "url": "https://github.com/eManPrague/frui.ts/issues"
+  },
+  "author": "Augustin Šulc <sulc.gusta@gmail.com>",
+  "license": "MIT",
+  "main": "dist/index.js",
+  "directories": {
+    "lib": "dist",
+    "test": "__tests__"
+  },
+  "files": [
+    "dist"
+  ],
+  "scripts": {
+    "clean": "rimraf dist",
+    "build": "tsc"
+  },
+  "dependencies": {
+    "@frui.ts/helpers": "^999.0.0"
+  },
+  "devDependencies": {
+    "jest-mock-extended": "^1.0.16",
+    "regenerator-runtime": "^0.13.7"
+  },
+  "peerDependencies": {
+    "mobx": "^4.0.0 || ^5.0.0"
+  }
+}
