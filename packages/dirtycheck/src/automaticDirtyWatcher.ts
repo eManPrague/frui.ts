@@ -1,5 +1,5 @@
-import { PropertyName } from "@frui.ts/helpers";
-import { get, observable } from "mobx";
+import { isSet, PropertyName } from "@frui.ts/helpers";
+import { get, isArrayLike, observable } from "mobx";
 import DirtyWatcherBase from "./dirtyWatcherBase";
 import { attachDirtyWatcher } from "./utils";
 
@@ -71,18 +71,69 @@ export default class AutomaticDirtyWatcher<TEntity = any> extends DirtyWatcherBa
       ) {
         this._watchedProperties.push(propertyName);
         const entity = this.target;
+
         const originalValue = get(entity, propertyName) as unknown;
-        Object.defineProperty(resultsObject, propertyName, {
-          get: () => {
-            const currentValue = get(entity, propertyName) as unknown;
-            return originalValue !== currentValue;
-          },
-        });
+
+        if (isArrayLike(originalValue)) {
+          defineArrayDirtyWatchProperty(resultsObject, originalValue, propertyName, entity);
+        } else if (isSet(originalValue)) {
+          defineSetDirtyCheckProperty(resultsObject, originalValue, propertyName, entity);
+        } else {
+          Object.defineProperty(resultsObject, propertyName, {
+            get: () => {
+              const currentValue = get(entity, propertyName) as unknown;
+              return originalValue !== currentValue;
+            },
+          });
+        }
       }
     }
 
     this._results = observable(resultsObject);
   }
+}
+
+function defineArrayDirtyWatchProperty<TEntity>(
+  resultsObject: Partial<Record<PropertyName<TEntity>, boolean>>,
+  originalValue: unknown[],
+  propertyName: PropertyName<TEntity>,
+  entity: TEntity
+) {
+  const arraySnapshot = originalValue.slice();
+  Object.defineProperty(resultsObject, propertyName, {
+    get: () => {
+      const currentValue = get(entity, propertyName) as unknown[];
+      return (
+        !currentValue ||
+        currentValue.length !== arraySnapshot.length ||
+        arraySnapshot.some((originalItem, index) => originalItem !== currentValue[index])
+      );
+    },
+  });
+}
+
+function defineSetDirtyCheckProperty<TEntity>(
+  resultsObject: Partial<Record<PropertyName<TEntity>, boolean>>,
+  originalValue: Set<any>,
+  propertyName: PropertyName<TEntity>,
+  entity: TEntity
+) {
+  const setSnapshot = new Set(originalValue);
+  Object.defineProperty(resultsObject, propertyName, {
+    get: () => {
+      const currentValue = get(entity, propertyName) as Set<unknown>;
+      if (!currentValue || currentValue.size !== setSnapshot.size) {
+        return true;
+      }
+
+      for (const item of setSnapshot.values()) {
+        if (!currentValue.has(item)) {
+          return true;
+        }
+      }
+      return false;
+    },
+  });
 }
 
 export function attachAutomaticDirtyWatcher<TEntity>(target: TEntity): AutomaticDirtyWatcher<TEntity>;
