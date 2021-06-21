@@ -45,7 +45,7 @@ describe("AutomaticDirtyWatcher", () => {
     expect(watcher.checkDirty("items")).toBeFalsy();
   });
 
-  test.only("watching a Set compares its content", () => {
+  test("watching a Set compares its content", () => {
     const target = observable({
       items: new Set([1]),
     });

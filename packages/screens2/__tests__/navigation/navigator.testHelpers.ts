@@ -1,19 +1,52 @@
 import { ManualPromise } from "@frui.ts/helpers";
 import TypedEventHub from "../../src/events/typedEventHub";
-import ScreenLifecycleNavigator from "../../src/navigation/screenLifecycleNavigator";
-import { NavigationContext } from "../../src/navigationContext";
+import { NavigationContext } from "../../src/models/navigationContext";
+import ScreenLifecycleEventHub from "../../src/navigation/screenLifecycleEventHub";
+import { LifecycleScreenNavigator } from "../../src/navigation/types";
 import { HasLifecycleEvents } from "../../src/screens/hasLifecycleHandlers";
 import ScreenBase from "../../src/screens/screenBase";
 
-describe("ScreenLifecycleNavigator", () => {
+export function testLifecycle<TNavigator extends LifecycleScreenNavigator, TScreen extends Partial<HasLifecycleEvents>>(
+  navigatorFactory: (screen: TScreen, eventHub?: ScreenLifecycleEventHub<TScreen>) => TNavigator
+) {
+  // TODO add other functions
+
+  // TODO test activate/deactivate and isActive value
+
+  describe("navigate", () => {
+    it("sets the isActive property to true", async () => {
+      const screen = {};
+      const navigator = navigatorFactory(screen as any);
+
+      expect(navigator.isActive).toBe(false);
+
+      await navigator.navigate([]);
+
+      expect(navigator.isActive).toBe(true);
+    });
+  });
+
+  describe("deactivate", () => {
+    it("sets the isActive property to false", async () => {
+      const screen = {};
+      const navigator = navigatorFactory(screen as any);
+
+      await navigator.navigate([]);
+      expect(navigator.isActive).toBe(true);
+
+      await navigator.deactivate(true);
+      expect(navigator.isActive).toBe(false);
+    });
+  });
+
   describe("canNavigate", () => {
     it("calls canNavigate on the viewModel", async () => {
       const screen = {
         canNavigate: jest.fn(() => false),
       };
-      const navigator = new ScreenLifecycleNavigator(screen);
+      const navigator = navigatorFactory(screen as any);
 
-      const result = await navigator.canNavigate(undefined);
+      const result = await navigator.canNavigate([{ name: "screen" }]);
       expect(result).toBe(false);
       expect(screen.canNavigate).toBeCalled();
     });
@@ -30,9 +63,9 @@ describe("ScreenLifecycleNavigator", () => {
         events: eventHub,
       };
 
-      const navigator = new ScreenLifecycleNavigator(screen);
+      const navigator = navigatorFactory(screen as any);
 
-      const result = await navigator.canNavigate(undefined);
+      const result = await navigator.canNavigate([{ name: "screen" }]);
       expect(result).toBe(false);
       expect(isCalled).toBeTruthy();
     });
@@ -45,25 +78,25 @@ describe("ScreenLifecycleNavigator", () => {
         return false;
       });
 
-      const navigator = new ScreenLifecycleNavigator({}, eventHub);
+      const navigator = navigatorFactory(screen as any, eventHub);
 
-      const result = await navigator.canNavigate(undefined);
+      const result = await navigator.canNavigate([{ name: "screen" }]);
       expect(result).toBe(false);
       expect(isCalled).toBeTruthy();
     });
 
     it("does not fail when no viewModel available", async () => {
-      const navigator = new ScreenLifecycleNavigator({});
+      const navigator = navigatorFactory(screen as any);
 
-      const result = await navigator.canNavigate(undefined);
+      const result = await navigator.canNavigate([{ name: "screen" }]);
       expect(result).toBe(true);
     });
 
     it("does not fail when no eventEmitter available", async () => {
       const screen = {};
-      const navigator = new ScreenLifecycleNavigator(screen);
+      const navigator = navigatorFactory(screen as any);
 
-      const result = await navigator.canNavigate(undefined);
+      const result = await navigator.canNavigate([{ name: "screen" }]);
       expect(result).toBe(true);
     });
   });
@@ -80,10 +113,10 @@ describe("ScreenLifecycleNavigator", () => {
           return manualPromise.promise;
         },
       };
-      const navigator = new ScreenLifecycleNavigator(screen);
+      const navigator = navigatorFactory(screen as any);
 
-      const callPromise1 = navigator.navigate(undefined);
-      const callPromise2 = navigator.navigate(undefined);
+      const callPromise1 = navigator.navigate([{ name: "screen" }]);
+      const callPromise2 = navigator.navigate([{ name: "screen" }]);
 
       // give some time for the activate promises to start
       await new Promise(resolve => setTimeout(resolve));
@@ -106,10 +139,10 @@ describe("ScreenLifecycleNavigator", () => {
           return manualPromise.promise;
         },
       };
-      const navigator = new ScreenLifecycleNavigator(screen);
+      const navigator = navigatorFactory(screen as any);
 
-      const callPromise1 = navigator.navigate(undefined);
-      const callPromise2 = navigator.navigate(undefined);
+      const callPromise1 = navigator.navigate([{ name: "screen" }]);
+      const callPromise2 = navigator.navigate([{ name: "screen" }]);
 
       // give some time for the activate promises to start
       await new Promise(resolve => setTimeout(resolve));
@@ -132,10 +165,10 @@ describe("ScreenLifecycleNavigator", () => {
           return manualPromise.promise;
         },
       };
-      const navigator = new ScreenLifecycleNavigator(screen);
+      const navigator = navigatorFactory(screen as any);
 
-      const callPromise1 = navigator.navigate(undefined);
-      const callPromise2 = navigator.navigate(undefined);
+      const callPromise1 = navigator.navigate([{ name: "screen" }]);
+      const callPromise2 = navigator.navigate([{ name: "screen" }]);
 
       // give some time for the activate promises to start
       await new Promise(resolve => setTimeout(resolve));
@@ -147,4 +180,4 @@ describe("ScreenLifecycleNavigator", () => {
       expect(callsCounter).toBe(2);
     });
   });
-});
+}

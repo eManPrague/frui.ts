@@ -1,6 +1,6 @@
 import TypedEventHub from "../events/typedEventHub";
 import ScreenLifecycleEventHub from "../navigation/screenLifecycleEventHub";
-import ScreenNavigator from "../navigation/screenNavigator";
+import { ScreenNavigator } from "../navigation/types";
 import { HasLifecycleEvents } from "./hasLifecycleHandlers";
 
 export default abstract class ScreenBase<TNavigator extends ScreenNavigator = ScreenNavigator> {
@@ -10,4 +10,10 @@ export default abstract class ScreenBase<TNavigator extends ScreenNavigator = Sc
   constructor() {
     this.events = new TypedEventHub<HasLifecycleEvents<this>>();
   }
+}
+
+export function getNavigator<TNavigator extends ScreenNavigator = ScreenNavigator>(
+  target: unknown
+): Partial<TNavigator> | undefined {
+  return (target as ScreenBase<TNavigator>)?.navigator;
 }

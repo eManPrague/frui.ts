@@ -1,45 +1,70 @@
 import { computed, observable, runInAction } from "mobx";
-import { ClosingNavigationContext, NavigationContext } from "../navigationContext";
+import { ClosingNavigationContext, NavigationContext } from "../models/navigationContext";
+import PathElement from "../models/pathElements";
 import { HasLifecycleEvents } from "../screens/hasLifecycleHandlers";
 import ScreenBase from "../screens/screenBase";
 import ScreenLifecycleEventHub from "./screenLifecycleEventHub";
-import ScreenNavigator from "./screenNavigator";
+import { LifecycleScreenNavigator } from "./types";
 
-export default class ScreenLifecycleNavigator<
+export default class LifecycleScreenNavigatorBase<
   TScreen extends Partial<HasLifecycleEvents> & Partial<ScreenBase>,
-  TNavigationParams
-> implements ScreenNavigator {
-  eventHub?: ScreenLifecycleEventHub<TScreen>;
+  TNavigationParams extends Record<string, string>
+> implements LifecycleScreenNavigator {
+  // extension point - you can either set getNavigationName function, or assign navigationName property
+  getNavigationName?: () => string;
 
-  constructor(private screen: TScreen, eventHub?: ScreenLifecycleEventHub<TScreen>) {
-    this.eventHub = eventHub ?? ((screen as unknown) as ScreenBase).events;
+  navigationNameValue?: string;
+  get navigationName() {
+    return this.navigationNameValue ?? this.getNavigationName?.() ?? this.screen?.constructor?.name ?? "unknown";
   }
 
-  canNavigate(navigationParams: TNavigationParams) {
+  set navigationName(value: string) {
+    this.navigationNameValue = value || undefined;
+  }
+
+  eventHub?: ScreenLifecycleEventHub<TScreen>;
+  protected screen?: TScreen;
+
+  constructor(screen?: TScreen, eventHub?: ScreenLifecycleEventHub<TScreen>) {
+    this.screen = screen;
+    this.eventHub = eventHub ?? ((screen as unknown) as ScreenBase)?.events;
+  }
+
+  canNavigate(path: PathElement[]) {
     const context: NavigationContext<TScreen> = {
       navigator: this,
       screen: this.screen,
-      navigationParams,
+      navigationParams: path[0]?.params,
+      path,
     };
 
     return this.aggregateBooleanAll("canNavigate", context);
   }
 
-  async navigate(navigationParams: TNavigationParams): Promise<void> {
+  getNavigationParams?: () => TNavigationParams;
+  getNavigationPath(): PathElement[] {
+    return [
+      {
+        name: this.navigationName,
+        params: this.getNavigationParams?.(),
+      },
+    ];
+  }
+
+  async navigate(path: PathElement[]): Promise<void> {
     const context: NavigationContext<TScreen> = {
       navigator: this,
       screen: this.screen,
-      navigationParams,
+      navigationParams: path[0]?.params,
+      path,
     };
 
     if (!this.isInitialized) {
-      await (this.initializePromise ||
-        (this.initializePromise = this.initializeInner(context).then(this.clearInitializePromise, this.clearInitializePromise)));
+      await this.initialize(context);
     }
 
     if (!this.isActive) {
-      await (this.activatePromise ||
-        (this.activatePromise = this.activateInner(context).then(this.clearActivatePromise, this.clearActivatePromise)));
+      await this.activate(context);
     }
 
     await this.callAll("onNavigate", context);
@@ -49,6 +74,13 @@ export default class ScreenLifecycleNavigator<
   @observable protected isInitializedValue = false;
   @computed get isInitialized() {
     return this.isInitializedValue;
+  }
+
+  protected initialize(context: NavigationContext<TScreen>) {
+    return (
+      this.initializePromise ||
+      (this.initializePromise = this.initializeInner(context).then(this.clearInitializePromise, this.clearInitializePromise))
+    );
   }
 
   private initializePromise?: Promise<void>;
@@ -67,6 +99,13 @@ export default class ScreenLifecycleNavigator<
   @observable protected isActiveValue = false;
   @computed get isActive() {
     return this.isActiveValue;
+  }
+
+  protected activate(context: NavigationContext<TScreen>) {
+    return (
+      this.activatePromise ||
+      (this.activatePromise = this.activateInner(context).then(this.clearActivatePromise, this.clearActivatePromise))
+    );
   }
 
   private activatePromise?: Promise<void>;
