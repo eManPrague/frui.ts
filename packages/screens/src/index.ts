@@ -3,7 +3,8 @@ export { default as NavigationConfiguration } from "./navigation/navigationConfi
 export * from "./navigation/navigationPath";
 export { default as Router } from "./navigation/router";
 export * from "./navigation/types";
-export { default as UrlNavigationAdapter } from "./navigation/urlNavigationAdapter";
+export { default as HashNavigationAdapter } from "./navigation/hashNavigationAdapter";
+export { default as PathNavigationAdapter, NAVIGATE_EVENT_NAME } from "./navigation/pathNavigationAdapter";
 export { default as BusyWatcher, watchBusy } from "./structure/busyWatcher";
 export { default as ConductorAllChildrenActive } from "./structure/conductorAllChildrenActive";
 export { default as ConductorBase } from "./structure/conductorBase";

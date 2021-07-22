@@ -1,11 +1,12 @@
 import { bound } from "@frui.ts/helpers";
 import { ParseOptions, parseUrl } from "query-string";
-import { IScreen, ScreenBase } from "..";
+import ScreenBase from "../structure/screenBase";
+import { IScreen } from "../structure/types";
 import NavigationConfiguration from "./navigationConfiguration";
 import { appendQueryString } from "./navigationPath";
 import { ICanNavigate } from "./types";
 
-export default class UrlNavigationAdapter {
+export default class HashNavigationAdapter {
   private isNavigationSuppressed = false;
 
   // this is used when navigate() is called, to eventually call updateUrl() only for the last VM (not its parents that are activated as well along the path)

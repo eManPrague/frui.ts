@@ -1,5 +1,6 @@
 # 0.17.0
 - `ScreenBase.name` is now a property with a default getter implementation reading the value from the `nameValue` field. To adapt to this change, you should replace `this.name = xxx` with `this.nameValue = xxx`.
+- BREAKING: Renamed `UrlNavigationAdapter` to `HashNavigationAdapter` and added `PathNavigationAdapter` to @frui.ts/screens.
 
 # 0.16.2
 
