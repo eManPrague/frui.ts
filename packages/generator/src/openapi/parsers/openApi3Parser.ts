@@ -1,6 +1,10 @@
+import { camelCase } from "lodash";
 import { OpenAPIV3 } from "openapi-types";
 import { pascalCase } from "../../helpers";
+import NameFormatter from "../formatters/nameFormatter";
 import AliasEntity from "../models/aliasEntity";
+import ApiModel from "../models/apiModel";
+import Endpoint from "../models/endpoint";
 import EntityProperty from "../models/entityProperty";
 import Enum from "../models/enum";
 import InheritedEntity from "../models/inheritedEntity";
@@ -10,14 +14,21 @@ import TypeReference from "../models/typeReference";
 import UnionEntity from "../models/unionEntity";
 import { isV3ReferenceObject, isV3SchemaObject } from "./helpers";
 
-export default class OpenApi3Parser {
+export default class OpenApi3Parser implements ApiModel {
   types = new Map<string, TypeReference>();
+  endpoints: Endpoint[];
 
-  parse(api: OpenAPIV3.Document) {
-    if (api.components?.schemas) {
-      for (const [name, definition] of Object.entries(api.components.schemas)) {
+  constructor(private apiDocument: OpenAPIV3.Document) {}
+
+  parse() {
+    if (this.apiDocument.components?.schemas) {
+      for (const [name, definition] of Object.entries(this.apiDocument.components.schemas)) {
         this.parseSchemaObject(name, definition);
       }
+    }
+
+    if (this.apiDocument.paths) {
+      this.parsePaths(this.apiDocument.paths);
     }
   }
 
@@ -184,8 +195,140 @@ export default class OpenApi3Parser {
     this.types.set(name, newReference);
     return newReference;
   }
+
+  parsePaths(paths: OpenAPIV3.PathsObject) {
+    this.endpoints = Object.entries(paths)
+      .flatMap(([path, methods]) =>
+        Object.entries(methods).map(([method, action]) => ({
+          path,
+          method: method.toLowerCase(),
+          action: action as OpenAPIV3.OperationObject,
+        }))
+      )
+      .filter(x => isHttpMethod(x.method))
+      .map(x => this.parseEndpoint(x));
+  }
+
+  private parseEndpoint({ path, method, action }: { path: string; method: string; action: OpenAPIV3.OperationObject }) {
+    const name = action.operationId ?? camelCase(method + path);
+
+    const endpoint = new Endpoint(name);
+    endpoint.path = path;
+    endpoint.method = method;
+    endpoint.repository = action.tags?.[0] ?? "General";
+    endpoint.description = action.description?.trim() ?? action.summary?.trim();
+
+    const parameters =
+      action.parameters?.filter(
+        (x: any): x is OpenAPIV3.ParameterObject & Required<Pick<OpenAPIV3.ParameterObject, "schema">> => !!x.schema
+      ) ?? [];
+
+    endpoint.pathParams = parameters
+      .filter(x => x.in === "path")
+      .map(x => {
+        const param = this.parseEndpointParameter(name, x);
+        NameFormatter.toCamelCase(param);
+        return param;
+      });
+
+    const queryParams = parameters.filter(x => x.in === "query").map(x => this.parseEndpointParameter(name, x));
+    if (queryParams.length) {
+      const queryEntity = new ObjectEntity(name + "Query", queryParams);
+      endpoint.queryParam = this.setTypeReference(queryEntity.name, queryEntity);
+    }
+
+    if (action.requestBody) {
+      endpoint.requestBody = this.getRequestBodyType(name + "Request", action.requestBody);
+    }
+
+    if (action.responses) {
+      endpoint.responses = {};
+      Object.entries(action.responses).forEach(([code, response]) => {
+        const responseBodyType = this.getResponseBodyType(`${name}Response${code}`, response);
+        if (response) {
+          (endpoint.responses as Record<string, unknown>)[code] = responseBodyType;
+        }
+      });
+    }
+
+    return endpoint;
+  }
+
+  private parseEndpointParameter(
+    parentName: string,
+    input: OpenAPIV3.ParameterObject & Required<Pick<OpenAPIV3.ParameterObject, "schema">>
+  ) {
+    const type = this.parseSchemaObject(parentName, input.schema);
+    const parameter = new EntityProperty(cleanParameterName(input.name), type);
+    parameter.description = input.description;
+    if (input.required) {
+      parameter.addRestriction(Restriction.required, true);
+    }
+    return parameter;
+  }
+
+  private getRequestBodyType(
+    fallbackName: string,
+    input: OpenAPIV3.ReferenceObject | OpenAPIV3.RequestBodyObject
+  ): { contentType: string; typeReference: TypeReference } | undefined {
+    if (isV3ReferenceObject(input)) {
+      const name = input.$ref.substr(input.$ref.lastIndexOf("/") + 1);
+      const object = this.apiDocument.components?.requestBodies?.[name];
+      return object ? this.getRequestBodyType(name, object) : undefined;
+    } else {
+      const contentType = Object.keys(input.content)[0];
+      const schemaObject = input.content[contentType]?.schema;
+      const typeReference = schemaObject && this.parseSchemaObject(fallbackName, schemaObject);
+      return typeReference ? { contentType, typeReference } : undefined;
+    }
+  }
+
+  private getResponseBodyType(
+    fallbackName: string,
+    input: OpenAPIV3.ReferenceObject | OpenAPIV3.ResponseObject
+  ): { contentType: string; typeReference: TypeReference } | undefined {
+    if (isV3ReferenceObject(input)) {
+      const name = input.$ref.substr(input.$ref.lastIndexOf("/") + 1);
+      const object = this.apiDocument.components?.responses?.[name];
+      return object ? this.getResponseBodyType(name, object) : undefined;
+    } else {
+      if (!input.content) {
+        return undefined;
+      }
+
+      const contentType = Object.keys(input.content)[0];
+      const schemaObject = input.content?.[contentType]?.schema;
+      const typeReference = schemaObject && this.parseSchemaObject(fallbackName, schemaObject);
+      return typeReference ? { contentType, typeReference } : undefined;
+    }
+  }
 }
 
 function getReferencedEntityName(ref: string) {
   return ref.replace("#/components/schemas/", "");
+}
+
+function isHttpMethod(method: string) {
+  switch (method) {
+    case "get":
+    case "put":
+    case "post":
+    case "delete":
+    case "option":
+    case "head":
+    case "patch":
+    case "trace":
+      return true;
+
+    default:
+      return false;
+  }
+}
+
+function cleanParameterName(name: string) {
+  if (name.endsWith("[]")) {
+    return name.substring(0, name.length - 2);
+  } else {
+    return name;
+  }
 }

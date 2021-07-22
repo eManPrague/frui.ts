@@ -19,10 +19,22 @@ export default class TypeReference {
 
   getTypeDeclaration() {
     const name = this.getTypeName();
-    if (this.type instanceof AliasEntity && this.type.isArray) {
+    if (this.isArray) {
       return `${name}[]`;
     }
 
     return name;
+  }
+
+  get isArray() {
+    return this.type instanceof AliasEntity && this.type.isArray;
+  }
+
+  get isImportRequired(): boolean {
+    if (this.type instanceof AliasEntity) {
+      return this.type.referencedEntity.isImportRequired;
+    } else {
+      return typeof this.type === "object";
+    }
   }
 }

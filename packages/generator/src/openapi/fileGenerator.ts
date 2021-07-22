@@ -1,5 +1,11 @@
+import fs from "fs";
+import Handlebars from "handlebars";
+import { camelCase, groupBy } from "lodash";
+import path from "path";
 import { Project } from "ts-morph";
+import { getRelativePath, pascalCase } from "../helpers";
 import { createProgressBar } from "../progressBar";
+import Endpoint from "./models/endpoint";
 import Enum from "./models/enum";
 import InheritedEntity from "./models/inheritedEntity";
 import ObjectEntity from "./models/objectEntity";
@@ -8,21 +14,52 @@ import UnionEntity from "./models/unionEntity";
 import { IConfig, IGeneratorParams } from "./types";
 import EnumWriter from "./writers/enumWriter";
 import ObjectEntityWriter from "./writers/objectEntityWriter";
+import RepositoryWriter from "./writers/repositoryWriter";
 import StringLiteralWriter from "./writers/stringLiteralWriter";
 import UnionEntityWriter from "./writers/unionEntityWriter";
 
 export default class FileGenerator {
-  constructor(private project: Project, private params: IGeneratorParams, private config: Partial<IConfig>) {}
+  constructor(private project: Project, private params: IGeneratorParams, private config: IConfig) {
+    this.initTemplates();
+  }
 
-  async generate(items: TypeReference[]) {
-    const progress = createProgressBar("Generating");
+  private initTemplates() {
+    Handlebars.registerHelper({
+      camelCase: x => camelCase(x),
+      pascalCase: x => pascalCase(x),
+      rawText: x => x,
+      and: (...args) => Array.prototype.every.call(args, Boolean),
+      or: (...args) => Array.prototype.slice.call(args, 0, -1).some(Boolean),
+    });
+  }
+
+  async generateEntities(items: TypeReference[]) {
+    if (!this.config.entitiesPath) {
+      return;
+    }
+
+    const progress = createProgressBar("Generating entities");
     const saveSteps = Math.ceil(items.length * 0.1 + 1);
     progress.start(1 + items.length + saveSteps, 0);
 
-    const directory = this.project.createDirectory(this.params.outputFolder);
-    const enumWriter = this.config.enums === "enum" ? new EnumWriter(directory) : new StringLiteralWriter(directory);
-    const objectWriter = new ObjectEntityWriter(directory, this.params, this.config);
-    const unionWriter = new UnionEntityWriter(directory);
+    const templates = {
+      enumEntity: await this.readTemplate("enumEntity"),
+      enumEntityFile: await this.readTemplate("enumEntityFile"),
+      objectEntityContent: await this.readTemplate("objectEntityContent"),
+      objectEntityFile: await this.readTemplate("objectEntityFile"),
+      stringLiteralEntity: await this.readTemplate("stringLiteralEntity"),
+      stringLiteralEntityFile: await this.readTemplate("stringLiteralEntityFile"),
+      unionEntity: await this.readTemplate("unionEntity"),
+      unionEntityFile: await this.readTemplate("unionEntityFile"),
+    };
+
+    Handlebars.registerPartial("generatedEntityHeader", await this.readTemplate("generatedEntityHeader"));
+
+    const directory = this.project.createDirectory(this.config.entitiesPath);
+    const enumWriter =
+      this.config.enums === "enum" ? new EnumWriter(directory, templates) : new StringLiteralWriter(directory, templates);
+    const objectWriter = new ObjectEntityWriter(directory, this.config, templates);
+    const unionWriter = new UnionEntityWriter(directory, templates);
 
     progress.increment(1);
 
@@ -46,5 +83,59 @@ export default class FileGenerator {
     progress.increment(saveSteps);
 
     progress.stop();
+  }
+
+  async generateRepositories(endpoints: Endpoint[]) {
+    if (!this.config.repositoriesPath) {
+      return;
+    }
+
+    const repositories = Object.entries(groupBy(endpoints, x => x.repository));
+
+    const progress = createProgressBar("Generating repositories");
+    const saveSteps = Math.ceil(repositories.length * 0.1 + 1);
+    progress.start(1 + repositories.length + saveSteps, 0);
+
+    const templates = {
+      repositoryAction: await this.readTemplate("repositoryAction"),
+      repositoryFile: await this.readTemplate("repositoryFile"),
+    };
+
+    const directory = this.project.createDirectory(this.config.repositoriesPath);
+    const writer = new RepositoryWriter(
+      directory,
+      {
+        entitiesRelativePath: getRelativePath(this.config.repositoriesPath, this.config.entitiesPath),
+      },
+      templates
+    );
+
+    progress.increment(1);
+
+    for (const [name, actions] of repositories) {
+      writer.write(name, actions);
+
+      progress.increment();
+    }
+
+    await this.project.save();
+    progress.increment(saveSteps);
+
+    progress.stop();
+  }
+
+  private async readTemplate<TContext = unknown>(name: string) {
+    const filePath = this.config.templates?.[name];
+
+    if (!filePath) {
+      return Handlebars.compile<TContext>(`// missing template ${name}`);
+    }
+
+    const fullPath = filePath.startsWith("@")
+      ? path.resolve(__dirname, filePath.replace("@", "./templates/"))
+      : path.resolve(process.cwd(), filePath);
+
+    const file = await fs.promises.readFile(fullPath);
+    return Handlebars.compile<TContext>(file.toString());
   }
 }

@@ -1,0 +1,9 @@
+{{#each importedEntities}}
+import {{this}} from "./{{camelCase this}}";
+{{/each}}
+{{#if importedEntities}}
+
+{{/if}}
+{{> generatedEntityHeader}}
+{{{content}}}
+export default {{pascalCase entity.name}};

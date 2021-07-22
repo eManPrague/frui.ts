@@ -4,6 +4,10 @@ import Enum from "../../src/openapi/models/enum";
 import ObjectEntity from "../../src/openapi/models/objectEntity";
 import OpenApi2Parser from "../../src/openapi/parsers/openApi2Parser";
 
+function createParser() {
+  return new OpenApi2Parser({} as any);
+}
+
 describe("OpenApi2Parser", () => {
   describe("parseSchemaObject", () => {
     it("returns simple type", () => {
@@ -11,7 +15,7 @@ describe("OpenApi2Parser", () => {
         type: "integer",
       };
 
-      const { type } = new OpenApi2Parser().parseSchemaObject("MyType", definition);
+      const { type } = createParser().parseSchemaObject("MyType", definition);
 
       expect(type).toBe("number");
     });
@@ -21,7 +25,7 @@ describe("OpenApi2Parser", () => {
         $ref: "#/definitions/Category",
       };
 
-      const { type } = new OpenApi2Parser().parseSchemaObject("MyType", definition);
+      const { type } = createParser().parseSchemaObject("MyType", definition);
       expect(type).toBeUndefined();
     });
 
@@ -31,7 +35,7 @@ describe("OpenApi2Parser", () => {
         properties: { foo: { type: "integer" }, bar: { type: "string" } },
       };
 
-      const parser = new OpenApi2Parser();
+      const parser = createParser();
       const { type } = parser.parseSchemaObject("MyType", definition);
       expect(type).toBeInstanceOf(ObjectEntity);
 
@@ -52,7 +56,7 @@ describe("OpenApi2Parser", () => {
         },
       };
 
-      const { type } = new OpenApi2Parser().parseSchemaObject("MyType", definition);
+      const { type } = createParser().parseSchemaObject("MyType", definition);
       expect(type).toBeInstanceOf(AliasEntity);
       expect(type).toMatchObject({ isArray: true, referencedEntity: { type: "string" } });
     });
@@ -66,7 +70,7 @@ describe("OpenApi2Parser", () => {
         },
       };
 
-      const { type } = new OpenApi2Parser().parseSchemaObject("MyType", definition);
+      const { type } = createParser().parseSchemaObject("MyType", definition);
       expect(type).toBeInstanceOf(AliasEntity);
       expect(type).toMatchObject({ isArray: true, referencedEntity: { type: undefined } });
     });
@@ -77,7 +81,7 @@ describe("OpenApi2Parser", () => {
         enum: ["one", "two", "three"],
       };
 
-      const { type } = new OpenApi2Parser().parseSchemaObject("MyType", definition);
+      const { type } = createParser().parseSchemaObject("MyType", definition);
       expect(type).toBeInstanceOf(Enum);
       expect(type).toMatchObject({ items: ["one", "two", "three"] });
     });

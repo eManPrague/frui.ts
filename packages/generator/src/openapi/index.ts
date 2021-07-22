@@ -14,7 +14,7 @@ export default class OpenApiGenerator extends GeneratorBase<IGeneratorParams, IC
     }
 
     const modelProcessor = new ModelProcessor();
-    const types = await modelProcessor.process(this.config.api);
+    const { types, endpoints } = await modelProcessor.process(this.config.api);
 
     const nameFormatter = new NameFormatter();
     const observableFormatter = new ObservableFormatter(this.config.observable);
@@ -26,7 +26,8 @@ export default class OpenApiGenerator extends GeneratorBase<IGeneratorParams, IC
     });
 
     const generator = new FileGenerator(this.project, this.params, this.config);
-    await generator.generate(Array.from(types.values()));
+    await generator.generateEntities(Array.from(types.values()));
+    await generator.generateRepositories(endpoints);
   }
 
   protected async getDefaultConfig() {

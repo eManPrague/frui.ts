@@ -1,0 +1,59 @@
+{{#*inline "property"}}
+  {{#if (or description example)}}
+  /**
+  {{#if description}}
+   * {{{description}}}
+  {{/if}}
+  {{#if example}}
+   * @example
+   * {{{example}}}
+  {{/if}}
+   */
+  {{/if}}
+  {{#if isObservable}}
+  @observable
+  {{/if}}
+  {{#each conversions}}
+  {{{this}}}
+  {{/each}}
+  {{#if externalName}}
+  @Expose({ name: "{{externalName}}" })
+  {{/if}}
+  {{#if readonly}}readonly {{/if}}{{name}}{{#if required}}!{{else}}?{{/if}}: {{type}};
+{{/inline}}
+{{#*inline "validationProperties"}}
+  {{#each properties}}
+    {{#if validations}}
+  {{name}}: { {{#each validations}}{{{this}}}{{#unless @last}}, {{/unless}}{{/each}} },
+    {{/if}}
+  {{/each}}
+{{/inline}}
+{{#*inline "validationEntity"}}
+  {{#if useBaseClassValidation}}
+  static ValidationRules = Object.assign(
+    {
+    {{> validationProperties}}
+    },
+    {{baseClass.name}}.ValidationRules
+  );
+  {{else}}
+  static ValidationRules = {
+  {{> validationProperties}}
+  };
+  {{/if}}
+{{/inline}}
+{{#each properties}}
+{{> property}}
+{{#unless @last}}
+
+{{/unless}}
+{{/each}}
+{{#if validationEntity}}
+
+{{> validationEntity}}
+{{else}}
+  {{#if useBaseClassValidation}}
+
+  static ValidationRules = {{baseClass.name}}.ValidationRules;
+  {{/if}}
+{{/if}}
