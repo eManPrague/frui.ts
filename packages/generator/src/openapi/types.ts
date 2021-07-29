@@ -31,6 +31,7 @@ export interface IConfig {
 
   entitiesPath: string;
   repositoriesPath: string;
+  enumsPath?: string;
 
   validation?: boolean;
   conversion?: boolean;
