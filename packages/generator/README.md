@@ -193,6 +193,8 @@ Custom configuration is expected to be a JSON file with the following structure:
 ```ts
 export interface IConfig {
   api: string;
+  entitiesPath?: string;
+  enumsPath?: string;
   observable?: ObservableConfig;
   enums?: "enum" | "string";
   dates?: "native" | "date-fns";

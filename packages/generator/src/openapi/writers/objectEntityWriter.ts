@@ -1,5 +1,6 @@
 import camelCase from "lodash/camelCase";
 import uniq from "lodash/uniq";
+import path from "path";
 import { Directory, SourceFile } from "ts-morph";
 import GeneratorBase from "../../generatorBase";
 import ObservableFormatter from "../formatters/observableFormatter";
@@ -47,7 +48,27 @@ export default class ObjectEntityWriter {
 
   private createFile(fileName: string, definition: ObjectEntity, baseClass: ObjectEntity | undefined) {
     const decoratorImports = this.getPropertyDecoratorsImports(definition.properties);
-    const entitiesToImport = definition.properties.filter(x => x.type.isImportRequired).map(x => x.type.getTypeName());
+    const propertiesToImport = definition.properties.filter(x => x.type.isImportRequired);
+
+    interface SplitImports {
+      enumsToImport: Array<string>;
+      entitiesToImport: Array<string>;
+    }
+
+    const { entitiesToImport, enumsToImport } = propertiesToImport.reduce(
+      (accumulator: SplitImports, property) => {
+        const typeName = property.type.getTypeName();
+        if (typeName) {
+          if (property.type.type instanceof Enum) {
+            accumulator.enumsToImport.push(typeName);
+          } else {
+            accumulator.entitiesToImport.push(typeName);
+          }
+        }
+        return accumulator;
+      },
+      { entitiesToImport: [], enumsToImport: [] }
+    );
 
     if (baseClass) {
       entitiesToImport.push(baseClass.name);
@@ -55,16 +76,40 @@ export default class ObjectEntityWriter {
 
     const entityImports = uniq(entitiesToImport)
       .sort()
-      .map(x => `import ${x} from "./${camelCase(x)}";`);
+      .map((x: string) => `import ${x} from "./${camelCase(x)}";`);
+
+    const pathToEnums = this.getPathToEnums();
+    const enumsImports = uniq(enumsToImport)
+      .sort()
+      .map((x: string) => `import ${x} from "${pathToEnums}/${camelCase(x)}";`);
 
     const result = this.templates.objectEntityFile({
-      imports: [...decoratorImports, ...entityImports],
+      imports: [...decoratorImports, ...entityImports, ...enumsImports],
       content: () => this.getEntityContent(definition, baseClass),
       entity: definition,
       baseClass,
     });
 
     return this.parentDirectory.createSourceFile(fileName, result, { overwrite: true });
+  }
+
+  getPathToEnums() {
+    function convertPath(windowsPath: string) {
+      return windowsPath
+        .replace(/^\\\\\?\\/, "")
+        .replace(/\\/g, "/")
+        .replace(/\/\/+/g, "/");
+    }
+
+    if (this.config.enumsPath && this.config.entitiesPath) {
+      const relativePath = convertPath(path.relative(this.config.entitiesPath, this.config.enumsPath));
+      if (!relativePath.startsWith(".")) {
+        return `./${relativePath}`;
+      }
+      return relativePath;
+    }
+
+    return ".";
   }
 
   getPropertyDecoratorsImports(properties: EntityProperty[]) {

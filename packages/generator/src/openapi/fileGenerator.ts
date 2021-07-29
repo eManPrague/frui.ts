@@ -56,8 +56,12 @@ export default class FileGenerator {
     Handlebars.registerPartial("generatedEntityHeader", await this.readTemplate("generatedEntityHeader"));
 
     const directory = this.project.createDirectory(this.config.entitiesPath);
+    let enumDirectory = directory;
+    if (this.config.enumsPath) {
+      enumDirectory = this.project.createDirectory(this.config.enumsPath);
+    }
     const enumWriter =
-      this.config.enums === "enum" ? new EnumWriter(directory, templates) : new StringLiteralWriter(directory, templates);
+      this.config.enums === "enum" ? new EnumWriter(enumDirectory, templates) : new StringLiteralWriter(enumDirectory, templates);
     const objectWriter = new ObjectEntityWriter(directory, this.config, templates);
     const unionWriter = new UnionEntityWriter(directory, templates);
 
