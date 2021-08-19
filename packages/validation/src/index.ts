@@ -1,4 +1,4 @@
-export { default as AutomaticEntityValidator } from "./automaticEntityValidator";
+export { default as AutomaticEntityValidator, hasAutomaticEntityValidator } from "./automaticEntityValidator";
 export * from "./helpers";
 export {
   addError,
