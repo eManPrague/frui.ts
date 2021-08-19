@@ -24,8 +24,6 @@ export interface IEntityValidator<TTarget> {
 
   /** Validation errors for the validated entity */
   errors: Readonly<ValidationErrors<TTarget>>;
-
-  requiredProperties: Readonly<string[]>;
 }
 
 /** Validator with manually maintained validation errors */

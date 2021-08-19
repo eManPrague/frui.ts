@@ -36,23 +36,16 @@ export default class AutomaticEntityValidator<TTarget extends Record<string, any
   @observable isErrorsVisible: boolean;
 
   @observable errors: ValidationErrors<TTarget> = {};
-  @observable private _requiredProperties: string[] = [];
+  readonly entityValidationRules: Readonly<IEntityValidationRules<TTarget>>;
   private validatedProperties: string[] = [];
-
-  @computed
-  get requiredProperties() {
-    return this._requiredProperties;
-  }
 
   constructor(target: TTarget, entityValidationRules: IEntityValidationRules<TTarget>, isErrorsVisible: boolean) {
     this.isErrorsVisible = isErrorsVisible;
+    this.entityValidationRules = Object.freeze(entityValidationRules);
 
     for (const propertyName in entityValidationRules) {
       if (entityValidationRules.hasOwnProperty(propertyName)) {
         const rules = (entityValidationRules as Record<string, IPropertyValidationRules>)[propertyName];
-        if (rules.hasOwnProperty("required")) {
-          this._requiredProperties.push(propertyName);
-        }
 
         const validator = createPropertyValidatorFromRules(propertyName, rules);
         if (!validator) {

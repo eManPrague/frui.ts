@@ -6,7 +6,6 @@ import { IHasManualValidation, IManualEntityValidator, ValidationErrors } from "
 export default class ManualEntityValidator<TTarget> implements IManualEntityValidator<TTarget> {
   @observable isErrorsVisible: boolean;
   @observable errors: ValidationErrors<TTarget> = {};
-  @observable readonly requiredProperties = [];
 
   constructor(isErrorsVisible: boolean) {
     this.isErrorsVisible = isErrorsVisible;
