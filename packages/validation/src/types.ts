@@ -94,7 +94,7 @@ export interface IHasValidation<TTarget> {
 }
 
 /** Represents an entity with attached automatic entity validator */
-export interface IHasAutomaticValidation<TTarget> {
+export interface IHasAutomaticValidation<TTarget> extends IHasValidation<TTarget> {
   __validation: IAutomaticEntityValidator<TTarget>;
 }
 
