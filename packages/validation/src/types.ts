@@ -26,6 +26,11 @@ export interface IEntityValidator<TTarget> {
   errors: Readonly<ValidationErrors<TTarget>>;
 }
 
+/** Validator with automatically maintained errors by validation rules  */
+export interface IAutomaticEntityValidation<TTarget> extends IEntityValidator<TTarget> {
+  readonly sourceValidationRules: Readonly<IEntityValidationRules<TTarget>>;
+}
+
 /** Validator with manually maintained validation errors */
 export interface IManualEntityValidator<TTarget> extends IEntityValidator<TTarget> {
   addError(propertyName: PropertyName<TTarget>, message: string): void;
@@ -86,6 +91,11 @@ export type ITypedPropertyValidationRules<TRules> = IPropertyValidationRules<key
 /** Represents an entity with attached entity validator */
 export interface IHasValidation<TTarget> {
   __validation: IEntityValidator<TTarget>;
+}
+
+/** Represents an entity with attached automatic entity validator */
+export interface IHasAutomaticValidation<TTarget> {
+  __validation: IAutomaticEntityValidation<TTarget>;
 }
 
 /** Represents an entity with attached manual entity validator */
