@@ -1,7 +1,7 @@
 import { ensureObservableProperty } from "@frui.ts/helpers";
 import { computed, extendObservable, get, observable } from "mobx";
 import {
-  IAutomaticEntityValidation,
+  IAutomaticEntityValidator,
   IEntityValidationRules,
   IHasAutomaticValidation,
   IPropertyValidationRules,
@@ -38,8 +38,7 @@ export function createPropertyValidatorFromRules(propertyName: string, propertyR
 }
 
 /** Entity validator implementation that automatically observes validated entity's properties and maintains validation errors */
-export default class AutomaticEntityValidator<TTarget extends Record<string, any>>
-  implements IAutomaticEntityValidation<TTarget> {
+export default class AutomaticEntityValidator<TTarget extends Record<string, any>> implements IAutomaticEntityValidator<TTarget> {
   @observable isErrorsVisible: boolean;
 
   @observable errors: ValidationErrors<TTarget> = {};

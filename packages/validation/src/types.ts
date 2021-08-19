@@ -27,7 +27,7 @@ export interface IEntityValidator<TTarget> {
 }
 
 /** Validator with automatically maintained errors by validation rules  */
-export interface IAutomaticEntityValidation<TTarget> extends IEntityValidator<TTarget> {
+export interface IAutomaticEntityValidator<TTarget> extends IEntityValidator<TTarget> {
   readonly sourceValidationRules: Readonly<IEntityValidationRules<TTarget>>;
 }
 
@@ -95,7 +95,7 @@ export interface IHasValidation<TTarget> {
 
 /** Represents an entity with attached automatic entity validator */
 export interface IHasAutomaticValidation<TTarget> {
-  __validation: IAutomaticEntityValidation<TTarget>;
+  __validation: IAutomaticEntityValidator<TTarget>;
 }
 
 /** Represents an entity with attached manual entity validator */
