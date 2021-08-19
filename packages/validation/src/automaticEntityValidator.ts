@@ -1,6 +1,12 @@
 import { ensureObservableProperty } from "@frui.ts/helpers";
 import { computed, extendObservable, get, observable } from "mobx";
-import { IEntityValidationRules, IEntityValidator, IPropertyValidationRules, ValidationErrors } from "./types";
+import {
+  IAutomaticEntityValidator,
+  IEntityValidationRules,
+  IHasAutomaticValidation,
+  IPropertyValidationRules,
+  ValidationErrors,
+} from "./types";
 import validatorsRepository from "./validatorsRepository";
 
 type IPropertyBoundValidator = (propertyValue: any, entity: any) => string | undefined;
@@ -32,14 +38,16 @@ export function createPropertyValidatorFromRules(propertyName: string, propertyR
 }
 
 /** Entity validator implementation that automatically observes validated entity's properties and maintains validation errors */
-export default class AutomaticEntityValidator<TTarget extends Record<string, any>> implements IEntityValidator<TTarget> {
+export default class AutomaticEntityValidator<TTarget extends Record<string, any>> implements IAutomaticEntityValidator<TTarget> {
   @observable isErrorsVisible: boolean;
 
   @observable errors: ValidationErrors<TTarget> = {};
+  readonly sourceValidationRules: Readonly<IEntityValidationRules<TTarget>>;
   private validatedProperties: string[] = [];
 
   constructor(target: TTarget, entityValidationRules: IEntityValidationRules<TTarget>, isErrorsVisible: boolean) {
     this.isErrorsVisible = isErrorsVisible;
+    this.sourceValidationRules = Object.freeze(entityValidationRules);
 
     for (const propertyName in entityValidationRules) {
       if (entityValidationRules.hasOwnProperty(propertyName)) {
@@ -66,4 +74,11 @@ export default class AutomaticEntityValidator<TTarget extends Record<string, any
   @computed get isValid() {
     return this.validatedProperties.every(prop => !get(this.errors, prop));
   }
+}
+
+export function hasAutomaticEntityValidator<TTarget>(target: any): target is IHasAutomaticValidation<TTarget> {
+  return (
+    (target as IHasAutomaticValidation<TTarget>)?.__validation !== undefined &&
+    target.__validation.sourceValidationRules !== undefined
+  );
 }
