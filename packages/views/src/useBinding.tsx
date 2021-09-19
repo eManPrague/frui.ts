@@ -1,4 +1,4 @@
-import { BindingProperty, BindingTarget, ensureObservableProperty, PropertyName, PropertyType } from "@frui.ts/helpers";
+import { BindingProperty, BindingTarget, ensureObservableProperty, isMap, PropertyName, PropertyType } from "@frui.ts/helpers";
 import { action, get, isObservable, isObservableMap, isObservableProp } from "mobx";
 import { IBindingProps } from "./bindingProps";
 
@@ -36,10 +36,16 @@ export function getValue<TTarget extends BindingTarget, TProperty extends Bindin
   const propertyName = property as PropertyName<TTarget>;
 
   if (!isObservable(target) || !isObservableProp(target, propertyName)) {
-    if (ensureObservable) {
-      action(ensureObservableProperty)(target, propertyName, target[propertyName]);
+    if (isMap<TProperty, PropertyType<TTarget, TProperty>>(target)) {
+      // eslint-disable-next-line @typescript-eslint/no-unsafe-return
+      return target.get(property);
     } else {
-      return target[propertyName];
+      if (ensureObservable) {
+        action(ensureObservableProperty)(target, propertyName, target[propertyName]);
+      } else {
+        // eslint-disable-next-line @typescript-eslint/no-unsafe-return
+        return target[property];
+      }
     }
   }
 

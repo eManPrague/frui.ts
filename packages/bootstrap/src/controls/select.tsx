@@ -68,10 +68,10 @@ export class Select<TTarget extends BindingTarget, TItem> extends ValidationCont
     );
   }
 
-  get selectedValue(): string | number {
+  get selectedValue(): string | number | undefined {
     const { mode, keyProperty } = this.props;
     // eslint-disable-next-line @typescript-eslint/no-unsafe-return
-    return mode === "item" && this.value ? (this.value as TItem)[keyProperty] : this.value;
+    return mode === "item" && this.value ? ((this.value as TItem)[keyProperty] as any) : this.value;
   }
 
   get hasValidValue() {

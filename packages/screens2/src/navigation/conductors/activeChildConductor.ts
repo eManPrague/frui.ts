@@ -3,7 +3,7 @@ import { ClosingNavigationContext, NavigationContext } from "../../models/naviga
 import PathElement from "../../models/pathElements";
 import { getNavigator } from "../../screens/screenBase";
 import LifecycleScreenNavigatorBase from "../lifecycleScreenNavigatorBase";
-import { LifecycleScreenNavigator } from "../types";
+import { LifecycleScreenNavigator, ScreenNavigator } from "../types";
 
 export default class ActiveChildConductor<
   TScreen = unknown,
@@ -26,6 +26,10 @@ export default class ActiveChildConductor<
   ) => Promise<{ newChild: TChild | undefined; closePrevious?: boolean }>;
 
   // default functionality overrides
+
+  getPrimaryChild(): ScreenNavigator | undefined {
+    return getNavigator(this.activeChild);
+  }
 
   async canNavigate(path: PathElement[]) {
     const context: NavigationContext<TScreen> = {
@@ -70,16 +74,12 @@ export default class ActiveChildConductor<
     const currentChild = this.activeChild;
     const { newChild, closePrevious } = await this.findNavigationChild(context, currentChild);
 
-    if (currentChild === newChild) {
-      return;
-    }
-
-    if (currentChild) {
+    if (currentChild !== newChild) {
       const currentChildNavigator = getNavigator<LifecycleScreenNavigator>(currentChild);
       await currentChildNavigator?.deactivate?.(!!closePrevious);
-    }
 
-    runInAction(() => (this.activeChildValue = newChild));
+      runInAction(() => (this.activeChildValue = newChild));
+    }
 
     if (newChild) {
       const newChildNavigator = getNavigator<LifecycleScreenNavigator>(newChild);
@@ -103,5 +103,19 @@ export default class ActiveChildConductor<
     }
 
     return this.aggregateBooleanAll("canDeactivate", context);
+  }
+
+  async deactivate(isClosing: boolean) {
+    const activeChildNavigator = getNavigator<LifecycleScreenNavigator>(this.activeChild);
+    await activeChildNavigator?.deactivate?.(isClosing);
+
+    await super.deactivate(isClosing);
+  }
+
+  protected connectChild(child: TChild) {
+    const navigator = getNavigator(child);
+    if (navigator) {
+      navigator.parent = this;
+    }
   }
 }

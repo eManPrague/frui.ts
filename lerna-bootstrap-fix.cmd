@@ -14,3 +14,6 @@ call yarn lerna bootstrap --scope=@frui.ts/views --force-local
 call yarn lerna bootstrap --scope=@frui.ts/example-complexdemo --force-local
 call yarn lerna bootstrap --scope=@frui.ts/examples-simpletodolist --force-local
 call yarn lerna bootstrap --scope=@frui.ts/stories --force-local
+
+rem This is temporary
+call yarn lerna bootstrap --scope=@frui.ts/screens2 --force-local

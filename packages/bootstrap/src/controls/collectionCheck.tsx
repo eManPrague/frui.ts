@@ -38,7 +38,7 @@ function useCollection<TTarget extends BindingTarget, TProperty extends BindingP
       } else {
         collection.add(key);
       }
-      props.onValueChanged?.(key, props.property as TProperty, props.target as TTarget);
+      props.onValueChanged?.(key as any, props.property as TProperty, props.target as TTarget);
     };
     return [checked, action(toggle)];
   } else if (isArrayLike(collection)) {
@@ -50,7 +50,7 @@ function useCollection<TTarget extends BindingTarget, TProperty extends BindingP
       } else {
         collection.push(key);
       }
-      props.onValueChanged?.(key, props.property as TProperty, props.target as TTarget);
+      props.onValueChanged?.(key as any, props.property as TProperty, props.target as TTarget);
     };
     return [checked, action(toggle)];
   } else {

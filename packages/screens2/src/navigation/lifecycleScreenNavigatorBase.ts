@@ -4,26 +4,28 @@ import PathElement from "../models/pathElements";
 import { HasLifecycleEvents } from "../screens/hasLifecycleHandlers";
 import ScreenBase from "../screens/screenBase";
 import ScreenLifecycleEventHub from "./screenLifecycleEventHub";
-import { LifecycleScreenNavigator } from "./types";
+import { LifecycleScreenNavigator, ScreenNavigator } from "./types";
 
-export default class LifecycleScreenNavigatorBase<
+export default abstract class LifecycleScreenNavigatorBase<
   TScreen extends Partial<HasLifecycleEvents> & Partial<ScreenBase>,
   TNavigationParams extends Record<string, string>
 > implements LifecycleScreenNavigator {
   // extension point - you can either set getNavigationName function, or assign navigationName property
   getNavigationName?: () => string;
 
-  navigationNameValue?: string;
+  private _navigationNameValue?: string;
   get navigationName() {
-    return this.navigationNameValue ?? this.getNavigationName?.() ?? this.screen?.constructor?.name ?? "unknown";
+    return this._navigationNameValue ?? this.getNavigationName?.() ?? this.screen?.constructor?.name ?? "unknown";
   }
 
   set navigationName(value: string) {
-    this.navigationNameValue = value || undefined;
+    this._navigationNameValue = value ?? undefined;
   }
 
   eventHub?: ScreenLifecycleEventHub<TScreen>;
   protected screen?: TScreen;
+
+  parent: ScreenNavigator | undefined = undefined;
 
   constructor(screen?: TScreen, eventHub?: ScreenLifecycleEventHub<TScreen>) {
     this.screen = screen;
@@ -42,13 +44,15 @@ export default class LifecycleScreenNavigatorBase<
   }
 
   getNavigationParams?: () => TNavigationParams;
-  getNavigationPath(): PathElement[] {
-    return [
-      {
-        name: this.navigationName,
-        params: this.getNavigationParams?.(),
-      },
-    ];
+  getNavigationState(): PathElement {
+    return {
+      name: this.navigationName,
+      params: this.getNavigationParams?.(),
+    };
+  }
+
+  getPrimaryChild(): ScreenNavigator | undefined {
+    return undefined;
   }
 
   async navigate(path: PathElement[]): Promise<void> {
@@ -148,7 +152,7 @@ export default class LifecycleScreenNavigatorBase<
 
   private async deactivateInner(context: ClosingNavigationContext<TScreen>) {
     try {
-      if (this.isActive) {
+      if (this.isActive || context.isClosing) {
         await this.callAll("onDeactivate", context);
         runInAction(() => (this.isActiveValue = false));
       }
@@ -197,7 +201,7 @@ export default class LifecycleScreenNavigatorBase<
 
     const listeners = this.eventHub?.getListeners(event);
     if (listeners?.length) {
-      await Promise.all([screenFunctionPromise, ...listeners]);
+      await Promise.all([screenFunctionPromise, ...listeners.map(x => x(context as any))]);
     } else {
       await screenFunctionPromise;
     }

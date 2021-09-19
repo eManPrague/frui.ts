@@ -1,5 +1,5 @@
 import { isSet, PropertyName } from "@frui.ts/helpers";
-import { get, isArrayLike, observable } from "mobx";
+import { get, isArrayLike, isObservableSet, observable } from "mobx";
 import DirtyWatcherBase from "./dirtyWatcherBase";
 import { attachDirtyWatcher } from "./utils";
 
@@ -76,7 +76,7 @@ export default class AutomaticDirtyWatcher<TEntity = any> extends DirtyWatcherBa
 
         if (isArrayLike(originalValue)) {
           defineArrayDirtyWatchProperty(resultsObject, originalValue, propertyName, entity);
-        } else if (isSet(originalValue)) {
+        } else if (isSet(originalValue) || isObservableSet(originalValue)) {
           defineSetDirtyCheckProperty(resultsObject, originalValue, propertyName, entity);
         } else {
           Object.defineProperty(resultsObject, propertyName, {

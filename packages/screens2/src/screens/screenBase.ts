@@ -4,7 +4,7 @@ import { ScreenNavigator } from "../navigation/types";
 import { HasLifecycleEvents } from "./hasLifecycleHandlers";
 
 export default abstract class ScreenBase<TNavigator extends ScreenNavigator = ScreenNavigator> {
-  navigator?: TNavigator;
+  navigator: TNavigator;
   events: ScreenLifecycleEventHub<this>;
 
   constructor() {
@@ -14,6 +14,6 @@ export default abstract class ScreenBase<TNavigator extends ScreenNavigator = Sc
 
 export function getNavigator<TNavigator extends ScreenNavigator = ScreenNavigator>(
   target: unknown
-): Partial<TNavigator> | undefined {
-  return (target as ScreenBase<TNavigator>)?.navigator;
+): (Partial<TNavigator> & ScreenNavigator) | undefined {
+  return (target as ScreenBase<TNavigator>)?.navigator as (Partial<TNavigator> & ScreenNavigator) | undefined;
 }

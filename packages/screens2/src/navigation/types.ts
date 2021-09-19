@@ -7,7 +7,10 @@ export interface ScreenNavigator {
   navigate(path: PathElement[]): Promise<void>;
 
   navigationName: string;
-  getNavigationPath(): PathElement[];
+  getNavigationState(): PathElement;
+
+  parent: ScreenNavigator | undefined;
+  getPrimaryChild(): ScreenNavigator | undefined;
 }
 
 export interface LifecycleScreenNavigator extends ScreenNavigator {

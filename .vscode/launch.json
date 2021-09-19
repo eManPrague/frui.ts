@@ -5,6 +5,13 @@
   "version": "0.2.0",
   "configurations": [
     {
+      "name": "Attach to Chrome",
+      "port": 9222,
+      "request": "attach",
+      "type": "pwa-chrome",
+      "webRoot": "${workspaceFolder}"
+    },
+    {
       "type": "node",
       "request": "launch",
       "name": "Debug generator",
@@ -14,13 +21,6 @@
       "env": {
         "TS_NODE_PROJECT": "${workspaceFolder}/packages/generator/tsconfig.json"
       }
-    },
-    {
-      "type": "chrome",
-      "request": "attach",
-      "name": "Attach to Chrome",
-      "port": 9222,
-      "webRoot": "${workspaceFolder}"
     },
     {
       "type": "node",

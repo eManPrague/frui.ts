@@ -11,8 +11,8 @@ function testComponent<TTarget, TProperty extends BindingProperty<TTarget>>(prop
     props.onValueChanged?.([99], props.property, props.target);
   }
 
-  const value = getValue(props.target, props.property);
-  setValue(props.target, props.property, [99]);
+  const value = getValue(props.target, props.property) as number[]; // TODO can have this strongly typed, or at least restricted by the component
+  setValue(props.target, props.property, [99] as any);
 
   const [value2, setValue2] = useBinding(props);
   setValue2([99]);

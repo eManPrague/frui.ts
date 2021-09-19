@@ -3,10 +3,6 @@ import { storiesOf } from "@storybook/react";
 import { action, observable } from "mobx";
 import { observer, Observer } from "mobx-react-lite";
 import React from "react";
-import "./views/allChildrenActiveView";
-import "./views/childView";
-import "./views/oneChildActiveView";
-import "./views/singleChildView";
 
 const observableTarget = observable({
   name: "John",
@@ -15,7 +11,7 @@ const observableTarget = observable({
 });
 
 const MyComponent = observer(() => {
-  const [name, setName] = useBinding({ target: observableTarget, property: "name" });
+  const [name, setName] = useBinding({ target: observableTarget, property: "name" } as const);
 
   return <input value={name} onChange={e => setName(e.target.value)} />;
 });
