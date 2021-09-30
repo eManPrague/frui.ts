@@ -23,26 +23,17 @@ export default class View extends React.PureComponent<ViewProps, ViewState> {
     return { hasError: true };
   }
 
-  protected runActivate() {
-    if (this.props.useLifecycle) {
-      const { vm } = this.props;
-      if (vm && isActivatable(vm)) {
-        vm.activate();
-      }
-    }
-  }
-
   componentDidCatch(error: Error, errorInfo: React.ErrorInfo) {
     this.props.onError?.(error, errorInfo);
   }
 
   componentDidMount() {
-    this.runActivate();
+    this.tryActivateViewModel();
   }
 
   componentDidUpdate(prevProps: ViewProps) {
     if (prevProps.vm !== this.props.vm) {
-      this.runActivate();
+      this.tryActivateViewModel();
     }
   }
 
@@ -77,5 +68,14 @@ export default class View extends React.PureComponent<ViewProps, ViewState> {
     }
 
     return <FoundView vm={vm} />;
+  }
+
+  protected tryActivateViewModel() {
+    if (this.props.useLifecycle) {
+      const { vm } = this.props;
+      if (vm && isActivatable(vm)) {
+        vm.activate();
+      }
+    }
   }
 }
