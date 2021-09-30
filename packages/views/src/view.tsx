@@ -1,5 +1,6 @@
 import { isActivatable, isDeactivatable } from "@frui.ts/screens";
 import * as React from "react";
+import useScreenLifecycle from "./useScreenLifecycle";
 import { getView, tryGetView } from "./viewLocator";
 
 interface ViewProps {
@@ -14,7 +15,9 @@ interface ViewState {
   hasError: boolean;
 }
 
-export default class View extends React.PureComponent<ViewProps, ViewState> {
+export class ViewWithErrorBoundary extends React.PureComponent<ViewProps, ViewState> {
+  static displayName = "View.ErrorBoundary";
+
   static defaultProps: Partial<ViewProps> = {
     fallbackMode: "children",
   };
@@ -79,3 +82,36 @@ export default class View extends React.PureComponent<ViewProps, ViewState> {
     }
   }
 }
+
+const View: React.FunctionComponent<ViewProps> & { ErrorBoundary: typeof ViewWithErrorBoundary } = ({
+  vm,
+  context,
+  useLifecycle,
+  fallbackMode,
+  children,
+}) => {
+  if (!vm) {
+    return <React.Fragment />;
+  }
+
+  const FoundView = fallbackMode ? tryGetView(vm.constructor, context) : getView(vm.constructor, context);
+
+  if (!FoundView) {
+    if (fallbackMode === "message") {
+      return <span>Could not find a view for {vm.constructor.name}</span>;
+    } else if (fallbackMode === "children" && children) {
+      return <React.Fragment>{children}</React.Fragment>;
+    } else {
+      return null;
+    }
+  }
+
+  if (!!useLifecycle) {
+    useScreenLifecycle(vm);
+  }
+  return <FoundView vm={vm} />;
+};
+
+View.ErrorBoundary = ViewWithErrorBoundary;
+
+export default View;
