@@ -7,19 +7,19 @@ interface ViewProps {
   vm: any;
   context?: string;
   useLifecycle?: boolean;
-  fallbackMode?: "message" | "children";
 }
 
 const PureView: React.FunctionComponent<ViewProps> = props => {
-  const { vm, children, fallbackMode, useLifecycle } = props;
-  const FoundView = findView(props);
+  const { vm, children, context, useLifecycle } = props;
+
+  if (!vm) {
+    return null;
+  }
+
+  const FoundView = children === undefined ? getView(vm.constructor, context) : tryGetView(vm.constructor, context);
 
   if (!FoundView) {
-    return fallbackMode === "message" ? (
-      <span>Could not find a view for {vm.constructor.name}</span>
-    ) : (
-      <React.Fragment>{children}</React.Fragment>
-    );
+    return <React.Fragment>{children}</React.Fragment>;
   }
 
   if (!!useLifecycle) {
@@ -29,36 +29,21 @@ const PureView: React.FunctionComponent<ViewProps> = props => {
   return <FoundView vm={vm} />;
 };
 
-export class ViewWithErrorBoundary extends React.PureComponent<ViewProps & ErrorBoundaryProps> {
-  static displayName = "View.ErrorBoundary";
+PureView.displayName = "View";
 
-  static defaultProps: Partial<ViewProps> = {
-    fallbackMode: "children",
-  };
+const ViewWithErrorBoundary: React.FunctionComponent<ViewProps & ErrorBoundaryProps> = props => {
+  const { onError, onReset, fallback, ...rest } = props;
 
-  render() {
-    const { onError, onReset, fallback, ...rest } = this.props;
+  return (
+    <ErrorBoundary onError={onError} onReset={onReset} fallback={fallback}>
+      <PureView {...rest} />
+    </ErrorBoundary>
+  );
+};
 
-    return (
-      <ErrorBoundary onError={onError} onReset={onReset} fallback={fallback}>
-        <PureView {...rest} />
-      </ErrorBoundary>
-    );
-  }
-}
+ViewWithErrorBoundary.displayName = "View.ErrorBoundary";
 
-function findView(props: ViewProps) {
-  const { vm, fallbackMode, context } = props;
-
-  if (!vm) {
-    return null;
-  }
-
-  return fallbackMode ? tryGetView(vm.constructor, context) : getView(vm.constructor, context);
-}
-
-const View: React.FunctionComponent<ViewProps> & { ErrorBoundary: typeof ViewWithErrorBoundary } = PureView as any;
-
+const View = PureView as React.FunctionComponent<ViewProps> & { ErrorBoundary: typeof ViewWithErrorBoundary };
 View.ErrorBoundary = ViewWithErrorBoundary;
 
 export default View;
