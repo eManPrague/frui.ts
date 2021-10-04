@@ -4,14 +4,14 @@
 import * as React from "react";
 import { fireEvent, render, screen } from "@testing-library/react";
 import { bound } from "@frui.ts/helpers";
-import ErrorBoundary, { ErrorBoundaryProps } from "../src/errorboundary";
+import ErrorBoundary, { ErrorBoundaryProps } from "../src/errorBoundary";
 
-function Boo({ title }: { title: string }): JSX.Element {
+function SimulateError({ title }: { title: string }): JSX.Element {
   throw new Error(title);
 }
 
-function Bam(): JSX.Element {
-  return <Boo title={"test"} />;
+function Test(): JSX.Element {
+  return <SimulateError title={"errorMessage"} />;
 }
 
 class TestApp extends React.Component<ErrorBoundaryProps, { error: boolean }> {
@@ -34,13 +34,14 @@ class TestApp extends React.Component<ErrorBoundaryProps, { error: boolean }> {
             this.props.onReset(...args);
           }
         }}>
-        {this.state.error ? <Bam /> : this.props.children}
+        {this.state.error ? <Test /> : this.props.children}
         <button
-          data-testid="errorBtn"
+          data-testid="raiseErrorBtn"
           onClick={() => {
             this.setError(true);
-          }}
-        />
+          }}>
+          Raise error
+        </button>
       </ErrorBoundary>
     );
   }
@@ -50,7 +51,7 @@ describe("ErrorBoundary", () => {
   it("renders a fallback component on error", () => {
     const { container } = render(
       <ErrorBoundary fallback={<h1>Error Component</h1>}>
-        <Bam />
+        <Test />
       </ErrorBoundary>
     );
     expect(container.innerHTML).toBe("<h1>Error Component</h1>");
@@ -70,12 +71,22 @@ describe("ErrorBoundary", () => {
     const renderResult = render(
       // eslint-disable-next-line @typescript-eslint/ban-ts-ignore
       // @ts-ignore Passing wrong type on purpose
-      <ErrorBoundary fallback="Not a ReactElement">
-        <Bam />
+      <ErrorBoundary fallback={{ wrong: "fallback" }}>
+        <Test />
       </ErrorBoundary>
     );
 
     expect(renderResult.container.innerHTML).toBe("<p>Something went wrong :-(</p>");
+  });
+
+  it("renders a fallback string when error occur", () => {
+    const renderResult = render(
+      <ErrorBoundary fallback={"Error occur"}>
+        <Test />
+      </ErrorBoundary>
+    );
+
+    expect(renderResult.container.innerHTML).toBe("Error occur");
   });
 
   it("renders a fallback component when error occur", async () => {
@@ -87,11 +98,42 @@ describe("ErrorBoundary", () => {
 
     expect(container.innerHTML).toContain("<h1>children</h1>");
 
-    const btn = screen.getByTestId("errorBtn");
+    const btn = screen.getByTestId("raiseErrorBtn");
     fireEvent.click(btn);
 
     expect(container.innerHTML).not.toContain("<h1>children</h1>");
     expect(container.innerHTML).toBe("<p>You have hit an error</p>");
+  });
+
+  it("renders fallback as function", async () => {
+    let errorString = "";
+    let componentStackString = "";
+    const { container } = render(
+      <TestApp
+        fallback={({ error, errorInfo }) => {
+          errorString = error.toString();
+          componentStackString = errorInfo?.componentStack || "";
+          return <div>Fallback here</div>;
+        }}>
+        <h1>children</h1>
+      </TestApp>
+    );
+
+    expect(container.innerHTML).toContain("<h1>children</h1>");
+
+    const btn = screen.getByTestId("raiseErrorBtn");
+    fireEvent.click(btn);
+
+    expect(container.innerHTML).not.toContain("<h1>children</h1>");
+    expect(container.innerHTML).toBe("<div>Fallback here</div>");
+    expect(errorString).toBe("Error: errorMessage");
+    /*
+       in SimulateError
+       in Test
+       in ErrorBoundary
+       in TestApp
+     */
+    expect(componentStackString).toMatch(/\s*(in SimulateError)\s*(in Test)\s*(in ErrorBoundary)\s*(in TestApp)/g);
   });
 
   it("calls `componentDidCatch() when an error occurs`", () => {
@@ -104,7 +146,7 @@ describe("ErrorBoundary", () => {
 
     expect(mockOnError).toHaveBeenCalledTimes(0);
 
-    const btn = screen.getByTestId("errorBtn");
+    const btn = screen.getByTestId("raiseErrorBtn");
     fireEvent.click(btn);
 
     expect(mockOnError).toHaveBeenCalledTimes(1);

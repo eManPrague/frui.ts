@@ -4,13 +4,13 @@ export type FallbackRender = (errorData: {
   error: Error;
   errorInfo: React.ErrorInfo | null;
   resetError(): void;
-}) => React.ReactElement;
+}) => React.ReactChild;
 
 export interface ErrorBoundaryProps {
   onError?: (error: Error, errorInfo: React.ErrorInfo) => void;
   /** Called if resetError() is called from the fallback render props function  */
   onReset?(error: Error | null, errorInfo: React.ErrorInfo | null): void;
-  fallback?: React.ReactElement | FallbackRender;
+  fallback?: React.ReactChild | FallbackRender;
 }
 
 interface ErrorBoundaryState {
@@ -18,20 +18,22 @@ interface ErrorBoundaryState {
   errorInfo: React.ErrorInfo | null;
 }
 
-const INITIAL_STATE = {
+const INITIAL_STATE = Object.freeze({
   errorInfo: null,
   error: null,
-};
+});
 
 export default class ErrorBoundary extends React.PureComponent<ErrorBoundaryProps, ErrorBoundaryState> {
-  public state: ErrorBoundaryState = INITIAL_STATE;
+  state: ErrorBoundaryState = INITIAL_STATE;
 
   public resetErrorBoundary: () => void = () => {
     const { onReset } = this.props;
-    const { error, errorInfo } = this.state;
+
     if (onReset) {
+      const { error, errorInfo } = this.state;
       onReset(error, errorInfo);
     }
+
     this.setState(INITIAL_STATE);
   };
 
@@ -42,29 +44,24 @@ export default class ErrorBoundary extends React.PureComponent<ErrorBoundaryProp
   }
 
   render() {
-    const { fallback, children } = this.props;
-    const { error, errorInfo } = this.state;
+    if (this.state.error) {
+      const { error, errorInfo } = this.state;
+      const { fallback } = this.props;
+      const element =
+        typeof fallback === "function" ? fallback({ error, errorInfo, resetError: this.resetErrorBoundary }) : fallback;
 
-    if (error) {
-      let element: React.ReactElement | undefined;
-      if (typeof fallback === "function") {
-        element = fallback({ error, errorInfo, resetError: this.resetErrorBoundary });
-      } else {
-        element = fallback;
-      }
-
-      if (React.isValidElement(element)) {
+      if (React.isValidElement(element) || typeof element === "string") {
         return element;
       }
 
       if (fallback) {
-        console.warn("fallback did not produce a valid ReactElement");
+        console.warn("fallback did not produce a valid ReactChild");
       }
 
       // Fail gracefully if no fallback provided or is not valid
       return <p>Something went wrong :-(</p>;
     }
 
-    return <React.Fragment>{children}</React.Fragment>;
+    return <React.Fragment>{this.props.children}</React.Fragment>;
   }
 }
