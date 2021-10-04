@@ -13,7 +13,7 @@ const PureView: React.FunctionComponent<ViewProps> = props => {
   const { vm, children, context, useLifecycle } = props;
 
   if (!vm) {
-    return null;
+    return <React.Fragment>{children}</React.Fragment>;
   }
 
   const FoundView = children === undefined ? getView(vm.constructor, context) : tryGetView(vm.constructor, context);
