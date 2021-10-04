@@ -4,13 +4,13 @@ export type FallbackRender = (errorData: {
   error: Error;
   errorInfo: React.ErrorInfo | null;
   resetError(): void;
-}) => React.ReactChild;
+}) => React.ReactNode;
 
 export interface ErrorBoundaryProps {
   onError?: (error: Error, errorInfo: React.ErrorInfo) => void;
   /** Called if resetError() is called from the fallback render props function  */
   onReset?(error: Error | null, errorInfo: React.ErrorInfo | null): void;
-  fallback?: React.ReactChild | FallbackRender;
+  fallback?: React.ReactNode | FallbackRender;
 }
 
 interface ErrorBoundaryState {
@@ -50,15 +50,10 @@ export default class ErrorBoundary extends React.PureComponent<ErrorBoundaryProp
       const element =
         typeof fallback === "function" ? fallback({ error, errorInfo, resetError: this.resetErrorBoundary }) : fallback;
 
-      if (React.isValidElement(element) || typeof element === "string") {
+      if (element !== undefined) {
         return element;
       }
 
-      if (fallback) {
-        console.warn("fallback did not produce a valid ReactChild");
-      }
-
-      // Fail gracefully if no fallback provided or is not valid
       return <p>Something went wrong :-(</p>;
     }
 

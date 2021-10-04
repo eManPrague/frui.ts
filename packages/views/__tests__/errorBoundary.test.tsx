@@ -48,15 +48,6 @@ class TestApp extends React.Component<ErrorBoundaryProps, { error: boolean }> {
 }
 
 describe("ErrorBoundary", () => {
-  it("renders a fallback component on error", () => {
-    const { container } = render(
-      <ErrorBoundary fallback={<h1>Error Component</h1>}>
-        <Test />
-      </ErrorBoundary>
-    );
-    expect(container.innerHTML).toBe("<h1>Error Component</h1>");
-  });
-
   it("renders children correctly when there is no error", () => {
     const { container } = render(
       <ErrorBoundary fallback={<h1>Error Component</h1>}>
@@ -67,11 +58,9 @@ describe("ErrorBoundary", () => {
     expect(container.innerHTML).toBe("<h1>children</h1>");
   });
 
-  it("renders 'Something went wrong :-(' if not given a valid `fallback` prop", () => {
+  it("renders 'Something went wrong :-(' if not given `fallback` prop", () => {
     const renderResult = render(
-      // eslint-disable-next-line @typescript-eslint/ban-ts-ignore
-      // @ts-ignore Passing wrong type on purpose
-      <ErrorBoundary fallback={{ wrong: "fallback" }}>
+      <ErrorBoundary>
         <Test />
       </ErrorBoundary>
     );
@@ -87,6 +76,15 @@ describe("ErrorBoundary", () => {
     );
 
     expect(renderResult.container.innerHTML).toBe("Error occur");
+  });
+
+  it("renders a fallback component on error", () => {
+    const { container } = render(
+      <ErrorBoundary fallback={<h1>Error Component</h1>}>
+        <Test />
+      </ErrorBoundary>
+    );
+    expect(container.innerHTML).toBe("<h1>Error Component</h1>");
   });
 
   it("renders a fallback component when error occur", async () => {
@@ -133,7 +131,37 @@ describe("ErrorBoundary", () => {
        in ErrorBoundary
        in TestApp
      */
-    expect(componentStackString).toMatch(/\s*(in SimulateError)\s*(in Test)\s*(in ErrorBoundary)\s*(in TestApp)/g);
+    expect(componentStackString).toMatch(
+      /\s*(in SimulateError)([a-z]|[A-Z]|\(|\)| )*\s*(in Test)([a-z]|[A-Z]|\(|\)| )*\s*(in ErrorBoundary)([a-z]|[A-Z]|\(|\)| )*\s*(in TestApp)([a-z]|[A-Z]|\(|\)| )*/g
+    );
+  });
+
+  it("renders children component after reset from error", async () => {
+    const { container } = render(
+      <TestApp
+        fallback={({ resetError }) => {
+          return (
+            <button data-testid="resetErrorBtn" onClick={resetError}>
+              Reset error
+            </button>
+          );
+        }}>
+        <h1>children</h1>
+      </TestApp>
+    );
+
+    expect(container.innerHTML).toContain("<h1>children</h1>");
+
+    const btn = screen.getByTestId("raiseErrorBtn");
+    fireEvent.click(btn);
+
+    expect(container.innerHTML).not.toContain("<h1>children</h1>");
+    expect(container.innerHTML).toContain('<button data-testid="resetErrorBtn">Reset error</button>');
+
+    const resetErrorBtn = screen.getByTestId("resetErrorBtn");
+    fireEvent.click(resetErrorBtn);
+
+    expect(container.innerHTML).toContain("<h1>children</h1>");
   });
 
   it("calls `componentDidCatch() when an error occurs`", () => {
