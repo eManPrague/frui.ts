@@ -26,7 +26,7 @@ const INITIAL_STATE = Object.freeze({
 export default class ErrorBoundary extends React.PureComponent<ErrorBoundaryProps, ErrorBoundaryState> {
   state: ErrorBoundaryState = INITIAL_STATE;
 
-  public resetErrorBoundary: () => void = () => {
+  public readonly resetErrorBoundary = () => {
     const { onReset } = this.props;
 
     if (onReset) {
