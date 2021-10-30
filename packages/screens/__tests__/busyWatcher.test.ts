@@ -1,4 +1,4 @@
-import BusyWatcher from "../src/structure/busyWatcher";
+import BusyWatcher from "../src/busyWatcher";
 import { ManualPromise } from "@frui.ts/helpers";
 
 describe("BusyWatcher", () => {

@@ -1,48 +1,41 @@
-import { ConductorSingleChild } from "@frui.ts/screens";
-import { action } from "mobx";
+import { ActiveChildConductor, ScreenBase } from "@frui.ts/screens";
 import ChildViewModel from "./childViewModel";
-import "./helpers";
+import { IChildScreen } from "./types";
 
-export default class SingleChildViewModel extends ConductorSingleChild<ChildViewModel> {
-  private child1: ChildViewModel;
-  private child2: ChildViewModel;
-
-  @action
-  setName(value: string) {
-    this.nameValue = value;
-  }
+export default class SingleChildViewModel
+  extends ScreenBase<ActiveChildConductor<SingleChildViewModel, ChildViewModel>>
+  implements IChildScreen {
+  name = "Single active";
 
   constructor() {
     super();
-
-    this.child1 = new ChildViewModel();
-    this.child1.navigationName = "One";
-    this.child1.setName("Child One");
-    this.child1.text = "View Model One";
-
-    this.child2 = new ChildViewModel();
-    this.child2.navigationName = "Two";
-    this.child2.setName("Child Two");
-    this.child2.text = "View Model Two";
+    this.navigator = new ActiveChildConductor<SingleChildViewModel, ChildViewModel>(this);
+    this.navigator.navigationName = "single";
+    this.navigator.findNavigationChild = this.findNavigationChild;
   }
 
-  @action.bound
-  selectChild1() {
-    this.tryActivateChild(this.child1);
-  }
+  private findNavigationChild: SingleChildViewModel["navigator"]["findNavigationChild"] = context => {
+    const childPathElement = context.path[1];
+    if (childPathElement) {
+      if (childPathElement.name === this.navigator.activeChild?.navigator.navigationName) {
+        return Promise.resolve({
+          newChild: this.navigator.activeChild,
+          closePrevious: false,
+        });
+      }
 
-  @action.bound
-  selectChild2() {
-    this.tryActivateChild(this.child2);
-  }
-
-  protected findNavigationChild(navigationName: string) {
-    if (this.child1.navigationName === navigationName) {
-      return this.child1;
-    } else if (this.child2.navigationName === navigationName) {
-      return this.child2;
-    } else {
-      return undefined;
+      const newChild = new ChildViewModel(childPathElement.name, `Child ${childPathElement.name}`);
+      newChild.navigator.parent = context.navigator;
+      return Promise.resolve({
+        newChild,
+        closePrevious: true,
+      });
     }
-  }
+
+    // close
+    return Promise.resolve({
+      newChild: undefined,
+      closePrevious: true,
+    });
+  };
 }

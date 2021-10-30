@@ -1,4 +1,4 @@
-import { isDirty as getDirtyFlag } from "@frui.ts/dirtycheck";
+import { getDirtyWatcher } from "@frui.ts/dirtycheck";
 import { getValidationMessage } from "@frui.ts/validation";
 import { getInnerComponent, IFormFieldProps } from "@frui.ts/views";
 import { observer } from "mobx-react-lite";
@@ -13,9 +13,10 @@ export interface ChildProps {
 }
 
 export const FormField: React.FunctionComponent<IFormFieldProps<any, ChildProps> & FieldProps> = observer(props => {
-  const validationMessage = props.target && props.property && getValidationMessage(props.target, props.property as any);
-  const isDirty = getDirtyFlag(props.target, props.property as any);
-  const bordercolor = !!validationMessage ? "red" : isDirty ? "green" : "black";
+  const validationMessage =
+    props.target && props.property ? getValidationMessage(props.target, props.property as string) : undefined;
+  const isDirty = getDirtyWatcher(props.target)?.checkDirtyVisible(props.property as string);
+  const bordercolor = validationMessage ? "red" : isDirty ? "green" : "black";
 
   const childProps: ChildProps = {
     bordercolor,
@@ -37,6 +38,7 @@ export const FormField: React.FunctionComponent<IFormFieldProps<any, ChildProps>
 export function fieldForType<TTarget>(
   target: TTarget
 ): React.FunctionComponent<IFormFieldProps<TTarget, ChildProps> & FieldProps> {
+  // eslint-disable-next-line @typescript-eslint/no-unsafe-return
   return FormField as any;
 }
 

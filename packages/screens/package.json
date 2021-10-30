@@ -9,6 +9,7 @@
     "front-end",
     "framework",
     "mvvm",
+    "router",
     "mobx"
   ],
   "homepage": "https://github.com/eManPrague/frui.ts",
@@ -35,11 +36,12 @@
   },
   "dependencies": {
     "@frui.ts/helpers": "^999.0.0",
-    "query-string": "^6.13.7",
     "route-parser": "^0.0.5"
   },
   "devDependencies": {
-    "@types/route-parser": "^0.1.3"
+    "@types/route-parser": "^0.1.3",
+    "jest-mock-extended": "^1.0.16",
+    "regenerator-runtime": "^0.13.7"
   },
   "peerDependencies": {
     "mobx": "^4.0.0 || ^5.0.0"

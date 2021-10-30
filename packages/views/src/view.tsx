@@ -1,73 +1,50 @@
-import { isActivatable, isDeactivatable } from "@frui.ts/screens";
+import { ScreenBase } from "@frui.ts/screens";
 import React from "react";
+import ErrorBoundary, { ErrorBoundaryProps } from "./errorBoundary";
+import useScreenLifecycle from "./useScreenLifecycle";
 import { getView, tryGetView } from "./viewLocator";
 
-// eslint-disable-next-line @typescript-eslint/ban-types
-interface ViewProps<TViewModel extends { constructor: any } = { constructor: any }> {
-  vm: TViewModel;
+interface ViewProps {
+  vm?: ScreenBase;
   context?: string;
   useLifecycle?: boolean;
-  fallbackMode?: "message" | "children";
-  onError?: (error: Error, errorInfo: React.ErrorInfo) => void;
 }
 
-interface ViewState {
-  hasError: boolean;
-}
+const PureView: React.FunctionComponent<ViewProps> = props => {
+  const { vm, children, context, useLifecycle } = props;
 
-export default class View extends React.PureComponent<ViewProps, ViewState> {
-  static defaultProps: Partial<ViewProps> = {
-    fallbackMode: "children",
-  };
-
-  static getDerivedStateFromError(error: any) {
-    return { hasError: true };
+  if (!vm) {
+    return <React.Fragment>{children}</React.Fragment>;
   }
 
-  componentDidCatch(error: Error, errorInfo: React.ErrorInfo) {
-    this.props.onError?.(error, errorInfo);
+  const FoundView = children === undefined ? getView(vm.constructor, context) : tryGetView(vm.constructor, context);
+
+  if (!FoundView) {
+    return <React.Fragment>{children}</React.Fragment>;
   }
 
-  componentDidMount() {
-    if (this.props.useLifecycle) {
-      const { vm } = this.props;
-      if (vm && isActivatable(vm)) {
-        void vm.activate();
-      }
-    }
+  if (useLifecycle) {
+    useScreenLifecycle(vm);
   }
 
-  componentWillUnmount() {
-    if (this.props.useLifecycle) {
-      const { vm } = this.props;
-      if (vm && isDeactivatable(vm)) {
-        void vm.deactivate(true);
-      }
-    }
-  }
+  return <FoundView vm={vm} />;
+};
 
-  render() {
-    if (this.state?.hasError) {
-      return <p>Something went wrong :-(</p>;
-    }
+PureView.displayName = "View";
 
-    const { vm, context, fallbackMode, children } = this.props;
+const ViewWithErrorBoundary: React.FunctionComponent<ViewProps & ErrorBoundaryProps> = props => {
+  const { onError, onReset, fallback, ...rest } = props;
 
-    if (!vm) {
-      return <React.Fragment>{children}</React.Fragment>;
-    }
+  return (
+    <ErrorBoundary onError={onError} onReset={onReset} fallback={fallback}>
+      <PureView {...rest} />
+    </ErrorBoundary>
+  );
+};
 
-    const FoundView = fallbackMode ? tryGetView(vm.constructor, context) : getView(vm.constructor, context);
+ViewWithErrorBoundary.displayName = "View.ErrorBoundary";
 
-    if (!FoundView) {
-      return fallbackMode === "message" ? (
-        // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access
-        <p>Could not find a view for {vm.constructor.name}</p>
-      ) : (
-        <React.Fragment>{children}</React.Fragment>
-      );
-    }
+const View = PureView as React.FunctionComponent<ViewProps> & { ErrorBoundary: typeof ViewWithErrorBoundary };
+View.ErrorBoundary = ViewWithErrorBoundary;
 
-    return <FoundView vm={vm} />;
-  }
-}
+export default View;

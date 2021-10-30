@@ -1,11 +1,8 @@
 import { IPagingInfo, PagedQueryResult } from "@frui.ts/data";
-import { ConductorSingleChild, ScreenBase } from "@frui.ts/screens";
+import { ScreenBase } from "@frui.ts/screens";
 import { action, observable } from "mobx";
 
-export default abstract class ListViewModel<
-  TEntity,
-  TDetail extends ScreenBase = ScreenBase
-> extends ConductorSingleChild<TDetail> {
+export default abstract class ListViewModel<TEntity> extends ScreenBase {
   @observable.shallow items: TEntity[];
 
   /** Paging information relevant to the data in `items`. */
@@ -21,9 +18,5 @@ export default abstract class ListViewModel<
   protected setDataImpl([items, paging]: PagedQueryResult<TEntity>) {
     this.items = items;
     this.currentPaging = paging;
-  }
-
-  protected findNavigationChild(navigationName: string | undefined): Promise<TDetail | undefined> | TDetail | undefined {
-    return undefined;
   }
 }

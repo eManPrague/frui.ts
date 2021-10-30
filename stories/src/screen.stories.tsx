@@ -3,20 +3,22 @@ import { storiesOf } from "@storybook/react";
 import { observable, runInAction } from "mobx";
 import { Observer } from "mobx-react-lite";
 import React from "react";
-import InheritedTestViewModel from "./viewModels/inheritedTestViewModel";
+import ChildViewModel from "./viewModels/childViewModel";
+
+class TestViewModel extends ChildViewModel {}
 
 const config = observable({
   display: false,
-  vm: null as InheritedTestViewModel,
+  vm: undefined as TestViewModel | undefined,
 });
-const vm1 = new InheritedTestViewModel("View Model 1");
-const vm2 = new InheritedTestViewModel("View Model 2");
+const vm1 = new TestViewModel("vm1", "View Model 1");
+const vm2 = new TestViewModel("vm2", "View Model 2");
 
 const toggleDisplay = () => runInAction(() => (config.display = !config.display));
 const selectVM = (e: React.ChangeEvent<HTMLInputElement>) => runInAction(() => (config.vm = e.target.value === "1" ? vm1 : vm2));
 
-const testView: React.FunctionComponent<{ vm: InheritedTestViewModel }> = ({ vm }) => <p>This is a view for {vm.name}.</p>;
-registerView(testView, InheritedTestViewModel);
+const testView: React.FunctionComponent<{ vm: TestViewModel }> = ({ vm }) => <p>This is a view for {vm.name}.</p>;
+registerView(testView, TestViewModel);
 
 storiesOf("ScreenBase", module)
   .addDecorator(story => (
@@ -46,4 +48,4 @@ storiesOf("ScreenBase", module)
       )}
     </Observer>
   ))
-  .add("Screen lifecycle", () => config.display && <View vm={config.vm} useLifecycle={true} />);
+  .add("Screen lifecycle", () => (config.display ? <View vm={config.vm} useLifecycle={true} /> : <div></div>));

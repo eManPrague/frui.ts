@@ -1,15 +1,15 @@
-import { isActivatable, isDeactivatable } from "@frui.ts/screens";
+import { getNavigator, LifecycleScreenNavigator } from "@frui.ts/screens";
 import { useEffect } from "react";
 
 export default function useScreenLifecycle(vm: any, closeOnCleanup = true) {
   useEffect(() => {
-    if (isActivatable(vm)) {
-      void vm.activate();
-    }
+    const navigator = getNavigator<LifecycleScreenNavigator>(vm);
 
-    if (isDeactivatable(vm)) {
+    void navigator?.navigate([]);
+
+    if (navigator?.deactivate) {
       return () => {
-        void vm.deactivate(closeOnCleanup);
+        void navigator?.deactivate?.(closeOnCleanup);
       };
     }
   }, [vm]);

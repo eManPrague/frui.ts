@@ -1,6 +1,6 @@
-import { attachAutomaticValidator } from "@frui.ts//validation";
+import { attachAutomaticValidator } from "@frui.ts/validation";
 import { attachAutomaticDirtyWatcher } from "@frui.ts/dirtycheck";
-import { validatorsRepository } from "@frui.ts/validation";
+import { Configuration } from "@frui.ts/validation";
 import { storiesOf } from "@storybook/react";
 import { observable } from "mobx";
 import React from "react";
@@ -16,7 +16,14 @@ const validationRules = {
     required: true,
   },
 };
-validatorsRepository.set("required", (value, propertyName, entity, params) => (!params || value) ? undefined : `${propertyName} is required.`);
+
+Configuration.valueValidators.set("required", (value, context) => {
+  if (value) {
+    return { code: "required", isValid: true };
+  } else {
+    return { code: "required", isValid: false };
+  }
+});
 attachAutomaticValidator(observableTarget, validationRules, true);
 attachAutomaticDirtyWatcher(observableTarget, true);
 
@@ -24,8 +31,15 @@ const Field = fieldForType(observableTarget);
 
 storiesOf("FormField", module)
   .add("With component", () => <Field label="First name" target={observableTarget} property="name" component={Textbox} />)
-  .add("With component and props",
-    () => <Field label="First name" target={observableTarget} property="name" component={Textbox} componentprops={{ placeholder: "Name" }} />)
+  .add("With component and props", () => (
+    <Field
+      label="First name"
+      target={observableTarget}
+      property="name"
+      component={Textbox}
+      componentprops={{ placeholder: "Name" }}
+    />
+  ))
   .add("With children", () => (
     <Field label="First name" target={observableTarget} property="name">
       {(bindingProps, childProps) => <Textbox {...bindingProps} />}

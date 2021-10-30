@@ -1,12 +1,10 @@
 import { PagedQueryResult } from "@frui.ts/data";
-import { ScreenBase } from "@frui.ts/screens";
 import { FilteredListViewModel } from ".";
 
 export default abstract class ContinuousListViewModel<
   TEntity,
-  TFilter extends Record<string, any> = Record<string, any>,
-  TDetail extends ScreenBase = ScreenBase
-> extends FilteredListViewModel<TEntity, TFilter, TDetail> {
+  TFilter extends Record<string, any> = Record<string, any>
+> extends FilteredListViewModel<TEntity, TFilter> {
   get canLoadData() {
     return this.currentPaging && this.items.length < this.currentPaging.totalItems;
   }

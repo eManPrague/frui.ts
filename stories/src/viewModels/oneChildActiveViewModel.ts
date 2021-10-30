@@ -1,39 +1,26 @@
-import { ConductorOneChildActive } from "@frui.ts/screens";
+import { OneOfListActiveConductor, ScreenBase } from "@frui.ts/screens";
 import { action } from "mobx";
 import ChildViewModel from "./childViewModel";
-import "./helpers";
+import { IChildScreen } from "./types";
 
-export default class OneChildActiveViewModel extends ConductorOneChildActive<ChildViewModel> {
+export default class OneChildActiveViewModel
+  extends ScreenBase<OneOfListActiveConductor<OneChildActiveViewModel, ChildViewModel>>
+  implements IChildScreen {
+  name = "One Active";
+
   private childCounter = 1;
 
-  @action
-  setName(value: string) {
-    this.nameValue = value;
+  constructor() {
+    super();
+    this.navigator = new OneOfListActiveConductor<OneChildActiveViewModel, ChildViewModel>(this);
+    this.navigator.navigationName = "one";
+    this.navigator.preserveActiveChild = true;
   }
 
   @action.bound
   addChild() {
-    const newChild = new ChildViewModel();
-    newChild.navigationName = this.childCounter.toString();
-    newChild.setName(`Child ${this.childCounter}`);
-    newChild.text = `This is content of child #${this.childCounter}`;
-    this.children.push(newChild);
-
+    const newChild = new ChildViewModel(this.childCounter.toString(), `Child #${this.childCounter}`);
+    this.navigator.children.push(newChild);
     this.childCounter++;
-    return newChild;
-  }
-
-  protected findNavigationChild(name: string | undefined) {
-    if (!name) {
-      return undefined;
-    }
-
-    const child = this.children.find(x => x.navigationName === name);
-    if (child) {
-      return child;
-    } else {
-      this.childCounter = parseInt(name, 0);
-      return this.addChild();
-    }
   }
 }

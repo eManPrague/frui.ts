@@ -1,8 +1,8 @@
+import { CollectionCheckbox } from "@frui.ts/htmlcontrols";
 import { action } from "@storybook/addon-actions";
 import { storiesOf } from "@storybook/react";
-import { observable, configure } from "mobx";
+import { configure } from "mobx";
 import { Observer } from "mobx-react-lite";
-import { Textbox, CollectionCheckbox } from "@frui.ts/htmlcontrols";
 import React from "react";
 
 configure({ enforceActions: "observed" });

@@ -1,3 +1,0 @@
-- init the repo
-- remove CRA files
-- install packages

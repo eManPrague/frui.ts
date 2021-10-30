@@ -21,7 +21,8 @@ function dumpTargetObject(object: any) {
       {() => (
         <dl>
           <dt>Name</dt>
-          <dd>{object.name}</dd>
+          {/* eslint-disable-next-line @typescript-eslint/no-unsafe-member-access*/}
+          <dd>{object?.name}</dd>
         </dl>
       )}
     </Observer>

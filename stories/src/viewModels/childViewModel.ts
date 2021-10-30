@@ -1,24 +1,20 @@
-import { ScreenBase } from "@frui.ts/screens";
-import { action, observable } from "mobx";
-import "./helpers";
+import { ScreenBase, SimpleScreenNavigator } from "@frui.ts/screens";
 
-export default class ChildViewModel extends ScreenBase {
-  @observable text: string;
+export default class ChildViewModel extends ScreenBase<SimpleScreenNavigator<ChildViewModel, any>> {
+  name: string;
+  text: string;
 
-  @action
-  setName(value: string) {
-    this.nameValue = value;
-  }
+  constructor(navigationName: string, name: string) {
+    super();
+    this.name = name;
+    this.text = `This is content of Child View Model ${this.name}`;
 
-  protected onInitialize() {
-    console.log(this.name, "onInitialize");
-  }
+    this.navigator = new SimpleScreenNavigator<ChildViewModel, any>(this);
+    this.navigator.navigationName = navigationName;
 
-  protected onActivate() {
-    console.log(this.name, "onActivate");
-  }
-
-  protected onDeactivate(isClosing: boolean) {
-    console.log(this.name, "onDeactivate", isClosing);
+    this.events.on("onNavigate", context => console.log("onNavigate", this, context));
+    this.events.on("onInitialize", context => console.log("onInitialize", this, context));
+    this.events.on("onActivate", context => console.log("onActivate", this, context));
+    this.events.on("onDeactivate", context => console.log("onDeactivate", this, context));
   }
 }

@@ -1,23 +1,19 @@
-import { NavigationPath } from "./navigationPath";
+import PathElement from "../models/pathElements";
 
-export interface ICanNavigate {
-  navigate(subPath: string | undefined, params: any): Promise<any> | void;
+export interface ScreenNavigator {
+  readonly isActive: boolean;
 
-  getNavigationPath(): NavigationPath;
+  canNavigate(path: PathElement[]): Promise<boolean> | boolean;
+  navigate(path: PathElement[]): Promise<void>;
+
+  navigationName: string;
+  getNavigationState(): PathElement;
+
+  parent: ScreenNavigator | undefined;
+  getPrimaryChild(): ScreenNavigator | undefined;
 }
 
-export interface INavigationParent<TChild> {
-  getChildNavigationPath(child: TChild | string | number, childParams?: any): NavigationPath;
-}
-export type Class = { new (...args: any[]): any };
-
-const SelfLink = Symbol("Router.Self");
-export { SelfLink };
-
-export type RouteName = string | symbol | Class;
-
-export interface RouteDefinition {
-  name?: RouteName | typeof SelfLink;
-  route: string;
-  children?: Class[];
+export interface LifecycleScreenNavigator extends ScreenNavigator {
+  canDeactivate(isClosing: boolean): Promise<boolean> | boolean;
+  deactivate(isClosing: boolean): Promise<void>;
 }

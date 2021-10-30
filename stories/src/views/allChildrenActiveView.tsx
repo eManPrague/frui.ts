@@ -8,11 +8,12 @@ const allChildrenActiveView: React.FunctionComponent<{ vm: AllChildrenActiveView
     <div>
       Child view models: &nbsp;
       <button onClick={vm.addChild}>+</button>
+      <br />
       <Observer>
         {() => (
           <React.Fragment>
-            {vm.children.map(x => (
-              <View key={x.name} vm={x} />
+            {vm.navigator.children.map(x => (
+              <View key={x.navigator.navigationName} vm={x} />
             ))}
           </React.Fragment>
         )}

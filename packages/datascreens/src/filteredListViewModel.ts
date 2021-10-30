@@ -1,17 +1,14 @@
-/* eslint-disable @typescript-eslint/no-empty-function */
 import { IPagingFilter, SortingDirection } from "@frui.ts/data";
 import { attachAutomaticDirtyWatcher, EntityDirtyWatcher } from "@frui.ts/dirtycheck";
 import { bound } from "@frui.ts/helpers";
-import { ScreenBase } from "@frui.ts/screens";
 import { validate } from "@frui.ts/validation";
 import { action, isObservableArray, observable } from "mobx";
 import ListViewModel from "./listViewModel";
 
 export default abstract class FilteredListViewModel<
   TEntity,
-  TFilter extends Record<string, any> = Record<string, any>,
-  TDetail extends ScreenBase = ScreenBase
-> extends ListViewModel<TEntity, TDetail> {
+  TFilter extends Record<string, any> = Record<string, any>
+> extends ListViewModel<TEntity> {
   static defaultPageSize = 30;
 
   /** Currently edited filter */
@@ -81,7 +78,6 @@ export default abstract class FilteredListViewModel<
 
   protected resetFilterValues(filter: Partial<TFilter>) {
     for (const property in filter) {
-      // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
       filter[property] = undefined;
     }
   }

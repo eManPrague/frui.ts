@@ -1,41 +1,17 @@
-import { ConductorOneChildActive } from "@frui.ts/screens";
-import { action, observable } from "mobx";
+import { OneOfListActiveConductor, ScreenBase } from "@frui.ts/screens";
 import AllChildrenActiveViewModel from "./allChildrenActiveViewModel";
 import OneChildActiveViewModel from "./oneChildActiveViewModel";
 import SingleChildViewModel from "./singleChildViewModel";
+import { IChildScreen } from "./types";
 
-export default class RootViewModel extends ConductorOneChildActive<any> {
-  @observable navigationPath = "";
+export default class RootViewModel extends ScreenBase<OneOfListActiveConductor<RootViewModel, IChildScreen>> {
+  name = "My Root View Model";
 
   constructor() {
     super();
 
-    this.navigationName = "";
-
-    const module1 = new SingleChildViewModel();
-    module1.setName("Module 1");
-    module1.navigationName = "ModuleOne";
-    const module2 = new OneChildActiveViewModel();
-    module2.setName("Module 2");
-    module2.navigationName = "ModuleTwo";
-    const module3 = new AllChildrenActiveViewModel();
-    module3.setName("Module 3");
-    module3.navigationName = "ModuleThree";
-
-    this.children.push(module1, module2, module3);
-
-    window.addEventListener("navigated", (e: any) => {
-      this.setNavigationPath(e.detail.path);
-    });
-  }
-
-  @action.bound
-  setNavigationPath(path: string) {
-    this.navigationPath = path;
-  }
-
-  @action.bound
-  startNavigation() {
-    return this.navigate(this.navigationPath, undefined);
+    this.navigator = new OneOfListActiveConductor<RootViewModel, IChildScreen>(this);
+    this.navigator.navigationName = "root";
+    this.navigator.children.push(new AllChildrenActiveViewModel(), new OneChildActiveViewModel(), new SingleChildViewModel());
   }
 }
