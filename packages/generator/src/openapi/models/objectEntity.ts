@@ -1,6 +1,6 @@
-import EntityProperty from "./entityProperty";
+import type EntityProperty from "./entityProperty";
 import NamedObject from "./namedObject";
-import Restriction from "./restriction";
+import type Restriction from "./restriction";
 
 export default class ObjectEntity extends NamedObject {
   constructor(name: string, public properties: EntityProperty[]) {

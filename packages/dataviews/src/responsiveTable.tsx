@@ -1,8 +1,9 @@
 import { observer } from "mobx-react-lite";
 import React, { useEffect, useState } from "react";
 import DataList from "./dataList";
-import DataTable, { DataTableProps } from "./dataTable";
-import { ResponsiveColumnDefinition } from "./dataTypes";
+import type { DataTableProps } from "./dataTable";
+import DataTable from "./dataTable";
+import type { ResponsiveColumnDefinition } from "./dataTypes";
 import { combineClassNames } from "@frui.ts/helpers";
 
 function getWidth() {

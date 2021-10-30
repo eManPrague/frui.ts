@@ -1,4 +1,4 @@
-import React from "react";
+import type React from "react";
 
 export default function assignDefaultProps<TControl extends React.ElementType>(
   control: TControl,

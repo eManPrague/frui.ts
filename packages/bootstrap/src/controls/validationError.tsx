@@ -1,4 +1,5 @@
-import { BindingTarget, bound } from "@frui.ts/helpers";
+import type { BindingTarget } from "@frui.ts/helpers";
+import { bound } from "@frui.ts/helpers";
 import React from "react";
 import { ValidationControlBase } from "./validationControlBase";
 

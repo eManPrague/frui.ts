@@ -1,4 +1,4 @@
-import { SortingDirection } from "./sortingDirection";
+import type { SortingDirection } from "./sortingDirection";
 
 export interface IPagingInfo {
   totalItems: number;

@@ -1,4 +1,4 @@
-import { BindingTarget, BindingProperty, PropertyType } from "@frui.ts/helpers";
+import type { BindingTarget, BindingProperty, PropertyType } from "@frui.ts/helpers";
 
 /**
  * Base props required for two-way binding.

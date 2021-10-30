@@ -1,9 +1,9 @@
 import camelCase from "lodash/camelCase";
-import { CodeBlockWriter, Directory, SourceFile } from "ts-morph";
+import type { CodeBlockWriter, Directory, SourceFile } from "ts-morph";
 import GeneratorBase from "../../generatorBase";
 import { pascalCase } from "../../helpers";
 import { entityGeneratedHeader } from "../../messages.json";
-import Enum from "../models/enum";
+import type Enum from "../models/enum";
 export default class EnumWriter {
   constructor(private parentDirectory: Directory) {}
 
@@ -28,6 +28,7 @@ export default class EnumWriter {
     return this.parentDirectory.createSourceFile(
       fileName,
       writer => {
+        // eslint-disable-next-line @typescript-eslint/no-unsafe-argument
         writer.writeLine(entityGeneratedHeader);
         this.writeEnum(writer, definition);
         writer.newLineIfLastNot();

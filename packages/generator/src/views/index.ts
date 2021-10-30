@@ -1,7 +1,7 @@
-import { SourceFile } from "ts-morph";
+import type { SourceFile } from "ts-morph";
 import GeneratorBase from "../generatorBase";
 import { createProgressBar } from "../progressBar";
-import GeneratorParams from "./generatorParams";
+import type GeneratorParams from "./generatorParams";
 import ViewsAnalyzer from "./viewsAnalyzer";
 import ViewsProcessor from "./viewsProcessor";
 
@@ -31,6 +31,8 @@ export default class ViewsGenerator extends GeneratorBase<GeneratorParams, any> 
   }
 
   private ensureViewsFile() {
+    // TODO refactor this
+    // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
     if (!this.viewsFile && this.params.output) {
       this.viewsFile = this.project.createSourceFile(this.params.output, undefined, { overwrite: true });
     }

@@ -3,7 +3,7 @@ import type { AggregatedValidationResult, EntityValidator, ValidationResult } fr
 
 export function expectValid(results: Iterable<ValidationResult> | undefined) {
   if (results) {
-    const array: ValidationResult[] = Array.isArray(results) ? results : Array.from(results);
+    const array = Array.isArray(results) ? (results as ValidationResult[]) : Array.from(results);
     expect(array.every(x => x.isValid)).toBeTruthy();
   }
 }
@@ -122,6 +122,7 @@ export function testCoreValidatorFunctions<TEntity extends { firstName: string }
       "$state validator returns $results results when isEnabled:$isEnabled, isVisible:$isVisible",
       (args: { state: string; isEnabled: boolean; isVisible: boolean; results: string }) => {
         const validator = getValidator(args);
+        // eslint-disable-next-line @typescript-eslint/no-unsafe-argument
         const results = Array.from(validator.getResults("unknown" as any));
         if (args.results === "no") {
           expect(results).toHaveLength(0);
@@ -209,6 +210,7 @@ export function testCoreValidatorFunctions<TEntity extends { firstName: string }
       "$state validator returns $results results when isEnabled:$isEnabled, isVisible:$isVisible",
       (args: { state: string; isEnabled: boolean; isVisible: boolean; results: string }) => {
         const validator = getValidator(args);
+        // eslint-disable-next-line @typescript-eslint/no-unsafe-argument
         const results = Array.from(validator.getVisibleResults("unknown" as any));
         if (args.results === "no") {
           expect(results).toHaveLength(0);
@@ -287,6 +289,7 @@ export function testCoreValidatorFunctions<TEntity extends { firstName: string }
         "$state validator returns $result when isEnabled:$isEnabled, isVisible:$isVisible",
         (args: { state: string; isEnabled: boolean; isVisible: boolean; result: AggregatedValidationResult }) => {
           const validator = getValidator(args);
+          // eslint-disable-next-line @typescript-eslint/no-unsafe-argument
           const result = validator.checkValid("unknown" as any);
           expect(result).toBe(args.result);
         }

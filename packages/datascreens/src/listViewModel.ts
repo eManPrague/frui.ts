@@ -3,10 +3,10 @@ import { ScreenBase } from "@frui.ts/screens";
 import { action, observable } from "mobx";
 
 export default abstract class ListViewModel<TEntity> extends ScreenBase {
-  @observable.shallow items: TEntity[];
+  @observable.shallow items?: TEntity[];
 
   /** Paging information relevant to the data in `items`. */
-  @observable currentPaging: IPagingInfo;
+  @observable currentPaging?: IPagingInfo;
 
   @action.bound
   protected setData(data: PagedQueryResult<TEntity>) {

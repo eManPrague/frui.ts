@@ -1,7 +1,8 @@
-import { IPagingFilter, SortingDirection } from "@frui.ts/data";
+import type { IPagingFilter } from "@frui.ts/data";
+import { SortingDirection } from "@frui.ts/data";
 import { observer } from "mobx-react-lite";
 import React from "react";
-import { ColumnDefinition, PropsWithColumns } from "../dataTypes";
+import type { ColumnDefinition, PropsWithColumns } from "../dataTypes";
 
 export interface HeaderRowProps<TItem, TContext, TWrapper extends React.ElementType, TItemCell extends React.ElementType>
   extends PropsWithColumns<TItem, TContext> {

@@ -1,9 +1,9 @@
 import { computed, observable, runInAction } from "mobx";
-import { ClosingNavigationContext, NavigationContext } from "../../models/navigationContext";
-import PathElement from "../../models/pathElements";
+import type { ClosingNavigationContext, NavigationContext } from "../../models/navigationContext";
+import type PathElement from "../../models/pathElements";
 import { getNavigator } from "../../screens/screenBase";
 import LifecycleScreenNavigatorBase from "../lifecycleScreenNavigatorBase";
-import { LifecycleScreenNavigator, ScreenNavigator } from "../types";
+import type { LifecycleScreenNavigator, ScreenNavigator } from "../types";
 
 export default class ActiveChildConductor<
   TScreen = unknown,
@@ -83,7 +83,7 @@ export default class ActiveChildConductor<
 
     if (newChild) {
       const newChildNavigator = getNavigator<LifecycleScreenNavigator>(newChild);
-      await newChildNavigator?.navigate?.(path.slice(1));
+      await newChildNavigator?.navigate(path.slice(1));
     }
   }
 

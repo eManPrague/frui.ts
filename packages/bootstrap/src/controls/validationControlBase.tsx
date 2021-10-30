@@ -1,9 +1,10 @@
-import { BindingTarget, PropertyName } from "@frui.ts/helpers";
+import type { BindingTarget, PropertyName } from "@frui.ts/helpers";
 import { getValidationMessage } from "@frui.ts/validation";
-import { BindingComponent, ExcludeBindingProps, IBindingProps } from "@frui.ts/views";
+import type { ExcludeBindingProps, IBindingProps } from "@frui.ts/views";
+import { BindingComponent } from "@frui.ts/views";
 import { Observer } from "mobx-react-lite";
 import React from "react";
-import { CommonInputProps } from "./commonInputProps";
+import type { CommonInputProps } from "./commonInputProps";
 
 type TProps<TTarget, TOtherProps> = ExcludeBindingProps<CommonInputProps & TOtherProps> & IBindingProps<TTarget>;
 
@@ -35,7 +36,7 @@ export abstract class ValidationControlBase<TTarget extends BindingTarget, TOthe
       return errorMessage;
     }
 
-    const target = this.props.target as TTarget;
+    const target = this.props.target as TTarget | undefined;
     const property = this.props.property as PropertyName<TTarget>;
 
     if (target && property) {

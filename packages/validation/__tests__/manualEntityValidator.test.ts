@@ -1,6 +1,6 @@
 import { autorun } from "mobx";
 import ManualEntityValidator from "../src/manualEntityValidator";
-import { ValidationResult } from "../src/types";
+import type { ValidationResult } from "../src/types";
 import { testCoreValidatorFunctions, expectInvalid, expectValid } from "./testHelpers";
 
 interface ITarget {

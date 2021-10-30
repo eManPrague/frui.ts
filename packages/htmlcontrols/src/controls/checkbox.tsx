@@ -1,5 +1,7 @@
-import { BindingTarget, bound } from "@frui.ts/helpers";
-import { BindingComponent, IBindingProps } from "@frui.ts/views";
+import type { BindingTarget } from "@frui.ts/helpers";
+import { bound } from "@frui.ts/helpers";
+import type { IBindingProps } from "@frui.ts/views";
+import { BindingComponent } from "@frui.ts/views";
 import { Observer } from "mobx-react-lite";
 import React from "react";
 

@@ -1,4 +1,4 @@
-import PathElement from "../models/pathElements";
+import type PathElement from "../models/pathElements";
 
 export interface ScreenNavigator {
   readonly isActive: boolean;

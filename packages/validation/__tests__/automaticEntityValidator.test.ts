@@ -91,6 +91,6 @@ describe("AutomaticEntityValidator", () => {
     );
 
     const validationErrors = validator.getResults("firstName");
-    expect(validationErrors?.[0].code).toBe("required");
+    expect(validationErrors[0].code).toBe("required");
   });
 });

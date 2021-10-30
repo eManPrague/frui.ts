@@ -1,6 +1,6 @@
 import { computed, observable } from "mobx";
-import { PropertyName } from "@frui.ts/helpers";
-import { EntityDirtyWatcher } from "./types";
+import type { PropertyName } from "@frui.ts/helpers";
+import type { EntityDirtyWatcher } from "./types";
 
 const emptyResults: never[] = [];
 Object.freeze(emptyResults);
@@ -35,6 +35,7 @@ export default abstract class DirtyWatcherBase<TEntity = unknown> implements Ent
       return false;
     }
 
+    // eslint-disable-next-line @typescript-eslint/no-unsafe-argument
     return this.checkDirty(propertyName);
   }
 

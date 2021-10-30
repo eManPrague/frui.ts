@@ -35,7 +35,7 @@
     "build": "tsc"
   },
   "devDependencies": {
-    "@types/react": "^16.14.2"
+    "@types/react": "^17.0.33"
   },
   "dependencies": {
     "@frui.ts/helpers": "^999.0.0",
@@ -43,6 +43,6 @@
     "mobx-react-lite": "^2.2.2"
   },
   "peerDependencies": {
-    "react": "^16.13.0"
+    "react": "^17.0.2"
   }
 }

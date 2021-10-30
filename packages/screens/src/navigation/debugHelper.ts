@@ -1,9 +1,10 @@
 import { get, isArrayLike } from "mobx";
-import PathElement from "../models/pathElements";
-import UrlRouterBase from "../router/urlRouterBase";
-import ScreenBase, { getNavigator } from "../screens/screenBase";
+import type PathElement from "../models/pathElements";
+import type UrlRouterBase from "../router/urlRouterBase";
+import type ScreenBase from "../screens/screenBase";
+import { getNavigator } from "../screens/screenBase";
 import ActiveChildConductor from "./conductors/activeChildConductor";
-import OneOfListActiveConductor from "./conductors/oneOfListActiveConductor";
+import type OneOfListActiveConductor from "./conductors/oneOfListActiveConductor";
 
 interface ViewModelInfo {
   name?: string;
@@ -24,8 +25,8 @@ export function inspectViewModelHierarchy(vm: unknown, router?: UrlRouterBase): 
   return {
     name: get(screen, "name") as string,
     navigationPath: router?.getUrlForScreen(screen),
-    navigationName: screen.navigator?.navigationName,
-    navigationState: screen.navigator?.getNavigationState(),
+    navigationName: screen.navigator.navigationName,
+    navigationState: screen.navigator.getNavigationState(),
     instance: vm,
     activeChild: activeChild ? inspectViewModelHierarchy(activeChild, router) : undefined,
     children: isArrayLike(children) ? children.map(x => inspectViewModelHierarchy(x, router)) : undefined,
@@ -37,7 +38,7 @@ export function dumpViewModelHierarchy(vm: any) {
 
   const dump = (item: ViewModelInfo) => {
     rows.push(
-      // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access, @typescript-eslint/restrict-template-expressions
+      // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access, @typescript-eslint/restrict-template-expressions, @typescript-eslint/prefer-nullish-coalescing
       `/${item.navigationPath || ""} - ${item.name || item.navigationName || ""} (${item.instance?.constructor?.name || ""})`
     );
     if (item.activeChild) {

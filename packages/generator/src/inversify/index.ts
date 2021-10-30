@@ -1,10 +1,10 @@
-import { FunctionDeclaration, SourceFile } from "ts-morph";
+import type { FunctionDeclaration, SourceFile } from "ts-morph";
 import GeneratorBase from "../generatorBase";
 import { createProgressBar } from "../progressBar";
 import ExportsAnalyzer from "./exportsAnalyzer";
-import ServiceRule from "./models/serviceRule";
+import type ServiceRule from "./models/serviceRule";
 import RegistrationsProcessor from "./registrationsProcessor";
-import { IConfig, IGeneratorParams } from "./types";
+import type { IConfig, IGeneratorParams } from "./types";
 
 export default class IversifyGenerator extends GeneratorBase<IGeneratorParams, IConfig> {
   private decoratorsFile: SourceFile;
@@ -58,6 +58,7 @@ export default class IversifyGenerator extends GeneratorBase<IGeneratorParams, I
   }
 
   private ensureDecoratorsFile() {
+    // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
     if (!this.decoratorsFile && this.params.decorators?.output) {
       this.decoratorsFile = this.project.createSourceFile(this.params.decorators.output, undefined, { overwrite: true });
       this.decoratorsFile.addImportDeclaration({
@@ -69,6 +70,7 @@ export default class IversifyGenerator extends GeneratorBase<IGeneratorParams, I
   }
 
   private ensureRegistryFile() {
+    // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
     if (!this.registryFile && this.params.registry?.output) {
       this.registryFile = this.project.createSourceFile(this.params.registry.output, undefined, { overwrite: true });
       this.registryFile.addImportDeclaration({

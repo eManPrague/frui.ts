@@ -1,8 +1,8 @@
-import { PropertyName } from "@frui.ts/helpers";
+import type { PropertyName } from "@frui.ts/helpers";
 import { get, observable } from "mobx";
 import { emptyResults } from "./entityValidatorBase";
 import ManualEntityValidator from "./manualEntityValidator";
-import { ValidationResult } from "./types";
+import type { ValidationResult } from "./types";
 
 export default class ServerEntityValidator<TEntity = any> extends ManualEntityValidator<TEntity> {
   private _validatedValues = observable.map<string, unknown>(undefined, { deep: false });

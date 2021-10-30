@@ -1,7 +1,8 @@
-import { BindingProperty, BindingTarget } from "@frui.ts/helpers";
+import type { BindingProperty, BindingTarget } from "@frui.ts/helpers";
 import { action } from "mobx";
 import React from "react";
-import { ExcludeBindingProps, IBindingProps, omitBindingProps } from "./bindingProps";
+import type { ExcludeBindingProps, IBindingProps } from "./bindingProps";
+import { omitBindingProps } from "./bindingProps";
 import { getValue, setValue } from "./useBinding";
 
 /**
@@ -42,7 +43,7 @@ export abstract class BindingComponent<
       console.warn("'target' has not been set");
       return undefined;
     }
-    // eslint-disable-next-line @typescript-eslint/no-unsafe-return
+
     return getValue(this.props.target as TTarget, this.props.property);
   }
 
@@ -50,7 +51,9 @@ export abstract class BindingComponent<
   @action.bound
   protected setValue(value: any) {
     const { target, property, onValueChanged } = this.props;
+    // eslint-disable-next-line @typescript-eslint/no-unsafe-argument
     setValue(target as TTarget, property, value);
+    // eslint-disable-next-line @typescript-eslint/no-unsafe-argument
     onValueChanged?.(value, property as BindingProperty<TTarget>, target as TTarget);
   }
 }

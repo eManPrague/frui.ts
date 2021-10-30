@@ -1,4 +1,4 @@
-import { OpenAPIV3 } from "openapi-types";
+import type { OpenAPIV3 } from "openapi-types";
 import AliasEntity from "../../src/openapi/models/aliasEntity";
 import Enum from "../../src/openapi/models/enum";
 import InheritedEntity from "../../src/openapi/models/inheritedEntity";

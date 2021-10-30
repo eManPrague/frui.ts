@@ -1,5 +1,5 @@
 /* eslint-disable sonarjs/no-duplicate-string */
-import { EntityDirtyWatcher } from "../src/types";
+import type { EntityDirtyWatcher } from "../src/types";
 
 export function testCoreDirtyWatcherFunctions<TEntity extends { firstName: string } = any>(
   cleanWatcher: () => EntityDirtyWatcher<TEntity>,
@@ -125,6 +125,7 @@ export function testCoreDirtyWatcherFunctions<TEntity extends { firstName: strin
       "$state watcher returns dirty:$dirty when isEnabled:$isEnabled, isVisible:$isVisible",
       (args: { state: string; isEnabled: boolean; isVisible: boolean; dirty: boolean }) => {
         const watcher = getWatcher(args);
+        // eslint-disable-next-line @typescript-eslint/no-unsafe-argument
         const isDirty = watcher.checkDirty("unknown" as any);
         expect(isDirty).toBe(args.dirty);
       }
@@ -204,6 +205,7 @@ export function testCoreDirtyWatcherFunctions<TEntity extends { firstName: strin
       "$state watcher returns dirty:$dirty when isEnabled:$isEnabled, isVisible:$isVisible",
       (args: { state: string; isEnabled: boolean; isVisible: boolean; dirty: boolean }) => {
         const watcher = getWatcher(args);
+        // eslint-disable-next-line @typescript-eslint/no-unsafe-argument
         const isDirty = watcher.checkDirtyVisible("unknown" as any);
         expect(isDirty).toBe(args.dirty);
       }

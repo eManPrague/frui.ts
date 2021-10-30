@@ -1,4 +1,4 @@
-import { BaseParams } from "../generatorBase";
+import type { BaseParams } from "../generatorBase";
 
 export interface IGeneratorParams extends BaseParams {
   decorators?: {

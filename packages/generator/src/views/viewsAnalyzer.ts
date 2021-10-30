@@ -1,4 +1,4 @@
-import { Project, SourceFile } from "ts-morph";
+import type { Project, SourceFile } from "ts-morph";
 
 export default class ViewsAnalyzer {
   analyze(project: Project) {

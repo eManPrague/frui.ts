@@ -1,16 +1,16 @@
 ﻿import camelCase from "lodash/camelCase";
 import uniq from "lodash/uniq";
-import { CodeBlockWriter, Directory, SourceFile } from "ts-morph";
+import type { CodeBlockWriter, Directory, SourceFile } from "ts-morph";
 import GeneratorBase from "../../generatorBase";
 import { entityGeneratedHeader } from "../../messages.json";
 import ObservableFormatter from "../formatters/observableFormatter";
 import AliasEntity from "../models/aliasEntity";
-import EntityProperty from "../models/entityProperty";
+import type EntityProperty from "../models/entityProperty";
 import Enum from "../models/enum";
-import ObjectEntity from "../models/objectEntity";
+import type ObjectEntity from "../models/objectEntity";
 import Restriction from "../models/restriction";
-import TypeReference from "../models/typeReference";
-import { IConfig, IGeneratorParams, ValidationConfig } from "../types";
+import type TypeReference from "../models/typeReference";
+import type { IConfig, IGeneratorParams, ValidationConfig } from "../types";
 
 export default class ObjectEntityWriter {
   constructor(private parentDirectory: Directory, private params: IGeneratorParams, private config: Partial<IConfig>) {}
@@ -66,6 +66,7 @@ export default class ObjectEntityWriter {
         writer.conditionalBlankLine(writer.getLength() > 0);
 
         writer
+          // eslint-disable-next-line @typescript-eslint/no-unsafe-argument
           .writeLine(entityGeneratedHeader)
           .write("export default class ")
           .write(definition.name)

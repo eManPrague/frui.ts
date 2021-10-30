@@ -1,4 +1,4 @@
-import { OpenAPIV3 } from "openapi-types";
+import type { OpenAPIV3 } from "openapi-types";
 import { pascalCase } from "../../helpers";
 import AliasEntity from "../models/aliasEntity";
 import EntityProperty from "../models/entityProperty";
@@ -42,6 +42,7 @@ export default class OpenApi3Parser {
         return this.parseObject(name, definition);
 
       case "string":
+        // eslint-disable-next-line sonarjs/no-nested-switch
         switch (definition.format) {
           case "binary":
             return this.setTypeReference("Blob", "Blob");
@@ -74,7 +75,7 @@ export default class OpenApi3Parser {
   }
 
   private parseEnum(name: string, definition: OpenAPIV3.SchemaObject) {
-    const enumType = definition.enum ? new Enum(name, definition.enum) : undefined;
+    const enumType = definition.enum ? new Enum(name, definition.enum as string[]) : undefined;
     return this.setTypeReference(name, enumType);
   }
 
@@ -98,7 +99,7 @@ export default class OpenApi3Parser {
     ) as OpenAPIV3.SchemaObject[];
 
     const otherParents = subTypes
-      .filter(x => !plainObjects.includes(x as any))
+      .filter(x => !plainObjects.includes(x as OpenAPIV3.SchemaObject))
       .map((x, i) => this.parseSchemaObject(`${name}Parent${i + 1}`, x));
 
     const properties = plainObjects.flatMap(x => this.extractObjectProperties(name, x));
@@ -147,7 +148,8 @@ export default class OpenApi3Parser {
 
     if (isV3SchemaObject(definition)) {
       property.description = definition.description;
-      property.example = definition.example as unknown;
+      // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
+      property.example = definition.example;
 
       // TODO add more validation restrictions here
       if (definition.maxLength) {

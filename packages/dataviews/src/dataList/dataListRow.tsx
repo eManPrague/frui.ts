@@ -1,6 +1,6 @@
 import { observer } from "mobx-react-lite";
 import React from "react";
-import { PropsWithColumns, ResponsiveColumnDefinition } from "../dataTypes";
+import type { PropsWithColumns, ResponsiveColumnDefinition } from "../dataTypes";
 
 export interface DataListRowProps<TItem, TContext> extends PropsWithColumns<TItem, TContext> {
   item: TItem;

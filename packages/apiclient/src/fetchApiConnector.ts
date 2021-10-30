@@ -1,6 +1,6 @@
 import { bind } from "@frui.ts/helpers";
 import FetchError from "./fetchError";
-import { IApiConnector } from "./types";
+import type { IApiConnector } from "./types";
 
 const jsonContentType = "application/json";
 export type Middleware = (response: Response) => Response | PromiseLike<Response>;
@@ -12,7 +12,7 @@ export function appendJsonHeader(params?: RequestInit): RequestInit {
   return {
     ...params,
     headers: {
-      ...(params || {}).headers,
+      ...(params ?? {}).headers,
       "Content-Type": jsonContentType,
     },
   };

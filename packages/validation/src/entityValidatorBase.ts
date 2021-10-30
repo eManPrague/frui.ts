@@ -1,7 +1,8 @@
-import { PropertyName } from "@frui.ts/helpers";
+import type { PropertyName } from "@frui.ts/helpers";
 import { computed, observable } from "mobx";
 import { ValidationLoading } from "./configuration";
-import { AggregatedValidationResult, EntityValidator, ValidationResult } from "./types";
+import type { EntityValidator, ValidationResult } from "./types";
+import { AggregatedValidationResult } from "./types";
 
 const emptyResults: never[] = [];
 Object.freeze(emptyResults);
@@ -46,7 +47,7 @@ export default abstract class EntityValidatorBase<TEntity = unknown> implements 
   checkValid(propertyName?: PropertyName<TEntity>): AggregatedValidationResult {
     if (propertyName) {
       const results = this.getResults(propertyName);
-      return results ? AggregateValidationResults(results) : true;
+      return AggregateValidationResults(results);
     } else {
       const results = this.getAllValidationResults();
       return AggregateValidationResults(results);

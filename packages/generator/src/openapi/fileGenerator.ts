@@ -1,11 +1,11 @@
-import { Project } from "ts-morph";
+import type { Project } from "ts-morph";
 import { createProgressBar } from "../progressBar";
 import Enum from "./models/enum";
 import InheritedEntity from "./models/inheritedEntity";
 import ObjectEntity from "./models/objectEntity";
-import TypeReference from "./models/typeReference";
+import type TypeReference from "./models/typeReference";
 import UnionEntity from "./models/unionEntity";
-import { IConfig, IGeneratorParams } from "./types";
+import type { IConfig, IGeneratorParams } from "./types";
 import EnumWriter from "./writers/enumWriter";
 import ObjectEntityWriter from "./writers/objectEntityWriter";
 import StringLiteralWriter from "./writers/stringLiteralWriter";

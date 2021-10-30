@@ -1,6 +1,6 @@
 import { observer } from "mobx-react-lite";
 import React from "react";
-import { ResponsiveColumnDefinition } from ".";
+import type { ResponsiveColumnDefinition } from ".";
 import "./responsiveTableHeaders.scss";
 
 /*

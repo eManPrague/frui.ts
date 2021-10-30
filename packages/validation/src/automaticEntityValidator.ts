@@ -1,9 +1,9 @@
-import { PropertyName } from "@frui.ts/helpers";
+import type { PropertyName } from "@frui.ts/helpers";
 import { get, observable } from "mobx";
-import { EntityValidationRules, ValidationFunction } from "./automaticValidatorTypes";
+import type { EntityValidationRules, ValidationFunction } from "./automaticValidatorTypes";
 import DefaultConfiguration from "./configuration";
 import EntityValidatorBase, { emptyResults } from "./entityValidatorBase";
-import { ValidationResult } from "./types";
+import type { ValidationResult } from "./types";
 import { attachValidator } from "./utils";
 
 interface AutomaticEntityValidatorConfiguration {
@@ -40,7 +40,7 @@ export default class AutomaticEntityValidator<TEntity = any> extends EntityValid
   }
 
   getResults(propertyName: PropertyName<TEntity>): ValidationResult[] {
-    return (this.isEnabled && (get(this._results, propertyName) as ValidationResult[])) || emptyResults;
+    return (this.isEnabled && (get(this._results, propertyName) as ValidationResult[] | undefined)) || emptyResults;
   }
 
   private buildObservableResults(target: TEntity, entityValidationRules: EntityValidationRules<TEntity>) {

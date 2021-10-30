@@ -7,7 +7,7 @@ export default class ManualEntityValidator<TEntity = any> extends EntityValidato
   protected validationResults = observable.map<PropertyName<TEntity>, ValidationResult[]>();
 
   getAllResults(): Iterable<[PropertyName<TEntity>, ValidationResult[]]> {
-    return (this.isEnabled && this.validationResults.entries()) || emptyResults;
+    return this.isEnabled ? this.validationResults.entries() : emptyResults;
   }
 
   getResults(propertyName: PropertyName<TEntity>): Iterable<ValidationResult> {

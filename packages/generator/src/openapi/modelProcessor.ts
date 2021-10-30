@@ -1,7 +1,7 @@
 import SwaggerParser from "@apidevtools/swagger-parser";
-import { OpenAPI } from "openapi-types";
+import type { OpenAPI } from "openapi-types";
 import { createProgressBar } from "../progressBar";
-import ApiModel from "./models/apiModel";
+import type ApiModel from "./models/apiModel";
 import { isOpenAPIv2, isOpenAPIv3 } from "./parsers/helpers";
 import OpenApi2Parser from "./parsers/openApi2Parser";
 import OpenApi3Parser from "./parsers/openApi3Parser";

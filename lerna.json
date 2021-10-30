@@ -2,8 +2,6 @@
   "version": "999.0.0",
   "npmClient": "yarn",
   "packages": [
-    "demo",
-    "examples/*",
     "packages/*",
     "stories"
   ],

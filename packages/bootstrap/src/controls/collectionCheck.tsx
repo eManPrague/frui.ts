@@ -1,10 +1,13 @@
-import { BindingProperty, BindingTarget, isSet } from "@frui.ts/helpers";
-import { getValue, IBindingProps, omitBindingProps } from "@frui.ts/views";
+import type { BindingProperty, BindingTarget } from "@frui.ts/helpers";
+import { isSet } from "@frui.ts/helpers";
+import type { IBindingProps } from "@frui.ts/views";
+import { getValue, omitBindingProps } from "@frui.ts/views";
 import { action, isArrayLike } from "mobx";
 import { observer } from "mobx-react-lite";
 import React from "react";
-import { Form, FormCheckProps } from "react-bootstrap";
-import { CommonInputProps } from "./commonInputProps";
+import type { FormCheckProps } from "react-bootstrap";
+import { Form } from "react-bootstrap";
+import type { CommonInputProps } from "./commonInputProps";
 
 type SetOrArrayInnerType<TTarget, TProperty extends keyof TTarget> = TTarget[TProperty] extends Set<infer TSetValue> | undefined
   ? TSetValue
@@ -13,7 +16,7 @@ type SetOrArrayInnerType<TTarget, TProperty extends keyof TTarget> = TTarget[TPr
   : never;
 
 export interface CollectionCheckProps<TTarget extends BindingTarget, TProperty extends BindingProperty<TTarget>>
-  extends Omit<FormCheckProps, "property">,
+  extends Omit<FormCheckProps, "property" | "value">,
     CommonInputProps,
     IBindingProps<TTarget, TProperty> {
   value: TProperty extends keyof TTarget ? SetOrArrayInnerType<TTarget, TProperty> : any;
@@ -22,9 +25,10 @@ export interface CollectionCheckProps<TTarget extends BindingTarget, TProperty e
 function useCollection<TTarget extends BindingTarget, TProperty extends BindingProperty<TTarget>>(
   props: CollectionCheckProps<TTarget, TProperty>
 ): [boolean, () => void] {
-  const collection = getValue(props.target, props.property) as unknown;
+  const { target, property } = props;
+  const collection = getValue(target, property) as unknown;
 
-  if (!collection) {
+  if (!collection || !target || !property) {
     throw new Error("The target value must be an array or a Set");
   }
 
@@ -38,7 +42,8 @@ function useCollection<TTarget extends BindingTarget, TProperty extends BindingP
       } else {
         collection.add(key);
       }
-      props.onValueChanged?.(key as any, props.property as TProperty, props.target as TTarget);
+      // eslint-disable-next-line @typescript-eslint/no-unsafe-argument
+      props.onValueChanged?.(key as any, property, target);
     };
     return [checked, action(toggle)];
   } else if (isArrayLike(collection)) {
@@ -50,7 +55,8 @@ function useCollection<TTarget extends BindingTarget, TProperty extends BindingP
       } else {
         collection.push(key);
       }
-      props.onValueChanged?.(key as any, props.property as TProperty, props.target as TTarget);
+      // eslint-disable-next-line @typescript-eslint/no-unsafe-argument
+      props.onValueChanged?.(key as any, property, target);
     };
     return [checked, action(toggle)];
   } else {

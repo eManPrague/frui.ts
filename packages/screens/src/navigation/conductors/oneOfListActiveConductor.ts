@@ -1,8 +1,9 @@
-import { IArrayWillChange, IArrayWillSplice, observable } from "mobx";
-import { NavigationContext } from "../../models/navigationContext";
+import type { IArrayWillChange, IArrayWillSplice } from "mobx";
+import { observable } from "mobx";
+import type { NavigationContext } from "../../models/navigationContext";
 import { getNavigator } from "../../screens/screenBase";
-import ScreenLifecycleEventHub from "../screenLifecycleEventHub";
-import { LifecycleScreenNavigator } from "../types";
+import type ScreenLifecycleEventHub from "../screenLifecycleEventHub";
+import type { LifecycleScreenNavigator } from "../types";
 import ActiveChildConductor from "./activeChildConductor";
 
 export default class OneOfListActiveConductor<
@@ -27,7 +28,7 @@ export default class OneOfListActiveConductor<
     const newNavigationName = context.path[1]?.name;
     const activeChildNavigator = getNavigator<LifecycleScreenNavigator>(this.activeChild);
 
-    if (!activeChildNavigator || activeChildNavigator?.navigationName === newNavigationName) {
+    if (!activeChildNavigator || activeChildNavigator.navigationName === newNavigationName) {
       return true;
     }
 
@@ -41,7 +42,7 @@ export default class OneOfListActiveConductor<
     return Promise.resolve(result);
   };
 
-  private findChild(navigationName: string) {
+  private findChild(navigationName: string | undefined) {
     if (this.preserveActiveChild && navigationName === undefined) {
       return this.activeChild;
     }

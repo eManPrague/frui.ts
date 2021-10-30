@@ -1,11 +1,11 @@
-import { OpenAPIV2, OpenAPIV3 } from "openapi-types";
+import type { OpenAPIV2, OpenAPIV3 } from "openapi-types";
 
 export function isOpenAPIv2(api: any): api is OpenAPIV2.Document {
   return (api as OpenAPIV2.Document).swagger === "2.0";
 }
 
 export function isOpenAPIv3(api: any): api is OpenAPIV3.Document {
-  return (api as OpenAPIV3.Document).openapi?.startsWith("3");
+  return !!(api as Partial<OpenAPIV3.Document>).openapi?.startsWith("3");
 }
 
 export function isV3ReferenceObject(item: any): item is OpenAPIV3.ReferenceObject {
@@ -17,7 +17,7 @@ export function isV2ReferenceObject(item: any): item is OpenAPIV2.ReferenceObjec
 }
 
 export function isV3ArraySchemaObject(item: any): item is OpenAPIV3.ArraySchemaObject {
-  return (item as OpenAPIV3.ArraySchemaObject).type === "array";
+  return (item as Partial<OpenAPIV3.ArraySchemaObject>).type === "array";
 }
 
 export function isV3SchemaObject(item: any): item is OpenAPIV3.SchemaObject {

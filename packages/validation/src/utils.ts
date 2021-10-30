@@ -1,7 +1,7 @@
-import { PropertyName } from "@frui.ts/helpers";
+import type { PropertyName } from "@frui.ts/helpers";
 import { runInAction } from "mobx";
 import Configuration from "./configuration";
-import { AggregatedValidationResult, EntityValidator } from "./types";
+import type { AggregatedValidationResult, EntityValidator } from "./types";
 
 export function attachValidator<TEntity>(target: TEntity, validator: EntityValidator<TEntity>) {
   // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access
@@ -21,6 +21,7 @@ export function getValidationMessage<TEntity>(target: TEntity, propertyName: Pro
   if (validator) {
     for (const result of validator.getVisibleResults(propertyName)) {
       if (!result.isValid) {
+        // eslint-disable-next-line @typescript-eslint/prefer-nullish-coalescing
         const message = result.message || result.code;
         if (message) {
           return message;

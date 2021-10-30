@@ -1,5 +1,5 @@
 import { mock } from "jest-mock-extended";
-import { ScreenNavigator } from "../../src/navigation/types";
+import type { ScreenNavigator } from "../../src/navigation/types";
 import UrlRouterBase from "../../src/router/urlRouterBase";
 
 class TestRouter extends UrlRouterBase {

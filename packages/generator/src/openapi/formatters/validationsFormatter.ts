@@ -1,7 +1,7 @@
 import AliasEntity from "../models/aliasEntity";
 import ObjectEntity from "../models/objectEntity";
 import Restriction from "../models/restriction";
-import TypeReference from "../models/typeReference";
+import type TypeReference from "../models/typeReference";
 
 export default class ValidationsFormatter {
   format(item: TypeReference) {

@@ -1,4 +1,4 @@
-import { IPagingFilter } from "./types";
+import type { IPagingFilter } from "./types";
 import { SortingDirection } from "./sortingDirection";
 
 export function applySort(filter: IPagingFilter, columnName: string) {

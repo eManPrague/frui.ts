@@ -1,5 +1,5 @@
-import PathElement from "../models/pathElements";
-import { ScreenNavigator } from "../navigation/types";
+import type PathElement from "../models/pathElements";
+import type { ScreenNavigator } from "../navigation/types";
 
 export default abstract class RouterBase {
   rootNavigator?: ScreenNavigator;

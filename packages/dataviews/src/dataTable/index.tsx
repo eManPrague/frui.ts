@@ -1,8 +1,9 @@
 import { observer } from "mobx-react-lite";
 import React from "react";
-import { DataTablePropsBase } from "../dataTypes";
+import type { DataTablePropsBase } from "../dataTypes";
 import TableHeader from "./tableHeader";
-import TableRow, { TableRowProps } from "./tableRow";
+import type { TableRowProps } from "./tableRow";
+import TableRow from "./tableRow";
 
 export interface DataTableProps<TItem, TContext>
   extends DataTablePropsBase<TItem, TContext>,
@@ -31,7 +32,7 @@ function dataTable<TItem, TContext>(props: DataTableProps<TItem, TContext>) {
         </thead>
       )}
       <tbody>
-        {props.items?.map(item => (
+        {props.items.map(item => (
           <TableRow
             key={String(item[props.itemKey])}
             item={item}

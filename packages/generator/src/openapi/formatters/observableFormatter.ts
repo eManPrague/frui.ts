@@ -1,7 +1,7 @@
 import ObjectEntity from "../models/objectEntity";
 import Restriction from "../models/restriction";
-import TypeReference from "../models/typeReference";
-import { ObservableConfig } from "../types";
+import type TypeReference from "../models/typeReference";
+import type { ObservableConfig } from "../types";
 
 type ExcludeList = string[] | undefined;
 
@@ -34,7 +34,7 @@ export default class ObservableFormatter {
       }
 
       if (typeof entityConfig === "object") {
-        excludedProperties = entityConfig?.exclude;
+        excludedProperties = entityConfig.exclude;
       }
     }
 
@@ -48,6 +48,6 @@ export default class ObservableFormatter {
   }
 }
 
-function isExcluded(list: ExcludeList, value: string) {
-  return list && list.includes(value);
+function isExcluded(list: ExcludeList, value: string): boolean {
+  return list?.includes(value) === true;
 }

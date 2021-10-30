@@ -1,5 +1,5 @@
-import { PropertyName } from "@frui.ts/helpers";
-import { AsyncValidationResult, ValidationResult } from "./types";
+import type { PropertyName } from "@frui.ts/helpers";
+import type { AsyncValidationResult, ValidationResult } from "./types";
 
 export interface ValidationFunctionContext<TParameters = unknown, TEntity = any, TProperty = PropertyName<TEntity>> {
   readonly parameters: TParameters;

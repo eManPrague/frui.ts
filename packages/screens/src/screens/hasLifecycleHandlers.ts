@@ -1,4 +1,4 @@
-import { ClosingNavigationContext, NavigationContext } from "../models/navigationContext";
+import type { ClosingNavigationContext, NavigationContext } from "../models/navigationContext";
 
 export interface HasLifecycleEvents<TScreen = unknown> {
   /** Called only once, on the first call of navigate */

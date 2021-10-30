@@ -52,7 +52,11 @@ export default class ErrorBoundary extends React.PureComponent<ErrorBoundaryProp
           ? (fallback({ error, errorInfo, resetError: this.resetErrorBoundary }) as React.ReactNode)
           : fallback;
 
-      return element || <p>Something went wrong :-(</p>;
+      if (element) {
+        return element;
+      }
+
+      return <p>Something went wrong :-(</p>;
     }
 
     return <React.Fragment>{this.props.children}</React.Fragment>;

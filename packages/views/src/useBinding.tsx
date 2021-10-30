@@ -1,6 +1,8 @@
-import { BindingProperty, BindingTarget, ensureObservableProperty, isMap, PropertyName, PropertyType } from "@frui.ts/helpers";
+/* eslint-disable @typescript-eslint/no-unsafe-return */
+import type { BindingProperty, BindingTarget, PropertyName, PropertyType } from "@frui.ts/helpers";
+import { ensureObservableProperty, isMap } from "@frui.ts/helpers";
 import { action, get, isObservable, isObservableMap, isObservableProp } from "mobx";
-import { IBindingProps } from "./bindingProps";
+import type { IBindingProps } from "./bindingProps";
 
 export function getValue<TTarget, TProperty extends PropertyName<TTarget>>(
   target: TTarget | undefined,
@@ -10,18 +12,18 @@ export function getValue<TTarget, TProperty extends PropertyName<TTarget>>(
 export function getValue<TKey, TValue, TTarget extends Map<TKey, TValue>>(
   target: TTarget | undefined,
   key: TKey | undefined
-): TValue;
+): TValue | undefined;
 export function getValue<TTarget extends BindingTarget, TProperty extends BindingProperty<TTarget>>(
   target: TTarget | undefined,
   property: TProperty | undefined,
   ensureObservable?: boolean
-): PropertyType<TTarget, TProperty>;
+): PropertyType<TTarget, TProperty> | undefined;
 
 export function getValue<TTarget extends BindingTarget, TProperty extends BindingProperty<TTarget>>(
   target: TTarget | undefined,
   property: TProperty | undefined,
   ensureObservable = true
-): PropertyType<TTarget, TProperty> {
+): PropertyType<TTarget, TProperty> | undefined {
   if (!target) {
     throw new Error("'target' prop has not been set");
   }
@@ -30,26 +32,23 @@ export function getValue<TTarget extends BindingTarget, TProperty extends Bindin
   }
 
   if (isObservableMap(target)) {
-    // eslint-disable-next-line @typescript-eslint/no-unsafe-return
     return target.get(property);
   }
-  const propertyName = property as PropertyName<TTarget>;
+  const propertyName = property as PropertyName<TTarget> & string;
 
   if (!isObservable(target) || !isObservableProp(target, propertyName)) {
     if (isMap<TProperty, PropertyType<TTarget, TProperty>>(target)) {
-      // eslint-disable-next-line @typescript-eslint/no-unsafe-return
       return target.get(property);
     } else {
+      const value = target[property];
       if (ensureObservable) {
-        action(ensureObservableProperty)(target, propertyName, target[propertyName]);
+        action(ensureObservableProperty)(target, propertyName, value);
       } else {
-        // eslint-disable-next-line @typescript-eslint/no-unsafe-return
-        return target[property];
+        return value;
       }
     }
   }
 
-  // eslint-disable-next-line @typescript-eslint/no-unsafe-return
   return get(target, propertyName);
 }
 

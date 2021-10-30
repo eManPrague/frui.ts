@@ -1,7 +1,8 @@
 import uniqBy from "lodash/uniqBy";
-import { ClassDeclaration, Project } from "ts-morph";
-import ServiceRegistration from "./models/serviceRegistration";
-import ServiceRule from "./models/serviceRule";
+import type { Project } from "ts-morph";
+import { ClassDeclaration } from "ts-morph";
+import type ServiceRegistration from "./models/serviceRegistration";
+import type ServiceRule from "./models/serviceRule";
 
 export default class ExportsAnalyzer {
   analyze(project: Project, rules: ServiceRule[]) {

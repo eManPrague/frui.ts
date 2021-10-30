@@ -1,4 +1,4 @@
-import { LifeScope, ServiceIdentifier } from "../types";
+import type { LifeScope, ServiceIdentifier } from "../types";
 
 export default interface ServiceRule {
   regexPattern: RegExp;

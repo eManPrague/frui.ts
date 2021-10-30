@@ -1,4 +1,4 @@
-import { IPagingFilter, IPagingInfo } from "./types";
+import type { IPagingFilter, IPagingInfo } from "./types";
 
 type onPageChangedHandler = (offset: number, limit: number) => void;
 
@@ -25,7 +25,8 @@ export function handlePagingChanged(offset: number, limit: number, filter?: IPag
 
 /** Calculates paging filter values for the new page, updates the filter, and calls the provided handler */
 export function handlePageChanged(newPageNumber: number, filter?: IPagingFilter, onPageChanged?: onPageChangedHandler) {
-  const pageSize = (filter && filter.limit) || defaultPageSize;
+  // eslint-disable-next-line @typescript-eslint/prefer-nullish-coalescing
+  const pageSize = filter?.limit || defaultPageSize;
   const offset = (newPageNumber - 1) * pageSize;
 
   handlePagingChanged(offset, pageSize, filter, onPageChanged);

@@ -1,12 +1,13 @@
-import { ComponentType } from "react";
-import { constructor } from "./types";
+import type { ComponentType } from "react";
+import type { constructor } from "./types";
 
 type viewComponent<TViewModel> = ComponentType<{ vm: TViewModel }>;
+type ContextDictionary = Partial<Record<string, viewComponent<any>>>;
 
 const DEFAULT_CONTEXT = "default";
 
 // viewsRegistry is singleton
-const viewsRegistry = new Map<constructor<unknown>, Record<string, viewComponent<any>>>();
+const viewsRegistry = new Map<constructor<unknown>, ContextDictionary>();
 
 export function registerView<TViewModel>(
   view: viewComponent<TViewModel>,

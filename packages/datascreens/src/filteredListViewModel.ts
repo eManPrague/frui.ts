@@ -1,5 +1,6 @@
 import { IPagingFilter, SortingDirection } from "@frui.ts/data";
-import { attachAutomaticDirtyWatcher, EntityDirtyWatcher } from "@frui.ts/dirtycheck";
+import type { EntityDirtyWatcher } from "@frui.ts/dirtycheck";
+import { attachAutomaticDirtyWatcher } from "@frui.ts/dirtycheck";
 import { bound } from "@frui.ts/helpers";
 import { validate } from "@frui.ts/validation";
 import { action, isObservableArray, observable } from "mobx";
@@ -90,6 +91,7 @@ export default abstract class FilteredListViewModel<
       sortDirection: SortingDirection.Ascending,
     };
 
+    // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
     if (!this.filter) {
       const filter = this.createFilter();
       this.resetFilterValues(filter);

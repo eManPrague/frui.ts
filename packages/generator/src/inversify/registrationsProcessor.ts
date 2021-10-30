@@ -1,17 +1,9 @@
-import {
-  ArrowFunction,
-  ClassDeclaration,
-  ConstructorDeclaration,
-  FunctionTypeNode,
-  InterfaceDeclaration,
-  MethodDeclaration,
-  Node,
-  SourceFile,
-} from "ts-morph";
-import CodeBlock from "../codeBlock";
+import type { ConstructorDeclaration, MethodDeclaration, Node, SourceFile } from "ts-morph";
+import { ArrowFunction, ClassDeclaration, FunctionTypeNode, InterfaceDeclaration } from "ts-morph";
+import type CodeBlock from "../codeBlock";
 import { getImportDeclaration, unwrapType } from "../morphHelpers";
-import ServiceRegistration from "./models/serviceRegistration";
-import ServiceRule from "./models/serviceRule";
+import type ServiceRegistration from "./models/serviceRegistration";
+import type ServiceRule from "./models/serviceRule";
 
 export default class RegistrationsProcessor {
   private decorators: CodeBlock[];
@@ -74,7 +66,7 @@ export default class RegistrationsProcessor {
     });
   }
 
-  private registerConstructor(declaration: ClassDeclaration, rule: ServiceRule, construct: ConstructorDeclaration) {
+  private registerConstructor(declaration: ClassDeclaration, rule: ServiceRule, construct: ConstructorDeclaration | undefined) {
     const importStatement = getImportDeclaration(declaration, this.registrationFile);
 
     let serviceIdentifier: string;
@@ -87,6 +79,7 @@ export default class RegistrationsProcessor {
         break;
       case "$interface": {
         const impl = declaration.getImplements()[0];
+        // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
         serviceIdentifier = impl ? `"${impl.getText()}"` : "NoInterfaceImplemented";
         bindType = `to(${importStatement.identifier})`;
         break;
@@ -215,13 +208,14 @@ export default class RegistrationsProcessor {
   }
 }
 
-function getConstructor(declaration: ClassDeclaration): ConstructorDeclaration {
+function getConstructor(declaration: ClassDeclaration): ConstructorDeclaration | undefined {
   const construct = declaration.getConstructors()[0];
 
+  // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
   if (construct) {
     return construct;
   }
 
   const base = declaration.getBaseClass();
-  return base ? getConstructor(base) : construct;
+  return base ? getConstructor(base) : undefined;
 }

@@ -1,5 +1,6 @@
-import { stringify, StringifyOptions } from "query-string";
-import { IApiConnector } from "./types";
+import type { StringifiableRecord, StringifyOptions } from "query-string";
+import { stringify } from "query-string";
+import type { IApiConnector } from "./types";
 
 const cleanupRegex = /\/+$/g; // removes trailing slash
 
@@ -11,7 +12,7 @@ export function appendAcceptHeader(params: RequestInit | undefined, acceptConten
   return {
     ...params,
     headers: {
-      ...(params || {}).headers,
+      ...(params ?? {}).headers,
       Accept: acceptContentType,
     },
   };
@@ -60,13 +61,13 @@ export class RestRequestBuilder {
     return this;
   }
 
-  get<T>(queryParams?: any): Promise<T> {
+  get<T>(queryParams?: StringifiableRecord): Promise<T> {
     const requestUrl = this.appendQuery(this.urlValue, queryParams);
     const params = appendAcceptHeader(this.params, ContentTypes.json);
     return this.apiConnector.get(requestUrl, params).then(x => x.json() as Promise<T>);
   }
 
-  getRaw(queryParams?: any) {
+  getRaw(queryParams?: StringifiableRecord) {
     const requestUrl = this.appendQuery(this.urlValue, queryParams);
     return this.apiConnector.get(requestUrl, this.params);
   }
@@ -121,11 +122,11 @@ export class RestRequestBuilder {
     return this;
   }
 
-  getQueryString(query: any, queryStringOptions?: StringifyOptions) {
+  getQueryString(query: StringifiableRecord, queryStringOptions?: StringifyOptions) {
     return stringify(query, queryStringOptions ?? this.queryStringOptions ?? RestRequestBuilder.DefaultQueryStringOptions);
   }
 
-  appendQuery(url: string, query?: any, queryStringOptions?: StringifyOptions) {
+  appendQuery(url: string, query?: StringifiableRecord, queryStringOptions?: StringifyOptions) {
     if (!query) {
       return url;
     }

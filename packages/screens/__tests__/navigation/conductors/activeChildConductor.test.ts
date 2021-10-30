@@ -1,8 +1,8 @@
 /* eslint-disable sonarjs/no-identical-functions */
 import { mock } from "jest-mock-extended";
 import ActiveChildConductor from "../../../src/navigation/conductors/activeChildConductor";
-import { LifecycleScreenNavigator } from "../../../src/navigation/types";
-import ScreenBase from "../../../src/screens/screenBase";
+import type { LifecycleScreenNavigator } from "../../../src/navigation/types";
+import type ScreenBase from "../../../src/screens/screenBase";
 import { testLifecycle } from "../navigator.testHelpers";
 
 describe("ActiveChildConductor", () => {

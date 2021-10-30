@@ -1,4 +1,5 @@
-import { getNavigator, LifecycleScreenNavigator } from "@frui.ts/screens";
+import type { LifecycleScreenNavigator } from "@frui.ts/screens";
+import { getNavigator } from "@frui.ts/screens";
 import { useEffect } from "react";
 
 export default function useScreenLifecycle(vm: any, closeOnCleanup = true) {
@@ -9,7 +10,7 @@ export default function useScreenLifecycle(vm: any, closeOnCleanup = true) {
 
     if (navigator?.deactivate) {
       return () => {
-        void navigator?.deactivate?.(closeOnCleanup);
+        void navigator.deactivate?.(closeOnCleanup);
       };
     }
   }, [vm]);

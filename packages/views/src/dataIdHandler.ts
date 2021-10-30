@@ -1,9 +1,9 @@
 import memoize from "lodash/memoize";
-import React from "react";
+import type React from "react";
 
 function dataIdHandler(handler: (id: number) => any) {
   return (e: React.MouseEvent<HTMLElement>) => {
-    const id = e.currentTarget.dataset?.id;
+    const id = e.currentTarget.dataset.id;
     if (id !== undefined) {
       handler(+id);
     }

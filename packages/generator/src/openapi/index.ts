@@ -4,7 +4,7 @@ import NameFormatter from "./formatters/nameFormatter";
 import ObservableFormatter from "./formatters/observableFormatter";
 import ValidationsFormatter from "./formatters/validationsFormatter";
 import ModelProcessor from "./modelProcessor";
-import { IConfig, IGeneratorParams } from "./types";
+import type { IConfig, IGeneratorParams } from "./types";
 
 export default class OpenApiGenerator extends GeneratorBase<IGeneratorParams, IConfig> {
   async run() {

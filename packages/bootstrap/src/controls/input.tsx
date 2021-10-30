@@ -1,6 +1,8 @@
-import { BindingTarget, bound } from "@frui.ts/helpers";
+import type { BindingTarget } from "@frui.ts/helpers";
+import { bound } from "@frui.ts/helpers";
 import React from "react";
-import { Form, FormControlProps } from "react-bootstrap";
+import type { FormControlProps } from "react-bootstrap";
+import { Form } from "react-bootstrap";
 import { ValidationControlBase } from "./validationControlBase";
 
 export interface InputProps {

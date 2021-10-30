@@ -1,5 +1,5 @@
 import { extendObservable, isObservable, set } from "mobx";
-import { BindingTarget } from "./types";
+import type { BindingTarget } from "./types";
 
 /**
  * Makes sure the target entity is a Mobx `observable` with observable property
@@ -15,5 +15,6 @@ export function ensureObservableProperty(target: any, property: any, value: any)
     extendObservable(target, {});
   }
 
+  // eslint-disable-next-line @typescript-eslint/no-unsafe-argument
   set(target, property, value);
 }

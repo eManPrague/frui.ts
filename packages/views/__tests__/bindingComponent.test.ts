@@ -1,6 +1,6 @@
 import { computed, isObservableProp, observable, ObservableMap } from "mobx";
 import { BindingComponent } from "../src/bindingComponent";
-import { IBindingProps } from "../src/bindingProps";
+import type { IBindingProps } from "../src/bindingProps";
 
 type TestControlProps<TTarget> = IBindingProps<TTarget> & { otherText?: string; otherValue?: any };
 

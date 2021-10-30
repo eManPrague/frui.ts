@@ -1,4 +1,4 @@
-import { EntityDirtyWatcher } from "./types";
+import type { EntityDirtyWatcher } from "./types";
 import Configuration from "./configuration";
 
 export function attachDirtyWatcher<TEntity>(target: TEntity, dirtyWatcher: EntityDirtyWatcher<TEntity>) {

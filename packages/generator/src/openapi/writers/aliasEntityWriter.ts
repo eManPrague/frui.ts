@@ -1,10 +1,10 @@
 import camelCase from "lodash/camelCase";
-import { CodeBlockWriter, Directory, SourceFile } from "ts-morph";
+import type { CodeBlockWriter, Directory, SourceFile } from "ts-morph";
 import GeneratorBase from "../../generatorBase";
 import { entityGeneratedHeader } from "../../messages.json";
-import AliasEntity from "../models/aliasEntity";
-import Entity from "../models/entity";
-import Enum from "../models/enum";
+import type AliasEntity from "../models/aliasEntity";
+import type Entity from "../models/entity";
+import type Enum from "../models/enum";
 export default class AliasEntityWriter {
   constructor(private parentDirectory: Directory) {}
 
@@ -46,6 +46,7 @@ export default class AliasEntityWriter {
           writer.blankLine();
         }
 
+        // eslint-disable-next-line @typescript-eslint/no-unsafe-argument
         writer.writeLine(entityGeneratedHeader);
         this.writeTypeAlias(writer, definition);
         writer.newLineIfLastNot();

@@ -1,5 +1,6 @@
 import path from "path";
-import { Directory, IndentationText, Project, SourceFile, ts } from "ts-morph";
+import type { Directory, SourceFile } from "ts-morph";
+import { IndentationText, Project, ts } from "ts-morph";
 import { fileGeneratedHeader } from "./messages.json";
 
 export interface BaseParams {
@@ -49,12 +50,13 @@ export default abstract class GeneratorBase<TParams extends BaseParams, TConfig>
     const file = parent.getSourceFile(path);
 
     return !file
-      ?.getStatementByKind(ts.SyntaxKind.SingleLineCommentTrivia || ts.SyntaxKind.MultiLineCommentTrivia)
+      ?.getStatementByKind(ts.SyntaxKind.SingleLineCommentTrivia | ts.SyntaxKind.MultiLineCommentTrivia)
       ?.getText()
       .includes("generator:ignore");
   }
 
   protected writeGeneratedHeader(file: SourceFile) {
+    // eslint-disable-next-line @typescript-eslint/no-unsafe-argument
     file.insertText(0, x => x.writeLine(fileGeneratedHeader));
   }
 

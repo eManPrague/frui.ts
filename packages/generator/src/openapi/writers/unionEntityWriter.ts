@@ -1,8 +1,8 @@
 import camelCase from "lodash/camelCase";
-import { CodeBlockWriter, Directory, SourceFile } from "ts-morph";
+import type { CodeBlockWriter, Directory, SourceFile } from "ts-morph";
 import GeneratorBase from "../../generatorBase";
 import { entityGeneratedHeader } from "../../messages.json";
-import UnionEntity from "../models/unionEntity";
+import type UnionEntity from "../models/unionEntity";
 export default class UnionEntityWriter {
   constructor(private parentDirectory: Directory) {}
 
@@ -42,6 +42,7 @@ export default class UnionEntityWriter {
         }
         writer.conditionalBlankLine(!!requiredImports.length);
 
+        // eslint-disable-next-line @typescript-eslint/no-unsafe-argument
         writer.writeLine(entityGeneratedHeader);
         this.writeTypeAlias(writer, definition);
         writer.newLineIfLastNot();

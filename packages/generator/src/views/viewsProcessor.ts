@@ -1,5 +1,5 @@
-import { SourceFile, OptionalKind, ImportDeclarationStructure } from "ts-morph";
-import CodeBlock from "../codeBlock";
+import type { SourceFile, OptionalKind, ImportDeclarationStructure } from "ts-morph";
+import type CodeBlock from "../codeBlock";
 
 export default class ViewsProcessor {
   constructor(private targetFile: SourceFile) {}

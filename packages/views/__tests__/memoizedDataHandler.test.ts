@@ -4,7 +4,7 @@ const testEvent = {
   currentTarget: {
     dataset: { somedatakey: "foobar" },
   },
-} as any;
+};
 
 const somedatakeyHandler = createMemoizedHandler("somedatakey");
 
@@ -16,9 +16,10 @@ describe("memoizedDataHandler", () => {
     };
 
     const wrappedHandler = somedatakeyHandler(innerHandler);
-    wrappedHandler.call(undefined, testEvent);
+    wrappedHandler.call(undefined, testEvent as any);
     expect(handledValue).toBe("foobar");
   });
+
   it("memoizes the function creation so that it is memory-safe to call the inferred handler function from React component", () => {
     const innerHandler = (value: string) => true;
 

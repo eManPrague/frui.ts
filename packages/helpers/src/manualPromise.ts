@@ -19,6 +19,7 @@ export default class ManualPromise<T = unknown> {
 
   @action.bound
   resolve(result?: any): void {
+    // eslint-disable-next-line @typescript-eslint/no-unsafe-argument
     this.resolveCallback(result);
     this.status = "resolved";
   }

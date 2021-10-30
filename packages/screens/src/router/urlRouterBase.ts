@@ -1,7 +1,8 @@
-import PathElement from "../models/pathElements";
-import ScreenBase from "../screens/screenBase";
-import { Route, RouteDefinition, RouteName } from "./route";
-import Router from "./router";
+import type PathElement from "../models/pathElements";
+import type ScreenBase from "../screens/screenBase";
+import type { RouteDefinition, RouteName } from "./route";
+import { Route } from "./route";
+import type Router from "./router";
 import RouterBase from "./routerBase";
 
 const URL_SEPARATOR = "/";

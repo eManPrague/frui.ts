@@ -1,6 +1,6 @@
 import { observer } from "mobx-react-lite";
 import React from "react";
-import { PropsWithColumns } from "../dataTypes";
+import type { PropsWithColumns } from "../dataTypes";
 
 export interface TableRowProps<TItem, TContext> extends PropsWithColumns<TItem, TContext> {
   item: TItem;

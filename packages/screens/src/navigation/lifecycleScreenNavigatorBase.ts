@@ -1,25 +1,26 @@
 import { computed, observable, runInAction } from "mobx";
-import { ClosingNavigationContext, NavigationContext } from "../models/navigationContext";
-import PathElement from "../models/pathElements";
-import { HasLifecycleEvents } from "../screens/hasLifecycleHandlers";
-import ScreenBase from "../screens/screenBase";
-import ScreenLifecycleEventHub from "./screenLifecycleEventHub";
-import { LifecycleScreenNavigator, ScreenNavigator } from "./types";
+import type { ClosingNavigationContext, NavigationContext } from "../models/navigationContext";
+import type PathElement from "../models/pathElements";
+import type { HasLifecycleEvents } from "../screens/hasLifecycleHandlers";
+import type ScreenBase from "../screens/screenBase";
+import type ScreenLifecycleEventHub from "./screenLifecycleEventHub";
+import type { LifecycleScreenNavigator, ScreenNavigator } from "./types";
 
 export default abstract class LifecycleScreenNavigatorBase<
   TScreen extends Partial<HasLifecycleEvents> & Partial<ScreenBase>,
   TNavigationParams extends Record<string, string>
-> implements LifecycleScreenNavigator {
+> implements LifecycleScreenNavigator
+{
   // extension point - you can either set getNavigationName function, or assign navigationName property
   getNavigationName?: () => string;
 
   private _navigationNameValue?: string;
   get navigationName() {
-    return this._navigationNameValue ?? this.getNavigationName?.() ?? this.screen?.constructor?.name ?? "unknown";
+    return this._navigationNameValue ?? this.getNavigationName?.() ?? this.screen?.constructor.name ?? "unknown";
   }
 
   set navigationName(value: string) {
-    this._navigationNameValue = value ?? undefined;
+    this._navigationNameValue = value || undefined;
   }
 
   eventHub?: ScreenLifecycleEventHub<TScreen>;
@@ -29,7 +30,7 @@ export default abstract class LifecycleScreenNavigatorBase<
 
   constructor(screen?: TScreen, eventHub?: ScreenLifecycleEventHub<TScreen>) {
     this.screen = screen;
-    this.eventHub = eventHub ?? ((screen as unknown) as ScreenBase)?.events;
+    this.eventHub = eventHub ?? screen?.events;
   }
 
   canNavigate(path: PathElement[]) {
@@ -82,7 +83,7 @@ export default abstract class LifecycleScreenNavigatorBase<
 
   protected initialize(context: NavigationContext<TScreen>) {
     return (
-      this.initializePromise ||
+      this.initializePromise ??
       (this.initializePromise = this.initializeInner(context).then(this.clearInitializePromise, this.clearInitializePromise))
     );
   }
@@ -107,7 +108,7 @@ export default abstract class LifecycleScreenNavigatorBase<
 
   protected activate(context: NavigationContext<TScreen>) {
     return (
-      this.activatePromise ||
+      this.activatePromise ??
       (this.activatePromise = this.activateInner(context).then(this.clearActivatePromise, this.clearActivatePromise))
     );
   }
@@ -142,7 +143,7 @@ export default abstract class LifecycleScreenNavigatorBase<
     };
 
     if (this.isInitialized) {
-      await (this.deactivatePromise ||
+      await (this.deactivatePromise ??
         (this.deactivatePromise = this.deactivateInner(context).then(this.clearDeactivatePromise, this.clearDeactivatePromise)));
     }
   }
@@ -173,6 +174,7 @@ export default abstract class LifecycleScreenNavigatorBase<
   ): Promise<boolean> {
     const screenFunction = this.screen?.[event];
     if (typeof screenFunction === "function") {
+      // eslint-disable-next-line @typescript-eslint/no-unsafe-argument
       const result = await screenFunction(context as any);
       if (result === false) {
         return false;
@@ -182,6 +184,7 @@ export default abstract class LifecycleScreenNavigatorBase<
     const listeners = this.eventHub?.getListeners(event);
     if (listeners) {
       for (const listener of listeners) {
+        // eslint-disable-next-line @typescript-eslint/no-unsafe-argument
         const result = await listener(context as any);
         if (result === false) {
           return false;
@@ -197,10 +200,12 @@ export default abstract class LifecycleScreenNavigatorBase<
     context: Parameters<HasLifecycleEvents[T]>[0]
   ): Promise<void> {
     const screenFunction = this.screen?.[event];
+    // eslint-disable-next-line @typescript-eslint/no-unsafe-argument
     const screenFunctionPromise = typeof screenFunction === "function" ? screenFunction(context as any) : undefined;
 
     const listeners = this.eventHub?.getListeners(event);
     if (listeners?.length) {
+      // eslint-disable-next-line @typescript-eslint/no-unsafe-argument
       await Promise.all([screenFunctionPromise, ...listeners.map(x => x(context as any))]);
     } else {
       await screenFunctionPromise;

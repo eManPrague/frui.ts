@@ -1,7 +1,8 @@
-import { IArrayWillChange, IArrayWillSplice, observable } from "mobx";
+import type { IArrayWillChange, IArrayWillSplice } from "mobx";
+import { observable } from "mobx";
 import { getNavigator } from "../../screens/screenBase";
 import LifecycleScreenNavigatorBase from "../lifecycleScreenNavigatorBase";
-import ScreenLifecycleEventHub from "../screenLifecycleEventHub";
+import type ScreenLifecycleEventHub from "../screenLifecycleEventHub";
 
 export default class AllChildrenActiveConductor<
   TScreen = unknown,

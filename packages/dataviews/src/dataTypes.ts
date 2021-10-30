@@ -1,6 +1,7 @@
-import { IPagingFilter } from "@frui.ts/data";
+import type { IPagingFilter } from "@frui.ts/data";
 
-import React, { ReactNode } from "react";
+import type { ReactNode } from "react";
+import type React from "react";
 
 export type PropertyKey<TItem> = keyof TItem & (string | number);
 

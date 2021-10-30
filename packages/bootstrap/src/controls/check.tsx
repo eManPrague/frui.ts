@@ -1,8 +1,10 @@
-import { BindingTarget, bound } from "@frui.ts/helpers";
-import { IBindingProps } from "@frui.ts/views";
+import type { BindingTarget } from "@frui.ts/helpers";
+import { bound } from "@frui.ts/helpers";
+import type { IBindingProps } from "@frui.ts/views";
 import React from "react";
-import { Form, FormCheckProps } from "react-bootstrap";
-import { CommonInputProps } from "./commonInputProps";
+import type { FormCheckProps } from "react-bootstrap";
+import { Form } from "react-bootstrap";
+import type { CommonInputProps } from "./commonInputProps";
 import { ValidationControlBase } from "./validationControlBase";
 
 export interface CheckProps extends FormCheckProps, CommonInputProps {
@@ -24,7 +26,7 @@ export class Check<TTarget extends BindingTarget> extends ValidationControlBase<
     // eslint-disable-next-line @typescript-eslint/restrict-template-expressions
     const id = `${this.props.property}-${value}`;
 
-    const threeStateProps = threeState && { ref: (el: HTMLInputElement) => el && (el.indeterminate = this.value === null) };
+    const threeStateProps = threeState && { ref: (el?: HTMLInputElement) => el && (el.indeterminate = this.value === null) };
 
     return (
       <Form.Check

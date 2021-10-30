@@ -1,13 +1,14 @@
+/* eslint-disable @typescript-eslint/no-unsafe-argument */
 import { ManualPromise } from "@frui.ts/helpers";
 import TypedEventHub from "../../src/events/typedEventHub";
-import { NavigationContext } from "../../src/models/navigationContext";
-import ScreenLifecycleEventHub from "../../src/navigation/screenLifecycleEventHub";
-import { LifecycleScreenNavigator } from "../../src/navigation/types";
-import { HasLifecycleEvents } from "../../src/screens/hasLifecycleHandlers";
-import ScreenBase from "../../src/screens/screenBase";
+import type { NavigationContext } from "../../src/models/navigationContext";
+import type ScreenLifecycleEventHub from "../../src/navigation/screenLifecycleEventHub";
+import type { LifecycleScreenNavigator } from "../../src/navigation/types";
+import type { HasLifecycleEvents } from "../../src/screens/hasLifecycleHandlers";
+import type ScreenBase from "../../src/screens/screenBase";
 
 export function testLifecycle<TNavigator extends LifecycleScreenNavigator, TScreen extends Partial<HasLifecycleEvents>>(
-  navigatorFactory: (screen: TScreen, eventHub?: ScreenLifecycleEventHub<TScreen>) => TNavigator
+  navigatorFactory: (screen?: TScreen, eventHub?: ScreenLifecycleEventHub<TScreen>) => TNavigator
 ) {
   // TODO add other functions
 
@@ -78,7 +79,7 @@ export function testLifecycle<TNavigator extends LifecycleScreenNavigator, TScre
         return false;
       });
 
-      const navigator = navigatorFactory(screen as any, eventHub);
+      const navigator = navigatorFactory({} as any, eventHub);
 
       const result = await navigator.canNavigate([{ name: "screen" }]);
       expect(result).toBe(false);
@@ -86,15 +87,14 @@ export function testLifecycle<TNavigator extends LifecycleScreenNavigator, TScre
     });
 
     it("does not fail when no viewModel available", async () => {
-      const navigator = navigatorFactory(screen as any);
+      const navigator = navigatorFactory(undefined);
 
       const result = await navigator.canNavigate([{ name: "screen" }]);
       expect(result).toBe(true);
     });
 
     it("does not fail when no eventEmitter available", async () => {
-      const screen = {};
-      const navigator = navigatorFactory(screen as any);
+      const navigator = navigatorFactory({} as any);
 
       const result = await navigator.canNavigate([{ name: "screen" }]);
       expect(result).toBe(true);

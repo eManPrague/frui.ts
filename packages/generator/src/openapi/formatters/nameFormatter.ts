@@ -1,8 +1,8 @@
 import camelCase from "lodash/camelCase";
 import { pascalCase } from "../../helpers";
-import NamedObject from "../models/namedObject";
+import type NamedObject from "../models/namedObject";
 import ObjectEntity from "../models/objectEntity";
-import TypeReference from "../models/typeReference";
+import type TypeReference from "../models/typeReference";
 
 export default class NameFormatter {
   formatNames(item: TypeReference) {

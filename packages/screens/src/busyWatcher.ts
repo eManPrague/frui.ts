@@ -32,14 +32,14 @@ export default class BusyWatcher implements IBusyWatcher {
 }
 
 export function watchBusy(target: any, propertyKey: string, descriptor: PropertyDescriptor) {
-  const originalFunction = descriptor.value as (...args: any) => Promise<any>;
+  const originalFunction = descriptor.value as (...args: any) => Promise<unknown> | unknown;
 
   descriptor.value = function (this: { busyWatcher?: BusyWatcher }, ...args: any[]) {
     const ticket = this.busyWatcher?.getBusyTicket();
     const result = originalFunction.apply(this, args);
 
     if (ticket) {
-      if (typeof result?.then === "function") {
+      if (isPromise(result)) {
         result.then(ticket, (error: any) => {
           console.error(error);
           ticket();
@@ -51,4 +51,9 @@ export function watchBusy(target: any, propertyKey: string, descriptor: Property
 
     return result;
   };
+}
+
+function isPromise(value: any): value is Promise<any> {
+  // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access
+  return typeof value?.then === "function";
 }

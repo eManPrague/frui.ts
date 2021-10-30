@@ -1,6 +1,6 @@
 import { autorun, observable } from "mobx";
 import ServerEntityValidator from "../src/serverEntityValidator";
-import { ValidationResult } from "../src/types";
+import type { ValidationResult } from "../src/types";
 import { expectInvalid, expectValid, testCoreValidatorFunctions } from "./testHelpers";
 
 interface ITarget {

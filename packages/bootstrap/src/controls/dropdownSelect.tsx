@@ -1,9 +1,11 @@
-import { BindingProperty, BindingTarget } from "@frui.ts/helpers";
-import { IBindingProps, useBinding } from "@frui.ts/views";
+import type { BindingProperty, BindingTarget } from "@frui.ts/helpers";
+import type { IBindingProps } from "@frui.ts/views";
+import { useBinding } from "@frui.ts/views";
 import { observer } from "mobx-react-lite";
 import React from "react";
-import { ButtonProps as ButtonBootstrapProps, Dropdown as DropdownBootstrap } from "react-bootstrap";
-import { DropdownToggleProps as DropdownToggleBootstrapProps } from "react-bootstrap/DropdownToggle";
+import type { ButtonProps as ButtonBootstrapProps } from "react-bootstrap";
+import { Dropdown as DropdownBootstrap } from "react-bootstrap";
+import type { DropdownToggleProps as DropdownToggleBootstrapProps } from "react-bootstrap/DropdownToggle";
 import { Select } from "./select";
 
 interface DropdownBaseProps {
@@ -36,13 +38,13 @@ function DropdownSelectImpl<TTarget extends BindingTarget, TProperty extends Bin
   props: DropdownSelectProps<TTarget, TProperty, TItem>
 ) {
   const { mode, items, keyProperty, textProperty, onChanged } = props;
-  // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
   const [value, setValue] = useBinding(props);
 
   const selectedItem = mode === "item" ? (value as TItem) : items.find(x => propertyValue(x, keyProperty) === value);
   const title = propertyValue(selectedItem, textProperty) as string;
 
   const onClickHandler = (item: TItem) => () => {
+    // eslint-disable-next-line @typescript-eslint/no-unsafe-argument
     setValue(mode === "item" ? item : propertyValue(item, keyProperty));
     onChanged?.(item);
   };

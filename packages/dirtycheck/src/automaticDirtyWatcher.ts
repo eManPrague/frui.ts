@@ -1,4 +1,5 @@
-import { isSet, PropertyName } from "@frui.ts/helpers";
+import type { PropertyName } from "@frui.ts/helpers";
+import { isSet } from "@frui.ts/helpers";
 import { get, isArrayLike, isObservableSet, observable } from "mobx";
 import DirtyWatcherBase from "./dirtyWatcherBase";
 import { attachDirtyWatcher } from "./utils";
@@ -102,7 +103,7 @@ function defineArrayDirtyWatchProperty<TEntity>(
   const arraySnapshot = originalValue.slice();
   Object.defineProperty(resultsObject, propertyName, {
     get: () => {
-      const currentValue = get(entity, propertyName) as unknown[];
+      const currentValue = get(entity, propertyName) as unknown[] | undefined;
       return (
         !currentValue ||
         currentValue.length !== arraySnapshot.length ||
@@ -121,7 +122,7 @@ function defineSetDirtyCheckProperty<TEntity>(
   const setSnapshot = new Set(originalValue);
   Object.defineProperty(resultsObject, propertyName, {
     get: () => {
-      const currentValue = get(entity, propertyName) as Set<unknown>;
+      const currentValue = get(entity, propertyName) as Set<unknown> | undefined;
       if (!currentValue || currentValue.size !== setSnapshot.size) {
         return true;
       }
@@ -146,7 +147,9 @@ export function attachAutomaticDirtyWatcher<TEntity>(
   target: TEntity,
   params?: AutomaticDirtyWatcherParams<TEntity> | boolean
 ): AutomaticDirtyWatcher<TEntity> {
-  const automaticDirtyWatcher = new AutomaticDirtyWatcher(target, params as any);
+  const paramsObject: AutomaticDirtyWatcherParams<TEntity> | undefined =
+    typeof params === "boolean" ? { isVisible: params } : params;
+  const automaticDirtyWatcher = new AutomaticDirtyWatcher(target, paramsObject);
   attachDirtyWatcher(target, automaticDirtyWatcher);
   return automaticDirtyWatcher;
 }

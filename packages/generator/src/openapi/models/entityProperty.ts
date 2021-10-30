@@ -1,10 +1,10 @@
 import NamedObject from "./namedObject";
-import Restriction from "./restriction";
-import TypeReference from "./typeReference";
+import type Restriction from "./restriction";
+import type TypeReference from "./typeReference";
 
 export default class EntityProperty extends NamedObject {
   description?: string;
-  example?: any;
+  example?: string;
   restrictions?: Map<Restriction, unknown>;
   tags?: Map<symbol, any>;
 

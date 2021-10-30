@@ -1,6 +1,7 @@
-import { ScreenBase } from "@frui.ts/screens";
+import type { ScreenBase } from "@frui.ts/screens";
 import React from "react";
-import ErrorBoundary, { ErrorBoundaryProps } from "./errorBoundary";
+import type { ErrorBoundaryProps } from "./errorBoundary";
+import ErrorBoundary from "./errorBoundary";
 import useScreenLifecycle from "./useScreenLifecycle";
 import { getView, tryGetView } from "./viewLocator";
 

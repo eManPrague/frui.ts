@@ -1,11 +1,12 @@
 #!/usr/bin/env node
-import { program } from "commander";
-import { BaseParams } from "./generatorBase";
-import PackageInfo from "../package.json";
 /* eslint-disable sonarjs/no-duplicate-string */
 /* eslint-disable @typescript-eslint/no-unsafe-assignment */
 /* eslint-disable @typescript-eslint/no-unsafe-member-access */
+import { program } from "commander";
+import PackageInfo from "../package.json";
+import type { IGeneratorParams } from "./inversify/types";
 
+// eslint-disable-next-line @typescript-eslint/no-unsafe-argument
 program.name("fruits-generate").version(PackageInfo.version).description(PackageInfo.description);
 program
   .command("inversify")
@@ -19,11 +20,11 @@ program
   .option("--registry-output <relativePath>", "Registry output file path", "src/di.registry.ts")
 
   .action(async options => {
-    const params: any = {
+    const params: IGeneratorParams = {
       project: options.project,
       config: options.config,
       debug: options.debug,
-    } as BaseParams;
+    };
 
     if (options.decorators) {
       params.decorators = { output: options.decoratorsOutput };

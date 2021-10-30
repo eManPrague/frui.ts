@@ -1,5 +1,5 @@
-import { ClassDeclaration } from "ts-morph";
-import ServiceRule from "./serviceRule";
+import type { ClassDeclaration } from "ts-morph";
+import type ServiceRule from "./serviceRule";
 
 export default interface ServiceRegistration {
   declaration: ClassDeclaration;

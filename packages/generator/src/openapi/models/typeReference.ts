@@ -1,6 +1,6 @@
 import AliasEntity from "./aliasEntity";
-import Entity from "./entity";
-import Enum from "./enum";
+import type Entity from "./entity";
+import type Enum from "./enum";
 
 export default class TypeReference {
   constructor(public type?: Entity | Enum | string) {}

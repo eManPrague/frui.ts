@@ -1,5 +1,6 @@
 import { mock } from "jest-mock-extended";
-import { appendUrl, IApiConnector, RestRequestBuilder } from "../src";
+import type { IApiConnector } from "../src";
+import { appendUrl, RestRequestBuilder } from "../src";
 
 describe("appendUrl", () => {
   it("returns original url", () => {

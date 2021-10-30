@@ -1,6 +1,6 @@
 import { observer } from "mobx-react-lite";
 import React from "react";
-import { DataTablePropsBase } from "../dataTypes";
+import type { DataTablePropsBase } from "../dataTypes";
 import RepeaterHeader from "./repeaterHeader";
 import RepeaterRow from "./repeaterRow";
 

@@ -1,7 +1,7 @@
-import { PropertyName } from "@frui.ts/helpers";
+import type { PropertyName } from "@frui.ts/helpers";
 import { observable } from "mobx";
 import EntityValidatorBase, { emptyResults } from "./entityValidatorBase";
-import { EntityValidator, ValidationResult } from "./types";
+import type { EntityValidator, ValidationResult } from "./types";
 
 export default class AggregateEntityValidator<TEntity = any> extends EntityValidatorBase<TEntity> {
   public readonly validators: EntityValidator<TEntity>[];
