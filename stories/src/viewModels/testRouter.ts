@@ -1,6 +1,6 @@
 import { UrlRouterBase } from "@frui.ts/screens";
 import { action, observable } from "mobx";
-import { MouseEvent, MouseEventHandler } from "react";
+import type { MouseEvent, MouseEventHandler } from "react";
 
 export default class TestRouter extends UrlRouterBase {
   @observable

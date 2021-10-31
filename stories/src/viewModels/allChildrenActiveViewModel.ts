@@ -1,18 +1,19 @@
 import { AllChildrenActiveConductor, ScreenBase } from "@frui.ts/screens";
 import { action } from "mobx";
 import ChildViewModel from "./childViewModel";
-import { IChildScreen } from "./types";
+import type { IChildScreen } from "./types";
 
 export default class AllChildrenActiveViewModel
-  extends ScreenBase<AllChildrenActiveConductor<AllChildrenActiveViewModel, ChildViewModel>>
-  implements IChildScreen {
+  extends ScreenBase<AllChildrenActiveConductor<ChildViewModel>>
+  implements IChildScreen
+{
   name = "All Active";
 
   private childCounter = 1;
 
   constructor() {
     super();
-    this.navigator = new AllChildrenActiveConductor<AllChildrenActiveViewModel, ChildViewModel>(this);
+    this.navigator = new AllChildrenActiveConductor<ChildViewModel>(this);
     this.navigator.navigationName = "all";
   }
 

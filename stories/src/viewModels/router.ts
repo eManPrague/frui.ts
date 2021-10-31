@@ -1,5 +1,5 @@
-import TestRouter from "./testRouter";
+import type TestRouter from "./testRouter";
 
-const router = { current: (undefined as unknown) as TestRouter };
+const router = { current: undefined as unknown as TestRouter };
 
 export default router;

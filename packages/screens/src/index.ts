@@ -12,4 +12,4 @@ export { default as Router } from "./router/router";
 export { default as RouterBase } from "./router/routerBase";
 export { default as UrlRouterBase } from "./router/urlRouterBase";
 
-export { default as BusyWatcher, BusyWatcherKey, IBusyWatcher } from "./busyWatcher";
+export { default as BusyWatcher, BusyWatcherKey, IBusyWatcher, watchBusy } from "./busyWatcher";

@@ -1,6 +1,7 @@
 import { getDirtyWatcher } from "@frui.ts/dirtycheck";
 import { getValidationMessage } from "@frui.ts/validation";
-import { getInnerComponent, IFormFieldProps } from "@frui.ts/views";
+import type { IFormFieldProps } from "@frui.ts/views";
+import { getInnerComponent } from "@frui.ts/views";
 import { observer } from "mobx-react-lite";
 import React from "react";
 

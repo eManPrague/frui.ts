@@ -1,4 +1,3 @@
-import type { ScreenBase } from "@frui.ts/screens";
 import React from "react";
 import type { ErrorBoundaryProps } from "./errorBoundary";
 import ErrorBoundary from "./errorBoundary";
@@ -6,7 +5,7 @@ import useScreenLifecycle from "./useScreenLifecycle";
 import { getView, tryGetView } from "./viewLocator";
 
 interface ViewProps {
-  vm?: ScreenBase;
+  vm?: unknown;
   context?: string;
   useLifecycle?: boolean;
 }
@@ -18,7 +17,8 @@ const PureView: React.FunctionComponent<ViewProps> = props => {
     return <React.Fragment>{children}</React.Fragment>;
   }
 
-  const FoundView = children === undefined ? getView(vm.constructor, context) : tryGetView(vm.constructor, context);
+  const vmConstructor = (vm as Record<string, any>).constructor;
+  const FoundView = children === undefined ? getView(vmConstructor, context) : tryGetView(vmConstructor, context);
 
   if (!FoundView) {
     return <React.Fragment>{children}</React.Fragment>;

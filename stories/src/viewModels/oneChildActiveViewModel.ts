@@ -1,18 +1,19 @@
 import { OneOfListActiveConductor, ScreenBase } from "@frui.ts/screens";
 import { action } from "mobx";
 import ChildViewModel from "./childViewModel";
-import { IChildScreen } from "./types";
+import type { IChildScreen } from "./types";
 
 export default class OneChildActiveViewModel
-  extends ScreenBase<OneOfListActiveConductor<OneChildActiveViewModel, ChildViewModel>>
-  implements IChildScreen {
+  extends ScreenBase<OneOfListActiveConductor<ChildViewModel>>
+  implements IChildScreen
+{
   name = "One Active";
 
   private childCounter = 1;
 
   constructor() {
     super();
-    this.navigator = new OneOfListActiveConductor<OneChildActiveViewModel, ChildViewModel>(this);
+    this.navigator = new OneOfListActiveConductor<ChildViewModel>(this);
     this.navigator.navigationName = "one";
     this.navigator.preserveActiveChild = true;
   }

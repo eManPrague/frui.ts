@@ -21,7 +21,7 @@ describe("UrlRouterBase", () => {
 
       await router.initialize();
 
-      expect(router.persistedPath).toBe("my-screen");
+      expect(router.persistedPath).toBe("/my-screen");
     });
   });
 
@@ -32,7 +32,7 @@ describe("UrlRouterBase", () => {
 
       const router = new TestRouter(navigator);
 
-      await router.navigate("my-screen");
+      await router.navigate("/my-screen");
 
       expect(navigator.navigate).toBeCalledWith([{ name: "my-screen" }]);
     });

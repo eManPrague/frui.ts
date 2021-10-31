@@ -1,4 +1,4 @@
-import { EntityValidator } from "@frui.ts/validation";
+import type { EntityValidator } from "@frui.ts/validation";
 import { observer } from "mobx-react-lite";
 import React from "react";
 

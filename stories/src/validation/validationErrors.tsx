@@ -1,5 +1,5 @@
 import { observer } from "mobx-react-lite";
-import { EntityValidator } from "@frui.ts/validation";
+import type { EntityValidator } from "@frui.ts/validation";
 import React from "react";
 
 function validationErrors({ validator, property }: { validator: EntityValidator<any>; property: string }) {
@@ -8,7 +8,8 @@ function validationErrors({ validator, property }: { validator: EntityValidator<
     <ul>
       {results.map(result => (
         <li key={result.code}>
-          <strong>{property}</strong>:{" "}
+          <strong>{property}</strong>
+          {/* eslint-disable-next-line @typescript-eslint/prefer-nullish-coalescing */}
           <span style={{ color: result.isValid ? "green" : "red" }}>{result.message || result.code}</span>
         </li>
       ))}

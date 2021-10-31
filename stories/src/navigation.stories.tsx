@@ -1,4 +1,4 @@
-import { ScreenNavigator } from "@frui.ts/screens";
+import type { ScreenNavigator } from "@frui.ts/screens";
 import { preventDefault, View } from "@frui.ts/views";
 import { storiesOf } from "@storybook/react";
 import { action } from "mobx";
@@ -41,7 +41,7 @@ storiesOf("Navigation", module).add("Path", () => {
           <form onSubmit={preventDefault(() => router.current.navigate(router.current.currentPath))}>
             URL:
             <input
-              value={router.current.currentPath ?? "uninitialized"}
+              value={router.current.currentPath}
               onChange={action(e => (router.current.currentPath = e.currentTarget.value))}
             />
             <button type="submit">Go</button>

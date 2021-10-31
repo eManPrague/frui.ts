@@ -1,7 +1,8 @@
 import "!style-loader!css-loader!bootstrap/dist/css/bootstrap.css";
 import { Check, Input, Select } from "@frui.ts/bootstrap";
 import { attachAutomaticDirtyWatcher } from "@frui.ts/dirtycheck";
-import { attachAutomaticValidator, Configuration, EntityValidationRules } from "@frui.ts/validation";
+import type { EntityValidationRules } from "@frui.ts/validation";
+import { attachAutomaticValidator, Configuration } from "@frui.ts/validation";
 import { storiesOf } from "@storybook/react";
 import { action, observable } from "mobx";
 import { Observer } from "mobx-react-lite";

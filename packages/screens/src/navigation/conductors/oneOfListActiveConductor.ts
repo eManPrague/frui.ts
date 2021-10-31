@@ -7,10 +7,10 @@ import type { LifecycleScreenNavigator } from "../types";
 import ActiveChildConductor from "./activeChildConductor";
 
 export default class OneOfListActiveConductor<
-  TScreen = unknown,
   TChild = unknown,
+  TScreen = any,
   TNavigationParams extends Record<string, string> = Record<string, string>
-> extends ActiveChildConductor<TScreen, TChild, TNavigationParams> {
+> extends ActiveChildConductor<TChild, TScreen, TNavigationParams> {
   readonly children: TChild[];
 
   /** When set to `true`, navigating directly to the conductor (with no child path specified) activates the previously set `activeChild`. */

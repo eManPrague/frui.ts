@@ -5,8 +5,8 @@ import LifecycleScreenNavigatorBase from "../lifecycleScreenNavigatorBase";
 import type ScreenLifecycleEventHub from "../screenLifecycleEventHub";
 
 export default class AllChildrenActiveConductor<
-  TScreen = unknown,
   TChild = unknown,
+  TScreen = any,
   TNavigationParams extends Record<string, string> = Record<string, string>
 > extends LifecycleScreenNavigatorBase<TScreen, TNavigationParams> {
   readonly children: TChild[];

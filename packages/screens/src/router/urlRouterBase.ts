@@ -34,7 +34,12 @@ export default abstract class UrlRouterBase extends RouterBase implements Router
     // TODO unwrap path if alias for a route
 
     const elements: PathElement[] =
-      typeof path === "string" ? path.split(URL_SEPARATOR).map(x => this.deserializePath(x) ?? { name: "parse-error" }) : path;
+      typeof path === "string"
+        ? path
+            .split(URL_SEPARATOR)
+            .filter(x => x)
+            .map(x => this.deserializePath(x) ?? { name: "parse-error" })
+        : path;
     await this.rootNavigator?.navigate(elements);
 
     const currentPath = this.getCurrentPath();
@@ -92,6 +97,14 @@ export default abstract class UrlRouterBase extends RouterBase implements Router
     return this.serializePath(path);
   }
 
+  getUrlFactoryForChild(parent: ScreenBase) {
+    const rootPath = this.getPathForChild(parent.navigator, undefined);
+    return (child: ScreenBase) => {
+      const path = this.cloneWithChildPath(rootPath, child.navigator);
+      return this.serializePath(path);
+    };
+  }
+
   getUrlForRoute(routeName: RouteName, params?: any) {
     const route = this.routes.get(routeName);
     if (route) {
@@ -101,7 +114,7 @@ export default abstract class UrlRouterBase extends RouterBase implements Router
   }
 
   protected serializePath(pathElements: PathElement[]): string {
-    return pathElements.map(x => this.serializePathElement(x)).join(URL_SEPARATOR);
+    return URL_SEPARATOR + pathElements.map(x => this.serializePathElement(x)).join(URL_SEPARATOR);
   }
 
   protected serializePathElement(element: PathElement): string {

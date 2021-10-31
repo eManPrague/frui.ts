@@ -36,4 +36,9 @@ export default abstract class RouterBase {
 
     return path;
   }
+
+  protected cloneWithChildPath(path: PathElement[], child: ScreenNavigator | undefined) {
+    const childPath = child?.getNavigationState();
+    return childPath ? [...path, childPath] : path;
+  }
 }

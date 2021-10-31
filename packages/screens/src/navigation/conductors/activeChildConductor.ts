@@ -6,8 +6,8 @@ import LifecycleScreenNavigatorBase from "../lifecycleScreenNavigatorBase";
 import type { LifecycleScreenNavigator, ScreenNavigator } from "../types";
 
 export default class ActiveChildConductor<
-  TScreen = unknown,
   TChild = unknown,
+  TScreen = any,
   TNavigationParams extends Record<string, string> = Record<string, string>
 > extends LifecycleScreenNavigatorBase<TScreen, TNavigationParams> {
   @observable.ref private activeChildValue?: TChild = undefined;
