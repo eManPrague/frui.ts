@@ -1,53 +1,53 @@
-import { action, computed, observable } from "mobx";
-import { IBusyWatcher } from "./types";
+import { action, computed, ObservableSet } from "mobx";
+import { BusyWatcherKey, IBusyWatcher } from "./types";
 
 export default class BusyWatcher implements IBusyWatcher {
-  @observable private counter = 0;
+  private busyItems = new ObservableSet<BusyWatcherKey>();
 
   @computed get isBusy() {
-    return this.counter > 0;
+    return this.busyItems.size > 0;
+  }
+
+  checkBusy(key: BusyWatcherKey) {
+    return this.busyItems.has(key);
   }
 
   @action.bound
-  getBusyTicket() {
-    this.counter++;
-
-    let wasUsed = false;
-    return () => {
-      if (!wasUsed) {
-        wasUsed = true;
-        this.decrement();
-      }
-    };
+  getBusyTicket(key: BusyWatcherKey = Symbol()) {
+    this.busyItems.add(key);
+    return action(() => this.busyItems.delete(key));
   }
 
-  @action.bound
   watch<T>(watchedAction: Promise<T>) {
-    this.counter++;
-    watchedAction.then(this.decrement, this.decrement);
+    const ticket = this.getBusyTicket();
+    watchedAction.then(ticket, ticket);
     return watchedAction;
-  }
-
-  @action.bound
-  private decrement() {
-    this.counter--;
   }
 }
 
 export function watchBusy(target: any, propertyKey: string, descriptor: PropertyDescriptor) {
-  const originalFunction = descriptor.value;
+  const originalFunction = descriptor.value as (...args: any) => Promise<unknown> | unknown;
 
-  descriptor.value = function (this: any, ...args: any[]) {
+  descriptor.value = function (this: { busyWatcher?: BusyWatcher }, ...args: any[]) {
+    const ticket = this.busyWatcher?.getBusyTicket();
     const result = originalFunction.apply(this, args);
 
-    if (result && result.then && typeof result.then === "function") {
-      result.then(undefined, (error: any) => console.error(error));
-
-      if (this.busyWatcher && typeof this.busyWatcher.watch === "function") {
-        this.busyWatcher.watch(result);
+    if (ticket) {
+      if (isPromise(result)) {
+        result.then(ticket, (error: any) => {
+          console.error(error);
+          ticket();
+        });
+      } else {
+        ticket();
       }
     }
 
     return result;
   };
+}
+
+function isPromise(value: any): value is Promise<any> {
+  // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access
+  return typeof value?.then === "function";
 }
