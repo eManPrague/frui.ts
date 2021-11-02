@@ -27,6 +27,9 @@ export interface IChild<TParent = IConductor<IScreen>> {
   requestClose(): Promise<boolean> | boolean;
 }
 
+export type BusyWatcherKey = string | symbol;
+
 export interface IBusyWatcher {
   readonly isBusy: boolean;
+  checkBusy(key: BusyWatcherKey): boolean;
 }
