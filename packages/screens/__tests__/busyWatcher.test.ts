@@ -39,6 +39,24 @@ describe("BusyWatcher", () => {
       ticket2();
       expect(watcher.isBusy).toBeFalsy();
     });
+
+    test("when the same ticket key is used multiple times, all must be returned", () => {
+      const watcher = new BusyWatcher();
+      const ticket1 = watcher.getBusyTicket("foo");
+      const ticket2 = watcher.getBusyTicket("foo");
+
+      ticket1();
+      expect(watcher.isBusy).toBeTruthy();
+      expect(watcher.checkBusy("foo")).toBeTruthy();
+
+      ticket1();
+      expect(watcher.isBusy).toBeTruthy();
+      expect(watcher.checkBusy("foo")).toBeTruthy();
+
+      ticket2();
+      expect(watcher.isBusy).toBeFalsy();
+      expect(watcher.checkBusy("foo")).toBeFalsy();
+    });
   });
 
   describe("watch", () => {

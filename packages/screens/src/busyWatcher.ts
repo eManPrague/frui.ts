@@ -1,4 +1,4 @@
-import { action, computed, ObservableSet } from "mobx";
+import { action, computed, ObservableMap } from "mobx";
 
 export type BusyWatcherKey = string | symbol;
 
@@ -8,20 +8,39 @@ export interface IBusyWatcher {
 }
 
 export default class BusyWatcher implements IBusyWatcher {
-  private busyItems = new ObservableSet<BusyWatcherKey>();
+  protected busyCounter = new ObservableMap<BusyWatcherKey, number>();
 
   @computed get isBusy() {
-    return this.busyItems.size > 0;
+    return this.busyCounter.size > 0;
   }
 
   checkBusy(key: BusyWatcherKey) {
-    return this.busyItems.has(key);
+    return this.busyCounter.has(key);
   }
 
   @action.bound
   getBusyTicket(key: BusyWatcherKey = Symbol()) {
-    this.busyItems.add(key);
-    return action(() => this.busyItems.delete(key));
+    const counter = this.busyCounter.get(key);
+
+    if (counter) {
+      this.busyCounter.set(key, counter + 1);
+    } else {
+      this.busyCounter.set(key, 1);
+    }
+
+    let isCleared = false;
+    return action(() => {
+      if (!isCleared) {
+        const currentCounter = this.busyCounter.get(key);
+        if (!currentCounter || currentCounter === 1) {
+          this.busyCounter.delete(key);
+        } else {
+          this.busyCounter.set(key, currentCounter - 1);
+        }
+
+        isCleared = true;
+      }
+    });
   }
 
   watch<T>(watchedAction: Promise<T>) {
@@ -31,26 +50,46 @@ export default class BusyWatcher implements IBusyWatcher {
   }
 }
 
-export function watchBusy(target: any, propertyKey: string, descriptor: PropertyDescriptor) {
-  const originalFunction = descriptor.value as (...args: any) => Promise<unknown> | unknown;
+type Decorator = (target: any, propertyKey: string, descriptor: PropertyDescriptor) => void;
 
-  descriptor.value = function (this: { busyWatcher?: BusyWatcher }, ...args: any[]) {
-    const ticket = this.busyWatcher?.getBusyTicket();
-    const result = originalFunction.apply(this, args);
+export function watchBusy(key: BusyWatcherKey): Decorator;
+export function watchBusy(target: any, propertyKey: string, descriptor: PropertyDescriptor): void;
 
-    if (ticket) {
-      if (isPromise(result)) {
-        result.then(ticket, (error: any) => {
-          console.error(error);
+export function watchBusy(target: any, propertyKey?: string, descriptor?: PropertyDescriptor) {
+  const isCustomKey = typeof target !== "object";
+  const key = isCustomKey ? (target as BusyWatcherKey) : Symbol();
+
+  const decorator: Decorator = (target, propertyKey, descriptor) => {
+    const originalFunction = descriptor.value as (...args: any) => Promise<unknown> | unknown;
+
+    descriptor.value = function (this: { busyWatcher?: BusyWatcher }, ...args: any[]) {
+      const ticket = this.busyWatcher?.getBusyTicket(key);
+      const result = originalFunction.apply(this, args);
+
+      if (ticket) {
+        if (isPromise(result)) {
+          result.then(ticket, (error: any) => {
+            console.error(error);
+            ticket();
+          });
+        } else {
           ticket();
-        });
-      } else {
-        ticket();
+        }
       }
+
+      return result;
+    };
+  };
+
+  if (isCustomKey) {
+    return decorator;
+  } else {
+    if (!propertyKey || !descriptor) {
+      throw new Error("Wrong decorator use. PropertyKey and Descriptor must be provided");
     }
 
-    return result;
-  };
+    return decorator(target, propertyKey, descriptor);
+  }
 }
 
 function isPromise(value: any): value is Promise<any> {
