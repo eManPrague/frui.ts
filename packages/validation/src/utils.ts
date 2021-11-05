@@ -14,7 +14,7 @@ export function getValidator<TEntity>(target: TEntity) {
 }
 
 /**
- * @deprecated Used for back-compatibility with the previous version of @frui.ts/validation
+ * @deprecated Used for back-compatibility with the previous version of @frui.ts/validation.
  */
 export function getValidationMessage<TEntity>(target: TEntity, propertyName: PropertyName<TEntity>): string | undefined {
   const validator = getValidator(target);

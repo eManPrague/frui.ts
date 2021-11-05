@@ -33,7 +33,8 @@ export default registerView(loginView, LoginViewModel);
 Let's have `RootViewModel` as follows:
 
 ```tsx
-class RootViewModel extends ConductorSingleChild<LoginViewModel | DataViewModel> {
+class RootViewModel extends ScreenBase<
+  OneOfListActiveConductor<LoginViewModel | DataViewModel> {
   ...
 }
 ```
@@ -44,12 +45,19 @@ We can display proper views for the currently active child of the `RootViewModel
 // rootView.tsx
 ...
 <aside>
-  <View vm={vm.activeChild} context="sidebar" fallbackMode="empty" />
+  <View vm={vm.navigator.activeChild} context="sidebar" />
 </aside>
 <main>
-  <View vm={vm.activeChild} />
+  <View vm={vm.navigator.activeChild} />
 </main>
 ```
+# Two-way binding
+
+If you want to create a component supporting two-way binding, you can use the `useBinding` hook or extend the `BindingComponent` class.
+
+## useBinding
+
+
 
 # BindingComponent
 
@@ -61,7 +69,7 @@ When creating a custom bindable control, you can use the following:
 - `this.setValue(value)` - call this and pass the new value when the user changes the value through the underlying component
 - `this.inheritedProps` - contains the props passed to the wrapper except for binding-specific properties, so that you can directly pass it to the underlying component
 
-## Example
+### Example
 
 ```tsx
 export class TextBox<TTarget> extends BindingComponent<TTarget, IBindingProps<TTarget>> {

@@ -41,7 +41,7 @@ export function testLifecycle<TNavigator extends LifecycleScreenNavigator, TScre
   });
 
   describe("canNavigate", () => {
-    it("calls canNavigate on the viewModel", async () => {
+    it("calls canNavigate on the screen", async () => {
       const screen = {
         canNavigate: jest.fn(() => false),
       };
@@ -52,7 +52,7 @@ export function testLifecycle<TNavigator extends LifecycleScreenNavigator, TScre
       expect(screen.canNavigate).toBeCalled();
     });
 
-    it("calls canNavigate on the viewModel's eventHub", async () => {
+    it("calls canNavigate on the screen's eventHub", async () => {
       let isCalled = false;
       const eventHub = new TypedEventHub<HasLifecycleEvents>();
       eventHub.on("canNavigate", () => {
@@ -86,7 +86,7 @@ export function testLifecycle<TNavigator extends LifecycleScreenNavigator, TScre
       expect(isCalled).toBeTruthy();
     });
 
-    it("does not fail when no viewModel available", async () => {
+    it("does not fail when no screen is provided", async () => {
       const navigator = navigatorFactory(undefined);
 
       const result = await navigator.canNavigate([{ name: "screen" }]);

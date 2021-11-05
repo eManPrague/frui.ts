@@ -1,3 +1,6 @@
+# 1.0.0
+- Complete refactoring
+
 # 0.16.2
 
 - `ManualPromise` has observable `State` property

@@ -33,6 +33,9 @@
   },
   "dependencies": {
     "@frui.ts/helpers": "^999.0.0",
-    "query-string": "^6.13.7"
+    "qs": "^6.10.1"
+  },
+  "devDependencies": {
+    "@types/qs": "^6.9.7"
   }
 }

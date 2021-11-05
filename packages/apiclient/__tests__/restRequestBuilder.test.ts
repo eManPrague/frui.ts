@@ -29,7 +29,7 @@ describe("getQueryString", () => {
 
     const query = { foo: "param1", bar: 123 };
     const result = builder.getQueryString(query);
-    expect(result).toBe("bar=123&foo=param1");
+    expect(result).toBe("foo=param1&bar=123");
   });
 });
 

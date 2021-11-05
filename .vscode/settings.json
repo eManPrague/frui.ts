@@ -4,7 +4,13 @@
     "**/node_modules": true,
     "**/dist": true
   },
+  "peacock.color": "#190d38",
+  "typescript.tsdk": "node_modules\\typescript\\lib",
   "workbench.colorCustomizations": {
+    "titleBar.activeBackground": "#190d38",
+    "titleBar.activeForeground": "#e7e7e7",
+    "titleBar.inactiveBackground": "#190d3899",
+    "titleBar.inactiveForeground": "#e7e7e799",
     "activityBar.activeBackground": "#2b1761",
     "activityBar.activeBorder": "#9b4525",
     "activityBar.background": "#2b1761",
@@ -12,20 +18,14 @@
     "activityBar.inactiveForeground": "#e7e7e799",
     "activityBarBadge.background": "#9b4525",
     "activityBarBadge.foreground": "#e7e7e7",
-    "statusBar.background": "#190d38",
-    "statusBar.foreground": "#e7e7e7",
-    "statusBarItem.hoverBackground": "#2b1761",
-    "titleBar.activeBackground": "#190d38",
-    "titleBar.activeForeground": "#e7e7e7",
-    "titleBar.inactiveBackground": "#190d3899",
-    "titleBar.inactiveForeground": "#e7e7e799",
     "editorGroup.border": "#2b1761",
     "panel.border": "#2b1761",
     "sash.hoverBorder": "#2b1761",
     "sideBar.border": "#2b1761",
+    "statusBar.background": "#190d38",
+    "statusBar.foreground": "#e7e7e7",
+    "statusBarItem.hoverBackground": "#2b1761",
     "statusBarItem.remoteBackground": "#190d38",
     "statusBarItem.remoteForeground": "#e7e7e7"
-  },
-  "peacock.color": "#190d38",
-  "typescript.tsdk": "node_modules\\typescript\\lib"
+  }
 }
