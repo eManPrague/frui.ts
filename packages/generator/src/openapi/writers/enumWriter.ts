@@ -1,11 +1,12 @@
-import camelCase from "lodash/camelCase";
-import type { CodeBlockWriter, Directory, SourceFile } from "ts-morph";
+﻿import camelCase from "lodash/camelCase";
+import type { Directory, SourceFile } from "ts-morph";
 import GeneratorBase from "../../generatorBase";
-import { pascalCase } from "../../helpers";
-import { entityGeneratedHeader } from "../../messages.json";
 import type Enum from "../models/enum";
 export default class EnumWriter {
-  constructor(private parentDirectory: Directory) {}
+  constructor(
+    private parentDirectory: Directory,
+    private templates: Record<"enumEntity" | "enumEntityFile", Handlebars.TemplateDelegate>
+  ) {}
 
   write(definition: Enum) {
     const fileName = `${camelCase(definition.name)}.ts`;
@@ -19,29 +20,21 @@ export default class EnumWriter {
 
   private updateFile(file: SourceFile, definition: Enum) {
     const currentEnum = file.getEnumOrThrow(definition.name);
-    currentEnum.replaceWithText(writer => this.writeEnum(writer, definition));
+    currentEnum.replaceWithText(this.getEnumContent(definition));
 
     return file;
   }
 
   private createFile(fileName: string, definition: Enum) {
-    return this.parentDirectory.createSourceFile(
-      fileName,
-      writer => {
-        // eslint-disable-next-line @typescript-eslint/no-unsafe-argument
-        writer.writeLine(entityGeneratedHeader);
-        this.writeEnum(writer, definition);
-        writer.newLineIfLastNot();
-        writer.writeLine(`export default ${definition.name};`);
-      },
-      { overwrite: true }
-    );
+    const result = this.templates.enumEntityFile({
+      content: () => this.getEnumContent(definition),
+      enum: definition,
+    });
+
+    return this.parentDirectory.createSourceFile(fileName, result, { overwrite: true });
   }
 
-  private writeEnum(writer: CodeBlockWriter, definition: Enum) {
-    writer.write(`enum ${definition.name}`);
-    writer.block(() => {
-      definition.items.forEach(item => writer.writeLine(`${pascalCase(item)} = "${item}",`));
-    });
+  private getEnumContent(definition: Enum) {
+    return this.templates.enumEntity(definition);
   }
 }

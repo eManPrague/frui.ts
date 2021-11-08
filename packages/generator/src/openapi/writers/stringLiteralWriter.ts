@@ -1,10 +1,12 @@
-import camelCase from "lodash/camelCase";
-import type { CodeBlockWriter, Directory, SourceFile } from "ts-morph";
+﻿import camelCase from "lodash/camelCase";
+import type { Directory, SourceFile } from "ts-morph";
 import GeneratorBase from "../../generatorBase";
-import { entityGeneratedHeader } from "../../messages.json";
 import type Enum from "../models/enum";
 export default class StringLiteralWriter {
-  constructor(private parentDirectory: Directory) {}
+  constructor(
+    private parentDirectory: Directory,
+    private templates: Record<"stringLiteralEntity" | "stringLiteralEntityFile", Handlebars.TemplateDelegate>
+  ) {}
 
   write(definition: Enum) {
     const fileName = `${camelCase(definition.name)}.ts`;
@@ -18,27 +20,21 @@ export default class StringLiteralWriter {
 
   private updateFile(file: SourceFile, definition: Enum) {
     const currentEnum = file.getTypeAliasOrThrow(definition.name);
-    currentEnum.replaceWithText(writer => this.writeTypeAlias(writer, definition));
+    currentEnum.replaceWithText(this.getEnumContent(definition));
 
     return file;
   }
 
   private createFile(fileName: string, definition: Enum) {
-    return this.parentDirectory.createSourceFile(
-      fileName,
-      writer => {
-        // eslint-disable-next-line @typescript-eslint/no-unsafe-argument
-        writer.writeLine(entityGeneratedHeader);
-        this.writeTypeAlias(writer, definition);
-        writer.newLineIfLastNot();
-        writer.writeLine(`export default ${definition.name};`);
-      },
-      { overwrite: true }
-    );
+    const result = this.templates.stringLiteralEntityFile({
+      content: () => this.getEnumContent(definition),
+      enum: definition,
+    });
+
+    return this.parentDirectory.createSourceFile(fileName, result, { overwrite: true });
   }
 
-  private writeTypeAlias(writer: CodeBlockWriter, definition: Enum) {
-    const items = definition.items.map(x => `"${x}"`).join(" | ");
-    writer.write(`type ${definition.name} = ${items};`);
+  private getEnumContent(definition: Enum) {
+    return this.templates.stringLiteralEntity(definition);
   }
 }

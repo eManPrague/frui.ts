@@ -1,10 +1,12 @@
-import camelCase from "lodash/camelCase";
-import type { CodeBlockWriter, Directory, SourceFile } from "ts-morph";
+﻿import camelCase from "lodash/camelCase";
+import type { Directory, SourceFile } from "ts-morph";
 import GeneratorBase from "../../generatorBase";
-import { entityGeneratedHeader } from "../../messages.json";
 import type UnionEntity from "../models/unionEntity";
 export default class UnionEntityWriter {
-  constructor(private parentDirectory: Directory) {}
+  constructor(
+    private parentDirectory: Directory,
+    private templates: Record<"unionEntity" | "unionEntityFile", Handlebars.TemplateDelegate>
+  ) {}
 
   write(definition: UnionEntity) {
     const fileName = `${camelCase(definition.name)}.ts`;
@@ -18,42 +20,32 @@ export default class UnionEntityWriter {
 
   private updateFile(file: SourceFile, definition: UnionEntity) {
     try {
-      const currentEnum = file.getTypeAliasOrThrow(definition.name);
-      currentEnum.replaceWithText(writer => this.writeTypeAlias(writer, definition));
+      const currentEntity = file.getTypeAliasOrThrow(definition.name);
+      currentEntity.replaceWithText(this.getEntityContent(definition));
+      return file;
     } catch (error) {
       console.error(`Error while updating union type ${definition.name} in file ${file.getFilePath()}.`);
       throw error;
     }
-
-    return file;
   }
 
   private createFile(fileName: string, definition: UnionEntity) {
-    const requiredImports = definition.entities
-      .filter(x => typeof x.type === "object")
-      .map(x => x.getTypeName())
-      .filter(x => x) as string[];
+    const importedEntities = definition.entities.filter(x => x.isImportRequired).map(x => x.getTypeName());
 
-    return this.parentDirectory.createSourceFile(
-      fileName,
-      writer => {
-        for (const statement of requiredImports) {
-          writer.writeLine(`import ${statement} from "./${camelCase(statement)}";`);
-        }
-        writer.conditionalBlankLine(!!requiredImports.length);
+    const result = this.templates.unionEntityFile({
+      importedEntities,
+      content: () => this.getEntityContent(definition),
+      entity: definition,
+    });
 
-        // eslint-disable-next-line @typescript-eslint/no-unsafe-argument
-        writer.writeLine(entityGeneratedHeader);
-        this.writeTypeAlias(writer, definition);
-        writer.newLineIfLastNot();
-        writer.writeLine(`export default ${definition.name};`);
-      },
-      { overwrite: true }
-    );
+    return this.parentDirectory.createSourceFile(fileName, result, { overwrite: true });
   }
 
-  private writeTypeAlias(writer: CodeBlockWriter, definition: UnionEntity) {
-    const names = definition.entities.map(x => x.getTypeDeclaration());
-    writer.write(`type ${definition.name} = ${names.join(" | ")};`);
+  private getEntityContent(definition: UnionEntity) {
+    const context = {
+      name: definition.name,
+      subEntities: definition.entities.map(x => x.getTypeDeclaration()),
+    };
+    return this.templates.unionEntity(context);
   }
 }

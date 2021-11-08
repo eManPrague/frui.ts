@@ -1,4 +1,4 @@
-#!/usr/bin/env node
+﻿#!/usr/bin/env node
 /* eslint-disable sonarjs/no-duplicate-string */
 /* eslint-disable @typescript-eslint/no-unsafe-assignment */
 /* eslint-disable @typescript-eslint/no-unsafe-member-access */
@@ -66,16 +66,10 @@ program
   .option("-p, --project <fileName>", "TS project file", "./tsconfig.json")
   .option("-c, --config <fileName>", "Custom configuration file")
   .option("-d, --debug", "Output extra debugging")
-  .option("-o, --output <relativePath>", "Output folder path", "src/entities")
-  .option("--no-validation", "Do not generate validation rules")
-  .option("--no-conversion", "Do not generate conversion function")
   .action(async options => {
     const params = {
       project: options.project,
       config: options.config,
-      outputFolder: options.output,
-      generateValidation: options.validation,
-      generateConversion: options.conversion,
       debug: options.debug,
     };
 
@@ -85,4 +79,6 @@ program
     await generator.run();
   });
 
-program.parse();
+program.parseAsync().catch(error => {
+  console.error(error);
+});

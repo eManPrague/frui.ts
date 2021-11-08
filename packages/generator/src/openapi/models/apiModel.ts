@@ -1,4 +1,9 @@
+﻿import type Endpoint from "./endpoint";
 import type TypeReference from "./typeReference";
 
-type ApiModel = Map<string, TypeReference>;
+interface ApiModel {
+  types: Map<string, TypeReference>;
+  endpoints: Endpoint[];
+}
+
 export default ApiModel;

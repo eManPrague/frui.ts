@@ -20,6 +20,14 @@ export default class NameFormatter {
       fixName(camelCase, property);
     }
   }
+
+  static toPascalCase(item: NamedObject) {
+    fixName(pascalCase, item);
+  }
+
+  static toCamelCase(item: NamedObject) {
+    fixName(camelCase, item);
+  }
 }
 
 function fixName(projection: (name: string) => string, item: NamedObject) {

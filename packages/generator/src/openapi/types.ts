@@ -1,10 +1,7 @@
 import type { BaseParams } from "../generatorBase";
 
-export interface IGeneratorParams extends BaseParams {
-  outputFolder: string;
-  generateValidation: boolean;
-  generateConversion: boolean;
-}
+// eslint-disable-next-line @typescript-eslint/no-empty-interface
+export interface IGeneratorParams extends BaseParams {}
 
 interface HasExclude {
   exclude?: string[];
@@ -31,4 +28,12 @@ export interface IConfig {
   enums?: "enum" | "string";
   dates?: "native" | "date-fns";
   validations?: Record<string, ValidationConfig>;
+
+  entitiesPath: string;
+  repositoriesPath: string;
+
+  validation?: boolean;
+  conversion?: boolean;
+
+  templates: Record<string, string>;
 }

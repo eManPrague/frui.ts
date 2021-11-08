@@ -2,6 +2,8 @@ import { isArray } from "lodash";
 import type { IJsonSchema, OpenAPIV2 } from "openapi-types";
 import { pascalCase } from "../../helpers";
 import AliasEntity from "../models/aliasEntity";
+import type ApiModel from "../models/apiModel";
+import type Endpoint from "../models/endpoint";
 import EntityProperty from "../models/entityProperty";
 import Enum from "../models/enum";
 import InheritedEntity from "../models/inheritedEntity";
@@ -11,12 +13,15 @@ import TypeReference from "../models/typeReference";
 import UnionEntity from "../models/unionEntity";
 import { isV2ReferenceObject, isV2SchemaObject } from "./helpers";
 
-export default class OpenApi2Parser {
+export default class OpenApi2Parser implements ApiModel {
   types = new Map<string, TypeReference>();
+  endpoints: Endpoint[];
 
-  parse(api: OpenAPIV2.Document) {
-    if (api.definitions) {
-      for (const [name, definition] of Object.entries(api.definitions)) {
+  constructor(private apiDocument: OpenAPIV2.Document) {}
+
+  parse() {
+    if (this.apiDocument.definitions) {
+      for (const [name, definition] of Object.entries(this.apiDocument.definitions)) {
         this.parseSchemaObject(name, definition);
       }
     }

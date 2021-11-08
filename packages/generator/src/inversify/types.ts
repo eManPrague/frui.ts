@@ -12,8 +12,8 @@ export type ServiceIdentifier = "$class" | "$interface" | string;
 export type LifeScope = "none" | "singleton" | "transient";
 
 export interface IConfig {
-  factoryName: string;
-  rules: {
+  factoryName?: string;
+  rules?: {
     pattern: string;
     addDecorators?: boolean;
     scope: LifeScope;

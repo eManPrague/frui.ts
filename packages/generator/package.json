@@ -33,12 +33,13 @@
     "start-openapi": "ts-node src/index.ts openapi -o temp/apitest",
     "clean": "rimraf dist",
     "build": "tsc",
-    "postbuild": "ncp dist/src dist -o && rimraf dist/src && rimraf dist/package.json"
+    "postbuild": "ncp dist/src dist -o && ncp src/openapi/templates dist/openapi/templates && rimraf dist/src && rimraf dist/package.json"
   },
   "dependencies": {
     "@apidevtools/swagger-parser": "^10.0.3",
     "cli-progress": "^3.9.1",
     "commander": "^8.3.0",
+    "handlebars": "^4.7.7",
     "lodash": "^4.17.21",
     "openapi-types": "^9.3.0",
     "ts-morph": "^12.0.0"

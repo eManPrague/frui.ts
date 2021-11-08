@@ -42,6 +42,7 @@
   },
   "devDependencies": {
     "@emanprague/eslint-config": "^2.4.0",
+    "@testing-library/react": "^12.1.1",
     "@types/jest": "^27.0.2",
     "@types/node": "^16.11.6",
     "@types/prettier": "^2.4.1",
@@ -62,6 +63,7 @@
   },
   "peerDependencies": {
     "mobx": "^4.15.7",
-    "react": "^17.0.2"
+    "react": "^17.0.2",
+    "react-dom": "^17.0.2"
   }
 }

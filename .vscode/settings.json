@@ -1,5 +1,8 @@
 // Workspace settings
 {
+  "[handlebars]": {
+    "files.insertFinalNewline": false
+  },
   "files.exclude": {
     "**/node_modules": true,
     "**/dist": true
