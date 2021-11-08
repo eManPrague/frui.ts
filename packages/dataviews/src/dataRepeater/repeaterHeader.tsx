@@ -1,4 +1,5 @@
 import type { IPagingFilter } from "@frui.ts/data";
+import { getSortingDirection } from "@frui.ts/data";
 import { SortingDirection } from "@frui.ts/data";
 import { observer } from "mobx-react-lite";
 import React from "react";
@@ -17,8 +18,10 @@ export interface HeaderRowProps<TItem, TContext, TWrapper extends React.ElementT
 }
 
 function getSortIndicatorClass(pagingFilter: IPagingFilter, columnName: string | number) {
-  if (pagingFilter.sortColumn === columnName) {
-    return pagingFilter.sortDirection === SortingDirection.Descending ? "sort-indicator desc" : "sort-indicator asc";
+  const currentDirection = getSortingDirection(pagingFilter, columnName as string);
+
+  if (currentDirection) {
+    return currentDirection === SortingDirection.Descending ? "sort-indicator desc" : "sort-indicator asc";
   } else {
     return "sort-indicator";
   }
