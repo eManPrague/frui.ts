@@ -37,7 +37,7 @@ export default class FilteredList<
   }
 
   constructor(
-    public onLoadData: (filter: TFilter, paging: IPagingFilter) => Promise<PagedQueryResult<TEntity>>,
+    public onLoadData: (filter: TFilter, paging: IPagingFilter) => Promise<PagedQueryResult<TEntity> | void>,
     private initFilter: () => TFilter = () => ({} as TFilter),
     private defaultPagingFilter: () => IPagingFilter = () => ({
       limit: FilteredList.defaultPageSize,
@@ -69,18 +69,22 @@ export default class FilteredList<
     const paging = this.defaultPagingFilter();
     const data = await this.onLoadData(appliedFilter, paging);
 
-    runInAction(() => {
-      this.appliedFilterValue = appliedFilter;
-      this.setData(data);
-    });
+    if (data) {
+      runInAction(() => {
+        this.appliedFilterValue = appliedFilter;
+        this.setData(data);
+      });
+    }
 
-    return true;
+    return !!data;
   }
 
   @bound
   async applyPaging() {
     const data = await this.onLoadData(this.appliedFilter, this.pagingFilter);
-    this.setData(data);
+    if (data) {
+      this.setData(data);
+    }
   }
 
   protected cloneFilter(filter: TFilter): TFilter {

@@ -35,5 +35,10 @@ export interface IConfig {
   validation?: boolean;
   conversion?: boolean;
 
+  endpointUrlPrefix?: string;
   templates: Record<string, string>;
+}
+
+export interface IApiParserConfig {
+  endpointUrlPrefix?: string;
 }

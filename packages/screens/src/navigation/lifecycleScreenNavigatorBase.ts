@@ -96,7 +96,7 @@ export default abstract class LifecycleScreenNavigatorBase<
       await this.callAll("onInitialize", context);
       runInAction(() => (this.isInitializedValue = true));
     } catch (error) {
-      console.error(error);
+      console.error("Error while calling onInitialize", error);
     }
   }
 
@@ -121,7 +121,7 @@ export default abstract class LifecycleScreenNavigatorBase<
       await this.callAll("onActivate", context);
       runInAction(() => (this.isActiveValue = true));
     } catch (error) {
-      console.error(error);
+      console.error("Error while calling onActivate", error);
     }
   }
 
@@ -162,7 +162,7 @@ export default abstract class LifecycleScreenNavigatorBase<
         await this.callAll("onDispose", context);
       }
     } catch (error) {
-      console.error(error);
+      console.error("Error while calling onDeactivate", error);
     }
   }
 
@@ -172,10 +172,10 @@ export default abstract class LifecycleScreenNavigatorBase<
     event: T,
     context: Parameters<HasLifecycleEvents[T]>[0]
   ): Promise<boolean> {
-    const screenFunction = this.screen?.[event];
+    const screenFunction = this.screen?.[event] as (context: NavigationContext<TScreen>) => Promise<boolean> | boolean;
     if (typeof screenFunction === "function") {
       // eslint-disable-next-line @typescript-eslint/no-unsafe-argument
-      const result = await screenFunction(context as any);
+      const result = await screenFunction.call(this.screen, context as any);
       if (result === false) {
         return false;
       }
@@ -199,9 +199,10 @@ export default abstract class LifecycleScreenNavigatorBase<
     event: T,
     context: Parameters<HasLifecycleEvents[T]>[0]
   ): Promise<void> {
-    const screenFunction = this.screen?.[event];
-    // eslint-disable-next-line @typescript-eslint/no-unsafe-argument
-    const screenFunctionPromise = typeof screenFunction === "function" ? screenFunction(context as any) : undefined;
+    const screenFunction = this.screen?.[event] as (context: NavigationContext<TScreen>) => Promise<unknown> | void;
+    const screenFunctionPromise =
+      // eslint-disable-next-line @typescript-eslint/no-unsafe-argument
+      typeof screenFunction === "function" ? screenFunction.call(this.screen, context as any) : undefined;
 
     const listeners = this.eventHub?.getListeners(event);
     if (listeners?.length) {

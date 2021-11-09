@@ -14,7 +14,7 @@ export default class OpenApiGenerator extends GeneratorBase<IGeneratorParams, IC
     }
 
     const modelProcessor = new ModelProcessor();
-    const { types, endpoints } = await modelProcessor.process(this.config.api);
+    const { types, endpoints } = await modelProcessor.process(this.config.api, this.config);
 
     const nameFormatter = new NameFormatter();
     const observableFormatter = new ObservableFormatter(this.config.observable);

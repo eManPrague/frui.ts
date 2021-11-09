@@ -25,6 +25,7 @@
   "validations": {
     "readOnly": false
   },
+  "endpointUrlPrefix": "/api/",
   "templates": {
     "enumEntity": "@enumEntity.hbs",
     "enumEntityFile": "@enumEntityFile.hbs",

@@ -1,4 +1,4 @@
-﻿#!/usr/bin/env node
+﻿// #!/usr/bin/env node
 /* eslint-disable sonarjs/no-duplicate-string */
 /* eslint-disable @typescript-eslint/no-unsafe-assignment */
 /* eslint-disable @typescript-eslint/no-unsafe-member-access */

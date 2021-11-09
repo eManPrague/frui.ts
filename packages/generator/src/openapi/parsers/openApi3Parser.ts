@@ -12,13 +12,14 @@ import ObjectEntity from "../models/objectEntity";
 import Restriction from "../models/restriction";
 import TypeReference from "../models/typeReference";
 import UnionEntity from "../models/unionEntity";
+import type { IApiParserConfig } from "../types";
 import { isV3ReferenceObject, isV3SchemaObject } from "./helpers";
 
 export default class OpenApi3Parser implements ApiModel {
   types = new Map<string, TypeReference>();
   endpoints: Endpoint[];
 
-  constructor(private apiDocument: OpenAPIV3.Document) {}
+  constructor(private apiDocument: OpenAPIV3.Document, private config?: IApiParserConfig) {}
 
   parse() {
     if (this.apiDocument.components?.schemas) {
@@ -210,7 +211,8 @@ export default class OpenApi3Parser implements ApiModel {
   }
 
   private parseEndpoint({ path, method, action }: { path: string; method: string; action: OpenAPIV3.OperationObject }) {
-    const name = action.operationId ?? camelCase(method + path);
+    path = this.config?.endpointUrlPrefix ? path.replace(this.config.endpointUrlPrefix, "") : path;
+    const name = action.operationId ?? camelCase(method + "-" + path.replace(/\{\D*?\}/, "")); // the dash makes sure first path word starts with upper case
 
     const endpoint = new Endpoint(name);
     endpoint.path = path;
