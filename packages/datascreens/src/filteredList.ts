@@ -32,19 +32,22 @@ export default class FilteredList<
   @observable
   protected pagingFilterValue: IPagingFilter;
 
-  get pagingFilter(): Readonly<IPagingFilter> {
+  /** Change properties of this object and call `applyPaging()` to load data */
+  get pagingFilter(): IPagingFilter {
     return this.pagingFilterValue;
   }
 
   constructor(
     public onLoadData: (filter: TFilter, paging: IPagingFilter) => Promise<PagedQueryResult<TEntity> | void>,
     private initFilter: () => TFilter = () => ({} as TFilter),
-    private defaultPagingFilter: () => IPagingFilter = () => ({
+    private defaultPagingFilter: (previous?: Readonly<IPagingFilter>) => IPagingFilter = previous => ({
       limit: FilteredList.defaultPageSize,
       offset: 0,
+      sorting: previous?.sorting ?? [],
     })
   ) {
     super();
+    this.pagingFilterValue = defaultPagingFilter(undefined);
   }
 
   @action.bound
@@ -66,12 +69,13 @@ export default class FilteredList<
     }
 
     const appliedFilter = this.cloneFilter(this.filter);
-    const paging = this.defaultPagingFilter();
+    const paging = this.defaultPagingFilter(this.pagingFilterValue);
     const data = await this.onLoadData(appliedFilter, paging);
 
     if (data) {
       runInAction(() => {
         this.appliedFilterValue = appliedFilter;
+        this.pagingFilterValue = paging;
         this.setData(data);
       });
     }
@@ -83,7 +87,9 @@ export default class FilteredList<
   async applyPaging() {
     const data = await this.onLoadData(this.appliedFilter, this.pagingFilter);
     if (data) {
-      this.setData(data);
+      runInAction(() => {
+        this.setData(data);
+      });
     }
   }
 

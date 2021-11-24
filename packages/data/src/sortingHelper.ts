@@ -12,7 +12,7 @@ export function getSortingDirection(filter: IPagingFilter, columnName: string) {
 }
 
 export function setSort(filter: IPagingFilter, columnName: string, direction?: SortingDirection) {
-  const existingSort = filter.sorting?.[0];
+  const existingSort = filter.sorting?.length ? filter.sorting[0] : undefined;
   const sortDirection =
     direction ??
     (existingSort?.column === columnName && existingSort.direction === SortingDirection.Ascending

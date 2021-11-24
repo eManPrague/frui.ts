@@ -84,6 +84,11 @@ export function useBinding<
   TValue = PropertyType<TTarget, TProperty>
 >(props: IBindingProps<TTarget, TProperty, TValue>) {
   const value = getValue(props.target, props.property) as TValue;
-  const setter = (value: TValue) => setValue(props.target, props.property, value);
+  const setter = (value: TValue) => {
+    setValue(props.target, props.property, value);
+    if (props.target && props.property) {
+      props.onValueChanged?.(value, props.property, props.target);
+    }
+  };
   return [value, setter] as const;
 }
