@@ -1,8 +1,5 @@
 {
   "name": "@frui.ts/bootstrap",
-  "publishConfig": {
-    "registry": "https://nexus.eman.cz/repository/eman-npm/"
-  },
   "version": "0.7.2",
   "description": "Bootstrap controls ready for Frui.ts integration",
   "author": "Augustin Šulc <sulc.gusta@gmail.com>",

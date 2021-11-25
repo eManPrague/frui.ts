@@ -1,0 +1,28 @@
+name: Publish packages to NPM
+
+on:
+  release:
+    types: [published]
+
+jobs:
+  publish-npm:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+      - uses: actions/setup-node@v1
+        with:
+          node-version: 14
+          registry-url: https://registry.npmjs.org/
+      - uses: little-core-labs/get-git-tag@v3.0.1
+        id: tagName
+        with:
+          tagRegex: "v(.*)"
+          tagRegexGroup: 1
+      - run: npm install
+      - run: npx lerna bootstrap
+      - run: npm run build
+      - run: npm test
+      - run: npm run lint
+      - run: npx lerna publish from-package --yes --no-git-tag-version --no-push
+        env:
+          NODE_AUTH_TOKEN: ${{secrets.npm_token}}

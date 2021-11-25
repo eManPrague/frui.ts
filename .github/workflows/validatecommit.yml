@@ -1,0 +1,24 @@
+name: Validate commit
+
+on:
+  pull_request:
+  push:
+    branches:
+      - "**"
+    tags-ignore:
+      - "v*.*" # We don't want this to run on release
+
+jobs:
+  validate:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+      - uses: actions/setup-node@v1
+        with:
+          node-version: 14
+          registry-url: https://registry.npmjs.org/
+      - run: npm install
+      - run: npx lerna bootstrap
+      - run: npm run build
+      - run: npm test
+      - run: npm run lint

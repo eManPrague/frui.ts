@@ -1,8 +1,5 @@
 {
   "name": "@frui.ts/views",
-  "publishConfig": {
-    "registry": "https://nexus.eman.cz/repository/eman-npm/"
-  },
   "version": "0.7.2",
   "description": "> TODO: description",
   "author": "Augustin Šulc <sulc.gusta@gmail.com>",

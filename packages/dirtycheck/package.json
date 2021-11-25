@@ -1,8 +1,5 @@
 {
   "name": "@frui.ts/dirtycheck",
-  "publishConfig": {
-    "registry": "https://nexus.eman.cz/repository/eman-npm/"
-  },
   "version": "0.7.2",
   "description": "Observable dirty checking",
   "author": "Augustin Šulc <sulc.gusta@gmail.com>",
