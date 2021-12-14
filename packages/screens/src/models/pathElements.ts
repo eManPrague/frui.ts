@@ -1,4 +1,4 @@
-export default interface PathElement {
+export interface PathElement<TParamsValue = string | undefined> {
   name: string;
-  params?: Record<string, string>;
+  params?: Record<string, TParamsValue>;
 }

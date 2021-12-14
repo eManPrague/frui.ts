@@ -1,6 +1,7 @@
 import type { PagedQueryResult } from "@frui.ts/data";
 import { IPagingFilter } from "@frui.ts/data";
 import { attachDirtyWatcher, AutomaticDirtyWatcher } from "@frui.ts/dirtycheck";
+import type { Awaitable } from "@frui.ts/helpers";
 import { bound } from "@frui.ts/helpers";
 import { validate } from "@frui.ts/validation";
 import { action, isArrayLike, observable, runInAction } from "mobx";
@@ -38,7 +39,7 @@ export default class FilteredList<
   }
 
   constructor(
-    public onLoadData: (filter: TFilter, paging: IPagingFilter) => Promise<PagedQueryResult<TEntity> | void>,
+    public onLoadData: (filter: TFilter, paging: IPagingFilter) => Awaitable<PagedQueryResult<TEntity> | void>,
     private initFilter: () => TFilter = () => ({} as TFilter),
     private defaultPagingFilter: (previous?: Readonly<IPagingFilter>) => IPagingFilter = previous => ({
       limit: FilteredList.defaultPageSize,

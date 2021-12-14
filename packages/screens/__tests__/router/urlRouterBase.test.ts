@@ -15,7 +15,7 @@ describe("UrlRouterBase", () => {
   describe("initialize", () => {
     it("serializes and sets the current path", async () => {
       const navigator = mock<ScreenNavigator>();
-      navigator.getNavigationState.mockReturnValue({ name: "my-screen" });
+      navigator.getNavigationState.mockReturnValue([{ name: "my-screen" }]);
 
       const router = new TestRouter(navigator);
 
@@ -28,7 +28,7 @@ describe("UrlRouterBase", () => {
   describe("navigate", () => {
     it("deserializes path and calls navigate", async () => {
       const navigator = mock<ScreenNavigator>();
-      navigator.getNavigationState.mockReturnValue({ name: "my-screen" });
+      navigator.getNavigationState.mockReturnValue([{ name: "my-screen" }]);
 
       const router = new TestRouter(navigator);
 

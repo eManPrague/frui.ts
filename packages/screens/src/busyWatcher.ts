@@ -1,3 +1,4 @@
+import type { Awaitable } from "@frui.ts/helpers";
 import { action, computed, ObservableMap } from "mobx";
 
 export type BusyWatcherKey = string | symbol;
@@ -60,7 +61,7 @@ export function watchBusy(target: any, propertyKey?: string, descriptor?: Proper
   const key = isCustomKey ? (target as BusyWatcherKey) : Symbol();
 
   const decorator: Decorator = (target, propertyKey, descriptor) => {
-    const originalFunction = descriptor.value as (...args: any) => Promise<unknown> | unknown;
+    const originalFunction = descriptor.value as (...args: any) => Awaitable<unknown>;
 
     descriptor.value = function (this: { busyWatcher?: BusyWatcher }, ...args: any[]) {
       const ticket = this.busyWatcher?.getBusyTicket(key);

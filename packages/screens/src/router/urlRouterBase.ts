@@ -1,4 +1,5 @@
-import type PathElement from "../models/pathElements";
+import type { Awaitable } from "@frui.ts/helpers";
+import type { PathElement } from "../models/pathElements";
 import type ScreenBase from "../screens/screenBase";
 import type { RouteDefinition, RouteName } from "./route";
 import { Route } from "./route";
@@ -11,7 +12,11 @@ const SEGMENT_REGEX = /^(?<name>[\w-]+)(\[(?<params>\S+)\])?$/;
 export default abstract class UrlRouterBase extends RouterBase implements Router {
   protected routes = new Map<RouteName, Route<any>>();
 
-  async initialize() {
+  initialize() {
+    return this.updateUrl();
+  }
+
+  async updateUrl() {
     const path = this.getCurrentPath();
     if (path.length) {
       const url = this.serializePath(path);
@@ -19,7 +24,7 @@ export default abstract class UrlRouterBase extends RouterBase implements Router
     }
   }
 
-  protected abstract persistUrl(url: string): Promise<void>;
+  protected abstract persistUrl(url: string): Awaitable<unknown>;
 
   registerRoute(definition: RouteDefinition) {
     const names = Array.isArray(definition.name) ? definition.name : [definition.name];
@@ -33,13 +38,7 @@ export default abstract class UrlRouterBase extends RouterBase implements Router
   async navigate(path: string | PathElement[]) {
     // TODO unwrap path if alias for a route
 
-    const elements: PathElement[] =
-      typeof path === "string"
-        ? path
-            .split(URL_SEPARATOR)
-            .filter(x => x)
-            .map(x => this.deserializePath(x) ?? { name: "parse-error" })
-        : path;
+    const elements: PathElement[] = typeof path === "string" ? this.deserializePath(path) : path;
     await this.rootNavigator?.navigate(elements);
 
     const currentPath = this.getCurrentPath();
@@ -119,14 +118,24 @@ export default abstract class UrlRouterBase extends RouterBase implements Router
 
   protected serializePathElement(element: PathElement): string {
     if (element.params) {
-      const values = Object.entries(element.params).map(([key, value]) => `${key}=${encodeURIComponent(value)}`);
+      const values = Object.entries(element.params)
+        .filter(([key, value]) => value !== undefined)
+        // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+        .map(([key, value]) => `${key}=${encodeURIComponent(value!)}`);
       return `${element.name}[${values.join(",")}]`;
     } else {
       return element.name;
     }
   }
 
-  protected deserializePath(text: string): PathElement | undefined {
+  protected deserializePath(path: string) {
+    return path
+      .split(URL_SEPARATOR)
+      .filter(x => x)
+      .map(x => this.deserializePathSegment(x) ?? { name: "parse-error" });
+  }
+
+  protected deserializePathSegment(text: string): PathElement | undefined {
     const match = SEGMENT_REGEX.exec(text)?.groups;
 
     if (!match) {

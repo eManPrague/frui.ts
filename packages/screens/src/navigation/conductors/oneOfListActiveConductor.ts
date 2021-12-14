@@ -1,5 +1,6 @@
 import type { IArrayWillChange, IArrayWillSplice } from "mobx";
 import { observable } from "mobx";
+import type { FindChildResult } from "../../models/findChildResult";
 import type { NavigationContext } from "../../models/navigationContext";
 import { getNavigator } from "../../screens/screenBase";
 import type ScreenLifecycleEventHub from "../screenLifecycleEventHub";
@@ -9,7 +10,7 @@ import ActiveChildConductor from "./activeChildConductor";
 export default class OneOfListActiveConductor<
   TChild = unknown,
   TScreen = any,
-  TNavigationParams extends Record<string, string> = Record<string, string>
+  TNavigationParams extends Record<string, string | undefined> = Record<string, string | undefined>
 > extends ActiveChildConductor<TChild, TScreen, TNavigationParams> {
   readonly children: TChild[];
 
@@ -38,13 +39,12 @@ export default class OneOfListActiveConductor<
   findNavigationChild = (context: NavigationContext<TScreen>, currentChild: TChild | undefined) => {
     const searchedNavigationName = context.path[1]?.name;
     const newChild = this.findChild(searchedNavigationName);
-    const result = { newChild, closePrevious: false };
-    return Promise.resolve(result);
+    return { newChild, closePrevious: false } as FindChildResult<TChild>;
   };
 
   private findChild(navigationName: string | undefined) {
     if (this.preserveActiveChild && navigationName === undefined) {
-      return this.activeChild;
+      return this.activeChild ?? this.children[0];
     }
 
     return navigationName !== undefined ? this.children.find(x => getNavigator(x)?.navigationName === navigationName) : undefined;

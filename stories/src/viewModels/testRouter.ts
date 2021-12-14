@@ -7,9 +7,8 @@ export default class TestRouter extends UrlRouterBase {
   currentPath: string;
 
   @action
-  protected persistUrl(path: string): Promise<void> {
+  protected persistUrl(path: string) {
     this.currentPath = path;
-    return Promise.resolve();
   }
 
   hrefParams(url: string, onClick?: MouseEventHandler<any>) {

@@ -1,4 +1,4 @@
-import type PathElement from "../models/pathElements";
+import type { PathElement } from "../models/pathElements";
 import type { ScreenNavigator } from "../navigation/types";
 
 export default abstract class RouterBase {
@@ -13,7 +13,7 @@ export default abstract class RouterBase {
 
     let navigator = this.rootNavigator;
     while (navigator) {
-      path.push(navigator.getNavigationState());
+      path.push(...navigator.getNavigationState());
       navigator = navigator.getPrimaryChild();
     }
 
@@ -25,20 +25,20 @@ export default abstract class RouterBase {
 
     const childPath = child?.getNavigationState();
     if (childPath) {
-      path.push(childPath);
+      path.push(...childPath);
     }
 
     let navigator: ScreenNavigator | undefined = parent;
     while (navigator) {
-      path.unshift(navigator.getNavigationState());
+      path.unshift(...navigator.getNavigationState());
       navigator = navigator.parent;
     }
 
     return path;
   }
 
-  protected cloneWithChildPath(path: PathElement[], child: ScreenNavigator | undefined) {
+  protected cloneWithChildPath(path: PathElement[], child: ScreenNavigator | undefined): PathElement[] {
     const childPath = child?.getNavigationState();
-    return childPath ? [...path, childPath] : path;
+    return childPath ? [...path, ...childPath] : path;
   }
 }

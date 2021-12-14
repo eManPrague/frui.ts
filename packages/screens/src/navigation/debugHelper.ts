@@ -1,5 +1,5 @@
 import { get, isArrayLike } from "mobx";
-import type PathElement from "../models/pathElements";
+import type { PathElement } from "../models/pathElements";
 import type UrlRouterBase from "../router/urlRouterBase";
 import type ScreenBase from "../screens/screenBase";
 import { getNavigator } from "../screens/screenBase";
@@ -10,7 +10,7 @@ interface ViewModelInfo {
   name?: string;
   navigationPath?: string;
   navigationName?: string;
-  navigationState?: PathElement;
+  navigationState?: PathElement[];
   activeChild?: ViewModelInfo;
   children?: ViewModelInfo[];
   instance: any;

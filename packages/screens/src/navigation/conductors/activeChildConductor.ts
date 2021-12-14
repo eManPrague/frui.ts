@@ -1,6 +1,9 @@
+import type { Awaitable } from "@frui.ts/helpers";
 import { computed, observable, runInAction } from "mobx";
+import type { FindChildResult } from "../../models/findChildResult";
+import { isChildFoundResult } from "../../models/findChildResult";
 import type { ClosingNavigationContext, NavigationContext } from "../../models/navigationContext";
-import type PathElement from "../../models/pathElements";
+import type { PathElement } from "../../models/pathElements";
 import { getNavigator } from "../../screens/screenBase";
 import LifecycleScreenNavigatorBase from "../lifecycleScreenNavigatorBase";
 import type { LifecycleScreenNavigator, ScreenNavigator } from "../types";
@@ -8,7 +11,7 @@ import type { LifecycleScreenNavigator, ScreenNavigator } from "../types";
 export default class ActiveChildConductor<
   TChild = unknown,
   TScreen = any,
-  TNavigationParams extends Record<string, string> = Record<string, string>
+  TNavigationParams extends Record<string, string | undefined> = Record<string, string | undefined>
 > extends LifecycleScreenNavigatorBase<TScreen, TNavigationParams> {
   @observable.ref private activeChildValue?: TChild = undefined;
 
@@ -17,13 +20,13 @@ export default class ActiveChildConductor<
   }
 
   // extension point, implement this to decide what navigate should do
-  canChangeActiveChild?: (context: NavigationContext<TScreen>, currentChild: TChild | undefined) => Promise<boolean>;
+  canChangeActiveChild?: (context: NavigationContext<TScreen>, currentChild: TChild | undefined) => Awaitable<boolean>;
 
   // extension point, implement this to decide what navigate should do
   findNavigationChild?: (
     context: NavigationContext<TScreen>,
     currentChild: TChild | undefined
-  ) => Promise<{ newChild: TChild | undefined; closePrevious?: boolean }>;
+  ) => Awaitable<FindChildResult<TChild>>;
 
   // default functionality overrides
 
@@ -72,18 +75,22 @@ export default class ActiveChildConductor<
     await this.callAll("onNavigate", context);
 
     const currentChild = this.activeChild;
-    const { newChild, closePrevious } = await this.findNavigationChild(context, currentChild);
+    const childResult = await this.findNavigationChild(context, currentChild);
 
-    if (currentChild !== newChild) {
+    if (currentChild !== childResult.newChild) {
       const currentChildNavigator = getNavigator<LifecycleScreenNavigator>(currentChild);
-      await currentChildNavigator?.deactivate?.(!!closePrevious);
+      await currentChildNavigator?.deactivate?.(!!childResult.closePrevious);
 
-      runInAction(() => (this.activeChildValue = newChild));
+      runInAction(() => (this.activeChildValue = childResult.newChild));
     }
 
-    if (newChild) {
-      const newChildNavigator = getNavigator<LifecycleScreenNavigator>(newChild);
-      await newChildNavigator?.navigate(path.slice(1));
+    if (isChildFoundResult(childResult)) {
+      if (childResult.attachToParent !== false) {
+        this.connectChild(childResult.newChild);
+      }
+
+      const newChildNavigator = getNavigator<LifecycleScreenNavigator>(childResult.newChild);
+      await newChildNavigator?.navigate(childResult.pathForChild ?? path.slice(1));
     }
   }
 

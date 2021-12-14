@@ -1,6 +1,6 @@
 import { computed, observable, runInAction } from "mobx";
 import type { ClosingNavigationContext, NavigationContext } from "../models/navigationContext";
-import type PathElement from "../models/pathElements";
+import type { PathElement } from "../models/pathElements";
 import type { HasLifecycleEvents } from "../screens/hasLifecycleHandlers";
 import type ScreenBase from "../screens/screenBase";
 import type ScreenLifecycleEventHub from "./screenLifecycleEventHub";
@@ -8,7 +8,7 @@ import type { LifecycleScreenNavigator, ScreenNavigator } from "./types";
 
 export default abstract class LifecycleScreenNavigatorBase<
   TScreen extends Partial<HasLifecycleEvents> & Partial<ScreenBase>,
-  TNavigationParams extends Record<string, string>
+  TNavigationParams extends Record<string, string | undefined>
 > implements LifecycleScreenNavigator
 {
   // extension point - you can either set getNavigationName function, or assign navigationName property
@@ -44,8 +44,10 @@ export default abstract class LifecycleScreenNavigatorBase<
     return this.aggregateBooleanAll("canNavigate", context);
   }
 
-  getNavigationParams?: () => TNavigationParams;
-  getNavigationState(): PathElement {
+  getNavigationParams?: () => TNavigationParams | undefined;
+  getNavigationState: () => PathElement[] = () => [this.createDefaultNavigationState()];
+
+  createDefaultNavigationState() {
     return {
       name: this.navigationName,
       params: this.getNavigationParams?.(),

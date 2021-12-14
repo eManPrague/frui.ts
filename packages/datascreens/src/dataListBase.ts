@@ -3,7 +3,9 @@ import { IPagingInfo } from "@frui.ts/data";
 import { observable } from "mobx";
 
 export default abstract class DataListBase<T> implements IPagingInfo {
-  @observable.shallow itemsValue?: T[];
+  @observable.shallow
+  private itemsValue?: T[];
+
   get items() {
     return this.itemsValue;
   }

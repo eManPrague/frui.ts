@@ -1,3 +1,4 @@
+import type { Awaitable } from "@frui.ts/helpers";
 import { BusyWatcher, ScreenBase } from "@frui.ts/screens";
 import { action, observable } from "mobx";
 
@@ -16,5 +17,5 @@ export default abstract class DetailViewModel<TEntity> extends ScreenBase {
       this.setItem(item);
     }
   }
-  protected abstract loadDetail(): Promise<TEntity | undefined> | TEntity | undefined;
+  protected abstract loadDetail(): Awaitable<TEntity | undefined>;
 }

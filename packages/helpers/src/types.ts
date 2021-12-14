@@ -1,3 +1,5 @@
+export type Awaitable<T> = T | PromiseLike<T>;
+
 export type BindingTarget = Map<any, any> | Record<string, any>;
 
 export type PropertyName<TTarget> = keyof TTarget & string;
