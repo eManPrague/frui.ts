@@ -25,7 +25,7 @@ export function formatValueForControl(value: any) {
 
 export class Input<TTarget, TOtherProps = unknown> extends ValidationControlBase<
   TTarget,
-  InputProps & FormControlProps & TOtherProps
+  InputProps & React.InputHTMLAttributes<HTMLInputElement> & FormControlProps & TOtherProps
 > {
   @bound
   protected renderInner() {
