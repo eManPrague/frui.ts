@@ -1,7 +1,9 @@
 import { bound } from "@frui.ts/helpers";
 import * as React from "react";
-import { Form, FormControl } from "react-bootstrap";
+import { Form, FormControlProps } from "react-bootstrap";
 import { ValidationControlBase } from "./validationControlBase";
+
+type FormControlElement = HTMLInputElement | HTMLSelectElement | HTMLTextAreaElement;
 
 export interface InputProps {
   onBlur?: (e: React.FormEvent<any>) => void;
@@ -25,7 +27,7 @@ export function formatValueForControl(value: any) {
 
 export class Input<TTarget, TOtherProps = unknown> extends ValidationControlBase<
   TTarget,
-  InputProps & React.PropsWithRef<FormControl> & TOtherProps
+  InputProps & React.InputHTMLAttributes<FormControlElement> & FormControlProps & TOtherProps
 > {
   @bound
   protected renderInner() {
