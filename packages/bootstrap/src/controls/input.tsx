@@ -1,6 +1,6 @@
 import { bound } from "@frui.ts/helpers";
 import * as React from "react";
-import { Form, FormControlProps } from "react-bootstrap";
+import { Form, FormControl } from "react-bootstrap";
 import { ValidationControlBase } from "./validationControlBase";
 
 export interface InputProps {
@@ -25,7 +25,7 @@ export function formatValueForControl(value: any) {
 
 export class Input<TTarget, TOtherProps = unknown> extends ValidationControlBase<
   TTarget,
-  InputProps & React.InputHTMLAttributes<HTMLInputElement> & FormControlProps & TOtherProps
+  InputProps & React.PropsWithRef<FormControl> & TOtherProps
 > {
   @bound
   protected renderInner() {
