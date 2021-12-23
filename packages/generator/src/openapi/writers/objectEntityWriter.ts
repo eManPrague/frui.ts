@@ -1,8 +1,8 @@
 import camelCase from "lodash/camelCase";
 import uniq from "lodash/uniq";
-import path from "path";
 import { Directory, SourceFile } from "ts-morph";
 import GeneratorBase from "../../generatorBase";
+import { getRelativePath } from "../../helpers";
 import ObservableFormatter from "../formatters/observableFormatter";
 import AliasEntity from "../models/aliasEntity";
 import EntityProperty from "../models/entityProperty";
@@ -11,11 +11,12 @@ import ObjectEntity from "../models/objectEntity";
 import Restriction from "../models/restriction";
 import TypeReference from "../models/typeReference";
 import { IConfig, ValidationConfig } from "../types";
+import { getPath } from "../utils";
 
 export default class ObjectEntityWriter {
   constructor(
     private parentDirectory: Directory,
-    private config: Partial<IConfig>,
+    private config: IConfig,
     private templates: Record<"objectEntityContent" | "objectEntityFile", Handlebars.TemplateDelegate>
   ) {}
 
@@ -48,43 +49,25 @@ export default class ObjectEntityWriter {
 
   private createFile(fileName: string, definition: ObjectEntity, baseClass: ObjectEntity | undefined) {
     const decoratorImports = this.getPropertyDecoratorsImports(definition.properties);
-    const propertiesToImport = definition.properties.filter(x => x.type.isImportRequired);
-
-    interface SplitImports {
-      enumsToImport: Array<string>;
-      entitiesToImport: Array<string>;
-    }
-
-    const { entitiesToImport, enumsToImport } = propertiesToImport.reduce(
-      (accumulator: SplitImports, property) => {
-        const typeName = property.type.getTypeName();
-        if (typeName) {
-          if (property.type.type instanceof Enum) {
-            accumulator.enumsToImport.push(typeName);
-          } else {
-            accumulator.entitiesToImport.push(typeName);
-          }
-        }
-        return accumulator;
-      },
-      { entitiesToImport: [], enumsToImport: [] }
-    );
-
+    const entitiesToImport: Array<EntityProperty | ObjectEntity> = definition.properties.filter(x => x.type.isImportRequired);
     if (baseClass) {
-      entitiesToImport.push(baseClass.name);
+      entitiesToImport.push(baseClass);
     }
 
-    const entityImports = uniq(entitiesToImport)
-      .sort()
-      .map((x: string) => `import ${x} from "./${camelCase(x)}";`);
+    const entitiesImports = entitiesToImport.sort().map(x => {
+      let name;
+      if (x instanceof EntityProperty) {
+        name = x.type.getTypeName() ?? x.name;
+      } else {
+        name = x.name;
+      }
+      const path = this.getImportPath(x, definition);
 
-    const pathToEnums = this.getPathToEnums();
-    const enumsImports = uniq(enumsToImport)
-      .sort()
-      .map((x: string) => `import ${x} from "${pathToEnums}/${camelCase(x)}";`);
+      return `import ${name} from "${path}/${camelCase(name)}";`;
+    });
 
     const result = this.templates.objectEntityFile({
-      imports: [...decoratorImports, ...entityImports, ...enumsImports],
+      imports: [...decoratorImports, ...uniq(entitiesImports)],
       content: () => this.getEntityContent(definition, baseClass),
       entity: definition,
       baseClass,
@@ -93,23 +76,24 @@ export default class ObjectEntityWriter {
     return this.parentDirectory.createSourceFile(fileName, result, { overwrite: true });
   }
 
-  getPathToEnums() {
-    function convertPath(windowsPath: string) {
-      return windowsPath
-        .replace(/^\\\\\?\\/, "")
-        .replace(/\\/g, "/")
-        .replace(/\/\/+/g, "/");
+  getImportPath(targetEntity: EntityProperty | ObjectEntity, sourceEntity: ObjectEntity) {
+    let targetEntityName;
+    if (targetEntity instanceof EntityProperty) {
+      targetEntityName = targetEntity.type.getTypeName() ?? targetEntity.name;
+    } else {
+      targetEntityName = targetEntity.name;
     }
 
-    if (this.config.enumsPath && this.config.entitiesPath) {
-      const relativePath = convertPath(path.relative(this.config.entitiesPath, this.config.enumsPath));
-      if (!relativePath.startsWith(".")) {
-        return `./${relativePath}`;
-      }
-      return relativePath;
+    const targetPath = getPath(this.config.entitiesPath, targetEntityName, this.config.defaultEntitiesPath);
+    const sourcePath = getPath(this.config.entitiesPath, sourceEntity.name, this.config.defaultEntitiesPath);
+
+    const path = getRelativePath(sourcePath, targetPath);
+
+    if (path.endsWith("/")) {
+      return path.slice(0, path.length - 1);
     }
 
-    return ".";
+    return path;
   }
 
   getPropertyDecoratorsImports(properties: EntityProperty[]) {

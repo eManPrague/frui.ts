@@ -3,18 +3,16 @@ import camelCase from "lodash/camelCase";
 import uniq from "lodash/uniq";
 import { Directory, SourceFile } from "ts-morph";
 import GeneratorBase from "../../generatorBase";
-import { pascalCase } from "../../helpers";
+import { getRelativePath, pascalCase } from "../../helpers";
 import Endpoint from "../models/endpoint";
 import TypeReference from "../models/typeReference";
-
-export interface RepositoryWriterConfig {
-  entitiesRelativePath: string;
-}
+import { IConfig } from "../types";
+import { getPath } from "../utils";
 
 export default class RepositoryWriter {
   constructor(
     private parentDirectory: Directory,
-    private config: RepositoryWriterConfig,
+    private config: IConfig,
     private templates: Record<"repositoryAction" | "repositoryFile", Handlebars.TemplateDelegate>
   ) {}
 
@@ -62,8 +60,17 @@ export default class RepositoryWriter {
         .flatMap(action => [action.queryParam, action.requestBody?.typeReference, getMainResponse(action)?.typeReference])
         .filter((x): x is TypeReference => !!x && x.isImportRequired)
     ).map(entity => {
-      const name = entity.getTypeName();
-      return `import ${name} from "${this.config.entitiesRelativePath}/${camelCase(name)}";`;
+      const name = entity.getTypeName() ?? "";
+      const entitiesPath = this.config.entitiesPath;
+      let entityPath: string;
+
+      if (typeof entitiesPath === "object") {
+        entityPath = getPath(entitiesPath, name, this.config.defaultEntitiesPath);
+      } else {
+        entityPath = entitiesPath;
+      }
+
+      return `import ${name} from "${getRelativePath(this.config.repositoriesPath, entityPath)}/${camelCase(name)}";`;
     });
   }
 

@@ -7,6 +7,21 @@ import ModelProcessor from "./modelProcessor";
 import { IConfig, IGeneratorParams } from "./types";
 
 export default class OpenApiGenerator extends GeneratorBase<IGeneratorParams, IConfig> {
+  async init(): Promise<void> {
+    await super.init();
+    const entitiesPath = this.config.entitiesPath;
+
+    // Create RegExp from "//" strings
+    if (typeof entitiesPath === "object") {
+      for (const path in entitiesPath) {
+        const pattern = entitiesPath[path] as string;
+        if (pattern.startsWith("/") && pattern.endsWith("/")) {
+          entitiesPath[path] = new RegExp(pattern.slice(0, pattern.length - 1).slice(1));
+        }
+      }
+    }
+  }
+
   async run() {
     if (!this.config.api) {
       console.warn("Api definition is missing");
