@@ -1,7 +1,7 @@
-import { IObservableArray } from "mobx";
+import { ObservableSet } from "mobx";
 
 export interface ISelectableList<TEntity> extends IList<TEntity> {
-  selectedItems: IObservableArray<TEntity>;
+  selectedItems: ObservableSet<TEntity>;
   allItemsSelected: boolean | null;
   toggleItem(selectedItem: TEntity): void;
 }
