@@ -9,7 +9,7 @@ import type { LifecycleScreenNavigator, ScreenNavigator } from "./types";
 export default abstract class LifecycleScreenNavigatorBase<
   TScreen extends Partial<HasLifecycleEvents> & Partial<ScreenBase>,
   TNavigationParams extends Record<string, string | undefined>
-> implements LifecycleScreenNavigator
+> implements LifecycleScreenNavigator<TScreen>
 {
   // extension point - you can either set getNavigationName function, or assign navigationName property
   getNavigationName?: () => string;
@@ -24,12 +24,16 @@ export default abstract class LifecycleScreenNavigatorBase<
   }
 
   eventHub?: ScreenLifecycleEventHub<TScreen>;
-  protected screen?: TScreen;
+
+  private screenValue?: TScreen;
+  get screen() {
+    return this.screenValue;
+  }
 
   parent: ScreenNavigator | undefined = undefined;
 
   constructor(screen?: TScreen, eventHub?: ScreenLifecycleEventHub<TScreen>) {
-    this.screen = screen;
+    this.screenValue = screen;
     this.eventHub = eventHub ?? screen?.events;
   }
 

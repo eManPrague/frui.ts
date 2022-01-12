@@ -1,8 +1,9 @@
 import type { Awaitable } from "@frui.ts/helpers";
 import type { PathElement } from "../models/pathElements";
 
-export interface ScreenNavigator {
+export interface ScreenNavigator<TScreen = unknown> {
   readonly isActive: boolean;
+  readonly screen?: TScreen;
 
   canNavigate(path: PathElement[]): Awaitable<boolean>;
   navigate(path: PathElement[]): Promise<void>;
@@ -14,7 +15,7 @@ export interface ScreenNavigator {
   getPrimaryChild(): ScreenNavigator | undefined;
 }
 
-export interface LifecycleScreenNavigator extends ScreenNavigator {
+export interface LifecycleScreenNavigator<TScreen = unknown> extends ScreenNavigator<TScreen> {
   canDeactivate(isClosing: boolean): Awaitable<boolean>;
   deactivate(isClosing: boolean): Promise<void>;
 }

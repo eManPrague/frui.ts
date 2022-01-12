@@ -1,3 +1,4 @@
+import type { ScreenBase } from "..";
 import type { PathElement } from "../models/pathElements";
 import type { ScreenNavigator } from "../navigation/types";
 
@@ -6,6 +7,18 @@ export default abstract class RouterBase {
 
   constructor(rootNavigator?: ScreenNavigator) {
     this.rootNavigator = rootNavigator;
+  }
+
+  getCurrentScreen<TScreen = Partial<ScreenBase>>() {
+    let navigator = this.rootNavigator;
+    while (navigator) {
+      const childNavigator = navigator.getPrimaryChild();
+      if (childNavigator) {
+        navigator = childNavigator;
+      } else {
+        return navigator.screen as TScreen;
+      }
+    }
   }
 
   protected getCurrentPath() {

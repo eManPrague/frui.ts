@@ -33,7 +33,7 @@ export default class AllChildrenActiveConductor<
     return change;
   };
 
-  protected connectChild(child: TChild) {
+  connectChild(child: TChild) {
     const navigator = getNavigator(child);
     if (navigator) {
       navigator.parent = this;
