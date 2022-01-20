@@ -56,21 +56,21 @@ export default class OpenApi2Parser implements ApiModel {
         // eslint-disable-next-line sonarjs/no-nested-switch
         switch (definition.format) {
           case "binary":
-            return this.setTypeReference("Blob", "Blob");
+            return this.setTypeReference(name, "Blob");
           case "date":
           case "datetime":
           case "date-time":
-            return this.setTypeReference("Date", "Date");
+            return this.setTypeReference(name, "Date");
           default:
-            return this.setTypeReference("string", "string");
+            return this.setTypeReference(name, "string");
         }
 
       case "integer":
       case "number":
-        return this.setTypeReference("number", "number");
+        return this.setTypeReference(name, "number");
 
       case "boolean":
-        return this.setTypeReference(definition.type, definition.type);
+        return this.setTypeReference(name, definition.type);
     }
 
     if (definition.oneOf || definition.allOf) {
