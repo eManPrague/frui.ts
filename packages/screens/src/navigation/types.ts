@@ -6,6 +6,12 @@ export interface ICanNavigate {
   getNavigationPath(): NavigationPath;
 }
 
+export interface INavigatedEvent {
+  navigationName: string;
+  name: string;
+  url: string;
+}
+
 export interface INavigationParent<TChild> {
   getChildNavigationPath(child: TChild | string | number, childParams?: any): NavigationPath;
 }

@@ -4,7 +4,7 @@ import ScreenBase from "../structure/screenBase";
 import { IScreen } from "../structure/types";
 import NavigationConfiguration from "./navigationConfiguration";
 import { appendQueryString } from "./navigationPath";
-import { ICanNavigate } from "./types";
+import { ICanNavigate, INavigatedEvent } from "./types";
 
 export default class HashNavigationAdapter {
   private isNavigationSuppressed = false;
@@ -64,6 +64,11 @@ export default class HashNavigationAdapter {
         }
       }
     }
+
+    const navigateEvent = new CustomEvent<INavigatedEvent>("fruitsNavigated", {
+      detail: { navigationName: screen.navigationName, name: screen.name, url: window.location.toString() },
+    });
+    window.dispatchEvent(navigateEvent);
 
     this.lastActiveScreen = screen;
   }
