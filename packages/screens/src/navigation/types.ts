@@ -1,9 +1,16 @@
+import { IScreen } from "../structure/types";
 import { NavigationPath } from "./navigationPath";
 
 export interface ICanNavigate {
   navigate(subPath: string | undefined, params: any): Promise<any> | void;
 
   getNavigationPath(): NavigationPath;
+}
+
+export interface INavigatedEvent {
+  screenName: string;
+  screen: IScreen;
+  url: string;
 }
 
 export interface INavigationParent<TChild> {

@@ -249,3 +249,21 @@ urlAdapter.start(rootViewModel);
 ```
 
 Implement `ICanNavigate` if you want to control the navigation path for children and react to changes in the navigation path. Note that the conductors described above already implement `ICanNavigate`.
+
+### Navigated event
+`UrlNavigationAdapter` triggers the `fruitsNavigated` event.
+You can listen for this event in your application, for example to report `pageView` to Google Analytics.
+
+```typescript
+interface INavigatedEvent {
+  screenName: string;
+  screen: IScreen;
+  url: string;
+}
+
+window.addEventListener("fruitsNavigated", this.onNavigated);
+
+onNavigated(e: CustomEventInit<INavigatedEvent>) {
+    console.log(e.detail?.url);
+}
+```

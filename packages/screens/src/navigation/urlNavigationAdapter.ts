@@ -3,7 +3,7 @@ import { ParseOptions, parseUrl } from "query-string";
 import { IScreen, ScreenBase } from "..";
 import NavigationConfiguration from "./navigationConfiguration";
 import { appendQueryString } from "./navigationPath";
-import { ICanNavigate } from "./types";
+import { ICanNavigate, INavigatedEvent } from "./types";
 
 export default class UrlNavigationAdapter {
   private isNavigationSuppressed = false;
@@ -63,6 +63,11 @@ export default class UrlNavigationAdapter {
         }
       }
     }
+
+    const navigateEvent = new CustomEvent<INavigatedEvent>("fruitsNavigated", {
+      detail: { screenName: screen.name, screen: screen, url: window.location.toString() },
+    });
+    window.dispatchEvent(navigateEvent);
 
     this.lastActiveScreen = screen;
   }
