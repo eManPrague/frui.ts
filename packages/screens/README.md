@@ -270,3 +270,21 @@ import { hrefParams } from "@frui.ts/views";
 // use:
 <a {...hrefParams("/users/list")} >Click me!</a>
 ```
+
+### Navigated event
+Both navigation adapters, `PathNavigationAdapter` as well as `HashNavigationAdapter`, trigger `fruitsNavigated` event.
+You can listen for this event in your application, for example to report `pageView` to Google Analytics.
+
+```typescript
+interface INavigatedEvent {
+  screenName: string;
+  screen: IScreen;
+  url: string;
+}
+
+window.addEventListener("fruitsNavigated", this.onNavigated);
+
+onNavigated(e: CustomEventInit<INavigatedEvent>) {
+    console.log(e.detail?.url);
+}
+```
