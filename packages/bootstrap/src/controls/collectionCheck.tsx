@@ -38,7 +38,7 @@ function useCollection<TTarget, TProperty extends BindingProperty<TTarget>>(
       } else {
         collection.add(key);
       }
-      // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+      // eslint-disable-next-line @typescript-eslint/no-non-null-assertion,@typescript-eslint/tslint/config
       props.onValueChanged?.(key, props.property!, props.target!);
     };
     return [checked, action(toggle)];
@@ -52,7 +52,7 @@ function useCollection<TTarget, TProperty extends BindingProperty<TTarget>>(
       } else {
         array.push(key);
       }
-      // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+      // eslint-disable-next-line @typescript-eslint/no-non-null-assertion,@typescript-eslint/tslint/config
       props.onValueChanged?.(key, props.property!, props.target!);
     };
     return [checked, action(toggle)];

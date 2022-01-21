@@ -55,6 +55,7 @@ describe("ErrorBoundary", () => {
       </ErrorBoundary>
     );
 
+    // eslint-disable-next-line @typescript-eslint/tslint/config
     expect(container.innerHTML).toBe("<h1>children</h1>");
   });
 

@@ -66,8 +66,7 @@ export class Select<TTarget, TItem> extends ValidationControlBase<TTarget, FormC
 
   get selectedValue(): any {
     const { mode, keyProperty } = this.props;
-    // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
-    return mode === "item" && this.value ? (this.value as TItem)[keyProperty!] : this.value;
+    return mode === "item" && this.value && keyProperty !== undefined ? (this.value as TItem)[keyProperty] : this.value;
   }
 
   get hasValidValue() {

@@ -1,4 +1,4 @@
-import { PropertyName } from "@frui.ts/helpers";
+import { BindingProperty, PropertyName } from "@frui.ts/helpers";
 import { getValidationMessage } from "@frui.ts/validation";
 import { BindingComponent, ExcludeBindingProps, IBindingProps } from "@frui.ts/views";
 import { Observer } from "mobx-react-lite";
@@ -33,7 +33,7 @@ export abstract class ValidationControlBase<TTarget, TOtherProps = unknown> exte
     }
 
     const target = this.props.target as TTarget;
-    const property = this.props.property as PropertyName<TTarget>;
+    const property = (this.props.property as BindingProperty<TTarget>) as PropertyName<TTarget>;
 
     if (target && property) {
       return getValidationMessage(target, property);
