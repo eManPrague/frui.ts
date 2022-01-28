@@ -32,9 +32,14 @@ export default abstract class LifecycleScreenNavigatorBase<
 
   parent: ScreenNavigator | undefined = undefined;
 
-  constructor(screen?: TScreen, eventHub?: ScreenLifecycleEventHub<TScreen>) {
+  constructor(screen?: TScreen, navigationPrefix?: string, eventHub?: ScreenLifecycleEventHub<TScreen>) {
     this.screenValue = screen;
     this.eventHub = eventHub ?? screen?.events;
+
+    if (navigationPrefix) {
+      this.getNavigationState = () => [{ name: navigationPrefix }, this.createDefaultNavigationState()];
+      this.getNavigationStateLength = () => 2;
+    }
   }
 
   canNavigate(path: PathElement[]) {
@@ -50,8 +55,10 @@ export default abstract class LifecycleScreenNavigatorBase<
 
   getNavigationParams?: () => TNavigationParams | undefined;
   getNavigationState: () => PathElement[] = () => [this.createDefaultNavigationState()];
+  // Current NavigationState can contain multiple elements (not just one). In that case, we need to skip all of them.
+  getNavigationStateLength: () => number = () => 1;
 
-  createDefaultNavigationState() {
+  protected createDefaultNavigationState() {
     return {
       name: this.navigationName,
       params: this.getNavigationParams?.(),

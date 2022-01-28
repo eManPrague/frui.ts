@@ -8,10 +8,6 @@ export default class SimpleScreenNavigator<
   TNavigationParams extends Record<string, string | undefined> = Record<string, string | undefined>
 > extends LifecycleScreenNavigatorBase<TScreen, TNavigationParams> {
   constructor(screen?: TScreen, navigationPrefix?: string, eventHub?: ScreenLifecycleEventHub<TScreen>) {
-    super(screen, eventHub);
-
-    if (navigationPrefix) {
-      this.getNavigationState = () => [{ name: navigationPrefix }, this.createDefaultNavigationState()];
-    }
+    super(screen, navigationPrefix, eventHub);
   }
 }

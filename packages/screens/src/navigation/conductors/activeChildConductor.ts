@@ -81,16 +81,16 @@ export default class ActiveChildConductor<
       const currentChildNavigator = getNavigator<LifecycleScreenNavigator>(currentChild);
       await currentChildNavigator?.deactivate?.(!!childResult.closePrevious);
 
+      if (isChildFoundResult(childResult) && childResult.attachToParent !== false) {
+        this.connectChild(childResult.newChild);
+      }
+
       runInAction(() => (this.activeChildValue = childResult.newChild));
     }
 
     if (isChildFoundResult(childResult)) {
-      if (childResult.attachToParent !== false) {
-        this.connectChild(childResult.newChild);
-      }
-
       const newChildNavigator = getNavigator<LifecycleScreenNavigator>(childResult.newChild);
-      await newChildNavigator?.navigate(childResult.pathForChild ?? path.slice(1));
+      await newChildNavigator?.navigate(childResult.pathForChild ?? path.slice(this.getNavigationStateLength()));
     }
   }
 

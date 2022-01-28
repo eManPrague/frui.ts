@@ -7,7 +7,7 @@ import { testLifecycle } from "../navigator.testHelpers";
 
 describe("ActiveChildConductor", () => {
   testLifecycle((screen, eventHub) => {
-    const conductor = new ActiveChildConductor(screen, eventHub);
+    const conductor = new ActiveChildConductor(screen, undefined, eventHub);
     conductor.findNavigationChild = () => Promise.resolve({ newChild: undefined });
     return conductor;
   });
@@ -161,4 +161,6 @@ describe("ActiveChildConductor", () => {
       expect(childNavigator.deactivate).toBeCalledWith(true);
     });
   });
+
+  // TODO test proper child finding with navigationPrefix used
 });

@@ -17,8 +17,8 @@ export default class OneOfListActiveConductor<
   /** When set to `true`, navigating directly to the conductor (with no child path specified) activates the previously set `activeChild`. */
   preserveActiveChild = false;
 
-  constructor(screen?: TScreen, eventHub?: ScreenLifecycleEventHub<TScreen>) {
-    super(screen, eventHub);
+  constructor(screen?: TScreen, navigationPrefix?: string, eventHub?: ScreenLifecycleEventHub<TScreen>) {
+    super(screen, navigationPrefix, eventHub);
 
     const children = observable.array<TChild>([], { deep: false });
     children.intercept(this.handleChildrenChanged);
@@ -26,7 +26,8 @@ export default class OneOfListActiveConductor<
   }
 
   canChangeActiveChild = async (context: NavigationContext<TScreen>, currentChild: TChild | undefined) => {
-    const newNavigationName = context.path[1]?.name;
+    const pathElementsToSkip = this.getNavigationStateLength();
+    const newNavigationName = context.path[pathElementsToSkip]?.name;
     const activeChildNavigator = getNavigator<LifecycleScreenNavigator>(this.activeChild);
 
     if (!activeChildNavigator || activeChildNavigator.navigationName === newNavigationName) {
@@ -37,7 +38,8 @@ export default class OneOfListActiveConductor<
   };
 
   findNavigationChild = (context: NavigationContext<TScreen>, currentChild: TChild | undefined) => {
-    const searchedNavigationName = context.path[1]?.name;
+    const pathElementsToSkip = this.getNavigationStateLength();
+    const searchedNavigationName = context.path[pathElementsToSkip]?.name;
     const newChild = this.findChild(searchedNavigationName);
     return { newChild, closePrevious: false } as FindChildResult<TChild>;
   };
