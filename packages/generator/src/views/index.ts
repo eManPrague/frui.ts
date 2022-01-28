@@ -1,18 +1,18 @@
 import type { SourceFile } from "ts-morph";
 import GeneratorBase from "../generatorBase";
 import { createProgressBar } from "../progressBar";
-import type GeneratorParams from "./generatorParams";
+import type { GeneratorParams, IConfig } from "./types";
 import ViewsAnalyzer from "./viewsAnalyzer";
 import ViewsProcessor from "./viewsProcessor";
 
-export default class ViewsGenerator extends GeneratorBase<GeneratorParams, any> {
+export default class ViewsGenerator extends GeneratorBase<GeneratorParams, IConfig> {
   private viewsFile: SourceFile;
 
   async run() {
     const progressBar = createProgressBar("Generating");
     progressBar.start(5, 0);
 
-    const viewFiles = new ViewsAnalyzer().analyze(this.project);
+    const viewFiles = new ViewsAnalyzer().analyze(this.project, this.config.viewsPattern);
     progressBar.increment();
 
     const processor = new ViewsProcessor(this.ensureViewsFile());
@@ -39,7 +39,8 @@ export default class ViewsGenerator extends GeneratorBase<GeneratorParams, any> 
     return this.viewsFile;
   }
 
-  protected getDefaultConfig() {
-    return Promise.resolve({});
+  protected async getDefaultConfig() {
+    const config = (await import("./defaultConfig.json")) as { default: IConfig };
+    return config.default;
   }
 }

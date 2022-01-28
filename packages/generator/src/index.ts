@@ -43,6 +43,7 @@ program
   .command("views")
   .description("Generate view registrations")
   .option("-p, --project <fileName>", "TS project file", "./tsconfig.json")
+  .option("-c, --config <fileName>", "Custom configuration file")
   .option("-d, --debug", "Output extra debugging")
   .option("-o, --output <relativePath>", "Output file path", "src/views/index.ts")
   .action(async options => {
