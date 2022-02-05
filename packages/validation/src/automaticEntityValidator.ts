@@ -26,14 +26,14 @@ export default class AutomaticEntityValidator<TEntity = any> extends EntityValid
     this.buildObservableResults(target, validationRules);
   }
 
-  *getAllResults(): Iterable<[PropertyName<TEntity>, Iterable<ValidationResult>]> {
+  *getAllResults(): Iterable<[PropertyName<TEntity>, ValidationResult[]]> {
     if (!this.isEnabled) {
       return;
     }
 
     for (const propertyName of this._validatedProperties) {
       const propertyResults = get(this._results, propertyName) as ValidationResult[] | undefined;
-      if (propertyResults) {
+      if (propertyResults?.length) {
         yield [propertyName, propertyResults];
       }
     }

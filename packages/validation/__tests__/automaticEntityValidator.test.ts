@@ -6,6 +6,7 @@ import { testCoreValidatorFunctions, expectInvalid, expectValid } from "./testHe
 beforeAll(() => {
   configuration.valueValidators.set("required", value => ({ code: "required", isValid: !!value }));
   configuration.valueValidators.set("mustBeJohn", value => ({ code: "mustBeJohn", isValid: value === "John" }));
+  configuration.valueValidators.set("mockValidation", value => undefined);
 });
 
 describe("AutomaticEntityValidator", () => {
@@ -92,5 +93,24 @@ describe("AutomaticEntityValidator", () => {
 
     const validationErrors = validator.getResults("firstName");
     expect(validationErrors[0].code).toBe("required");
+  });
+
+  describe("getAllResults", () => {
+    it("return only non-empty results", () => {
+      const target = observable({
+        firstName: "John",
+      });
+
+      const validator = new AutomaticEntityValidator(
+        target,
+        {
+          firstName: { mockValidation: true },
+        },
+        false
+      );
+
+      const validationErrors = Array.from(validator.getAllResults());
+      expect(validationErrors).toHaveLength(0);
+    });
   });
 });
