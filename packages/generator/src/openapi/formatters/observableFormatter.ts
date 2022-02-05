@@ -2,15 +2,13 @@ import ObjectEntity from "../models/objectEntity";
 import Restriction from "../models/restriction";
 import type TypeReference from "../models/typeReference";
 import type { ObservableConfig } from "../types";
+import ExcludeFormatterBase from "./excludeFormatterBase";
 
-type ExcludeList = string[] | undefined;
-
-export default class ObservableFormatter {
+export default class ObservableFormatter extends ExcludeFormatterBase {
   static OBSERVABLE = Symbol("observable");
-  private globalExcludedProperties?: string[];
 
   constructor(private config: ObservableConfig | undefined) {
-    this.globalExcludedProperties = typeof config === "object" ? config.properties?.exclude : undefined;
+    super(typeof config === "object" ? config : undefined);
   }
 
   format(item: TypeReference) {
@@ -24,30 +22,17 @@ export default class ObservableFormatter {
   }
 
   formatEntity(entity: ObjectEntity) {
-    let excludedProperties: ExcludeList;
-
-    if (typeof this.config === "object") {
-      const entityConfig = this.config.entities[entity.name];
-
-      if (entityConfig === false) {
-        return;
-      }
-
-      if (typeof entityConfig === "object") {
-        excludedProperties = entityConfig.exclude;
-      }
+    const excludeList = this.buildExcludeList(entity.name);
+    if (excludeList === false) {
+      return;
     }
 
     for (const property of entity.properties) {
-      const excluded = isExcluded(excludedProperties, property.name) || isExcluded(this.globalExcludedProperties, property.name);
+      const excluded = excludeList.includes(property.name);
       const readOnly = property.restrictions?.has(Restriction.readOnly);
       if (!excluded && !readOnly) {
         property.addTag(ObservableFormatter.OBSERVABLE, true);
       }
     }
   }
-}
-
-function isExcluded(list: ExcludeList, value: string): boolean {
-  return list?.includes(value) === true;
 }

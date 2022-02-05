@@ -5,16 +5,17 @@ export interface IGeneratorParams extends BaseParams {}
 
 interface HasExclude {
   exclude?: string[];
+  include?: string[];
 }
 
-export type ObservableConfig =
-  | boolean
-  | {
-      entities: Record<string, boolean | HasExclude>;
-      properties?: HasExclude;
-    };
+export type ExcludeConfig = {
+  entities?: Record<string, boolean | HasExclude>;
+  properties?: HasExclude;
+};
 
-export type ValidationConfig =
+export type ObservableConfig = boolean | ExcludeConfig;
+
+export type ValidationRuleConfig =
   | string // generated rule name
   | boolean // 'false' disables rule generation
   | {
@@ -22,12 +23,18 @@ export type ValidationConfig =
       filter?: string; // regex matched against the rule param
     };
 
+export type ValidationsConfig =
+  | boolean
+  | (ExcludeConfig & {
+      rules?: Record<string, ValidationRuleConfig>;
+    });
+
 export interface IConfig {
   api: string;
   observable?: ObservableConfig;
   enums?: "enum" | "string";
   dates?: "native" | "date-fns";
-  validations?: Record<string, ValidationConfig>;
+  validations?: ValidationsConfig;
 
   entitiesPath: string;
   repositoriesPath: string;

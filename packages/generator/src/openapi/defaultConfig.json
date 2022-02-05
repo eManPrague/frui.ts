@@ -24,7 +24,9 @@
   "enums": "enum",
   "dates": "native",
   "validations": {
-    "readOnly": false
+    "rules": {
+      "readOnly": false
+    }
   },
   "endpointUrlPrefix": "/api/",
   "templates": {

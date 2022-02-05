@@ -9,7 +9,7 @@ import Enum from "../models/enum";
 import type ObjectEntity from "../models/objectEntity";
 import Restriction from "../models/restriction";
 import type TypeReference from "../models/typeReference";
-import type { IConfig, ValidationConfig } from "../types";
+import type { IConfig, ValidationRuleConfig } from "../types";
 
 export default class ObjectEntityWriter {
   constructor(
@@ -173,10 +173,10 @@ export default class ObjectEntityWriter {
   }
 
   private getPropertyValidations(property: EntityProperty) {
-    if (property.restrictions?.size) {
+    if (property.validations?.size) {
       const definitions: string[] = [];
-      property.restrictions.forEach((params, key) => {
-        const definition = this.getRestrictionDefinition(key, params);
+      property.validations.forEach((params, key) => {
+        const definition = this.getValidationDefinition(key, params);
         if (definition && !definitions.includes(definition)) {
           definitions.push(definition);
         }
@@ -188,19 +188,20 @@ export default class ObjectEntityWriter {
     return undefined;
   }
 
-  private getRestrictionDefinition(restriction: Restriction, params: any) {
+  private getValidationDefinition(restriction: Restriction, params: any) {
     const restrictionName = Restriction[restriction];
-    const restrictionConfiguration = this.config.validations?.[restrictionName];
-    if (restrictionConfiguration === false) {
+    const validationConfiguration =
+      typeof this.config.validations === "object" ? this.config.validations.rules?.[restrictionName] : undefined;
+    if (validationConfiguration === false) {
       return undefined;
     }
 
     const validationParams = JSON.stringify(params);
-    if (!shouldWriteValidation(restrictionConfiguration, validationParams)) {
+    if (!shouldWriteValidation(validationConfiguration, validationParams)) {
       return undefined;
     }
 
-    const validationName = getValidationName(restrictionConfiguration) ?? restrictionName;
+    const validationName = getValidationName(validationConfiguration) ?? restrictionName;
     return `${validationName}: ${validationParams}`;
   }
 }
@@ -209,7 +210,7 @@ function hasValidation(entity: ObjectEntity) {
   return entity.properties.some(p => p.restrictions?.size);
 }
 
-function getValidationName(config?: ValidationConfig) {
+function getValidationName(config?: ValidationRuleConfig) {
   if (typeof config === "string") {
     return config;
   }
@@ -232,7 +233,7 @@ function getCachedRegex(pattern: string) {
   return regex;
 }
 
-function shouldWriteValidation(config: ValidationConfig | undefined, value: string) {
+function shouldWriteValidation(config: ValidationRuleConfig | undefined, value: string) {
   if (typeof config === "object" && config.filter) {
     const regex = getCachedRegex(config.filter);
     return !!regex.exec(value);

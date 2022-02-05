@@ -18,7 +18,13 @@ export default class OpenApiGenerator extends GeneratorBase<IGeneratorParams, IC
 
     const nameFormatter = new NameFormatter();
     const observableFormatter = new ObservableFormatter(this.config.observable);
-    const validationsFormatter = new ValidationsFormatter();
+
+    // merge configuration from observable as well
+    const validationConfig =
+      // eslint-disable-next-line @typescript-eslint/prefer-nullish-coalescing
+      this.config.validation && Object.assign({}, this.config.observable || undefined, this.config.validation);
+    const validationsFormatter = new ValidationsFormatter(validationConfig);
+
     types.forEach(x => {
       nameFormatter.formatNames(x);
       observableFormatter.format(x);
