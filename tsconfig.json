@@ -11,7 +11,7 @@
     "downlevelIteration": true,
     "sourceMap": true,
     "esModuleInterop": true,
-    "target": "es5",
+    "target": "ES6",
     "jsx": "react",
     "lib": [
       "es2019",
