@@ -24,7 +24,11 @@ export default class OpenApi3Parser implements ApiModel {
   parse() {
     if (this.apiDocument.components?.schemas) {
       for (const [name, definition] of Object.entries(this.apiDocument.components.schemas)) {
-        this.parseSchemaObject(name, definition);
+        const parsed = this.parseSchemaObject(name, definition);
+        if (isV3ReferenceObject(definition)) {
+          // the definition is just a reference to another object
+          this.setTypeReference(name, new AliasEntity(name, parsed));
+        }
       }
     }
 

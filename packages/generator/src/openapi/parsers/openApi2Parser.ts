@@ -22,7 +22,11 @@ export default class OpenApi2Parser implements ApiModel {
   parse() {
     if (this.apiDocument.definitions) {
       for (const [name, definition] of Object.entries(this.apiDocument.definitions)) {
-        this.parseSchemaObject(name, definition);
+        const parsed = this.parseSchemaObject(name, definition);
+        if (isV2ReferenceObject(definition)) {
+          // the definition is just a reference to another object
+          this.setTypeReference(name, new AliasEntity(name, parsed));
+        }
       }
     }
   }
