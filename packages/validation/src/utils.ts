@@ -9,6 +9,10 @@ export function attachValidator<TEntity>(target: TEntity, validator: EntityValid
 }
 
 export function getValidator<TEntity>(target: TEntity) {
+  if (!target) {
+    return undefined;
+  }
+
   // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access
   return (target as any)[Configuration.validatorAttachedProperty] as EntityValidator<TEntity> | undefined;
 }

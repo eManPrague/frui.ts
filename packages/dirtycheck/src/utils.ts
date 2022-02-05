@@ -7,6 +7,10 @@ export function attachDirtyWatcher<TEntity>(target: TEntity, dirtyWatcher: Entit
 }
 
 export function getDirtyWatcher<TEntity>(target: TEntity) {
+  if (!target) {
+    return undefined;
+  }
+
   // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access
   return (target as any)[Configuration.dirtyWatcherAttachedProperty] as EntityDirtyWatcher<TEntity> | undefined;
 }
