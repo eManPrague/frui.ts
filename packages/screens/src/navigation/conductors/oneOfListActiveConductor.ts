@@ -45,11 +45,14 @@ export default class OneOfListActiveConductor<
   };
 
   private findChild(navigationName: string | undefined) {
-    if (this.preserveActiveChild && navigationName === undefined) {
-      return this.activeChild ?? this.children[0];
+    const child =
+      navigationName !== undefined ? this.children.find(x => getNavigator(x)?.navigationName === navigationName) : undefined;
+
+    if (child || !this.preserveActiveChild) {
+      return child;
     }
 
-    return navigationName !== undefined ? this.children.find(x => getNavigator(x)?.navigationName === navigationName) : undefined;
+    return this.activeChild ?? this.children[0];
   }
 
   private handleChildrenChanged = (change: IArrayWillChange<TChild> | IArrayWillSplice<TChild>) => {
