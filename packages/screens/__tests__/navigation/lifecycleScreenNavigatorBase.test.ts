@@ -4,5 +4,5 @@ import { testLifecycle } from "./navigator.testHelpers";
 class TestNavigator extends LifecycleScreenNavigatorBase<any, any> {}
 
 describe("LifecycleScreenNavigatorBase", () => {
-  testLifecycle((screen, eventHub) => new TestNavigator(screen, undefined, eventHub));
+  testLifecycle((screen, eventHub) => new TestNavigator(screen, undefined, undefined, eventHub));
 });

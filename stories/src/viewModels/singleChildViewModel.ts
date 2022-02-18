@@ -1,4 +1,4 @@
-import { ActiveChildConductor, ScreenBase } from "@frui.ts/screens";
+import { ActiveChildConductor, FindNavigationChildHandler, ScreenBase } from "@frui.ts/screens";
 import ChildViewModel from "./childViewModel";
 import type { IChildScreen } from "./types";
 
@@ -12,7 +12,7 @@ export default class SingleChildViewModel extends ScreenBase<ActiveChildConducto
     this.navigator.findNavigationChild = this.findNavigationChild;
   }
 
-  private findNavigationChild: SingleChildViewModel["navigator"]["findNavigationChild"] = context => {
+  private findNavigationChild: FindNavigationChildHandler<ChildViewModel> = context => {
     const childPathElement = context.path.length > 1 && context.path[1];
     if (childPathElement) {
       if (childPathElement.name === this.navigator.activeChild?.navigator.navigationName) {

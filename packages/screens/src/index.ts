@@ -5,7 +5,7 @@ export { default as ScreenBase, getNavigator } from "./screens/screenBase";
 
 export * from "./navigation/types";
 export { default as SimpleScreenNavigator } from "./navigation/simpleScreenNavigator";
-export { default as ActiveChildConductor } from "./navigation/conductors/activeChildConductor";
+export { default as ActiveChildConductor, FindNavigationChildHandler } from "./navigation/conductors/activeChildConductor";
 export { default as AllChildrenActiveConductor } from "./navigation/conductors/allChildrenActiveConductor";
 export { default as OneOfListActiveConductor } from "./navigation/conductors/oneOfListActiveConductor";
 

@@ -9,8 +9,7 @@ export default class ChildViewModel extends ScreenBase<SimpleScreenNavigator<Chi
     this.name = name;
     this.text = `This is content of Child View Model ${this.name}`;
 
-    this.navigator = new SimpleScreenNavigator<ChildViewModel, any>(this);
-    this.navigator.navigationName = navigationName;
+    this.navigator = new SimpleScreenNavigator<ChildViewModel, any>(this, navigationName);
 
     this.events.on("onNavigate", context => console.log("onNavigate", this, context));
     this.events.on("onInitialize", context => console.log("onInitialize", this, context));

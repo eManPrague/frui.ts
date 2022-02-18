@@ -4,9 +4,15 @@ import type { FindChildResult } from "../../models/findChildResult";
 import { isChildFoundResult } from "../../models/findChildResult";
 import type { ClosingNavigationContext, NavigationContext } from "../../models/navigationContext";
 import type { PathElement } from "../../models/pathElements";
+import type ScreenBase from "../../screens/screenBase";
 import { getNavigator } from "../../screens/screenBase";
 import LifecycleScreenNavigatorBase from "../lifecycleScreenNavigatorBase";
 import type { LifecycleScreenNavigator, ScreenNavigator } from "../types";
+
+export type FindNavigationChildHandler<TChild = unknown, TScreen = ScreenBase<ActiveChildConductor<TChild>>> = (
+  context: NavigationContext<TScreen>,
+  currentChild: TChild | undefined
+) => Awaitable<FindChildResult<TChild>>;
 
 export default class ActiveChildConductor<
   TChild = unknown,
@@ -23,10 +29,7 @@ export default class ActiveChildConductor<
   canChangeActiveChild?: (context: NavigationContext<TScreen>, currentChild: TChild | undefined) => Awaitable<boolean>;
 
   // extension point, implement this to decide what navigate should do
-  findNavigationChild?: (
-    context: NavigationContext<TScreen>,
-    currentChild: TChild | undefined
-  ) => Awaitable<FindChildResult<TChild>>;
+  findNavigationChild?: FindNavigationChildHandler<TChild, TScreen>;
 
   // default functionality overrides
 

@@ -1,13 +1,12 @@
 /* eslint-disable sonarjs/no-identical-functions */
 import { mock } from "jest-mock-extended";
-import ActiveChildConductor from "../../../src/navigation/conductors/activeChildConductor";
-import type { LifecycleScreenNavigator } from "../../../src/navigation/types";
-import type ScreenBase from "../../../src/screens/screenBase";
+import type { ScreenBase, SimpleScreenNavigator } from "../../../src";
+import { ActiveChildConductor } from "../../../src";
 import { testLifecycle } from "../navigator.testHelpers";
 
 describe("ActiveChildConductor", () => {
   testLifecycle((screen, eventHub) => {
-    const conductor = new ActiveChildConductor(screen, undefined, eventHub);
+    const conductor = new ActiveChildConductor(screen, "testpage", undefined, eventHub);
     conductor.findNavigationChild = () => Promise.resolve({ newChild: undefined });
     return conductor;
   });
@@ -28,7 +27,7 @@ describe("ActiveChildConductor", () => {
   describe("navigate", () => {
     it("calls navigate on the active child", async () => {
       // arrange
-      const childNavigator = mock<LifecycleScreenNavigator>();
+      const childNavigator = mock<SimpleScreenNavigator>();
       const childScreen: Partial<ScreenBase> = { navigator: childNavigator };
 
       const conductor = new ActiveChildConductor();
@@ -50,7 +49,7 @@ describe("ActiveChildConductor", () => {
       // we still need to pass the navigation flow
 
       // arrange
-      const childNavigator = mock<LifecycleScreenNavigator>();
+      const childNavigator = mock<SimpleScreenNavigator>();
       const childScreen: Partial<ScreenBase> = { navigator: childNavigator };
 
       const conductor = new ActiveChildConductor();
@@ -70,7 +69,7 @@ describe("ActiveChildConductor", () => {
 
     it("sets the active child", async () => {
       // arrange
-      const childNavigator = mock<LifecycleScreenNavigator>();
+      const childNavigator = mock<SimpleScreenNavigator>();
       const childScreen: Partial<ScreenBase> = { navigator: childNavigator };
 
       const conductor = new ActiveChildConductor();
@@ -88,7 +87,7 @@ describe("ActiveChildConductor", () => {
     });
 
     it("calls deactivate on the previous child", async () => {
-      const child1Navigator = mock<LifecycleScreenNavigator>();
+      const child1Navigator = mock<SimpleScreenNavigator>();
       child1Navigator.canDeactivate.mockReturnValue(Promise.resolve(false));
       const child1Screen: Partial<ScreenBase> = { navigator: child1Navigator };
 
@@ -118,7 +117,7 @@ describe("ActiveChildConductor", () => {
   describe("canDeactivate", () => {
     it("calls canDeactivate on active child", async () => {
       // activate a child
-      const childNavigator = mock<LifecycleScreenNavigator>();
+      const childNavigator = mock<SimpleScreenNavigator>();
       childNavigator.canDeactivate.mockReturnValue(Promise.resolve(false));
       const childScreen: Partial<ScreenBase> = { navigator: childNavigator };
 
@@ -142,7 +141,7 @@ describe("ActiveChildConductor", () => {
   describe("deactivate", () => {
     it("calls deactivate on active child", async () => {
       // activate a child
-      const childNavigator = mock<LifecycleScreenNavigator>();
+      const childNavigator = mock<SimpleScreenNavigator>();
       childNavigator.deactivate.mockReturnValue(Promise.resolve());
       const childScreen: Partial<ScreenBase> = { navigator: childNavigator };
 

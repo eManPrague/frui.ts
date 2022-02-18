@@ -32,8 +32,9 @@ export default abstract class LifecycleScreenNavigatorBase<
 
   parent: ScreenNavigator | undefined = undefined;
 
-  constructor(screen?: TScreen, navigationPrefix?: string, eventHub?: ScreenLifecycleEventHub<TScreen>) {
+  constructor(screen?: TScreen, navigationName?: string, navigationPrefix?: string, eventHub?: ScreenLifecycleEventHub<TScreen>) {
     this.screenValue = screen;
+    this._navigationNameValue = navigationName;
     this.eventHub = eventHub ?? screen?.events;
 
     if (navigationPrefix) {

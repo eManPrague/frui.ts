@@ -11,8 +11,8 @@ export default class AllChildrenActiveConductor<
 > extends LifecycleScreenNavigatorBase<TScreen, TNavigationParams> {
   readonly children: TChild[];
 
-  constructor(screen?: TScreen, navigationPrefix?: string, eventHub?: ScreenLifecycleEventHub<TScreen>) {
-    super(screen, navigationPrefix, eventHub);
+  constructor(screen?: TScreen, navigationName?: string, navigationPrefix?: string, eventHub?: ScreenLifecycleEventHub<TScreen>) {
+    super(screen, navigationName, navigationPrefix, eventHub);
 
     const children = observable.array<TChild>([], { deep: false });
     children.intercept(this.handleChildrenChanged);

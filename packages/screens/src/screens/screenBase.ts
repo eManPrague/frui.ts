@@ -1,9 +1,10 @@
+import type { SimpleScreenNavigator } from "..";
 import TypedEventHub from "../events/typedEventHub";
 import type ScreenLifecycleEventHub from "../navigation/screenLifecycleEventHub";
 import type { ScreenNavigator } from "../navigation/types";
 import type { HasLifecycleEvents } from "./hasLifecycleHandlers";
 
-export default abstract class ScreenBase<TNavigator extends ScreenNavigator = ScreenNavigator> {
+export default abstract class ScreenBase<TNavigator extends ScreenNavigator = SimpleScreenNavigator> {
   navigator: TNavigator;
   events: ScreenLifecycleEventHub<this>;
 

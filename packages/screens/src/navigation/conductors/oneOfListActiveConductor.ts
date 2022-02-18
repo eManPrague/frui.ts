@@ -17,8 +17,8 @@ export default class OneOfListActiveConductor<
   /** When set to `true`, navigating directly to the conductor (with no child path specified) activates the previously set `activeChild`. */
   preserveActiveChild = false;
 
-  constructor(screen?: TScreen, navigationPrefix?: string, eventHub?: ScreenLifecycleEventHub<TScreen>) {
-    super(screen, navigationPrefix, eventHub);
+  constructor(screen?: TScreen, navigationName?: string, navigationPrefix?: string, eventHub?: ScreenLifecycleEventHub<TScreen>) {
+    super(screen, navigationName, navigationPrefix, eventHub);
 
     const children = observable.array<TChild>([], { deep: false });
     children.intercept(this.handleChildrenChanged);
