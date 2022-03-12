@@ -112,6 +112,10 @@ export default class OpenApi3Parser implements ApiModel {
       x => !isV3ReferenceObject(x) && x.type === "object" && !x.allOf && !x.oneOf
     ) as OpenAPIV3.SchemaObject[];
 
+    if (definition.properties) {
+      plainObjects.push(definition);
+    }
+
     const otherParents = subTypes
       .filter(x => !plainObjects.includes(x as OpenAPIV3.SchemaObject))
       .map((x, i) => this.parseSchemaObject(`${name}Parent${i + 1}`, x));

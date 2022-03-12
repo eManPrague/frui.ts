@@ -1,4 +1,4 @@
 export * from "./fetchApiConnector";
-export * from "./fetchError";
+export { default as FetchError } from "./fetchError";
 export * from "./restRequestBuilder";
 export * from "./types";

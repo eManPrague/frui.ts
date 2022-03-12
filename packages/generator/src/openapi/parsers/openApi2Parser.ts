@@ -114,6 +114,10 @@ export default class OpenApi2Parser implements ApiModel {
       x => !isV2ReferenceObject(x) && x.type === "object" && !x.allOf && !x.oneOf
     ) as OpenAPIV2.SchemaObject[];
 
+    if (definition.properties) {
+      plainObjects.push(definition);
+    }
+
     const otherParents = subTypes
       .filter(x => !plainObjects.includes(x as OpenAPIV2.SchemaObject))
       .map((x, i) => this.parseSchemaObject(`${name}Parent${i + 1}`, x as OpenAPIV2.SchemaObject));
