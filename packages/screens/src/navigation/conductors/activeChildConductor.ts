@@ -9,16 +9,22 @@ import { getNavigator } from "../../screens/screenBase";
 import LifecycleScreenNavigatorBase from "../lifecycleScreenNavigatorBase";
 import type { LifecycleScreenNavigator, ScreenNavigator } from "../types";
 
-export type FindNavigationChildHandler<TChild = unknown, TScreen = ScreenBase<ActiveChildConductor<TChild>>> = (
-  context: NavigationContext<TScreen>,
+export type FindNavigationChildHandler<
+  TChild = unknown,
+  TScreen = ScreenBase<ActiveChildConductor<TChild>>,
+  TNavigationParams = unknown,
+  TLocation = unknown
+> = (
+  context: NavigationContext<TScreen, TNavigationParams, TLocation>,
   currentChild: TChild | undefined
 ) => Awaitable<FindChildResult<TChild>>;
 
 export default class ActiveChildConductor<
   TChild = unknown,
   TScreen = any,
-  TNavigationParams extends Record<string, string | undefined> = Record<string, string | undefined>
-> extends LifecycleScreenNavigatorBase<TScreen, TNavigationParams> {
+  TNavigationParams extends Record<string, string | undefined> = Record<string, string | undefined>,
+  TLocation = unknown
+> extends LifecycleScreenNavigatorBase<TScreen, TNavigationParams, TLocation> {
   @observable.ref private activeChildValue?: TChild = undefined;
 
   @computed get activeChild() {
@@ -26,10 +32,13 @@ export default class ActiveChildConductor<
   }
 
   // extension point, implement this to decide what navigate should do
-  canChangeActiveChild?: (context: NavigationContext<TScreen>, currentChild: TChild | undefined) => Awaitable<boolean>;
+  canChangeActiveChild?: (
+    context: NavigationContext<TScreen, TNavigationParams, TLocation>,
+    currentChild: TChild | undefined
+  ) => Awaitable<boolean>;
 
   // extension point, implement this to decide what navigate should do
-  findNavigationChild?: FindNavigationChildHandler<TChild, TScreen>;
+  findNavigationChild?: FindNavigationChildHandler<TChild, TScreen, TNavigationParams, TLocation>;
 
   // default functionality overrides
 
@@ -38,10 +47,10 @@ export default class ActiveChildConductor<
   }
 
   async canNavigate(path: PathElement[]) {
-    const context: NavigationContext<TScreen> = {
+    const context: NavigationContext<TScreen, TNavigationParams, TLocation> = {
       navigator: this,
       screen: this.screen,
-      navigationParams: path[0]?.params,
+      navigationParams: path[0]?.params as TNavigationParams,
       path,
     };
 
@@ -55,15 +64,16 @@ export default class ActiveChildConductor<
     return await this.aggregateBooleanAll("canNavigate", context);
   }
 
-  async navigate(path: PathElement[]): Promise<void> {
+  async navigate(path: PathElement[], location?: TLocation): Promise<void> {
     if (!this.findNavigationChild) {
       throw new Error("findNavigationChild is not implemented");
     }
 
-    const context: NavigationContext<TScreen> = {
+    const context: NavigationContext<TScreen, TNavigationParams, TLocation> = {
       navigator: this,
       screen: this.screen,
-      navigationParams: path[0]?.params,
+      navigationParams: path[0]?.params as TNavigationParams,
+      location,
       path,
     };
 

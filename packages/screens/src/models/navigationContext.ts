@@ -1,10 +1,11 @@
 import type { ScreenNavigator } from "../navigation/types";
 import type { PathElement } from "./pathElements";
 
-export interface NavigationContext<TScreen = unknown, TNavigationParams = unknown> {
+export interface NavigationContext<TScreen = unknown, TNavigationParams = unknown, TLocation = unknown> {
   screen?: TScreen;
   navigator: ScreenNavigator;
-  navigationParams: TNavigationParams;
+  navigationParams?: TNavigationParams;
+  location?: TLocation;
 
   path: PathElement[];
 }

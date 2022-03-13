@@ -1,12 +1,13 @@
 import React from "react";
-import { useParams } from "react-router";
+import { createView } from "../useViewModel";
+import InvoiceDetailViewModel from "./invoiceDetailViewModel";
 
-export default function InvoiceDetail() {
-  const params = useParams<"invoiceId">();
-
+export default createView(InvoiceDetailViewModel, ({ vm }) => {
   return (
     <main style={{ padding: "1rem 0" }}>
-      <h2>Invoice #{params.invoiceId} detail</h2>
+      <h2>
+        Invoice #{vm.invoice?.id} - {vm.invoice?.name}
+      </h2>
     </main>
   );
-}
+});
