@@ -3,21 +3,26 @@ import { action, observable } from "mobx";
 import type { Invoice } from "./data";
 import { invoices } from "./data";
 
-export default class InvoiceDetailViewModel extends ScreenBase {
+interface NavigationParams {
+  invoiceId: string;
+}
+
+export default class InvoiceDetailViewModel extends ScreenBase<SimpleScreenNavigator<NavigationParams>> {
   @observable invoice: Invoice | undefined;
 
   constructor() {
     super();
-    this.navigator = new SimpleScreenNavigator(this);
+    this.navigator = new SimpleScreenNavigator<NavigationParams>(this);
   }
 
   @action
-  onNavigate(context: NavigationContext) {
-    // TODO type
-    console.log({ context });
-    const params = context.navigationParams as { invoiceId: string };
-    const invoiceId = parseInt(params.invoiceId, 10);
+  onNavigate(context: NavigationContext<NavigationParams>) {
+    const invoiceIdString = context.navigationParams?.invoiceId;
+    if (invoiceIdString) {
+      const invoiceId = parseInt(invoiceIdString, 10);
 
-    this.invoice = invoices.find(x => x.id === invoiceId);
+      // load data
+      this.invoice = invoices.find(x => x.id === invoiceId);
+    }
   }
 }

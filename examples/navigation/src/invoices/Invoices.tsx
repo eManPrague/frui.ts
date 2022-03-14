@@ -1,24 +1,25 @@
+import { action } from "mobx";
 import React from "react";
 import { NavLink, Outlet, useSearchParams } from "react-router-dom";
+import { createView } from "../useViewModel";
+import InvoicesViewModel from "./invoicesViewModel";
 
-const invoices = [
-  { id: 1, name: "Invoice one" },
-  { id: 2, name: "Invoice two" },
-  { id: 3, name: "Invoice three" },
-];
-
-export default function Invoices() {
+export default createView(InvoicesViewModel, ({ vm }) => {
   const [searchParams, setSearchParams] = useSearchParams();
-
-  const filter = searchParams.get("filter");
-  const filteredInvoices = filter ? invoices.filter(x => x.name.includes(filter)) : invoices;
 
   return (
     <main style={{ padding: "1rem 0" }}>
       <h2>Invoices</h2>
 
+      <label>Direct filter:</label>
+      {/* This should use a two-way bound input */}
+      <input value={vm.filter} onChange={action(e => (vm.filter = e.target.value))} />
+
+      <br />
+
+      <label>URL filter:</label>
       <input
-        value={filter || ""}
+        value={searchParams.get("filter") ?? ""}
         onChange={event => {
           const filter = event.target.value;
           if (filter) {
@@ -29,7 +30,7 @@ export default function Invoices() {
         }}
       />
 
-      {filteredInvoices.map(invoice => (
+      {vm.visibleInvoices?.map(invoice => (
         <NavLink key={invoice.id} to={`/invoices/${invoice.id}`} style={{ display: "block", margin: "1rem 0" }}>
           {({ isActive }) => (isActive ? `--${invoice.name}--` : invoice.name)}
         </NavLink>
@@ -38,4 +39,4 @@ export default function Invoices() {
       <Outlet />
     </main>
   );
-}
+});

@@ -6,10 +6,10 @@ import type ScreenLifecycleEventHub from "../screenLifecycleEventHub";
 
 export default class AllChildrenActiveConductor<
   TChild = unknown,
-  TScreen = any,
   TNavigationParams extends Record<string, string | undefined> = Record<string, string | undefined>,
+  TScreen = any,
   TLocation = unknown
-> extends LifecycleScreenNavigatorBase<TScreen, TNavigationParams, TLocation> {
+> extends LifecycleScreenNavigatorBase<TNavigationParams, TScreen, TLocation> {
   readonly children: TChild[];
 
   constructor(screen?: TScreen, navigationName?: string, navigationPrefix?: string, eventHub?: ScreenLifecycleEventHub<TScreen>) {
