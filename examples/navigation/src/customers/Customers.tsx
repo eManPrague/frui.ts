@@ -2,6 +2,9 @@ import React from "react";
 import { createView } from "../useViewModel";
 import CustomersViewModel from "./customersViewModel";
 
+// This is an example of simple View-first approach
+// using either `createView` or `useViewModel`
+
 export default createView(CustomersViewModel, ({ vm }) => {
   return (
     <main style={{ padding: "1rem 0" }}>

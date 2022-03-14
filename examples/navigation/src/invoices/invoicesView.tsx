@@ -1,10 +1,11 @@
+import { registerView } from "@frui.ts/views";
 import { action } from "mobx";
 import React from "react";
 import { NavLink, Outlet, useSearchParams } from "react-router-dom";
-import { createView } from "../useViewModel";
+import { createViewComponent } from "../useViewModel";
 import InvoicesViewModel from "./invoicesViewModel";
 
-export default createView(InvoicesViewModel, ({ vm }) => {
+export const invoicesView = createViewComponent<InvoicesViewModel>(vm => {
   const [searchParams, setSearchParams] = useSearchParams();
 
   return (
@@ -40,3 +41,5 @@ export default createView(InvoicesViewModel, ({ vm }) => {
     </main>
   );
 });
+
+registerView(invoicesView, InvoicesViewModel);

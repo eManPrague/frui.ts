@@ -17,6 +17,7 @@ export default class InvoiceDetailViewModel extends ScreenBase<SimpleScreenNavig
 
   @action
   onNavigate(context: NavigationContext<NavigationParams>) {
+    // this shows hot to handle route parameters
     const invoiceIdString = context.navigationParams?.invoiceId;
     if (invoiceIdString) {
       const invoiceId = parseInt(invoiceIdString, 10);

@@ -25,6 +25,7 @@ export default class InvoicesViewModel extends ScreenBase {
 
   @action
   onNavigate(context: NavigationContext) {
+    // this shows how to handle query parameters
     const location = context.location as Location;
     if (location.search) {
       const search = new URLSearchParams(location.search);

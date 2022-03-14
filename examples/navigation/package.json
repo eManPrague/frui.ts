@@ -6,7 +6,7 @@
   "version": "999.0.0",
   "scripts": {
     "dev": "vite",
-    "build": "tsc && vite build",
+    "build-static": "tsc && vite build",
     "preview": "vite preview"
   },
   "dependencies": {
