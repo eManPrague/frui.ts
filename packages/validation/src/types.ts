@@ -22,6 +22,7 @@ export interface EntityValidator<TEntity> {
   isEnabled: boolean;
   isVisible: boolean;
   readonly isValid: AggregatedValidationResult;
+  readonly visibleProperties: Set<PropertyName<TEntity>>;
 
   getAllResults(): Iterable<[PropertyName<TEntity>, Iterable<ValidationResult>]>;
   getResults(propertyName: PropertyName<TEntity>): Iterable<ValidationResult>;

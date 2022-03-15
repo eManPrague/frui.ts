@@ -160,6 +160,25 @@ export function testCoreValidatorFunctions<TEntity extends { firstName: string }
         }
       }
     );
+
+    it("returns explicitly set visible properties", () => {
+      const validator = invalidValidator();
+      validator.isVisible = false;
+
+      const initialResults = Array.from(validator.getAllVisibleResults());
+      expect(initialResults).toHaveLength(0);
+
+      const invalidProperties = Array.from(validator.getAllResults(), ([property, propertyResults]) => ({
+        property,
+        isValid: Array.from(propertyResults).some(x => !x.isValid),
+      }));
+      const invalidProperty = invalidProperties[0].property;
+
+      validator.visibleProperties.add(invalidProperty);
+
+      const results = Array.from(validator.getAllVisibleResults());
+      expect(results).not.toHaveLength(0);
+    });
   });
 
   describe("getVisibleResults on existing property", () => {
@@ -189,6 +208,19 @@ export function testCoreValidatorFunctions<TEntity extends { firstName: string }
         }
       }
     );
+
+    it("returns errors when explicitly set visible", () => {
+      const validator = invalidValidator();
+      validator.isVisible = false;
+
+      const initialResults = Array.from(validator.getVisibleResults("firstName"));
+      expect(initialResults).toHaveLength(0);
+
+      validator.visibleProperties.add("firstName");
+
+      const results = Array.from(validator.getVisibleResults("firstName"));
+      expect(results).not.toHaveLength(0);
+    });
   });
 
   describe("getVisibleResults on missing property", () => {

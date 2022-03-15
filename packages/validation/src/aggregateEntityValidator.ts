@@ -13,7 +13,7 @@ export default class AggregateEntityValidator<TEntity = any> extends EntityValid
 
   *getAllResults(): Iterable<[PropertyName<TEntity>, Iterable<ValidationResult>]> {
     if (!this.isEnabled) {
-      return emptyResults;
+      return;
     }
 
     for (const validator of this.validators) {
@@ -27,7 +27,7 @@ export default class AggregateEntityValidator<TEntity = any> extends EntityValid
 
   *getResults(propertyName: PropertyName<TEntity>): Iterable<ValidationResult> {
     if (!this.isEnabled) {
-      return emptyResults;
+      return;
     }
 
     for (const validator of this.validators) {
@@ -40,13 +40,13 @@ export default class AggregateEntityValidator<TEntity = any> extends EntityValid
   }
 
   *getAllVisibleResults(): Iterable<[PropertyName<TEntity>, Iterable<ValidationResult>]> {
-    if (!this.isEnabled || !this.isVisible) {
+    if (!this.isEnabled || (!this.isVisible && !this.visibleProperties.size)) {
       return emptyResults;
     }
 
     for (const validator of this.validators) {
-      if (validator.isEnabled && validator.isVisible) {
-        for (const result of validator.getAllResults()) {
+      for (const result of validator.getAllVisibleResults()) {
+        if (this.isVisible || this.visibleProperties.has(result[0])) {
           yield result;
         }
       }
@@ -54,15 +54,13 @@ export default class AggregateEntityValidator<TEntity = any> extends EntityValid
   }
 
   *getVisibleResults(propertyName: PropertyName<TEntity>): Iterable<ValidationResult> {
-    if (!this.isEnabled || !this.isVisible) {
+    if (!this.isEnabled || (!this.isVisible && !this.visibleProperties.has(propertyName))) {
       return emptyResults;
     }
 
     for (const validator of this.validators) {
-      if (validator.isEnabled && validator.isVisible) {
-        for (const result of validator.getResults(propertyName)) {
-          yield result;
-        }
+      for (const result of validator.getVisibleResults(propertyName)) {
+        yield result;
       }
     }
   }

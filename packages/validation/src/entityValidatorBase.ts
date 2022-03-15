@@ -15,6 +15,8 @@ export default abstract class EntityValidatorBase<TEntity = unknown> implements 
   @observable
   isVisible = false;
 
+  readonly visibleProperties = observable(new Set<PropertyName<TEntity>>());
+
   @computed
   get isValid(): AggregatedValidationResult {
     return this.checkValid();
@@ -27,15 +29,19 @@ export default abstract class EntityValidatorBase<TEntity = unknown> implements 
   abstract getAllResults(): Iterable<[PropertyName<TEntity>, Iterable<ValidationResult>]>;
   abstract getResults(propertyName: PropertyName<TEntity>): Iterable<ValidationResult>;
 
-  getAllVisibleResults(): Iterable<[PropertyName<TEntity>, Iterable<ValidationResult>]> {
-    if (this.isEnabled && this.isVisible) {
+  *getAllVisibleResults(): Iterable<[PropertyName<TEntity>, Iterable<ValidationResult>]> {
+    if (this.isEnabled && (this.isVisible || this.visibleProperties.size)) {
+      for (const propertyResult of this.getAllResults()) {
+        if (this.isVisible || this.visibleProperties.has(propertyResult[0])) {
+          yield propertyResult;
+        }
+      }
       return this.getAllResults();
-    } else {
-      return emptyResults;
     }
   }
+
   getVisibleResults(propertyName: PropertyName<TEntity>): Iterable<ValidationResult> {
-    if (this.isEnabled && this.isVisible) {
+    if (this.isEnabled && (this.isVisible || this.visibleProperties.has(propertyName))) {
       return this.getResults(propertyName);
     } else {
       return emptyResults;
