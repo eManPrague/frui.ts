@@ -1,6 +1,6 @@
 import type { PropertyName } from "@frui.ts/helpers";
-import { isSet } from "@frui.ts/helpers";
-import { get, isArrayLike, isObservableSet, observable } from "mobx";
+import { isMap, isSet } from "@frui.ts/helpers";
+import { get, isArrayLike, observable } from "mobx";
 import { getDirtyWatcher } from ".";
 import DirtyWatcherBase from "./dirtyWatcherBase";
 import { attachDirtyWatcher } from "./utils";
@@ -78,8 +78,10 @@ export default class AutomaticDirtyWatcher<TEntity = any> extends DirtyWatcherBa
 
         if (isArrayLike(originalValue)) {
           defineArrayDirtyWatchProperty(resultsObject, originalValue, propertyName, entity);
-        } else if (isSet(originalValue) || isObservableSet(originalValue)) {
+        } else if (isSet(originalValue)) {
           defineSetDirtyCheckProperty(resultsObject, originalValue, propertyName, entity);
+        } else if (isMap(originalValue)) {
+          defineMapDirtyCheckProperty(resultsObject, originalValue, propertyName, entity);
         } else if (typeof originalValue === "object") {
           defineObjectDirtyWatchProperty(resultsObject, originalValue, propertyName, entity);
         } else {
@@ -104,16 +106,33 @@ function defineArrayDirtyWatchProperty<TEntity>(
   entity: TEntity
 ) {
   const arraySnapshot = originalValue.slice();
-  Object.defineProperty(resultsObject, propertyName, {
-    get: () => {
-      const currentValue = get(entity, propertyName) as unknown[] | undefined;
-      return (
-        !currentValue ||
-        currentValue.length !== arraySnapshot.length ||
-        arraySnapshot.some((originalItem, index) => originalItem !== currentValue[index])
-      );
-    },
-  });
+  const hasNestedDirtyWatcher = !!getDirtyWatcher(arraySnapshot[0]);
+
+  if (hasNestedDirtyWatcher) {
+    Object.defineProperty(resultsObject, propertyName, {
+      get: () => {
+        const currentValue = get(entity, propertyName) as unknown[] | undefined;
+        return (
+          !currentValue ||
+          currentValue.length !== arraySnapshot.length ||
+          arraySnapshot.some(
+            (originalItem, index) => originalItem !== currentValue[index] || getDirtyWatcher(originalItem)?.isDirty === true
+          )
+        );
+      },
+    });
+  } else {
+    Object.defineProperty(resultsObject, propertyName, {
+      get: () => {
+        const currentValue = get(entity, propertyName) as unknown[] | undefined;
+        return (
+          !currentValue ||
+          currentValue.length !== arraySnapshot.length ||
+          arraySnapshot.some((originalItem, index) => originalItem !== currentValue[index])
+        );
+      },
+    });
+  }
 }
 
 function defineSetDirtyCheckProperty<TEntity>(
@@ -131,7 +150,32 @@ function defineSetDirtyCheckProperty<TEntity>(
       }
 
       for (const item of setSnapshot.values()) {
-        if (!currentValue.has(item)) {
+        if (!currentValue.has(item) || getDirtyWatcher(item)?.isDirty) {
+          return true;
+        }
+      }
+      return false;
+    },
+  });
+}
+
+function defineMapDirtyCheckProperty<TEntity>(
+  resultsObject: Partial<Record<PropertyName<TEntity>, boolean>>,
+  originalValue: Map<unknown, unknown>,
+  propertyName: PropertyName<TEntity>,
+  entity: TEntity
+) {
+  const setSnapshot = new Map(originalValue);
+  Object.defineProperty(resultsObject, propertyName, {
+    get: () => {
+      const currentValue = get(entity, propertyName) as Map<unknown, unknown> | undefined;
+      if (!currentValue || currentValue.size !== setSnapshot.size) {
+        return true;
+      }
+
+      for (const [key, item] of setSnapshot.entries()) {
+        const currentItem = currentValue.get(key);
+        if (item !== currentItem || getDirtyWatcher(item)?.isDirty) {
           return true;
         }
       }

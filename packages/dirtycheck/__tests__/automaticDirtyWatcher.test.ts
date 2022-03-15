@@ -45,6 +45,33 @@ describe("AutomaticDirtyWatcher", () => {
     expect(watcher.checkDirty("items")).toBeFalsy();
   });
 
+  test("watching an array checks nested dirty watchers", () => {
+    const nested = observable({
+      firstName: "John",
+    });
+    attachAutomaticDirtyWatcher(nested);
+
+    const target = observable({
+      items: [nested],
+    });
+    const watcher = new AutomaticDirtyWatcher(target);
+
+    nested.firstName = "Tom";
+
+    expect(watcher.isDirty).toBeTruthy();
+    expect(watcher.checkDirty("items")).toBeTruthy();
+
+    nested.firstName = "John";
+
+    expect(watcher.isDirty).toBeFalsy();
+    expect(watcher.checkDirty("items")).toBeFalsy();
+
+    target.items.push(observable({ firstName: "Jane" }));
+
+    expect(watcher.isDirty).toBeTruthy();
+    expect(watcher.checkDirty("items")).toBeTruthy();
+  });
+
   test("watching a Set compares its content", () => {
     const target = observable({
       items: new Set([1]),
@@ -60,6 +87,75 @@ describe("AutomaticDirtyWatcher", () => {
 
     expect(watcher.isDirty).toBeFalsy();
     expect(watcher.checkDirty("items")).toBeFalsy();
+  });
+
+  test("watching a Set checks nested dirty watchers", () => {
+    const nested = observable({
+      firstName: "John",
+    });
+    attachAutomaticDirtyWatcher(nested);
+    const target = observable({
+      items: new Set([nested]),
+    });
+    const watcher = new AutomaticDirtyWatcher(target);
+
+    nested.firstName = "Tom";
+
+    expect(watcher.isDirty).toBeTruthy();
+    expect(watcher.checkDirty("items")).toBeTruthy();
+
+    nested.firstName = "John";
+
+    expect(watcher.isDirty).toBeFalsy();
+    expect(watcher.checkDirty("items")).toBeFalsy();
+
+    target.items.add(observable({ firstName: "Jane" }));
+
+    expect(watcher.isDirty).toBeTruthy();
+    expect(watcher.checkDirty("items")).toBeTruthy();
+  });
+
+  test("watching a Map compares its content", () => {
+    const target = observable({
+      items: new Map([[1, "one"]]),
+    });
+    const watcher = new AutomaticDirtyWatcher(target);
+
+    target.items.set(2, "two");
+
+    expect(watcher.isDirty).toBeTruthy();
+    expect(watcher.checkDirty("items")).toBeTruthy();
+
+    target.items = new Map([[1, "one"]]);
+
+    expect(watcher.isDirty).toBeFalsy();
+    expect(watcher.checkDirty("items")).toBeFalsy();
+  });
+
+  test("watching a Map checks nested dirty watchers", () => {
+    const nested = observable({
+      firstName: "John",
+    });
+    attachAutomaticDirtyWatcher(nested);
+    const target = observable({
+      items: new Map([["john", nested]]),
+    });
+    const watcher = new AutomaticDirtyWatcher(target);
+
+    nested.firstName = "Tom";
+
+    expect(watcher.isDirty).toBeTruthy();
+    expect(watcher.checkDirty("items")).toBeTruthy();
+
+    nested.firstName = "John";
+
+    expect(watcher.isDirty).toBeFalsy();
+    expect(watcher.checkDirty("items")).toBeFalsy();
+
+    target.items.set("jane", observable({ firstName: "Jane" }));
+
+    expect(watcher.isDirty).toBeTruthy();
+    expect(watcher.checkDirty("items")).toBeTruthy();
   });
 
   test("watching an object with nested dirty watcher uses nested dirty watcher", () => {
