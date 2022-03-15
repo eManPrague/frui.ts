@@ -1,6 +1,7 @@
 import type { PropertyName } from "@frui.ts/helpers";
 import { isSet } from "@frui.ts/helpers";
 import { get, isArrayLike, isObservableSet, observable } from "mobx";
+import { getDirtyWatcher } from ".";
 import DirtyWatcherBase from "./dirtyWatcherBase";
 import { attachDirtyWatcher } from "./utils";
 
@@ -79,6 +80,8 @@ export default class AutomaticDirtyWatcher<TEntity = any> extends DirtyWatcherBa
           defineArrayDirtyWatchProperty(resultsObject, originalValue, propertyName, entity);
         } else if (isSet(originalValue) || isObservableSet(originalValue)) {
           defineSetDirtyCheckProperty(resultsObject, originalValue, propertyName, entity);
+        } else if (typeof originalValue === "object") {
+          defineObjectDirtyWatchProperty(resultsObject, originalValue, propertyName, entity);
         } else {
           Object.defineProperty(resultsObject, propertyName, {
             get: () => {
@@ -135,6 +138,27 @@ function defineSetDirtyCheckProperty<TEntity>(
       return false;
     },
   });
+}
+
+function defineObjectDirtyWatchProperty<TEntity>(
+  resultsObject: Partial<Record<PropertyName<TEntity>, boolean>>,
+  originalValue: unknown,
+  propertyName: PropertyName<TEntity>,
+  entity: TEntity
+) {
+  const hasNestedDirtyWatcher = getDirtyWatcher(originalValue);
+  if (hasNestedDirtyWatcher) {
+    Object.defineProperty(resultsObject, propertyName, {
+      get: () => getDirtyWatcher(get(entity, propertyName))?.isDirty === true,
+    });
+  } else {
+    Object.defineProperty(resultsObject, propertyName, {
+      get: () => {
+        const currentValue = get(entity, propertyName) as unknown;
+        return originalValue !== currentValue;
+      },
+    });
+  }
 }
 
 export function attachAutomaticDirtyWatcher<TEntity>(target: TEntity): AutomaticDirtyWatcher<TEntity>;

@@ -1,4 +1,5 @@
-import { ActiveChildConductor, FindNavigationChildHandler, ScreenBase } from "@frui.ts/screens";
+import type { FindNavigationChildHandler } from "@frui.ts/screens";
+import { ActiveChildConductor, ScreenBase } from "@frui.ts/screens";
 import ChildViewModel from "./childViewModel";
 import type { IChildScreen } from "./types";
 

@@ -1,5 +1,5 @@
 import { observable } from "mobx";
-import AutomaticDirtyWatcher from "../src/automaticDirtyWatcher";
+import AutomaticDirtyWatcher, { attachAutomaticDirtyWatcher } from "../src/automaticDirtyWatcher";
 import { testCoreDirtyWatcherFunctions } from "./testHelpers";
 
 describe("AutomaticDirtyWatcher", () => {
@@ -60,6 +60,38 @@ describe("AutomaticDirtyWatcher", () => {
 
     expect(watcher.isDirty).toBeFalsy();
     expect(watcher.checkDirty("items")).toBeFalsy();
+  });
+
+  test("watching an object with nested dirty watcher uses nested dirty watcher", () => {
+    const nested = observable({
+      firstName: "John",
+    });
+    const nestedWatcher = attachAutomaticDirtyWatcher(nested);
+
+    const target = observable({
+      person: nested,
+    });
+    const watcher = new AutomaticDirtyWatcher(target);
+
+    nested.firstName = "Tom";
+
+    expect(nestedWatcher.isDirty).toBeTruthy();
+    expect(watcher.isDirty).toBeTruthy();
+  });
+
+  test("watching an object without nested dirty watcher checks reference only", () => {
+    const nested = observable({
+      firstName: "John",
+    });
+
+    const target = observable({
+      person: nested,
+    });
+    const watcher = new AutomaticDirtyWatcher(target);
+
+    target.person = observable({ firstName: "Tom" });
+
+    expect(watcher.isDirty).toBeTruthy();
   });
 
   test("property can be excluded", () => {
