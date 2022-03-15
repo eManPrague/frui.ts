@@ -12,6 +12,7 @@ interface AutomaticEntityValidatorConfiguration {
 }
 
 export default class AutomaticEntityValidator<TEntity = any> extends EntityValidatorBase<TEntity> {
+  readonly sourceValidationRules: EntityValidationRules<TEntity>;
   private _results: Readonly<Partial<Record<PropertyName<TEntity>, ValidationResult[]>>>;
   private _validatedProperties: PropertyName<TEntity>[] = [];
 
@@ -23,6 +24,7 @@ export default class AutomaticEntityValidator<TEntity = any> extends EntityValid
   ) {
     super(isVisible);
 
+    this.sourceValidationRules = Object.freeze(validationRules);
     this.buildObservableResults(target, validationRules);
   }
 

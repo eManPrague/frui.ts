@@ -1,3 +1,4 @@
+import "!style-loader!css-loader!./style.css";
 import { Check, Input } from "@frui.ts/bootstrap";
 import type { EntityValidationRules, ValidationResult } from "@frui.ts/validation";
 import { AutomaticEntityValidator, Configuration } from "@frui.ts/validation";
@@ -7,8 +8,6 @@ import { Observer } from "mobx-react-lite";
 import React from "react";
 import ValidationErrors from "./validationErrors";
 import ValidityIndicator from "./validityIndicator";
-
-import "!style-loader!css-loader!./style.css";
 
 Configuration.valueValidators.set("required", (value, context) => {
   console.log("validating 'required'", value, context);
