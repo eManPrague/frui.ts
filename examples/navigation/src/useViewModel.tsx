@@ -4,7 +4,8 @@ import type { ViewComponent } from "@frui.ts/views";
 import { View } from "@frui.ts/views";
 import { observer } from "mobx-react-lite";
 import React, { useContext, useEffect, useState } from "react";
-import { useLocation, useParams } from "react-router";
+import type { RouteMatch } from "react-router";
+import { UNSAFE_RouteContext, useLocation } from "react-router";
 
 // use custom context provider to customize `createInstance` (e.g., using DI container)
 export const DependenciesContext = React.createContext({ createInstance: activateInstance });
@@ -23,7 +24,7 @@ function activateInstance<T>(type: constructor<T>): T {
  */
 export default function useViewModel<TViewModel extends ScreenBase>(viewModelType: constructor<TViewModel>) {
   const location = useLocation();
-  const params = useParams();
+  const routeContext = useContext(UNSAFE_RouteContext);
   const { createInstance } = useContext(DependenciesContext);
   const [viewModel] = useState(() => createInstance(viewModelType));
 
@@ -37,7 +38,11 @@ export default function useViewModel<TViewModel extends ScreenBase>(viewModelTyp
   useEffect(() => {
     const navigator = getNavigator<LifecycleScreenNavigator>(viewModel);
     if (navigator) {
-      void navigator.navigate([{ name: location.pathname, params: params }], location);
+      const currentRoute = routeContext.matches.length > 0 ? routeContext.matches[routeContext.matches.length - 1] : undefined;
+      void navigator.navigate(
+        [{ name: currentRoute?.route.path ?? currentRoute?.pathname ?? "", params: currentRoute?.params }],
+        location
+      );
     }
   }, [location]);
 

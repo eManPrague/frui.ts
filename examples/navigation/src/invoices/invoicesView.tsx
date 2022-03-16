@@ -32,7 +32,7 @@ export const invoicesView = createViewComponent<InvoicesViewModel>(vm => {
       />
 
       {vm.visibleInvoices?.map(invoice => (
-        <NavLink key={invoice.id} to={`/invoices/${invoice.id}`} style={{ display: "block", margin: "1rem 0" }}>
+        <NavLink key={invoice.id} to={`detail/${invoice.id}`} style={{ display: "block", margin: "1rem 0" }}>
           {({ isActive }) => (isActive ? `--${invoice.name}--` : invoice.name)}
         </NavLink>
       ))}

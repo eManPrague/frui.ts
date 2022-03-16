@@ -20,7 +20,7 @@ ReactDOM.render(
           {/* This route is registered as view-model-first, using automatic Frui.ts view localization. */}
           <Route path="invoices" {...viewModel(InvoicesViewModel)}>
             <Route index element={<p>Select invoice</p>} />
-            <Route path=":invoiceId" {...viewModel(InvoiceDetailViewModel)} />
+            <Route path="detail/:invoiceId" {...viewModel(InvoiceDetailViewModel)} />
           </Route>
           <Route path="*" element={<p>404 not found</p>} />
         </Route>
