@@ -1,7 +1,7 @@
 import { autorun } from "mobx";
 import ManualEntityValidator from "../src/manualEntityValidator";
 import type { ValidationResult } from "../src/types";
-import { testCoreValidatorFunctions, expectInvalid, expectValid } from "./testHelpers";
+import { expectInvalid, expectValid, testCoreValidatorFunctions } from "./testHelpers";
 
 interface ITarget {
   firstName: string;
@@ -24,6 +24,22 @@ describe("ManualEntityValidator", () => {
       return new ManualEntityValidator<ITarget>();
     }
   );
+
+  describe("setResult", () => {
+    it("calls middleware if present", () => {
+      const validator = new ManualEntityValidator<ITarget>(false, {
+        resultMiddleware: x => {
+          x.message = "Middleware was here";
+          return x;
+        },
+      });
+
+      validator.setResult("firstName", { code: "nameCheck", isValid: true });
+      const result = Array.from(validator.getResults("firstName"))[0];
+
+      expect(result).toEqual({ code: "nameCheck", isValid: true, message: "Middleware was here" });
+    });
+  });
 
   test("adding and removing errors changes valid state", () => {
     const validator = new ManualEntityValidator<ITarget>(false);

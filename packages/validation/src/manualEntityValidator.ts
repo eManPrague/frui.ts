@@ -1,10 +1,19 @@
 import { PropertyName } from "@frui.ts/helpers";
 import { action, observable } from "mobx";
+import DefaultConfiguration from "./configuration";
 import EntityValidatorBase, { emptyResults } from "./entityValidatorBase";
 import { ValidationResult } from "./types";
 
+export interface ManualEntityValidatorConfiguration {
+  resultMiddleware?: (result: ValidationResult) => ValidationResult;
+}
+
 export default class ManualEntityValidator<TEntity = any> extends EntityValidatorBase<TEntity> {
-  protected validationResults = observable.map<PropertyName<TEntity>, ValidationResult[]>();
+  protected readonly validationResults = observable.map<PropertyName<TEntity>, ValidationResult[]>();
+
+  constructor(isVisible = false, protected configuration: ManualEntityValidatorConfiguration = DefaultConfiguration) {
+    super(isVisible);
+  }
 
   getAllResults(): Iterable<[PropertyName<TEntity>, ValidationResult[]]> {
     return this.isEnabled ? this.validationResults.entries() : emptyResults;
@@ -16,16 +25,19 @@ export default class ManualEntityValidator<TEntity = any> extends EntityValidato
 
   @action
   setResult(propertyName: PropertyName<TEntity>, result: ValidationResult) {
+    const { resultMiddleware } = this.configuration;
+    const processedResult = resultMiddleware ? resultMiddleware(result) : result;
+
     const results = this.validationResults.get(propertyName);
     if (results) {
-      const index = results.findIndex(x => x.code === result.code);
+      const index = results.findIndex(x => x.code === processedResult.code);
       if (index < 0) {
-        results.push(result);
+        results.push(processedResult);
       } else {
-        results.splice(index, 1, result);
+        results.splice(index, 1, processedResult);
       }
     } else {
-      this.validationResults.set(propertyName, observable.array([result]));
+      this.validationResults.set(propertyName, observable.array([processedResult]));
     }
   }
 

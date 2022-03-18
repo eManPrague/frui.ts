@@ -1,5 +1,6 @@
 import type { PropertyName } from "@frui.ts/helpers";
-import { computed, observable } from "mobx";
+import { computed, isArrayLike, observable } from "mobx";
+import type { ValidationResponse } from "./automaticValidatorTypes";
 import { ValidationLoading } from "./configuration";
 import type { EntityValidator, ValidationResult } from "./types";
 import { AggregatedValidationResult } from "./types";
@@ -92,4 +93,17 @@ export function AggregateValidationResults(results: Iterable<ValidationResult>):
   }
 
   return isLoading ? ValidationLoading : true;
+}
+
+export function applyMiddleware<T extends ValidationResponse>(
+  resultMiddleware: (result: ValidationResult) => ValidationResult,
+  result: T
+) {
+  if (!result) {
+    return result;
+  } else if (isArrayLike(result)) {
+    return result.map(resultMiddleware);
+  } else {
+    return resultMiddleware(result);
+  }
 }

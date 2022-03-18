@@ -8,6 +8,32 @@ interface ITarget {
 }
 
 describe("ServerEntityValidator", () => {
+  testCoreValidatorFunctions(
+    () => {
+      const target = observable({
+        firstName: "John",
+      });
+      const validator = new ServerEntityValidator<ITarget>(target);
+      validator.setResult("firstName", { code: "required", isValid: true });
+      return validator;
+    },
+    () => {
+      const target = observable({
+        firstName: "",
+      });
+      const validator = new ServerEntityValidator<ITarget>(target);
+      validator.setResult("firstName", { code: "required", isValid: false });
+      return validator;
+    },
+
+    () => {
+      const target = observable({
+        firstName: "John",
+      });
+      return new ServerEntityValidator<ITarget>(target);
+    }
+  );
+
   test("initial state is valid", () => {
     const target = observable({
       firstName: "John",
@@ -56,6 +82,44 @@ describe("ServerEntityValidator", () => {
     expect(validator.isValid).toBeTruthy();
     expect(validator.checkValid("firstName")).toBeTruthy();
     expectValid(validator.getResults("firstName"));
+  });
+
+  describe("setResult", () => {
+    it("calls middleware if present", () => {
+      const target = observable({
+        firstName: "John",
+      });
+
+      const validator = new ServerEntityValidator<ITarget>(target, {
+        resultMiddleware: x => {
+          x.message = "Middleware was here";
+          return x;
+        },
+      });
+
+      validator.setResult("firstName", { code: "nameCheck", isValid: true });
+      const result = Array.from(validator.getResults("firstName"))[0];
+
+      expect(result.message).toBe("Middleware was here");
+    });
+  });
+
+  describe("setResult", () => {
+    it("calls middleware if present", () => {
+      const target = observable({
+        firstName: "John",
+      });
+      const validator = new ServerEntityValidator<ITarget>(target, {
+        resultMiddleware: x => {
+          x.message = "Middleware was here";
+          return x;
+        },
+      });
+      validator.setResults({ firstName: [{ code: "nameCheck", isValid: false }] });
+      const result = Array.from(validator.getResults("firstName"))[0];
+
+      expect(result.message).toBe("Middleware was here");
+    });
   });
 
   test("clearResults(propertyName) removes validation results for property", () => {
@@ -116,30 +180,4 @@ describe("ServerEntityValidator", () => {
 
     dispose();
   });
-
-  testCoreValidatorFunctions(
-    () => {
-      const target = observable({
-        firstName: "John",
-      });
-      const validator = new ServerEntityValidator<ITarget>(target);
-      validator.setResult("firstName", { code: "required", isValid: true });
-      return validator;
-    },
-    () => {
-      const target = observable({
-        firstName: "",
-      });
-      const validator = new ServerEntityValidator<ITarget>(target);
-      validator.setResult("firstName", { code: "required", isValid: false });
-      return validator;
-    },
-
-    () => {
-      const target = observable({
-        firstName: "John",
-      });
-      return new ServerEntityValidator<ITarget>(target);
-    }
-  );
 });

@@ -1,21 +1,29 @@
+import { ManualPromise } from "@frui.ts/helpers";
 import { observable } from "mobx";
-import AutomaticEntityValidator from "../src/automaticEntityValidator";
-import configuration from "../src/configuration";
+import AsyncEntityValidator from "../src/asyncEntityValidator";
+import configuration, { ValidationLoading } from "../src/configuration";
+import type { ValidationResult } from "../src/types";
 import { expectInvalid, expectValid, testCoreValidatorFunctions } from "./testHelpers";
 
 beforeAll(() => {
   configuration.valueValidators.set("required", value => ({ code: "required", isValid: !!value }));
   configuration.valueValidators.set("mustBeJohn", value => ({ code: "mustBeJohn", isValid: value === "John" }));
   configuration.valueValidators.set("mockValidation", value => undefined);
+
+  configuration.asyncValueValidators.set("asyncCheck", (value, context, callback) => {
+    const manualPromise = context.parameters as Promise<boolean>;
+    void manualPromise.then(x => callback(value, { code: "asyncCheck", isValid: x }));
+    return { code: "asyncCheck", isLoading: true, isValid: false };
+  });
 });
 
-describe("AutomaticEntityValidator", () => {
+describe("AsyncEntityValidator", () => {
   testCoreValidatorFunctions(
     () => {
       const target = observable({
         firstName: "John",
       });
-      return new AutomaticEntityValidator(target, {
+      return new AsyncEntityValidator(target, {
         firstName: { required: true },
       });
     },
@@ -23,7 +31,7 @@ describe("AutomaticEntityValidator", () => {
       const target = observable({
         firstName: "",
       });
-      return new AutomaticEntityValidator(target, {
+      return new AsyncEntityValidator(target, {
         firstName: { required: true },
       });
     },
@@ -32,7 +40,7 @@ describe("AutomaticEntityValidator", () => {
       const target = observable({
         firstName: "John",
       });
-      return new AutomaticEntityValidator(target, {});
+      return new AsyncEntityValidator(target, {});
     }
   );
 
@@ -41,7 +49,7 @@ describe("AutomaticEntityValidator", () => {
       firstName: "John",
     });
 
-    const validator = new AutomaticEntityValidator(target, {}, false);
+    const validator = new AsyncEntityValidator(target, {}, false);
 
     expect(validator.isValid).toBeTruthy();
     expect(validator.checkValid("firstName")).toBeTruthy();
@@ -59,7 +67,7 @@ describe("AutomaticEntityValidator", () => {
       firstName: "",
     });
 
-    const validator = new AutomaticEntityValidator(
+    const validator = new AsyncEntityValidator(
       target,
       {
         firstName: { required: true },
@@ -83,7 +91,7 @@ describe("AutomaticEntityValidator", () => {
       firstName: "",
     });
 
-    const validator = new AutomaticEntityValidator(
+    const validator = new AsyncEntityValidator(
       target,
       {
         firstName: { required: true },
@@ -91,7 +99,7 @@ describe("AutomaticEntityValidator", () => {
       false
     );
 
-    const validationErrors = validator.getResults("firstName");
+    const validationErrors = Array.from(validator.getResults("firstName"));
     expect(validationErrors[0].code).toBe("required");
   });
 
@@ -100,7 +108,7 @@ describe("AutomaticEntityValidator", () => {
       firstName: "",
     });
 
-    const validator = new AutomaticEntityValidator(
+    const validator = new AsyncEntityValidator(
       target,
       {
         firstName: { required: true },
@@ -115,7 +123,7 @@ describe("AutomaticEntityValidator", () => {
       }
     );
 
-    const validationErrors = validator.getResults("firstName");
+    const validationErrors = Array.from(validator.getResults("firstName"));
     expect(validationErrors[0].message).toBe("Middleware was here");
   });
 
@@ -125,7 +133,7 @@ describe("AutomaticEntityValidator", () => {
         firstName: "John",
       });
 
-      const validator = new AutomaticEntityValidator(
+      const validator = new AsyncEntityValidator(
         target,
         {
           firstName: { mockValidation: true },
@@ -135,6 +143,34 @@ describe("AutomaticEntityValidator", () => {
 
       const validationErrors = Array.from(validator.getAllResults());
       expect(validationErrors).toHaveLength(0);
+    });
+
+    it("returns loading code until validation is resolved", () => {
+      const target = observable({
+        firstName: "John",
+      });
+
+      const manualPromise = new ManualPromise<boolean>();
+
+      const validator = new AsyncEntityValidator(
+        target,
+        {
+          firstName: { asyncCheck: manualPromise.promise },
+        },
+        false
+      );
+
+      const validationErrors = Array.from(validator.getAllResults());
+      expect(validationErrors).toHaveLength(1);
+
+      const propertyErrors = Array.from(validationErrors[0][1]);
+      expect(propertyErrors).toMatchObject([{ code: "asyncCheck", isLoading: true } as ValidationResult]);
+
+      expect(validator.isValid).toBe(ValidationLoading);
+
+      manualPromise.resolve(true);
+
+      expect(validator.isValid).toBeTruthy();
     });
   });
 });

@@ -11,7 +11,7 @@ export interface ValidationResult {
 }
 
 export interface AsyncValidationResult extends ValidationResult {
-  readonly isLoading: false;
+  readonly isLoading?: false;
 }
 
 export type AggregatedValidationResult = boolean | typeof ValidationLoading;

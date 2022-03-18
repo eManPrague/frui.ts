@@ -1,5 +1,6 @@
 export { default as AggregateEntityValidator } from "./aggregateEntityValidator";
-export { default as AutomaticEntityValidator, attachAutomaticValidator } from "./automaticEntityValidator";
+export { attachAsyncValidator, default as AsyncEntityValidator } from "./asyncEntityValidator";
+export { attachAutomaticValidator, default as AutomaticEntityValidator } from "./automaticEntityValidator";
 export * from "./automaticValidatorTypes";
 export { default as Configuration, ValidationLoading } from "./configuration";
 export { default as EntityValidatorBase } from "./entityValidatorBase";
