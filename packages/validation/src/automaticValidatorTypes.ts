@@ -15,7 +15,7 @@ export interface ValidationFunction<TValue = unknown, TParameters = any, TEntity
 
 export type AsyncValidationFunctionCallback<TValue = unknown> = (validatedValue: TValue, result: ValidationResponse) => void;
 
-export interface AsyncValidationFunction<TValue = unknown, TParameters = unknown, TEntity = any> {
+export interface AsyncValidationFunction<TValue = unknown, TParameters = any, TEntity = any> {
   (
     value: TValue,
     context: ValidationFunctionContext<TParameters, TEntity>,

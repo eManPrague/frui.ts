@@ -75,7 +75,7 @@ export class RestRequestBuilder {
     return this.apiConnector.get(requestUrl, params).then(this.objectDeserializer as Deserializer<T>);
   }
 
-  getRaw(queryParams?: any) {
+  getRaw(queryParams?: any): Promise<Response> {
     const requestUrl = this.appendQuery(this.urlValue, queryParams);
     return this.apiConnector.get(requestUrl, this.params);
   }
@@ -85,11 +85,11 @@ export class RestRequestBuilder {
     return this.apiConnector.postObject(this.urlValue, content, params).then(this.objectDeserializer as Deserializer<T>);
   }
 
-  postOnly(content: any) {
+  postOnly(content: any): Promise<Response> {
     return this.apiConnector.postObject(this.urlValue, content, this.params);
   }
 
-  postData(data?: BodyInit) {
+  postData(data?: BodyInit): Promise<Response> {
     return this.apiConnector.post(this.urlValue, data, this.params);
   }
 
@@ -98,11 +98,11 @@ export class RestRequestBuilder {
     return this.apiConnector.putObject(this.urlValue, content, params).then(this.objectDeserializer as Deserializer<T>);
   }
 
-  putOnly(content: any) {
+  putOnly(content: any): Promise<Response> {
     return this.apiConnector.putObject(this.urlValue, content, this.params);
   }
 
-  putData(data?: BodyInit) {
+  putData(data?: BodyInit): Promise<Response> {
     return this.apiConnector.put(this.urlValue, data, this.params);
   }
 
@@ -111,15 +111,15 @@ export class RestRequestBuilder {
     return this.apiConnector.patchObject(this.urlValue, content, params).then(this.objectDeserializer as Deserializer<T>);
   }
 
-  patchOnly(content: any) {
+  patchOnly(content: any): Promise<Response> {
     return this.apiConnector.patchObject(this.urlValue, content, this.params);
   }
 
-  patchData(data?: BodyInit) {
+  patchData(data?: BodyInit): Promise<Response> {
     return this.apiConnector.patch(this.urlValue, data, this.params);
   }
 
-  delete(content?: any) {
+  delete(content?: any): Promise<Response> {
     return content
       ? this.apiConnector.deleteObject(this.urlValue, content, this.params)
       : this.apiConnector.delete(this.urlValue, undefined, this.params);
