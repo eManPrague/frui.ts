@@ -7,9 +7,10 @@ import type ScreenLifecycleEventHub from "./screenLifecycleEventHub";
 import type { LifecycleScreenNavigator, ScreenNavigator } from "./types";
 
 export default abstract class LifecycleScreenNavigatorBase<
+  TNavigationParams,
   TScreen extends Partial<HasLifecycleEvents> & Partial<ScreenBase>,
-  TNavigationParams extends Record<string, string | undefined>
-> implements LifecycleScreenNavigator<TScreen>
+  TLocation
+> implements LifecycleScreenNavigator<TScreen, TLocation>
 {
   // extension point - you can either set getNavigationName function, or assign navigationName property
   getNavigationName?: () => string;
@@ -44,10 +45,10 @@ export default abstract class LifecycleScreenNavigatorBase<
   }
 
   canNavigate(path: PathElement[]) {
-    const context: NavigationContext<TScreen> = {
+    const context: NavigationContext<TNavigationParams, TScreen, TLocation> = {
       navigator: this,
       screen: this.screen,
-      navigationParams: path[0]?.params,
+      navigationParams: path[0]?.params as unknown as TNavigationParams,
       path,
     };
 
@@ -59,22 +60,23 @@ export default abstract class LifecycleScreenNavigatorBase<
   // Current NavigationState can contain multiple elements (not just one). In that case, we need to skip all of them.
   getNavigationStateLength: () => number = () => 1;
 
-  protected createDefaultNavigationState() {
+  protected createDefaultNavigationState(): PathElement {
     return {
       name: this.navigationName,
       params: this.getNavigationParams?.(),
-    };
+    } as PathElement;
   }
 
   getPrimaryChild(): ScreenNavigator | undefined {
     return undefined;
   }
 
-  async navigate(path: PathElement[]): Promise<void> {
-    const context: NavigationContext<TScreen> = {
+  async navigate(path: PathElement[], location?: TLocation): Promise<void> {
+    const context: NavigationContext<TNavigationParams, TScreen, TLocation> = {
       navigator: this,
       screen: this.screen,
-      navigationParams: path[0]?.params,
+      navigationParams: path[0]?.params as unknown as TNavigationParams,
+      location,
       path,
     };
 
@@ -95,7 +97,7 @@ export default abstract class LifecycleScreenNavigatorBase<
     return this.isInitializedValue;
   }
 
-  protected initialize(context: NavigationContext<TScreen>) {
+  protected initialize(context: NavigationContext<TNavigationParams, TScreen, TLocation>) {
     return (
       this.initializePromise ??
       (this.initializePromise = this.initializeInner(context).then(this.clearInitializePromise, this.clearInitializePromise))
@@ -105,7 +107,7 @@ export default abstract class LifecycleScreenNavigatorBase<
   private initializePromise?: Promise<void>;
   private clearInitializePromise: () => void = () => (this.initializePromise = undefined);
 
-  private async initializeInner(context: NavigationContext<TScreen>) {
+  private async initializeInner(context: NavigationContext<TNavigationParams, TScreen, TLocation>) {
     try {
       await this.callAll("onInitialize", context);
       runInAction(() => (this.isInitializedValue = true));
@@ -120,7 +122,7 @@ export default abstract class LifecycleScreenNavigatorBase<
     return this.isActiveValue;
   }
 
-  protected activate(context: NavigationContext<TScreen>) {
+  protected activate(context: NavigationContext<TNavigationParams, TScreen, TLocation>) {
     return (
       this.activatePromise ??
       (this.activatePromise = this.activateInner(context).then(this.clearActivatePromise, this.clearActivatePromise))
@@ -130,7 +132,7 @@ export default abstract class LifecycleScreenNavigatorBase<
   private activatePromise?: Promise<void>;
   private clearActivatePromise: () => void = () => (this.activatePromise = undefined);
 
-  private async activateInner(context: NavigationContext<TScreen>) {
+  private async activateInner(context: NavigationContext<TNavigationParams, TScreen, TLocation>) {
     try {
       await this.callAll("onActivate", context);
       runInAction(() => (this.isActiveValue = true));
@@ -186,7 +188,9 @@ export default abstract class LifecycleScreenNavigatorBase<
     event: T,
     context: Parameters<HasLifecycleEvents[T]>[0]
   ): Promise<boolean> {
-    const screenFunction = this.screen?.[event] as (context: NavigationContext<TScreen>) => Promise<boolean> | boolean;
+    const screenFunction = this.screen?.[event] as (
+      context: NavigationContext<TNavigationParams, TScreen, TLocation>
+    ) => Promise<boolean> | boolean;
     if (typeof screenFunction === "function") {
       // eslint-disable-next-line @typescript-eslint/no-unsafe-argument
       const result = await screenFunction.call(this.screen, context as any);
@@ -213,7 +217,9 @@ export default abstract class LifecycleScreenNavigatorBase<
     event: T,
     context: Parameters<HasLifecycleEvents[T]>[0]
   ): Promise<void> {
-    const screenFunction = this.screen?.[event] as (context: NavigationContext<TScreen>) => Promise<unknown> | void;
+    const screenFunction = this.screen?.[event] as (
+      context: NavigationContext<TNavigationParams, TScreen, TLocation>
+    ) => Promise<unknown> | void;
     const screenFunctionPromise =
       // eslint-disable-next-line @typescript-eslint/no-unsafe-argument
       typeof screenFunction === "function" ? screenFunction.call(this.screen, context as any) : undefined;

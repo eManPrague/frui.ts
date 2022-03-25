@@ -3,7 +3,8 @@
   "npmClient": "yarn",
   "packages": [
     "packages/*",
-    "stories"
+    "stories",
+    "examples/*"
   ],
   "command": {
     "bootstrap": {

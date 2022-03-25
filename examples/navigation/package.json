@@ -1,0 +1,30 @@
+{
+  "name": "@frui.ts/example-navigation",
+  "publishConfig": {
+    "access": "public"
+  },
+  "version": "999.0.0",
+  "scripts": {
+    "dev": "vite",
+    "build-static": "tsc && vite build",
+    "preview": "vite preview"
+  },
+  "dependencies": {
+    "@frui.ts/screens": "^999.0.0",
+    "@frui.ts/views": "^999.0.0",
+    "mobx": "^4.15.4",
+    "mobx-react-lite": "^2.0.6",
+    "react": "^17.0.2",
+    "react-dom": "^17.0.2",
+    "react-router-dom": "^6.2.2"
+  },
+  "devDependencies": {
+    "@babel/plugin-proposal-class-properties": "^7.16.7",
+    "@babel/plugin-proposal-decorators": "^7.17.2",
+    "@types/react": "^17.0.33",
+    "@types/react-dom": "^17.0.10",
+    "@vitejs/plugin-react": "^1.0.7",
+    "typescript": "^4.5.4",
+    "vite": "^2.8.0"
+  }
+}

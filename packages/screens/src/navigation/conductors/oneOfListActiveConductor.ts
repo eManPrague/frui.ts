@@ -9,9 +9,10 @@ import ActiveChildConductor from "./activeChildConductor";
 
 export default class OneOfListActiveConductor<
   TChild = unknown,
+  TNavigationParams extends Record<string, string | undefined> = Record<string, string | undefined>,
   TScreen = any,
-  TNavigationParams extends Record<string, string | undefined> = Record<string, string | undefined>
-> extends ActiveChildConductor<TChild, TScreen, TNavigationParams> {
+  TLocation = unknown
+> extends ActiveChildConductor<TChild, TNavigationParams, TScreen, TLocation> {
   readonly children: TChild[];
 
   /** When set to `true`, navigating directly to the conductor (with no child path specified) activates the previously set `activeChild`. */
@@ -25,7 +26,10 @@ export default class OneOfListActiveConductor<
     this.children = children;
   }
 
-  canChangeActiveChild = async (context: NavigationContext<TScreen>, currentChild: TChild | undefined) => {
+  canChangeActiveChild = async (
+    context: NavigationContext<TNavigationParams, TScreen, TLocation>,
+    currentChild: TChild | undefined
+  ) => {
     const pathElementsToSkip = this.getNavigationStateLength();
     const newNavigationName = context.path[pathElementsToSkip]?.name;
     const activeChildNavigator = getNavigator<LifecycleScreenNavigator>(this.activeChild);
@@ -37,7 +41,7 @@ export default class OneOfListActiveConductor<
     return activeChildNavigator.canDeactivate ? activeChildNavigator.canDeactivate(false) : true;
   };
 
-  findNavigationChild = (context: NavigationContext<TScreen>, currentChild: TChild | undefined) => {
+  findNavigationChild = (context: NavigationContext<TNavigationParams, TScreen, TLocation>, currentChild: TChild | undefined) => {
     const pathElementsToSkip = this.getNavigationStateLength();
     const searchedNavigationName = context.path[pathElementsToSkip]?.name;
     const newChild = this.findChild(searchedNavigationName);
