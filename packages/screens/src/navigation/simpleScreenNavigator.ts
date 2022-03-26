@@ -4,6 +4,6 @@ import LifecycleScreenNavigatorBase from "./lifecycleScreenNavigatorBase";
 
 export default class SimpleScreenNavigator<
   TNavigationParams = any,
-  TScreen extends Partial<HasLifecycleEvents> & Partial<ScreenBase> = any,
+  TScreen extends HasLifecycleEvents & Partial<ScreenBase> = any,
   TLocation = undefined
 > extends LifecycleScreenNavigatorBase<TNavigationParams, TScreen, TLocation> {}

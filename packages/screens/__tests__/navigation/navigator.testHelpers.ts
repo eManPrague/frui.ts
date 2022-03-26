@@ -4,10 +4,10 @@ import TypedEventHub from "../../src/events/typedEventHub";
 import type { NavigationContext } from "../../src/models/navigationContext";
 import type ScreenLifecycleEventHub from "../../src/navigation/screenLifecycleEventHub";
 import type { LifecycleScreenNavigator } from "../../src/navigation/types";
-import type { HasLifecycleEvents } from "../../src/screens/hasLifecycleHandlers";
+import type { HasLifecycleEvents, RequiredLifecycleEvents } from "../../src/screens/hasLifecycleHandlers";
 import type ScreenBase from "../../src/screens/screenBase";
 
-export function testLifecycle<TNavigator extends LifecycleScreenNavigator, TScreen extends Partial<HasLifecycleEvents>>(
+export function testLifecycle<TNavigator extends LifecycleScreenNavigator, TScreen extends HasLifecycleEvents>(
   navigatorFactory: (screen?: TScreen, eventHub?: ScreenLifecycleEventHub<TScreen>) => TNavigator
 ) {
   // TODO add other functions
@@ -54,7 +54,7 @@ export function testLifecycle<TNavigator extends LifecycleScreenNavigator, TScre
 
     it("calls canNavigate on the screen's eventHub", async () => {
       let isCalled = false;
-      const eventHub = new TypedEventHub<HasLifecycleEvents>();
+      const eventHub = new TypedEventHub<RequiredLifecycleEvents>();
       eventHub.on("canNavigate", () => {
         isCalled = true;
         return false;
@@ -73,7 +73,7 @@ export function testLifecycle<TNavigator extends LifecycleScreenNavigator, TScre
 
     it("calls canNavigate on the eventHub", async () => {
       let isCalled = false;
-      const eventHub = new TypedEventHub<HasLifecycleEvents>();
+      const eventHub = new TypedEventHub<RequiredLifecycleEvents>();
       eventHub.on("canNavigate", () => {
         isCalled = true;
         return false;

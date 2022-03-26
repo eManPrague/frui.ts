@@ -59,7 +59,7 @@ export default function useViewModel<TViewModel extends ScreenBase>(viewModelTyp
  * @returns
  * View component observing its own instance of the view model
  */
-export function createView<TViewModel extends ScreenBase>(
+export function createViewFirst<TViewModel extends ScreenBase>(
   viewModelType: constructor<TViewModel>,
   view: React.FunctionComponent<{ vm: TViewModel }>
 ) {

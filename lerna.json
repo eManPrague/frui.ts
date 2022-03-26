@@ -1,13 +1,11 @@
 {
   "version": "999.0.0",
   "npmClient": "yarn",
+  "packages": ["packages/*", "stories", "examples/*"],
   "useWorkspaces": true,
   "command": {
     "publish": {
-      "ignoreChanges": [
-        "ignored-file",
-        "*.md"
-      ]
+      "ignoreChanges": ["ignored-file", "*.md"]
     }
   }
 }

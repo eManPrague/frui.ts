@@ -21,7 +21,6 @@
     "emitDecoratorMetadata": true,
     "downlevelIteration": true,
 
-    "incremental": true,
     "declaration": true,
     "inlineSources": true
   }

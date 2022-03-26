@@ -14,7 +14,7 @@ ReactDOM.render(
     <BrowserRouter>
       <Routes>
         <Route path="/" element={<App />}>
-          {/* This route is registered as view-first, using the `createView` helper */}
+          {/* This route is registered as view-first, using the `createViewFirst` helper */}
           <Route path="customers" element={<Customers />} />
 
           {/* This route is registered as view-model-first, using automatic Frui.ts view localization. */}

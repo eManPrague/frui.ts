@@ -14,10 +14,11 @@ type TextboxProps<TTarget extends BindingTarget, TProperty extends BindingProper
 function textbox<TTarget extends BindingTarget, TProperty extends BindingProperty<TTarget>>(
   props: TextboxProps<TTarget, TProperty>
 ) {
+  const { target, property, onValueChanged, ...restProps } = props;
   const [value, setValue] = useBinding(props);
   const handleValueChanged = (e: React.ChangeEvent<HTMLInputElement>) => setValue(e.target.value);
 
-  return <input type="text" value={value || ""} onChange={handleValueChanged} />;
+  return <input type="text" {...restProps} value={value || ""} onChange={handleValueChanged} />;
 }
 
 const Textbox = observer(textbox as any) as typeof textbox;

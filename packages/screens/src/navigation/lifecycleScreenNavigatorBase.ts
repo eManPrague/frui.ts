@@ -1,14 +1,14 @@
 import { computed, observable, runInAction } from "mobx";
 import type { ClosingNavigationContext, NavigationContext } from "../models/navigationContext";
 import type { PathElement } from "../models/pathElements";
-import type { HasLifecycleEvents } from "../screens/hasLifecycleHandlers";
+import type { HasLifecycleEvents, RequiredLifecycleEvents } from "../screens/hasLifecycleHandlers";
 import type ScreenBase from "../screens/screenBase";
 import type ScreenLifecycleEventHub from "./screenLifecycleEventHub";
 import type { LifecycleScreenNavigator, ScreenNavigator } from "./types";
 
 export default abstract class LifecycleScreenNavigatorBase<
   TNavigationParams,
-  TScreen extends Partial<HasLifecycleEvents> & Partial<ScreenBase>,
+  TScreen extends HasLifecycleEvents & Partial<ScreenBase>,
   TLocation
 > implements LifecycleScreenNavigator<TScreen, TLocation>
 {
@@ -184,9 +184,9 @@ export default abstract class LifecycleScreenNavigatorBase<
 
   // helpers
 
-  protected async aggregateBooleanAll<T extends keyof HasLifecycleEvents>(
+  protected async aggregateBooleanAll<T extends keyof RequiredLifecycleEvents>(
     event: T,
-    context: Parameters<HasLifecycleEvents[T]>[0]
+    context: Parameters<RequiredLifecycleEvents[T]>[0]
   ): Promise<boolean> {
     const screenFunction = this.screen?.[event] as (
       context: NavigationContext<TNavigationParams, TScreen, TLocation>
@@ -203,7 +203,7 @@ export default abstract class LifecycleScreenNavigatorBase<
     if (listeners) {
       for (const listener of listeners) {
         // eslint-disable-next-line @typescript-eslint/no-unsafe-argument
-        const result = await listener(context as any);
+        const result = await listener?.(context as any);
         if (result === false) {
           return false;
         }
@@ -213,9 +213,9 @@ export default abstract class LifecycleScreenNavigatorBase<
     return true;
   }
 
-  protected async callAll<T extends keyof HasLifecycleEvents>(
+  protected async callAll<T extends keyof RequiredLifecycleEvents>(
     event: T,
-    context: Parameters<HasLifecycleEvents[T]>[0]
+    context: Parameters<RequiredLifecycleEvents[T]>[0]
   ): Promise<void> {
     const screenFunction = this.screen?.[event] as (
       context: NavigationContext<TNavigationParams, TScreen, TLocation>
@@ -227,7 +227,7 @@ export default abstract class LifecycleScreenNavigatorBase<
     const listeners = this.eventHub?.getListeners(event);
     if (listeners?.length) {
       // eslint-disable-next-line @typescript-eslint/no-unsafe-argument
-      await Promise.all([screenFunctionPromise, ...listeners.map(x => x(context as any))]);
+      await Promise.all([screenFunctionPromise, ...listeners.map(x => x?.(context as any))]);
     } else {
       await screenFunctionPromise;
     }
