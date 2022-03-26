@@ -1,6 +1,6 @@
 import React from "react";
-import type { ErrorBoundaryProps } from "./errorBoundary";
-import ErrorBoundary from "./errorBoundary";
+import type { ErrorBoundaryProps } from "../errorBoundary";
+import ErrorBoundary from "../errorBoundary";
 import useScreenLifecycle from "./useScreenLifecycle";
 import { getView, tryGetView } from "./viewLocator";
 

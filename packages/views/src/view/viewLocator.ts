@@ -1,5 +1,5 @@
 import type { ComponentType } from "react";
-import type { constructor } from "./types";
+import type { constructor } from "../types";
 
 type viewComponent<TViewModel> = ComponentType<{ vm: TViewModel }>;
 type ContextDictionary = Partial<Record<string, viewComponent<any>>>;

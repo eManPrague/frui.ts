@@ -1,0 +1,41 @@
+{
+  "name": "@frui.ts/complexdemo",
+  "publishConfig": {
+    "access": "public"
+  },
+  "license": "MIT",
+  "version": "999.0.0",
+  "scripts": {
+    "dev": "vite",
+    "build": "tsc && vite build",
+    "preview": "vite preview",
+    "generate:openapi": "node ../../node_modules/@frui.ts/generator openapi -c generator.openapi.json",
+    "generate:inversify": "node ../../node_modules/@frui.ts/generator inversify -c generator.inversify.json",
+    "generate:views": "node ../../node_modules/@frui.ts/generator views -c generator.views.json",
+    "generate": "yarn generate:inversify && yarn generate:views"
+  },
+  "dependencies": {
+    "@frui.ts/apiclient": "^999.0.0",
+    "@frui.ts/bootstrap": "^999.0.0",
+    "@frui.ts/data": "^999.0.0",
+    "@frui.ts/datascreens": "^999.0.0",
+    "@frui.ts/dataviews": "^999.0.0",
+    "@frui.ts/dirtycheck": "^999.0.0",
+    "@frui.ts/generator": "^999.0.0",
+    "@frui.ts/helpers": "^999.0.0",
+    "@frui.ts/screens": "^999.0.0",
+    "@frui.ts/validation": "^999.0.0",
+    "@frui.ts/views": "^999.0.0",
+    "mobx": "5",
+    "mobx-react-lite": "^2.2.2",
+    "react": "^17.0.2",
+    "react-dom": "^17.0.2"
+  },
+  "devDependencies": {
+    "@types/react": "^17.0.33",
+    "@types/react-dom": "^17.0.10",
+    "@vitejs/plugin-react": "^1.0.7",
+    "typescript": "^4.5.4",
+    "vite": "^2.8.0"
+  }
+}

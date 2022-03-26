@@ -1,6 +1,6 @@
 import type { BindingProperty } from "@frui.ts/helpers";
-import type { IBindingProps } from "../src/bindingProps";
-import { getValue, setValue, useBinding } from "../src/useBinding";
+import type { IBindingProps } from "../src/binding/bindingProps";
+import { getValue, setValue, useBinding } from "../src/binding/useBinding";
 
 interface MyProps<TTarget, TProperty extends BindingProperty<TTarget>> extends IBindingProps<TTarget, TProperty, number[]> {
   required: string;

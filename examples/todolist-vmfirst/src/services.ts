@@ -1,4 +1,4 @@
-import type HistoryRouter from "./historyRouter";
+import type { HistoryRouter } from "@frui.ts/views";
 
 const services = {
   router: undefined as HistoryRouter | undefined,

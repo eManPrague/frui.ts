@@ -132,7 +132,7 @@ export default class FileGenerator {
     }
 
     const fullPath = filePath.startsWith("@")
-      ? path.resolve(__dirname, filePath.replace("@", "./templates/"))
+      ? path.resolve(__dirname, filePath.replace("@", "./openapi/templates/"))
       : path.resolve(process.cwd(), filePath);
 
     const file = await fs.promises.readFile(fullPath);

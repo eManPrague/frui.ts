@@ -1,5 +1,5 @@
 import { isObservableProp, observable, ObservableMap } from "mobx";
-import { getValue } from "../src/useBinding";
+import { getValue } from "../src/binding/useBinding";
 
 describe("getValue", () => {
   it("gets value from observable map", () => {

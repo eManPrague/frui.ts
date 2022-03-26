@@ -1,6 +1,6 @@
 import type { BindingTarget } from "@frui.ts/helpers";
 import React from "react";
-import type { IBindingProps } from "./bindingProps";
+import type { IBindingProps } from "../binding/bindingProps";
 
 // either a bindable react component or a function accepting binding props and returning a component should be provided
 export interface IComponentInChildrenProps<TTarget extends BindingTarget, TChildProps> {

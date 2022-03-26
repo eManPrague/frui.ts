@@ -3,7 +3,7 @@ import { getNavigator } from "@frui.ts/screens";
 import { observer } from "mobx-react-lite";
 import React, { useContext, useEffect, useState } from "react";
 import { UNSAFE_RouteContext, useLocation } from "react-router";
-import type { ViewComponent } from "./types";
+import type { ViewComponent } from "../types";
 import View from "./view";
 
 // use custom context provider to customize `createInstance` (e.g., using DI container)

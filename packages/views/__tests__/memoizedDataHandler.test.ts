@@ -1,4 +1,4 @@
-import createMemoizedHandler from "../src/memoizedDataHandler";
+import createMemoizedHandler from "../src/helpers/memoizedDataHandler";
 
 const testEvent = {
   currentTarget: {

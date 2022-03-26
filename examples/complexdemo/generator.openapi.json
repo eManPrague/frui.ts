@@ -1,0 +1,22 @@
+{
+  "api": "https://fruits-demo.herokuapp.com/api/swagger-json",
+  "endpointUrlPrefix": "/api/v1/",
+  "dates": "native",
+  "validations": {
+    "rules": {
+      "readOnly": false,
+      "nullable": false
+    }
+  },
+  "observable": {
+    "entities": {
+      "Created": false,
+      "Ok": {
+        "exclude": ["code"]
+      }
+    },
+    "properties": {
+      "exclude": ["id", "created"]
+    }
+  }
+}

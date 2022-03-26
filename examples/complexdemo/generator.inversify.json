@@ -1,0 +1,37 @@
+{
+  "factoryName": "Factory",
+  "rules": [
+    {
+      "pattern": "InitializationService|LocalizationService|NotificationService|EventsService",
+      "addDecorators": true,
+      "scope": "singleton",
+      "identifier": "$interface"
+    },
+    {
+      "pattern": "Service$",
+      "addDecorators": true,
+      "scope": "singleton"
+    },
+    {
+      "pattern": "PageViewModel$|PageScreen$|Page$",
+      "addDecorators": true,
+      "scope": "transient",
+      "identifier": "$interface"
+    },
+    {
+      "pattern": "Screen$|ViewModel$",
+      "addDecorators": true,
+      "scope": "transient"
+    },
+    {
+      "pattern": "Repository$|Provider$",
+      "addDecorators": true,
+      "scope": "transient"
+    },
+    {
+      "pattern": "EventBus",
+      "addDecorators": true,
+      "scope": "singleton"
+    }
+  ]
+}

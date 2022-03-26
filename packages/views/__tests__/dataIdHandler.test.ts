@@ -1,4 +1,4 @@
-import dataIdHandler from "../src/dataIdHandler";
+import dataIdHandler from "../src/helpers/dataIdHandler";
 
 const testEvent = {
   currentTarget: {
