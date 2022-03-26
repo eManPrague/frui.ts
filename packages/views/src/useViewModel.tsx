@@ -1,11 +1,10 @@
 import type { LifecycleScreenNavigator, ScreenBase } from "@frui.ts/screens";
 import { getNavigator } from "@frui.ts/screens";
-import type { ViewComponent } from "@frui.ts/views";
-import { View } from "@frui.ts/views";
 import { observer } from "mobx-react-lite";
 import React, { useContext, useEffect, useState } from "react";
-import type { RouteMatch } from "react-router";
 import { UNSAFE_RouteContext, useLocation } from "react-router";
+import type { ViewComponent } from "./types";
+import View from "./view";
 
 // use custom context provider to customize `createInstance` (e.g., using DI container)
 export const DependenciesContext = React.createContext({ createInstance: activateInstance });
@@ -33,6 +32,7 @@ export default function useViewModel<TViewModel extends ScreenBase>(viewModelTyp
     if (navigator?.deactivate) {
       return () => void navigator.deactivate?.(true);
     }
+    return undefined;
   }, []);
 
   useEffect(() => {

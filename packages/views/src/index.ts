@@ -9,5 +9,6 @@ export * from "./types";
 export * from "./useBinding";
 export { default as useDisposable } from "./useDisposable";
 export { default as useScreenLifecycle } from "./useScreenLifecycle";
+export * from "./useViewModel";
 export { default as View } from "./view";
 export * from "./viewLocator";

@@ -1,6 +1,5 @@
-import { registerView } from "@frui.ts/views";
+import { createViewComponent, registerView } from "@frui.ts/views";
 import React from "react";
-import { createViewComponent } from "../useViewModel";
 import InvoiceDetailViewModel from "./invoiceDetailViewModel";
 
 export const invoiceDetailView = createViewComponent<InvoiceDetailViewModel>(vm => {

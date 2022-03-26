@@ -1,5 +1,5 @@
+import { createView } from "@frui.ts/views";
 import React from "react";
-import { createView } from "../useViewModel";
 import CustomersViewModel from "./customersViewModel";
 
 // This is an example of simple View-first approach

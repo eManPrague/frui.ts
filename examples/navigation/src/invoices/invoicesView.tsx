@@ -1,8 +1,7 @@
-import { registerView } from "@frui.ts/views";
+import { createViewComponent, registerView } from "@frui.ts/views";
 import { action } from "mobx";
 import React from "react";
 import { NavLink, Outlet, useSearchParams } from "react-router-dom";
-import { createViewComponent } from "../useViewModel";
 import InvoicesViewModel from "./invoicesViewModel";
 
 export const invoicesView = createViewComponent<InvoicesViewModel>(vm => {

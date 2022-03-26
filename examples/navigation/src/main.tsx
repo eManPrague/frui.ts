@@ -6,8 +6,8 @@ import Customers from "./customers/Customers";
 import "./index.css";
 import InvoiceDetailViewModel from "./invoices/invoiceDetailViewModel";
 import InvoicesViewModel from "./invoices/invoicesViewModel";
-import { viewModel } from "./useViewModel";
 import "./views";
+import { viewModel } from "@frui.ts/views";
 
 ReactDOM.render(
   <React.StrictMode>
