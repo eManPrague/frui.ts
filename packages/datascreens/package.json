@@ -22,17 +22,21 @@
   },
   "author": "Augustin Šulc <sulc.gusta@gmail.com>",
   "license": "MIT",
-  "main": "dist/index.js",
-  "directories": {
-    "lib": "dist",
-    "test": "__tests__"
-  },
   "files": [
     "dist"
   ],
+  "main": "./dist/fruits-datascreens.umd.js",
+  "module": "./dist/fruits-datascreens.es.js",
+  "exports": {
+    ".": {
+      "import": "./dist/fruits-datascreens.es.js",
+      "require": "./dist/fruits-datascreens.umd.js"
+    }
+  },
+  "types": "./dist/index.d.ts",
   "scripts": {
     "clean": "rimraf dist",
-    "build": "tsc"
+    "build": "vite build && tsc --noEmit false --emitDeclarationOnly"
   },
   "dependencies": {
     "@frui.ts/data": "^999.0.0",

@@ -11,7 +11,7 @@ export function appendContentTypeHeader(contentType: string, params?: RequestIni
   return {
     ...params,
     headers: {
-      ...(params ?? {}).headers,
+      ...params?.headers,
       "Content-Type": contentType,
     },
   };

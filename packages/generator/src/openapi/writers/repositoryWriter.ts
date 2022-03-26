@@ -1,5 +1,4 @@
-import camelCase from "lodash/camelCase";
-import uniq from "lodash/uniq";
+import { camelCase, uniq } from "lodash";
 import type { Directory, SourceFile } from "ts-morph";
 import GeneratorBase from "../../generatorBase";
 import { pascalCase } from "../../helpers";

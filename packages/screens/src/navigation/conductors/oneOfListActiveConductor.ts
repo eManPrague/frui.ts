@@ -32,7 +32,7 @@ export default class OneOfListActiveConductor<
   ) => {
     const pathElementsToSkip = this.getNavigationStateLength();
     const newNavigationName = context.path[pathElementsToSkip]?.name;
-    const activeChildNavigator = getNavigator<LifecycleScreenNavigator>(this.activeChild);
+    const activeChildNavigator = getNavigator<LifecycleScreenNavigator>(currentChild);
 
     if (!activeChildNavigator || activeChildNavigator.navigationName === newNavigationName) {
       return true;
@@ -41,7 +41,10 @@ export default class OneOfListActiveConductor<
     return activeChildNavigator.canDeactivate ? activeChildNavigator.canDeactivate(false) : true;
   };
 
-  findNavigationChild = (context: NavigationContext<TNavigationParams, TScreen, TLocation>, currentChild: TChild | undefined) => {
+  findNavigationChild = (
+    context: NavigationContext<TNavigationParams, TScreen, TLocation>,
+    _currentChild: TChild | undefined
+  ) => {
     const pathElementsToSkip = this.getNavigationStateLength();
     const searchedNavigationName = context.path[pathElementsToSkip]?.name;
     const newChild = this.findChild(searchedNavigationName);

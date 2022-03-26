@@ -1,6 +1,6 @@
 import type { IDisposable, PropertyName } from "@frui.ts/helpers";
 import { onlyDefined } from "@frui.ts/helpers";
-import { debounce } from "lodash";
+import { debounce } from "lodash-es";
 import type { IReactionDisposer } from "mobx";
 import { action, get, isArrayLike, observable, reaction } from "mobx";
 import type {

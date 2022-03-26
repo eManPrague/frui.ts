@@ -22,17 +22,25 @@
   },
   "author": "Augustin Šulc <sulc.gusta@gmail.com>",
   "license": "MIT",
-  "main": "dist/index.js",
+  "files": [
+    "dist"
+  ],
+  "main": "./dist/fruits-dirtycheck.umd.js",
+  "module": "./dist/fruits-dirtycheck.es.js",
+  "exports": {
+    ".": {
+      "import": "./dist/fruits-dirtycheck.es.js",
+      "require": "./dist/fruits-dirtycheck.umd.js"
+    }
+  },
+  "types": "./dist/index.d.ts",
   "directories": {
     "lib": "dist",
     "test": "__tests__"
   },
-  "files": [
-    "dist"
-  ],
   "scripts": {
     "clean": "rimraf dist",
-    "build": "tsc"
+    "build": "vite build && tsc --noEmit false --emitDeclarationOnly"
   },
   "dependencies": {
     "@frui.ts/helpers": "^999.0.0"

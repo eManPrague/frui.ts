@@ -47,4 +47,6 @@ export function getInnerComponent<TTarget extends BindingTarget, TChildProps>(
     // TODO why the check (and function hasComponentInChildren) is needed here?
     return props.children(bindingProps, childProps);
   }
+
+  return undefined;
 }

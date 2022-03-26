@@ -108,7 +108,7 @@ export function testLifecycle<TNavigator extends LifecycleScreenNavigator, TScre
       let callsCounter = 0;
 
       const screen = {
-        onInitialize: (context: NavigationContext) => {
+        onInitialize: (_context: NavigationContext) => {
           callsCounter++;
           return manualPromise.promise;
         },
@@ -134,7 +134,7 @@ export function testLifecycle<TNavigator extends LifecycleScreenNavigator, TScre
       let callsCounter = 0;
 
       const screen = {
-        onActivate: (context: NavigationContext) => {
+        onActivate: (_context: NavigationContext) => {
           callsCounter++;
           return manualPromise.promise;
         },
@@ -160,7 +160,7 @@ export function testLifecycle<TNavigator extends LifecycleScreenNavigator, TScre
       let callsCounter = 0;
 
       const screen = {
-        onNavigate: (context: NavigationContext) => {
+        onNavigate: (_context: NavigationContext) => {
           callsCounter++;
           return manualPromise.promise;
         },

@@ -19,7 +19,7 @@ import StringLiteralWriter from "./writers/stringLiteralWriter";
 import UnionEntityWriter from "./writers/unionEntityWriter";
 
 export default class FileGenerator {
-  constructor(private project: Project, private params: IGeneratorParams, private config: IConfig) {
+  constructor(private project: Project, _params: IGeneratorParams, private config: IConfig) {
     this.initTemplates();
   }
 

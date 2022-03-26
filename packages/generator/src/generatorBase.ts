@@ -1,6 +1,6 @@
-import path from "path";
 import type { Directory, SourceFile } from "ts-morph";
 import { IndentationText, Project, ts } from "ts-morph";
+import { readJson } from "./helpers";
 import { fileGeneratedHeader } from "./messages.json";
 import { createProgressBar } from "./progressBar";
 
@@ -37,8 +37,7 @@ export default abstract class GeneratorBase<TParams extends BaseParams, TConfig>
     const defaultConfig = await this.getDefaultConfig();
 
     if (this.params.config) {
-      const configPath = path.join(process.cwd(), this.params.config);
-      const customConfig: unknown = await import(configPath);
+      const customConfig = await readJson(this.params.config);
       this.config = Object.assign({}, defaultConfig, customConfig);
     } else {
       this.config = defaultConfig;
@@ -55,8 +54,8 @@ export default abstract class GeneratorBase<TParams extends BaseParams, TConfig>
     await file.save();
   }
 
-  public static canOverwiteFile(parent: Project | Directory, path: string) {
-    const file = parent.getSourceFile(path);
+  public static canOverwiteFile(parent: Project | Directory, filePath: string) {
+    const file = parent.getSourceFile(filePath);
 
     return !file
       ?.getStatementByKind(ts.SyntaxKind.SingleLineCommentTrivia | ts.SyntaxKind.MultiLineCommentTrivia)
@@ -65,7 +64,6 @@ export default abstract class GeneratorBase<TParams extends BaseParams, TConfig>
   }
 
   protected writeGeneratedHeader(file: SourceFile) {
-    // eslint-disable-next-line @typescript-eslint/no-unsafe-argument
     file.insertText(0, x => x.writeLine(fileGeneratedHeader));
   }
 

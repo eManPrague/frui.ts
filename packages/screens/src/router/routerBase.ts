@@ -19,6 +19,7 @@ export default abstract class RouterBase {
         return navigator.screen as TScreen;
       }
     }
+    return undefined;
   }
 
   protected getCurrentPath() {

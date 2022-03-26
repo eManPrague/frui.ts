@@ -63,7 +63,7 @@ describe("BusyWatcher", () => {
     it("is busy when created", () => {
       const watcher = new BusyWatcher();
 
-      const promise = new Promise((resolve, reject) => null);
+      const promise = new Promise((_resolve, _reject) => null);
       void watcher.watch(promise);
 
       expect(watcher.isBusy).toBeTruthy();
@@ -87,7 +87,7 @@ describe("BusyWatcher", () => {
 
       // eslint-disable-next-line @typescript-eslint/no-empty-function
       let handler = () => {};
-      const promise = new Promise((resolve, reject) => {
+      const promise = new Promise((_resolve, reject) => {
         handler = reject;
       });
       void watcher.watch(promise);

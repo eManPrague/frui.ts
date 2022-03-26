@@ -1,8 +1,15 @@
-import camelCase from "lodash/camelCase";
-import upperFirst from "lodash/upperFirst";
+import fs from "fs";
+import { camelCase, upperFirst } from "lodash";
+import path from "path";
 
 export function pascalCase(input: string) {
   return upperFirst(camelCase(input));
+}
+
+export async function readJson<T = unknown>(relativePath: string) {
+  const fullPath = path.join(process.cwd(), relativePath);
+  const content = await fs.promises.readFile(fullPath, "utf8");
+  return JSON.parse(content) as T;
 }
 
 export function getRelativePath(source: string, target: string) {

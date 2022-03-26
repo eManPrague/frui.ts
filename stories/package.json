@@ -2,33 +2,18 @@
   "name": "@frui.ts/stories",
   "private": true,
   "version": "999.0.0",
-  "description": "> TODO: description",
   "author": "Augustin Šulc <sulc.gusta@gmail.com>",
-  "license": "ISC",
-  "directories": {
-    "lib": "dist",
-    "test": "__tests__"
-  },
-  "files": [
-    "dist"
-  ],
-  "repository": {
-    "type": "git",
-    "url": "git@gitlab.eman.cz:frui.ts/frui.ts-fe.git"
-  },
-  "scripts": {
-    "prepublish": "rimraf dist",
-    "publish": "build-storybook -c .storybook -o dist",
-    "start": "start-storybook -p 9001 -c .storybook"
-  },
+  "license": "MIT",
   "devDependencies": {
-    "@babel/core": "^7.12.10",
-    "@storybook/addon-actions": "^6.1.11",
-    "@storybook/addon-essentials": "^6.1.11",
-    "@storybook/addon-links": "^6.1.11",
-    "@storybook/react": "^6.1.11",
-    "babel-loader": "^8.2.2",
-    "typescript": "^4.4.4"
+    "@babel/core": "^7.17.8",
+    "@storybook/addon-actions": "^6.4.19",
+    "@storybook/addon-essentials": "^6.4.19",
+    "@storybook/addon-interactions": "^6.4.19",
+    "@storybook/addon-links": "^6.4.19",
+    "@storybook/react": "^6.4.19",
+    "@storybook/testing-library": "^0.0.9",
+    "babel-loader": "^8.2.4",
+    "storybook-builder-vite": "^0.1.21"
   },
   "dependencies": {
     "@frui.ts/bootstrap": "^999.0.0",
@@ -38,11 +23,12 @@
     "@frui.ts/screens": "^999.0.0",
     "@frui.ts/validation": "^999.0.0",
     "@frui.ts/views": "^999.0.0",
-    "bootstrap": "^4.6.1",
-    "mobx": "^4.15.7",
+    "mobx": "5",
     "mobx-react-lite": "^2.2.2",
-    "react": "^17.0.2",
-    "react-bootstrap": "^1.6.4",
-    "react-dom": "^17.0.2"
+    "react": "^17.0.2"
+  },
+  "scripts": {
+    "storybook": "start-storybook -p 6006",
+    "build-storybook": "build-storybook"
   }
 }

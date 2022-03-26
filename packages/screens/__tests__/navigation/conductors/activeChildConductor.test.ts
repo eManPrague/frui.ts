@@ -14,7 +14,7 @@ describe("ActiveChildConductor", () => {
   describe("canNavigate", () => {
     it("calls canChangeActiveChild", async () => {
       const conductor = new ActiveChildConductor();
-      conductor.canChangeActiveChild = (context, currentChild) => {
+      conductor.canChangeActiveChild = (_context, _currentChild) => {
         return Promise.resolve(false);
       };
 
@@ -31,7 +31,7 @@ describe("ActiveChildConductor", () => {
       const childScreen: Partial<ScreenBase> = { navigator: childNavigator };
 
       const conductor = new ActiveChildConductor();
-      conductor.findNavigationChild = (context, currentChild) => {
+      conductor.findNavigationChild = (_context, _currentChild) => {
         return Promise.resolve({
           newChild: childScreen,
         });
@@ -53,7 +53,7 @@ describe("ActiveChildConductor", () => {
       const childScreen: Partial<ScreenBase> = { navigator: childNavigator };
 
       const conductor = new ActiveChildConductor();
-      conductor.findNavigationChild = (context, currentChild) => {
+      conductor.findNavigationChild = (_context, _currentChild) => {
         return Promise.resolve({
           newChild: childScreen,
         });
@@ -73,7 +73,7 @@ describe("ActiveChildConductor", () => {
       const childScreen: Partial<ScreenBase> = { navigator: childNavigator };
 
       const conductor = new ActiveChildConductor();
-      conductor.findNavigationChild = (context, currentChild) => {
+      conductor.findNavigationChild = (_context, _currentChild) => {
         return Promise.resolve({
           newChild: childScreen,
         });
@@ -92,7 +92,7 @@ describe("ActiveChildConductor", () => {
       const child1Screen: Partial<ScreenBase> = { navigator: child1Navigator };
 
       const conductor = new ActiveChildConductor();
-      conductor.findNavigationChild = (context, currentChild) => {
+      conductor.findNavigationChild = (_context, _currentChild) => {
         return Promise.resolve({
           newChild: child1Screen,
         });
@@ -100,7 +100,7 @@ describe("ActiveChildConductor", () => {
       await conductor.navigate([{ name: "my-child", params: { foo: "bar" } }]);
 
       // act
-      conductor.findNavigationChild = (context, currentChild) => {
+      conductor.findNavigationChild = (_context, _currentChild) => {
         return Promise.resolve({
           newChild: undefined,
           closePrevious: true,
@@ -122,7 +122,7 @@ describe("ActiveChildConductor", () => {
       const childScreen: Partial<ScreenBase> = { navigator: childNavigator };
 
       const conductor = new ActiveChildConductor();
-      conductor.findNavigationChild = (context, currentChild) => {
+      conductor.findNavigationChild = (_context, _currentChild) => {
         return Promise.resolve({
           newChild: childScreen,
         });
@@ -146,7 +146,7 @@ describe("ActiveChildConductor", () => {
       const childScreen: Partial<ScreenBase> = { navigator: childNavigator };
 
       const conductor = new ActiveChildConductor();
-      conductor.findNavigationChild = (context, currentChild) => {
+      conductor.findNavigationChild = (_context, _currentChild) => {
         return Promise.resolve({
           newChild: childScreen,
         });

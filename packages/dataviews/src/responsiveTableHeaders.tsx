@@ -28,7 +28,7 @@ const defaultProps: Omit<Partial<ResponsiveTableHeadersProps<any, any>>, "id" | 
 
 function getStyleWithHeaders(id: string, headers: string[], mediaQuery?: string) {
   const headerStyles = headers
-    .map((label, index) => `#${id} td:nth-of-type(${index + 1})::before { content: "${headers[index]}"; }`)
+    .map((_label, index) => `#${id} td:nth-of-type(${index + 1})::before { content: "${headers[index]}"; }`)
     .join(" ");
 
   return mediaQuery ? `${mediaQuery} { ${headerStyles} }` : headerStyles;

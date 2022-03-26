@@ -1,4 +1,4 @@
-import camelCase from "lodash/camelCase";
+import { camelCase } from "lodash";
 import type { CodeBlockWriter, Directory, SourceFile } from "ts-morph";
 import GeneratorBase from "../../generatorBase";
 import { entityGeneratedHeader } from "../../messages.json";
@@ -46,7 +46,6 @@ export default class AliasEntityWriter {
           writer.blankLine();
         }
 
-        // eslint-disable-next-line @typescript-eslint/no-unsafe-argument
         writer.writeLine(entityGeneratedHeader);
         this.writeTypeAlias(writer, definition);
         writer.newLineIfLastNot();

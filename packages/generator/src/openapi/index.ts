@@ -1,4 +1,5 @@
 import GeneratorBase from "../generatorBase";
+import defaultConfig from "./defaultConfig.json";
 import FileGenerator from "./fileGenerator";
 import NameFormatter from "./formatters/nameFormatter";
 import ObservableFormatter from "./formatters/observableFormatter";
@@ -36,8 +37,7 @@ export default class OpenApiGenerator extends GeneratorBase<IGeneratorParams, IC
     await generator.generateRepositories(endpoints);
   }
 
-  protected async getDefaultConfig() {
-    const config = (await import("./defaultConfig.json")) as { default: IConfig };
-    return config.default;
+  protected getDefaultConfig() {
+    return Promise.resolve(defaultConfig as IConfig);
   }
 }

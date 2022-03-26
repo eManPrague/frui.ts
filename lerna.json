@@ -1,15 +1,8 @@
 {
   "version": "999.0.0",
   "npmClient": "yarn",
-  "packages": [
-    "packages/*",
-    "stories",
-    "examples/*"
-  ],
+  "useWorkspaces": true,
   "command": {
-    "bootstrap": {
-      "npmClient": "yarn"
-    },
     "publish": {
       "ignoreChanges": [
         "ignored-file",

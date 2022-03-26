@@ -18,7 +18,7 @@ describe("dataIdHandler", () => {
     expect(handledId).toBe(42);
   });
   it("memoizes the function creation so that it is memory-safe to call 'dataIdHandler(handler)' from React component", () => {
-    const innerHandler = (id: number) => true;
+    const innerHandler = (_id: number) => true;
 
     const wrappedHandler1 = dataIdHandler(innerHandler);
     const wrappedHandler2 = dataIdHandler(innerHandler);

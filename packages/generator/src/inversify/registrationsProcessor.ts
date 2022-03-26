@@ -205,6 +205,8 @@ export default class RegistrationsProcessor {
         }
       }
     }
+
+    return undefined;
   }
 }
 

@@ -60,7 +60,7 @@ export function watchBusy(target: any, propertyKey?: string, descriptor?: Proper
   const isCustomKey = typeof target !== "object";
   const key = isCustomKey ? (target as BusyWatcherKey) : Symbol();
 
-  const decorator: Decorator = (target, propertyKey, descriptor) => {
+  const decorator: Decorator = (_target, _propertyKey, descriptor) => {
     const originalFunction = descriptor.value as (...args: any) => Awaitable<unknown>;
 
     descriptor.value = function (this: { busyWatcher?: BusyWatcher }, ...args: any[]) {

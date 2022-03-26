@@ -1,6 +1,7 @@
 import type { FunctionDeclaration, SourceFile } from "ts-morph";
 import GeneratorBase from "../generatorBase";
 import { createProgressBar } from "../progressBar";
+import defaultConfig from "./defaultConfig.json";
 import ExportsAnalyzer from "./exportsAnalyzer";
 import type ServiceRule from "./models/serviceRule";
 import RegistrationsProcessor from "./registrationsProcessor";
@@ -50,11 +51,8 @@ export default class IversifyGenerator extends GeneratorBase<IGeneratorParams, I
     progressBar.stop();
   }
 
-  protected async getDefaultConfig() {
-    // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
-    const config = await import("./defaultConfig.json");
-    // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access
-    return config.default as IConfig;
+  protected getDefaultConfig() {
+    return Promise.resolve(defaultConfig as IConfig);
   }
 
   private ensureDecoratorsFile() {

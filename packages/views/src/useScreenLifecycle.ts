@@ -6,7 +6,7 @@ export default function useScreenLifecycle(vm: any, closeOnCleanup = true) {
   useEffect(() => {
     const navigator = getNavigator<LifecycleScreenNavigator>(vm);
     if (!navigator) {
-      return;
+      return undefined;
     }
 
     if (!navigator.isActive) {
@@ -18,5 +18,7 @@ export default function useScreenLifecycle(vm: any, closeOnCleanup = true) {
         void navigator.deactivate?.(closeOnCleanup);
       };
     }
+
+    return undefined;
   }, [vm]);
 }

@@ -1,4 +1,4 @@
-import memoize from "lodash/memoize";
+import { memoize } from "lodash-es";
 import type { SyntheticEvent } from "react";
 
 export default function createMemoizedHandler(datasetKey: string) {

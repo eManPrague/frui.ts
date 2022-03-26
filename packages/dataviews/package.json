@@ -21,19 +21,21 @@
   },
   "author": "Augustin Šulc <sulc.gusta@gmail.com>",
   "license": "MIT",
-  "main": "dist/index.js",
-  "directories": {
-    "lib": "dist",
-    "styles": "styles",
-    "test": "__tests__"
-  },
   "files": [
-    "dist",
-    "styles"
+    "dist"
   ],
+  "main": "./dist/fruits-dataviews.umd.js",
+  "module": "./dist/fruits-dataviews.es.js",
+  "exports": {
+    ".": {
+      "import": "./dist/fruits-dataviews.es.js",
+      "require": "./dist/fruits-dataviews.umd.js"
+    }
+  },
+  "types": "./dist/index.d.ts",
   "scripts": {
     "clean": "rimraf dist && rimraf styles",
-    "build": "tsc",
+    "build": "vite build && tsc --noEmit false --emitDeclarationOnly",
     "postbuild": "copyfiles src/**/*.scss styles -f"
   },
   "dependencies": {

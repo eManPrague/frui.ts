@@ -119,7 +119,7 @@ export default abstract class UrlRouterBase extends RouterBase implements Router
   protected serializePathElement(element: PathElement): string {
     if (element.params) {
       const values = Object.entries(element.params)
-        .filter(([key, value]) => value !== undefined)
+        .filter(([_key, value]) => value !== undefined)
         // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
         .map(([key, value]) => `${key}=${encodeURIComponent(value!)}`);
       return `${element.name}[${values.join(",")}]`;

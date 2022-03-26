@@ -22,24 +22,28 @@
   },
   "author": "Augustin Šulc <sulc.gusta@gmail.com>",
   "license": "MIT",
-  "main": "dist/index.js",
-  "directories": {
-    "lib": "dist",
-    "test": "__tests__"
-  },
   "files": [
     "dist"
   ],
+  "main": "./dist/fruits-validation.umd.js",
+  "module": "./dist/fruits-validation.es.js",
+  "exports": {
+    ".": {
+      "import": "./dist/fruits-validation.es.js",
+      "require": "./dist/fruits-validation.umd.js"
+    }
+  },
+  "types": "./dist/index.d.ts",
   "scripts": {
     "clean": "rimraf dist",
-    "build": "tsc"
+    "build": "vite build && tsc --noEmit false --emitDeclarationOnly"
   },
   "dependencies": {
     "@frui.ts/helpers": "^999.0.0",
-    "lodash": "^4.17.21"
+    "lodash-es": "^4.17.21"
   },
   "devDependencies": {
-    "@types/lodash": "^4.14.180"
+    "@types/lodash-es": "4.17.6"
   },
   "peerDependencies": {
     "mobx": "^4.0.0 || ^5.0.0"

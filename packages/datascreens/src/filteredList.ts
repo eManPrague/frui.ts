@@ -95,7 +95,7 @@ export default class FilteredList<
   }
 
   protected cloneFilter(filter: TFilter): TFilter {
-    const clonedFilter = { ...this.filter };
+    const clonedFilter = { ...filter };
 
     // we need to clone array properties so that they are not shared with the original filter
     Object.entries(clonedFilter).forEach(([key, value]) => {

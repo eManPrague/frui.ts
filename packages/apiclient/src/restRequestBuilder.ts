@@ -14,7 +14,7 @@ export function appendAcceptHeader(params: RequestInit | undefined, acceptConten
   return {
     ...params,
     headers: {
-      ...(params ?? {}).headers,
+      ...params?.headers,
       Accept: acceptContentType,
     },
   };

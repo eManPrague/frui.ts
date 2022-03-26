@@ -3,11 +3,10 @@
 /* eslint-disable @typescript-eslint/no-unsafe-assignment */
 /* eslint-disable @typescript-eslint/no-unsafe-member-access */
 import { program } from "commander";
-import PackageInfo from "../package.json";
+import { description, version } from "../package.json";
 import type { IGeneratorParams } from "./inversify/types";
 
-// eslint-disable-next-line @typescript-eslint/no-unsafe-argument
-program.name("fruits-generate").version(PackageInfo.version).description(PackageInfo.description);
+program.name("fruits-generate").version(version).description(description);
 program
   .command("inversify")
   .description("Generate Inversify configuration files")

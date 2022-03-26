@@ -42,7 +42,7 @@ export function checkValid(target: unknown): AggregatedValidationResult {
   return validator ? validator.checkValid() : true;
 }
 
-export function hasVisibleValidationError(target: unknown) {
+export function hasVisibleValidationError(target: unknown): boolean {
   const validator = getValidator(target);
   if (validator) {
     for (const [, results] of validator.getAllVisibleResults()) {
@@ -52,9 +52,8 @@ export function hasVisibleValidationError(target: unknown) {
         }
       }
     }
-  } else {
-    return false;
   }
+  return false;
 }
 
 export function validate(target: unknown): boolean {

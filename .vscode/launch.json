@@ -16,8 +16,8 @@
       "request": "launch",
       "name": "Debug generator",
       "cwd": "C:\\_Projects\\pudplus-fe",
-      "runtimeArgs": ["-r", "${workspaceFolder}/packages/generator/node_modules/ts-node/register/transpile-only"],
-      "args": ["${workspaceFolder}/packages/generator/src/index.ts", "openapi", "-cgenerator.openapi.json"],
+      "runtimeArgs": ["-r", "${workspaceFolder}/node_modules/ts-node/register/transpile-only"],
+      "args": ["${workspaceFolder}/packages/generator/src/index.ts", "views", "-cgenerator.views.json"],
       "env": {
         "TS_NODE_PROJECT": "${workspaceFolder}/packages/generator/tsconfig.json"
       }
@@ -43,7 +43,7 @@
       "args": ["--runInBand", "--runTestsByPath", "${relativeFile}"],
       "console": "integratedTerminal",
       "internalConsoleOptions": "neverOpen",
-      "skipFiles": ["<node_internals>/**"],
+      "skipFiles": ["<node_internals>/**", "${workspaceFolder}/node_modules/**/*.js"],
       "disableOptimisticBPs": true,
       "windows": {
         "program": "${workspaceFolder}/node_modules/jest/bin/jest"

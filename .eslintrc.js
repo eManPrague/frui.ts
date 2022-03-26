@@ -3,12 +3,23 @@ module.exports = {
   extends: ["@emanprague/eslint-config/eslint-default"],
   settings: {
     react: {
-      version: "latest",
+      version: "detect",
     },
+  },
+  parserOptions: {
+    project: "./tsconfig.eslint.json",
   },
   rules: {
     "@typescript-eslint/unbound-method": "off", // we use @bound attribute
     "@typescript-eslint/explicit-module-boundary-types": "off",
+    "@typescript-eslint/no-misused-promises": [
+      "error",
+      {
+        checksVoidReturn: {
+          attributes: false,
+        },
+      },
+    ],
   },
   ignorePatterns: ["**/cra-template/template/**/*.ts", "**/cra-template/template/**/*.tsx"],
   env: {

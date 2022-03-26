@@ -1,6 +1,7 @@
 import type { SourceFile } from "ts-morph";
 import GeneratorBase from "../generatorBase";
 import { createProgressBar } from "../progressBar";
+import defaultConfig from "./defaultConfig.json";
 import type { GeneratorParams, IConfig } from "./types";
 import ViewsAnalyzer from "./viewsAnalyzer";
 import ViewsProcessor from "./viewsProcessor";
@@ -39,8 +40,7 @@ export default class ViewsGenerator extends GeneratorBase<GeneratorParams, IConf
     return this.viewsFile;
   }
 
-  protected async getDefaultConfig() {
-    const config = (await import("./defaultConfig.json")) as { default: IConfig };
-    return config.default;
+  protected getDefaultConfig() {
+    return Promise.resolve(defaultConfig as IConfig);
   }
 }

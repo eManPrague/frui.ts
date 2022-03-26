@@ -1,7 +1,8 @@
-﻿import camelCase from "lodash/camelCase";
+﻿import { camelCase } from "lodash";
 import type { Directory, SourceFile } from "ts-morph";
 import GeneratorBase from "../../generatorBase";
 import type Enum from "../models/enum";
+
 export default class StringLiteralWriter {
   constructor(
     private parentDirectory: Directory,

@@ -8,7 +8,7 @@ import { expectInvalid, expectValid, testCoreValidatorFunctions } from "./testHe
 beforeAll(() => {
   configuration.valueValidators.set("required", value => ({ code: "required", isValid: !!value }));
   configuration.valueValidators.set("mustBeJohn", value => ({ code: "mustBeJohn", isValid: value === "John" }));
-  configuration.valueValidators.set("mockValidation", value => undefined);
+  configuration.valueValidators.set("mockValidation", _value => undefined);
 
   configuration.asyncValueValidators.set("asyncCheck", (value, context, callback) => {
     const manualPromise = context.parameters as Promise<boolean>;

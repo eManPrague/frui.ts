@@ -22,17 +22,21 @@
   },
   "author": "Augustin Šulc <sulc.gusta@gmail.com>",
   "license": "MIT",
-  "main": "dist/index.js",
-  "directories": {
-    "lib": "dist",
-    "test": "__tests__"
-  },
   "files": [
     "dist"
   ],
+  "main": "./dist/fruits-bootstrap.umd.js",
+  "module": "./dist/fruits-bootstrap.es.js",
+  "exports": {
+    ".": {
+      "import": "./dist/fruits-bootstrap.es.js",
+      "require": "./dist/fruits-bootstrap.umd.js"
+    }
+  },
+  "types": "./dist/index.d.ts",
   "scripts": {
     "clean": "rimraf dist",
-    "build": "tsc"
+    "build": "vite build && tsc --noEmit false --emitDeclarationOnly"
   },
   "devDependencies": {
     "@types/react": "^17.0.33"

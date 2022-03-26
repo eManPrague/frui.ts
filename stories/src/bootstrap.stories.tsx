@@ -1,4 +1,4 @@
-import "!style-loader!css-loader!bootstrap/dist/css/bootstrap.css";
+import "bootstrap/dist/css/bootstrap.css";
 import { Check, Input, Select } from "@frui.ts/bootstrap";
 import { attachAutomaticDirtyWatcher } from "@frui.ts/dirtycheck";
 import type { EntityValidationRules } from "@frui.ts/validation";

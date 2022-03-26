@@ -1,4 +1,4 @@
-import uniqBy from "lodash/uniqBy";
+import { uniqBy } from "lodash";
 import type { Project } from "ts-morph";
 import { ClassDeclaration } from "ts-morph";
 import type ServiceRegistration from "./models/serviceRegistration";
@@ -9,7 +9,7 @@ export default class ExportsAnalyzer {
     const registrations = [] as ServiceRegistration[];
 
     project.getSourceFiles().forEach(file => {
-      file.getExportedDeclarations().forEach((declarations, key) => {
+      file.getExportedDeclarations().forEach((declarations, _key) => {
         const declaration = declarations[0];
         if (declaration instanceof ClassDeclaration && !declaration.isAbstract()) {
           const className = declaration.getName();

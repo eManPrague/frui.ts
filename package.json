@@ -9,6 +9,12 @@
     "react",
     "mobx"
   ],
+  "private": true,
+  "workspaces": [
+    "packages/*",
+    "stories",
+    "examples/*"
+  ],
   "homepage": "https://github.com/eManPrague/frui.ts",
   "repository": {
     "type": "git",
@@ -25,7 +31,6 @@
     "test": "tests"
   },
   "scripts": {
-    "prepare": "install-peers",
     "setversion": "lerna version -y --no-push --no-git-tag-version",
     "publish:storybook": "yarn --cwd stories run publish",
     "publish:docs": "typedoc packages --out dist/docs --hideGenerator --exclude '**/node_modules' --ignoreCompilerErrors",
@@ -35,35 +40,22 @@
     "test": "jest",
     "storybook": "yarn --cwd stories start",
     "lint": "eslint \"./{packages,stories}/**/*.{ts,tsx}\" --cache",
-    "validate": "yarn run lint && yarn run cleanbuild && yarn run test && yarn run publish",
-    "lernaupdate": "lernaupdate",
-    "deps:outdated": "yarn outdated & lerna exec --stream --no-bail -- \"copy package.json package.bak && findstr /v \"@frui.ts/\" package.bak > package.json & yarn install & npx yarn-deduplicate yarn.lock & yarn outdated & move /Y package.bak package.json\"",
-    "clean-lock": "lerna exec lerna exec \"npx yarn-deduplicate yarn.lock\""
+    "validate": "yarn run lint && yarn run cleanbuild && yarn run test && yarn run publish"
   },
   "devDependencies": {
-    "@emanprague/eslint-config": "^2.4.0",
-    "@testing-library/react": "^12.1.1",
-    "@types/jest": "^27.0.2",
-    "@types/node": "^16.11.6",
-    "@types/prettier": "^2.4.1",
-    "@types/rimraf": "^3.0.2",
-    "core-js": "^3.19.0",
-    "eslint": "^7.15.0",
-    "install-peers-cli": "^2.2.0",
-    "jest": "27.3.1",
+    "@emanprague/eslint-config": "^3.0.0",
+    "@testing-library/react": "^12.1.4",
+    "@types/jest": "^27.4.1",
+    "eslint": "^8.12.0",
+    "jest": "27.5.1",
     "jest-mock-extended": "^2.0.4",
     "lerna": "^4.0.0",
-    "lerna-update-wizard": "^1.1.0",
-    "prettier": "^2.4.1",
+    "lerna-update-wizard": "^1.1.2",
+    "mobx": "5",
+    "prettier": "^2.6.1",
     "rimraf": "^3.0.2",
-    "ts-jest": "^27.0.7",
-    "ts-node": "^10.4.0",
-    "typedoc": "^0.22.7",
-    "typescript": "^4.4.4"
-  },
-  "peerDependencies": {
-    "mobx": "^4.15.7",
-    "react": "^17.0.2",
-    "react-dom": "^17.0.2"
+    "ts-jest": "^27.1.4",
+    "typedoc": "^0.22.13",
+    "vite": "^2.8.0"
   }
 }
