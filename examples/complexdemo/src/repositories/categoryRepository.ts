@@ -1,4 +1,4 @@
-import RepositoryBase from "./repositoryBase";
+import RepositoryBase from "../data/repositoryBase";
 import CategoryControllerListQuery from "../entities/categoryControllerListQuery";
 import Category from "../entities/category";
 import CategoryDto from "../entities/categoryDto";

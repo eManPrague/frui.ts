@@ -1,4 +1,4 @@
-import RepositoryBase from "./repositoryBase";
+import RepositoryBase from "../data/repositoryBase";
 import SessionDto from "../entities/sessionDto";
 import User from "../entities/user";
 

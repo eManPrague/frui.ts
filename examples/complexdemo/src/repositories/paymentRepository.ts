@@ -1,4 +1,4 @@
-import RepositoryBase from "./repositoryBase";
+import RepositoryBase from "../data/repositoryBase";
 import PaymentControllerListQuery from "../entities/paymentControllerListQuery";
 import Payment from "../entities/payment";
 import PaymentDto from "../entities/paymentDto";

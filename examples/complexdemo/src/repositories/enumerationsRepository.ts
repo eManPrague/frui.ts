@@ -1,4 +1,4 @@
-import RepositoryBase from "./repositoryBase";
+import RepositoryBase from "../data/repositoryBase";
 import EnumerationResponseDto from "../entities/enumerationResponseDto";
 
 export default class EnumerationsRepository extends RepositoryBase {
