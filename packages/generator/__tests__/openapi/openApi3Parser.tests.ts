@@ -1,4 +1,5 @@
 import type { OpenAPIV3 } from "openapi-types";
+import { describe, expect, it } from "vitest";
 import AliasEntity from "../../src/openapi/models/aliasEntity";
 import Enum from "../../src/openapi/models/enum";
 import InheritedEntity from "../../src/openapi/models/inheritedEntity";

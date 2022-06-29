@@ -1,4 +1,5 @@
 import { observable } from "mobx";
+import { describe, expect, test } from "vitest";
 import AutomaticDirtyWatcher, { attachAutomaticDirtyWatcher } from "../src/automaticDirtyWatcher";
 import { testCoreDirtyWatcherFunctions } from "./testHelpers";
 

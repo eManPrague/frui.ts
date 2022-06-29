@@ -1,11 +1,12 @@
 /**
- * @jest-environment jsdom
+ * @vitest-environment happy-dom
  */
 /* eslint-disable sonarjs/no-duplicate-string */
 import { fireEvent, render, screen } from "@testing-library/react";
 import React from "react";
 import type { ErrorBoundaryProps } from "../src/errorBoundary";
 import ErrorBoundary from "../src/errorBoundary";
+import { describe, beforeEach, it, expect, vi } from "vitest";
 
 function SimulateError({ title }: { title: string }): JSX.Element {
   throw new Error(title);
@@ -169,7 +170,7 @@ describe("ErrorBoundary", () => {
   });
 
   it("calls `componentDidCatch() when an error occurs`", () => {
-    const mockOnError = jest.fn();
+    const mockOnError = vi.fn();
     render(
       <TestApp fallback={<p>You have hit an error</p>} onError={mockOnError}>
         <h1>children</h1>

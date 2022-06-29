@@ -1,3 +1,4 @@
+import { describe, expect, it, test } from "vitest";
 import ManualPromise from "../src/manualPromise";
 
 describe("ManualPromise", () => {

@@ -1,5 +1,6 @@
 /* eslint-disable @typescript-eslint/no-unsafe-argument */
 import { ManualPromise } from "@frui.ts/helpers";
+import { describe, expect, it, vi } from "vitest";
 import TypedEventHub from "../../src/events/typedEventHub";
 import type { NavigationContext } from "../../src/models/navigationContext";
 import type ScreenLifecycleEventHub from "../../src/navigation/screenLifecycleEventHub";
@@ -43,7 +44,7 @@ export function testLifecycle<TNavigator extends LifecycleScreenNavigator, TScre
   describe("canNavigate", () => {
     it("calls canNavigate on the screen", async () => {
       const screen = {
-        canNavigate: jest.fn(() => false),
+        canNavigate: vi.fn(() => false),
       };
       const navigator = navigatorFactory(screen as any);
 

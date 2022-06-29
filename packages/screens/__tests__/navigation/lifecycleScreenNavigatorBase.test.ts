@@ -1,3 +1,4 @@
+import { describe } from "vitest";
 import LifecycleScreenNavigatorBase from "../../src/navigation/lifecycleScreenNavigatorBase";
 import { testLifecycle } from "./navigator.testHelpers";
 

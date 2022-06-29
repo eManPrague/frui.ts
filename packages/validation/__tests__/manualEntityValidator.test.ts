@@ -1,4 +1,5 @@
 import { autorun } from "mobx";
+import { describe, expect, it, test } from "vitest";
 import ManualEntityValidator from "../src/manualEntityValidator";
 import type { ValidationResult } from "../src/types";
 import { expectInvalid, expectValid, testCoreValidatorFunctions } from "./testHelpers";

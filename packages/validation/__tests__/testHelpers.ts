@@ -1,4 +1,5 @@
 /* eslint-disable sonarjs/no-duplicate-string */
+import { describe, expect, it, test } from "vitest";
 import type { AggregatedValidationResult, EntityValidator, ValidationResult } from "../src/types";
 
 export function expectValid(results: Iterable<ValidationResult> | undefined) {
@@ -46,117 +47,113 @@ export function testCoreValidatorFunctions<TEntity extends { firstName: string }
   };
 
   describe("getAllResults", () => {
-    test.each`
-      state        | isEnabled | isVisible | results
-      ${"valid"}   | ${false}  | ${false}  | ${"no"}
-      ${"valid"}   | ${false}  | ${true}   | ${"no"}
-      ${"valid"}   | ${true}   | ${false}  | ${"some"}
-      ${"valid"}   | ${true}   | ${true}   | ${"some"}
-      ${"invalid"} | ${false}  | ${false}  | ${"no"}
-      ${"invalid"} | ${false}  | ${true}   | ${"no"}
-      ${"invalid"} | ${true}   | ${false}  | ${"some"}
-      ${"invalid"} | ${true}   | ${true}   | ${"some"}
-      ${"empty"}   | ${false}  | ${false}  | ${"no"}
-      ${"empty"}   | ${false}  | ${true}   | ${"no"}
-      ${"empty"}   | ${true}   | ${false}  | ${"no"}
-      ${"empty"}   | ${true}   | ${true}   | ${"no"}
-    `(
-      "$state validator returns $results results when isEnabled:$isEnabled, isVisible:$isVisible",
-      (args: { state: string; isEnabled: boolean; isVisible: boolean; results: string }) => {
-        const validator = getValidator(args);
-        const results = Array.from(validator.getAllResults());
-        if (args.results === "no") {
-          expect(results).toHaveLength(0);
+    test.each([
+      ["valid", "no", false, false],
+      ["valid", "no", false, true],
+      ["valid", "some", true, false],
+      ["valid", "some", true, true],
+      ["invalid", "no", false, false],
+      ["invalid", "no", false, true],
+      ["invalid", "some", true, false],
+      ["invalid", "some", true, true],
+      ["empty", "no", false, false],
+      ["empty", "no", false, true],
+      ["empty", "no", true, false],
+      ["empty", "no", true, true],
+    ])(
+      "%s validator returns %s results when isEnabled:%o, isVisible:%o",
+      (state: string, results: string, isEnabled: boolean, isVisible: boolean) => {
+        const validator = getValidator({ state, isEnabled, isVisible });
+        const errors = Array.from(validator.getAllResults());
+        if (results === "no") {
+          expect(errors).toHaveLength(0);
         } else {
-          expect(results).not.toHaveLength(0);
+          expect(errors).not.toHaveLength(0);
         }
       }
     );
   });
 
   describe("getResults on existing property", () => {
-    test.each`
-      state        | isEnabled | isVisible | results
-      ${"valid"}   | ${false}  | ${false}  | ${"no"}
-      ${"valid"}   | ${false}  | ${true}   | ${"no"}
-      ${"valid"}   | ${true}   | ${false}  | ${"some"}
-      ${"valid"}   | ${true}   | ${true}   | ${"some"}
-      ${"invalid"} | ${false}  | ${false}  | ${"no"}
-      ${"invalid"} | ${false}  | ${true}   | ${"no"}
-      ${"invalid"} | ${true}   | ${false}  | ${"some"}
-      ${"invalid"} | ${true}   | ${true}   | ${"some"}
-      ${"empty"}   | ${false}  | ${false}  | ${"no"}
-      ${"empty"}   | ${false}  | ${true}   | ${"no"}
-      ${"empty"}   | ${true}   | ${false}  | ${"no"}
-      ${"empty"}   | ${true}   | ${true}   | ${"no"}
-    `(
-      "$state validator returns $results results when isEnabled:$isEnabled, isVisible:$isVisible",
-      (args: { state: string; isEnabled: boolean; isVisible: boolean; results: string }) => {
-        const validator = getValidator(args);
-        const results = Array.from(validator.getResults("firstName"));
-        if (args.results === "no") {
-          expect(results).toHaveLength(0);
+    test.each([
+      ["valid", "no", false, false],
+      ["valid", "no", false, true],
+      ["valid", "some", true, false],
+      ["valid", "some", true, true],
+      ["invalid", "no", false, false],
+      ["invalid", "no", false, true],
+      ["invalid", "some", true, false],
+      ["invalid", "some", true, true],
+      ["empty", "no", false, false],
+      ["empty", "no", false, true],
+      ["empty", "no", true, false],
+      ["empty", "no", true, true],
+    ])(
+      "%s validator returns %s results when isEnabled:%o, isVisible:%o",
+      (state: string, results: string, isEnabled: boolean, isVisible: boolean) => {
+        const validator = getValidator({ state, isEnabled, isVisible });
+        const errors = Array.from(validator.getResults("firstName"));
+        if (results === "no") {
+          expect(errors).toHaveLength(0);
         } else {
-          expect(results).not.toHaveLength(0);
+          expect(errors).not.toHaveLength(0);
         }
       }
     );
   });
 
   describe("getResults on missing property", () => {
-    test.each`
-      state        | isEnabled | isVisible | results
-      ${"valid"}   | ${false}  | ${false}  | ${"no"}
-      ${"valid"}   | ${false}  | ${true}   | ${"no"}
-      ${"valid"}   | ${true}   | ${false}  | ${"no"}
-      ${"valid"}   | ${true}   | ${true}   | ${"no"}
-      ${"invalid"} | ${false}  | ${false}  | ${"no"}
-      ${"invalid"} | ${false}  | ${true}   | ${"no"}
-      ${"invalid"} | ${true}   | ${false}  | ${"no"}
-      ${"invalid"} | ${true}   | ${true}   | ${"no"}
-      ${"empty"}   | ${false}  | ${false}  | ${"no"}
-      ${"empty"}   | ${false}  | ${true}   | ${"no"}
-      ${"empty"}   | ${true}   | ${false}  | ${"no"}
-      ${"empty"}   | ${true}   | ${true}   | ${"no"}
-    `(
-      "$state validator returns $results results when isEnabled:$isEnabled, isVisible:$isVisible",
-      (args: { state: string; isEnabled: boolean; isVisible: boolean; results: string }) => {
-        const validator = getValidator(args);
+    test.each([
+      ["valid", "no", false, false],
+      ["valid", "no", false, true],
+      ["valid", "no", true, false],
+      ["valid", "no", true, true],
+      ["invalid", "no", false, false],
+      ["invalid", "no", false, true],
+      ["invalid", "no", true, false],
+      ["invalid", "no", true, true],
+      ["empty", "no", false, false],
+      ["empty", "no", false, true],
+      ["empty", "no", true, false],
+      ["empty", "no", true, true],
+    ])(
+      "%s validator returns %s results when isEnabled:%o, isVisible:%o",
+      (state: string, results: string, isEnabled: boolean, isVisible: boolean) => {
+        const validator = getValidator({ state, isEnabled, isVisible });
         // eslint-disable-next-line @typescript-eslint/no-unsafe-argument
-        const results = Array.from(validator.getResults("unknown" as any));
-        if (args.results === "no") {
-          expect(results).toHaveLength(0);
+        const errors = Array.from(validator.getResults("unknown" as any));
+        if (results === "no") {
+          expect(errors).toHaveLength(0);
         } else {
-          expect(results).not.toHaveLength(0);
+          expect(errors).not.toHaveLength(0);
         }
       }
     );
   });
 
   describe("getAllVisibleResults", () => {
-    test.each`
-      state        | isEnabled | isVisible | results
-      ${"valid"}   | ${false}  | ${false}  | ${"no"}
-      ${"valid"}   | ${false}  | ${true}   | ${"no"}
-      ${"valid"}   | ${true}   | ${false}  | ${"no"}
-      ${"valid"}   | ${true}   | ${true}   | ${"some"}
-      ${"invalid"} | ${false}  | ${false}  | ${"no"}
-      ${"invalid"} | ${false}  | ${true}   | ${"no"}
-      ${"invalid"} | ${true}   | ${false}  | ${"no"}
-      ${"invalid"} | ${true}   | ${true}   | ${"some"}
-      ${"empty"}   | ${false}  | ${false}  | ${"no"}
-      ${"empty"}   | ${false}  | ${true}   | ${"no"}
-      ${"empty"}   | ${true}   | ${false}  | ${"no"}
-      ${"empty"}   | ${true}   | ${true}   | ${"no"}
-    `(
-      "$state validator returns $results results when isEnabled:$isEnabled, isVisible:$isVisible",
-      (args: { state: string; isEnabled: boolean; isVisible: boolean; results: string }) => {
-        const validator = getValidator(args);
-        const results = Array.from(validator.getAllVisibleResults());
-        if (args.results === "no") {
-          expect(results).toHaveLength(0);
+    test.each([
+      ["valid", "no", false, false],
+      ["valid", "no", false, true],
+      ["valid", "no", true, false],
+      ["valid", "some", true, true],
+      ["invalid", "no", false, false],
+      ["invalid", "no", false, true],
+      ["invalid", "no", true, false],
+      ["invalid", "some", true, true],
+      ["empty", "no", false, false],
+      ["empty", "no", false, true],
+      ["empty", "no", true, false],
+      ["empty", "no", true, true],
+    ])(
+      "%s validator returns %s results when isEnabled:%o, isVisible:%o",
+      (state: string, results: string, isEnabled: boolean, isVisible: boolean) => {
+        const validator = getValidator({ state, isEnabled, isVisible });
+        const errors = Array.from(validator.getAllVisibleResults());
+        if (results === "no") {
+          expect(errors).toHaveLength(0);
         } else {
-          expect(results).not.toHaveLength(0);
+          expect(errors).not.toHaveLength(0);
         }
       }
     );
@@ -182,29 +179,28 @@ export function testCoreValidatorFunctions<TEntity extends { firstName: string }
   });
 
   describe("getVisibleResults on existing property", () => {
-    test.each`
-      state        | isEnabled | isVisible | results
-      ${"valid"}   | ${false}  | ${false}  | ${"no"}
-      ${"valid"}   | ${false}  | ${true}   | ${"no"}
-      ${"valid"}   | ${true}   | ${false}  | ${"no"}
-      ${"valid"}   | ${true}   | ${true}   | ${"some"}
-      ${"invalid"} | ${false}  | ${false}  | ${"no"}
-      ${"invalid"} | ${false}  | ${true}   | ${"no"}
-      ${"invalid"} | ${true}   | ${false}  | ${"no"}
-      ${"invalid"} | ${true}   | ${true}   | ${"some"}
-      ${"empty"}   | ${false}  | ${false}  | ${"no"}
-      ${"empty"}   | ${false}  | ${true}   | ${"no"}
-      ${"empty"}   | ${true}   | ${false}  | ${"no"}
-      ${"empty"}   | ${true}   | ${true}   | ${"no"}
-    `(
-      "$state validator returns $results results when isEnabled:$isEnabled, isVisible:$isVisible",
-      (args: { state: string; isEnabled: boolean; isVisible: boolean; results: string }) => {
-        const validator = getValidator(args);
-        const results = Array.from(validator.getVisibleResults("firstName"));
-        if (args.results === "no") {
-          expect(results).toHaveLength(0);
+    test.each([
+      ["valid", "no", false, false],
+      ["valid", "no", false, true],
+      ["valid", "no", true, false],
+      ["valid", "some", true, true],
+      ["invalid", "no", false, false],
+      ["invalid", "no", false, true],
+      ["invalid", "no", true, false],
+      ["invalid", "some", true, true],
+      ["empty", "no", false, false],
+      ["empty", "no", false, true],
+      ["empty", "no", true, false],
+      ["empty", "no", true, true],
+    ])(
+      "%s validator returns %s results when isEnabled:%o, isVisible:%o",
+      (state: string, results: string, isEnabled: boolean, isVisible: boolean) => {
+        const validator = getValidator({ state, isEnabled, isVisible });
+        const errors = Array.from(validator.getVisibleResults("firstName"));
+        if (results === "no") {
+          expect(errors).toHaveLength(0);
         } else {
-          expect(results).not.toHaveLength(0);
+          expect(errors).not.toHaveLength(0);
         }
       }
     );
@@ -224,106 +220,102 @@ export function testCoreValidatorFunctions<TEntity extends { firstName: string }
   });
 
   describe("getVisibleResults on missing property", () => {
-    test.each`
-      state        | isEnabled | isVisible | results
-      ${"valid"}   | ${false}  | ${false}  | ${"no"}
-      ${"valid"}   | ${false}  | ${true}   | ${"no"}
-      ${"valid"}   | ${true}   | ${false}  | ${"no"}
-      ${"valid"}   | ${true}   | ${true}   | ${"no"}
-      ${"invalid"} | ${false}  | ${false}  | ${"no"}
-      ${"invalid"} | ${false}  | ${true}   | ${"no"}
-      ${"invalid"} | ${true}   | ${false}  | ${"no"}
-      ${"invalid"} | ${true}   | ${true}   | ${"no"}
-      ${"empty"}   | ${false}  | ${false}  | ${"no"}
-      ${"empty"}   | ${false}  | ${true}   | ${"no"}
-      ${"empty"}   | ${true}   | ${false}  | ${"no"}
-      ${"empty"}   | ${true}   | ${true}   | ${"no"}
-    `(
-      "$state validator returns $results results when isEnabled:$isEnabled, isVisible:$isVisible",
-      (args: { state: string; isEnabled: boolean; isVisible: boolean; results: string }) => {
-        const validator = getValidator(args);
+    test.each([
+      ["valid", "no", false, false],
+      ["valid", "no", false, true],
+      ["valid", "no", true, false],
+      ["valid", "no", true, true],
+      ["invalid", "no", false, false],
+      ["invalid", "no", false, true],
+      ["invalid", "no", true, false],
+      ["invalid", "no", true, true],
+      ["empty", "no", false, false],
+      ["empty", "no", false, true],
+      ["empty", "no", true, false],
+      ["empty", "no", true, true],
+    ])(
+      "%s validator returns %s results when isEnabled:%o, isVisible:%o",
+      (state: string, results: string, isEnabled: boolean, isVisible: boolean) => {
+        const validator = getValidator({ state, isEnabled, isVisible });
         // eslint-disable-next-line @typescript-eslint/no-unsafe-argument
-        const results = Array.from(validator.getVisibleResults("unknown" as any));
-        if (args.results === "no") {
-          expect(results).toHaveLength(0);
+        const errors = Array.from(validator.getVisibleResults("unknown" as any));
+        if (results === "no") {
+          expect(errors).toHaveLength(0);
         } else {
-          expect(results).not.toHaveLength(0);
+          expect(errors).not.toHaveLength(0);
         }
       }
     );
 
     describe("checkValid", () => {
-      test.each`
-        state        | isEnabled | isVisible | result
-        ${"valid"}   | ${false}  | ${false}  | ${true}
-        ${"valid"}   | ${false}  | ${true}   | ${true}
-        ${"valid"}   | ${true}   | ${false}  | ${true}
-        ${"valid"}   | ${true}   | ${true}   | ${true}
-        ${"invalid"} | ${false}  | ${false}  | ${true}
-        ${"invalid"} | ${false}  | ${true}   | ${true}
-        ${"invalid"} | ${true}   | ${false}  | ${false}
-        ${"invalid"} | ${true}   | ${true}   | ${false}
-        ${"empty"}   | ${false}  | ${false}  | ${true}
-        ${"empty"}   | ${false}  | ${true}   | ${true}
-        ${"empty"}   | ${true}   | ${false}  | ${true}
-        ${"empty"}   | ${true}   | ${true}   | ${true}
-      `(
-        "$state validator returns $result when isEnabled:$isEnabled, isVisible:$isVisible",
-        (args: { state: string; isEnabled: boolean; isVisible: boolean; result: AggregatedValidationResult }) => {
-          const validator = getValidator(args);
-          const result = validator.checkValid();
-          expect(result).toBe(args.result);
+      test.each([
+        ["valid", true, false, false],
+        ["valid", true, false, true],
+        ["valid", true, true, false],
+        ["valid", true, true, true],
+        ["invalid", true, false, false],
+        ["invalid", true, false, true],
+        ["invalid", false, true, false],
+        ["invalid", false, true, true],
+        ["empty", true, false, false],
+        ["empty", true, false, true],
+        ["empty", true, true, false],
+        ["empty", true, true, true],
+      ])(
+        "%s validator returns %o when isEnabled:%o, isVisible:%o",
+        (state: string, result: AggregatedValidationResult, isEnabled: boolean, isVisible: boolean) => {
+          const validator = getValidator({ state, isEnabled, isVisible });
+          const isValid = validator.checkValid();
+          expect(isValid).toBe(result);
         }
       );
     });
 
     describe("checkValid on existing property", () => {
-      test.each`
-        state        | isEnabled | isVisible | result
-        ${"valid"}   | ${false}  | ${false}  | ${true}
-        ${"valid"}   | ${false}  | ${true}   | ${true}
-        ${"valid"}   | ${true}   | ${false}  | ${true}
-        ${"valid"}   | ${true}   | ${true}   | ${true}
-        ${"invalid"} | ${false}  | ${false}  | ${true}
-        ${"invalid"} | ${false}  | ${true}   | ${true}
-        ${"invalid"} | ${true}   | ${false}  | ${false}
-        ${"invalid"} | ${true}   | ${true}   | ${false}
-        ${"empty"}   | ${false}  | ${false}  | ${true}
-        ${"empty"}   | ${false}  | ${true}   | ${true}
-        ${"empty"}   | ${true}   | ${false}  | ${true}
-        ${"empty"}   | ${true}   | ${true}   | ${true}
-      `(
-        "$state validator returns $result when isEnabled:$isEnabled, isVisible:$isVisible",
-        (args: { state: string; isEnabled: boolean; isVisible: boolean; result: AggregatedValidationResult }) => {
-          const validator = getValidator(args);
-          const result = validator.checkValid("firstName");
-          expect(result).toBe(args.result);
+      test.each([
+        ["valid", true, false, false],
+        ["valid", true, false, true],
+        ["valid", true, true, false],
+        ["valid", true, true, true],
+        ["invalid", true, false, false],
+        ["invalid", true, false, true],
+        ["invalid", false, true, false],
+        ["invalid", false, true, true],
+        ["empty", true, false, false],
+        ["empty", true, false, true],
+        ["empty", true, true, false],
+        ["empty", true, true, true],
+      ])(
+        "%s validator returns %o when isEnabled:%o, isVisible:%o",
+        (state: string, result: AggregatedValidationResult, isEnabled: boolean, isVisible: boolean) => {
+          const validator = getValidator({ state, isEnabled, isVisible });
+          const isValid = validator.checkValid("firstName");
+          expect(isValid).toBe(result);
         }
       );
     });
 
     describe("checkValid on missing property", () => {
-      test.each`
-        state        | isEnabled | isVisible | result
-        ${"valid"}   | ${false}  | ${false}  | ${true}
-        ${"valid"}   | ${false}  | ${true}   | ${true}
-        ${"valid"}   | ${true}   | ${false}  | ${true}
-        ${"valid"}   | ${true}   | ${true}   | ${true}
-        ${"invalid"} | ${false}  | ${false}  | ${true}
-        ${"invalid"} | ${false}  | ${true}   | ${true}
-        ${"invalid"} | ${true}   | ${false}  | ${true}
-        ${"invalid"} | ${true}   | ${true}   | ${true}
-        ${"empty"}   | ${false}  | ${false}  | ${true}
-        ${"empty"}   | ${false}  | ${true}   | ${true}
-        ${"empty"}   | ${true}   | ${false}  | ${true}
-        ${"empty"}   | ${true}   | ${true}   | ${true}
-      `(
-        "$state validator returns $result when isEnabled:$isEnabled, isVisible:$isVisible",
-        (args: { state: string; isEnabled: boolean; isVisible: boolean; result: AggregatedValidationResult }) => {
-          const validator = getValidator(args);
+      test.each([
+        ["valid", true, false, false],
+        ["valid", true, false, true],
+        ["valid", true, true, false],
+        ["valid", true, true, true],
+        ["invalid", true, false, false],
+        ["invalid", true, false, true],
+        ["invalid", true, true, false],
+        ["invalid", true, true, true],
+        ["empty", true, false, false],
+        ["empty", true, false, true],
+        ["empty", true, true, false],
+        ["empty", true, true, true],
+      ])(
+        "%s validator returns %o when isEnabled:%o, isVisible:%o",
+        (state: string, result: AggregatedValidationResult, isEnabled: boolean, isVisible: boolean) => {
+          const validator = getValidator({ state, isEnabled, isVisible });
           // eslint-disable-next-line @typescript-eslint/no-unsafe-argument
-          const result = validator.checkValid("unknown" as any);
-          expect(result).toBe(args.result);
+          const isValid = validator.checkValid("unknown" as any);
+          expect(isValid).toBe(result);
         }
       );
     });

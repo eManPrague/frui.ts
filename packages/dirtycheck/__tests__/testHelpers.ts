@@ -1,4 +1,5 @@
 /* eslint-disable sonarjs/no-duplicate-string */
+import { describe, expect, test } from "vitest";
 import type { EntityDirtyWatcher } from "../src/types";
 
 export function testCoreDirtyWatcherFunctions<TEntity extends { firstName: string } = any>(
@@ -19,7 +20,7 @@ export function testCoreDirtyWatcherFunctions<TEntity extends { firstName: strin
         watcher = emptyWatcher();
         break;
       default:
-        throw new Error(`Unknown watcher state '${args.state}'`);
+        throw new Error(`Unknown watcher state 'args.state}'`);
     }
 
     watcher.isEnabled = args.isEnabled;
@@ -28,191 +29,184 @@ export function testCoreDirtyWatcherFunctions<TEntity extends { firstName: strin
   };
 
   describe("getDirtyProperties", () => {
-    test.each`
-      state      | isEnabled | isVisible | results
-      ${"clean"} | ${false}  | ${false}  | ${"no"}
-      ${"clean"} | ${false}  | ${true}   | ${"no"}
-      ${"clean"} | ${true}   | ${false}  | ${"no"}
-      ${"clean"} | ${true}   | ${true}   | ${"no"}
-      ${"dirty"} | ${false}  | ${false}  | ${"no"}
-      ${"dirty"} | ${false}  | ${true}   | ${"no"}
-      ${"dirty"} | ${true}   | ${false}  | ${"some"}
-      ${"dirty"} | ${true}   | ${true}   | ${"some"}
-      ${"empty"} | ${false}  | ${false}  | ${"no"}
-      ${"empty"} | ${false}  | ${true}   | ${"no"}
-      ${"empty"} | ${true}   | ${false}  | ${"no"}
-      ${"empty"} | ${true}   | ${true}   | ${"no"}
-    `(
-      "$state watcher returns $results results when isEnabled:$isEnabled, isVisible:$isVisible",
-      (args: { state: string; isEnabled: boolean; isVisible: boolean; results: string }) => {
-        const watcher = getWatcher(args);
-        const results = Array.from(watcher.getDirtyProperties());
-        if (args.results === "no") {
-          expect(results).toHaveLength(0);
+    test.each([
+      ["clean", "no", false, false],
+      ["clean", "no", false, true],
+      ["clean", "no", true, false],
+      ["clean", "no", true, true],
+      ["dirty", "no", false, false],
+      ["dirty", "no", false, true],
+      ["dirty", "some", true, false],
+      ["dirty", "some", true, true],
+      ["empty", "no", false, false],
+      ["empty", "no", false, true],
+      ["empty", "no", true, false],
+      ["empty", "no", true, true],
+    ])(
+      "%s watcher returns %s results when isEnabled:%o, isVisible:%o",
+      (state: string, results: string, isEnabled: boolean, isVisible: boolean) => {
+        const watcher = getWatcher({ state, isEnabled, isVisible });
+        const properties = Array.from(watcher.getDirtyProperties());
+        if (results === "no") {
+          expect(properties).toHaveLength(0);
         } else {
-          expect(results).not.toHaveLength(0);
+          expect(properties).not.toHaveLength(0);
         }
       }
     );
   });
 
   describe("checkDirty", () => {
-    test.each`
-      state      | isEnabled | isVisible | dirty
-      ${"clean"} | ${false}  | ${false}  | ${false}
-      ${"clean"} | ${false}  | ${true}   | ${false}
-      ${"clean"} | ${true}   | ${false}  | ${false}
-      ${"clean"} | ${true}   | ${true}   | ${false}
-      ${"dirty"} | ${false}  | ${false}  | ${false}
-      ${"dirty"} | ${false}  | ${true}   | ${false}
-      ${"dirty"} | ${true}   | ${false}  | ${true}
-      ${"dirty"} | ${true}   | ${true}   | ${true}
-      ${"empty"} | ${false}  | ${false}  | ${false}
-      ${"empty"} | ${false}  | ${true}   | ${false}
-      ${"empty"} | ${true}   | ${false}  | ${false}
-      ${"empty"} | ${true}   | ${true}   | ${false}
-    `(
-      "$state watcher returns dirty:$dirty when isEnabled:$isEnabled, isVisible:$isVisible",
-      (args: { state: string; isEnabled: boolean; isVisible: boolean; dirty: boolean }) => {
-        const watcher = getWatcher(args);
+    test.each([
+      ["clean", false, false, false],
+      ["clean", false, false, true],
+      ["clean", false, true, false],
+      ["clean", false, true, true],
+      ["dirty", false, false, false],
+      ["dirty", false, false, true],
+      ["dirty", true, true, false],
+      ["dirty", true, true, true],
+      ["empty", false, false, false],
+      ["empty", false, false, true],
+      ["empty", false, true, false],
+      ["empty", false, true, true],
+    ])(
+      "%s watcher returns dirty:%s when isEnabled:%o, isVisible:%o",
+      (state: string, dirty: boolean, isEnabled: boolean, isVisible: boolean) => {
+        const watcher = getWatcher({ state, isEnabled, isVisible });
         const isDirty = watcher.checkDirty();
-        expect(isDirty).toBe(args.dirty);
+        expect(isDirty).toBe(dirty);
       }
     );
   });
 
   describe("checkDirty on existing property", () => {
-    test.each`
-      state      | isEnabled | isVisible | dirty
-      ${"clean"} | ${false}  | ${false}  | ${false}
-      ${"clean"} | ${false}  | ${true}   | ${false}
-      ${"clean"} | ${true}   | ${false}  | ${false}
-      ${"clean"} | ${true}   | ${true}   | ${false}
-      ${"dirty"} | ${false}  | ${false}  | ${false}
-      ${"dirty"} | ${false}  | ${true}   | ${false}
-      ${"dirty"} | ${true}   | ${false}  | ${true}
-      ${"dirty"} | ${true}   | ${true}   | ${true}
-      ${"empty"} | ${false}  | ${false}  | ${false}
-      ${"empty"} | ${false}  | ${true}   | ${false}
-      ${"empty"} | ${true}   | ${false}  | ${false}
-      ${"empty"} | ${true}   | ${true}   | ${false}
-    `(
-      "$state watcher returns dirty:$dirty when isEnabled:$isEnabled, isVisible:$isVisible",
-      (args: { state: string; isEnabled: boolean; isVisible: boolean; dirty: boolean }) => {
-        const watcher = getWatcher(args);
+    test.each([
+      ["clean", false, false, false],
+      ["clean", false, false, true],
+      ["clean", false, true, false],
+      ["clean", false, true, true],
+      ["dirty", false, false, false],
+      ["dirty", false, false, true],
+      ["dirty", true, true, false],
+      ["dirty", true, true, true],
+      ["empty", false, false, false],
+      ["empty", false, false, true],
+      ["empty", false, true, false],
+      ["empty", false, true, true],
+    ])(
+      "%s watcher returns dirty:%s when isEnabled:%o, isVisible:%o",
+      (state: string, dirty: boolean, isEnabled: boolean, isVisible: boolean) => {
+        const watcher = getWatcher({ state, isEnabled, isVisible });
         const isDirty = watcher.checkDirty("firstName");
-        expect(isDirty).toBe(args.dirty);
+        expect(isDirty).toBe(dirty);
       }
     );
   });
 
   describe("checkDirty on missing property", () => {
-    test.each`
-      state      | isEnabled | isVisible | dirty
-      ${"clean"} | ${false}  | ${false}  | ${false}
-      ${"clean"} | ${false}  | ${true}   | ${false}
-      ${"clean"} | ${true}   | ${false}  | ${false}
-      ${"clean"} | ${true}   | ${true}   | ${false}
-      ${"dirty"} | ${false}  | ${false}  | ${false}
-      ${"dirty"} | ${false}  | ${true}   | ${false}
-      ${"dirty"} | ${true}   | ${false}  | ${false}
-      ${"dirty"} | ${true}   | ${true}   | ${false}
-      ${"empty"} | ${false}  | ${false}  | ${false}
-      ${"empty"} | ${false}  | ${true}   | ${false}
-      ${"empty"} | ${true}   | ${false}  | ${false}
-      ${"empty"} | ${true}   | ${true}   | ${false}
-    `(
-      "$state watcher returns dirty:$dirty when isEnabled:$isEnabled, isVisible:$isVisible",
-      (args: { state: string; isEnabled: boolean; isVisible: boolean; dirty: boolean }) => {
-        const watcher = getWatcher(args);
+    test.each([
+      ["clean", false, false, false],
+      ["clean", false, false, true],
+      ["clean", false, true, false],
+      ["clean", false, true, true],
+      ["dirty", false, false, false],
+      ["dirty", false, false, true],
+      ["dirty", false, true, false],
+      ["dirty", false, true, true],
+      ["empty", false, false, false],
+      ["empty", false, false, true],
+      ["empty", false, true, false],
+      ["empty", false, true, true],
+    ])(
+      "%s watcher returns dirty:%s when isEnabled:%o, isVisible:%o",
+      (state: string, dirty: boolean, isEnabled: boolean, isVisible: boolean) => {
+        const watcher = getWatcher({ state, isEnabled, isVisible });
         // eslint-disable-next-line @typescript-eslint/no-unsafe-argument
         const isDirty = watcher.checkDirty("unknown" as any);
-        expect(isDirty).toBe(args.dirty);
+        expect(isDirty).toBe(dirty);
       }
     );
   });
 
   describe("getDirtyVisibleProperties", () => {
-    test.each`
-      state      | isEnabled | isVisible | results
-      ${"clean"} | ${false}  | ${false}  | ${"no"}
-      ${"clean"} | ${false}  | ${true}   | ${"no"}
-      ${"clean"} | ${true}   | ${false}  | ${"no"}
-      ${"clean"} | ${true}   | ${true}   | ${"no"}
-      ${"dirty"} | ${false}  | ${false}  | ${"no"}
-      ${"dirty"} | ${false}  | ${true}   | ${"no"}
-      ${"dirty"} | ${true}   | ${false}  | ${"no"}
-      ${"dirty"} | ${true}   | ${true}   | ${"some"}
-      ${"empty"} | ${false}  | ${false}  | ${"no"}
-      ${"empty"} | ${false}  | ${true}   | ${"no"}
-      ${"empty"} | ${true}   | ${false}  | ${"no"}
-      ${"empty"} | ${true}   | ${true}   | ${"no"}
-    `(
-      "$state watcher returns $results results when isEnabled:$isEnabled, isVisible:$isVisible",
-      (args: { state: string; isEnabled: boolean; isVisible: boolean; results: string }) => {
-        const watcher = getWatcher(args);
-        const results = Array.from(watcher.getDirtyVisibleProperties());
-        if (args.results === "no") {
-          expect(results).toHaveLength(0);
+    test.each([
+      ["clean", "no", false, false],
+      ["clean", "no", false, true],
+      ["clean", "no", true, false],
+      ["clean", "no", true, true],
+      ["dirty", "no", false, false],
+      ["dirty", "no", false, true],
+      ["dirty", "no", true, false],
+      ["dirty", "some", true, true],
+      ["empty", "no", false, false],
+      ["empty", "no", false, true],
+      ["empty", "no", true, false],
+      ["empty", "no", true, true],
+    ])(
+      "%s watcher returns $results results when isEnabled:%o, isVisible:%o",
+      (state: string, results: string, isEnabled: boolean, isVisible: boolean) => {
+        const watcher = getWatcher({ state, isEnabled, isVisible });
+        const properties = Array.from(watcher.getDirtyVisibleProperties());
+        if (results === "no") {
+          expect(properties).toHaveLength(0);
         } else {
-          expect(results).not.toHaveLength(0);
+          expect(properties).not.toHaveLength(0);
         }
       }
     );
   });
 
   describe("checkDirtyVisible on existing property", () => {
-    test.each`
-      state      | isEnabled | isVisible | dirty
-      ${"clean"} | ${false}  | ${false}  | ${false}
-      ${"clean"} | ${false}  | ${true}   | ${false}
-      ${"clean"} | ${true}   | ${false}  | ${false}
-      ${"clean"} | ${true}   | ${true}   | ${false}
-      ${"dirty"} | ${false}  | ${false}  | ${false}
-      ${"dirty"} | ${false}  | ${true}   | ${false}
-      ${"dirty"} | ${true}   | ${false}  | ${false}
-      ${"dirty"} | ${true}   | ${true}   | ${true}
-      ${"empty"} | ${false}  | ${false}  | ${false}
-      ${"empty"} | ${false}  | ${true}   | ${false}
-      ${"empty"} | ${true}   | ${false}  | ${false}
-      ${"empty"} | ${true}   | ${true}   | ${false}
-    `(
-      "$state watcher returns dirty:$dirty when isEnabled:$isEnabled, isVisible:$isVisible",
-      (args: { state: string; isEnabled: boolean; isVisible: boolean; dirty: boolean }) => {
-        const watcher = getWatcher(args);
+    test.each([
+      ["clean", false, false, false],
+      ["clean", false, false, true],
+      ["clean", false, true, false],
+      ["clean", false, true, true],
+      ["dirty", false, false, false],
+      ["dirty", false, false, true],
+      ["dirty", false, true, false],
+      ["dirty", true, true, true],
+      ["empty", false, false, false],
+      ["empty", false, false, true],
+      ["empty", false, true, false],
+      ["empty", false, true, true],
+    ])(
+      "%s watcher returns dirty:%s when isEnabled:%o, isVisible:%o",
+      (state: string, dirty: boolean, isEnabled: boolean, isVisible: boolean) => {
+        const watcher = getWatcher({ state, isEnabled, isVisible });
         const isDirty = watcher.checkDirtyVisible("firstName");
-        expect(isDirty).toBe(args.dirty);
+        expect(isDirty).toBe(dirty);
       }
     );
   });
 
   describe("checkDirtyVisible on missing property", () => {
-    test.each`
-      state      | isEnabled | isVisible | dirty
-      ${"clean"} | ${false}  | ${false}  | ${false}
-      ${"clean"} | ${false}  | ${true}   | ${false}
-      ${"clean"} | ${true}   | ${false}  | ${false}
-      ${"clean"} | ${true}   | ${true}   | ${false}
-      ${"dirty"} | ${false}  | ${false}  | ${false}
-      ${"dirty"} | ${false}  | ${true}   | ${false}
-      ${"dirty"} | ${true}   | ${false}  | ${false}
-      ${"dirty"} | ${true}   | ${true}   | ${false}
-      ${"empty"} | ${false}  | ${false}  | ${false}
-      ${"empty"} | ${false}  | ${true}   | ${false}
-      ${"empty"} | ${true}   | ${false}  | ${false}
-      ${"empty"} | ${true}   | ${true}   | ${false}
-    `(
-      "$state watcher returns dirty:$dirty when isEnabled:$isEnabled, isVisible:$isVisible",
-      (args: { state: string; isEnabled: boolean; isVisible: boolean; dirty: boolean }) => {
-        const watcher = getWatcher(args);
+    test.each([
+      ["clean", false, false, false],
+      ["clean", false, false, true],
+      ["clean", false, true, false],
+      ["clean", false, true, true],
+      ["dirty", false, false, false],
+      ["dirty", false, false, true],
+      ["dirty", false, true, false],
+      ["dirty", false, true, true],
+      ["empty", false, false, false],
+      ["empty", false, false, true],
+      ["empty", false, true, false],
+      ["empty", false, true, true],
+    ])(
+      "%s watcher returns dirty:%s when isEnabled:%o, isVisible:%o",
+      (state: string, dirty: boolean, isEnabled: boolean, isVisible: boolean) => {
+        const watcher = getWatcher({ state, isEnabled, isVisible });
         // eslint-disable-next-line @typescript-eslint/no-unsafe-argument
         const isDirty = watcher.checkDirtyVisible("unknown" as any);
-        expect(isDirty).toBe(args.dirty);
+        expect(isDirty).toBe(dirty);
       }
     );
   });
 
-  describe("reset() clears dirty flags", () => {
+  test("reset() clears dirty flags", () => {
     const watcher = dirtyWatcher();
     expect(watcher.isDirty).toBeTruthy();
 

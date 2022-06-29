@@ -1,5 +1,6 @@
 /* eslint-disable sonarjs/no-identical-functions */
-import { mock } from "jest-mock-extended";
+import { describe, expect, it } from "vitest";
+import { mock } from "vitest-mock-extended";
 import type { ScreenBase, SimpleScreenNavigator } from "../../../src";
 import { ActiveChildConductor } from "../../../src";
 import { testLifecycle } from "../navigator.testHelpers";

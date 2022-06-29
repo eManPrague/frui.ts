@@ -1,4 +1,5 @@
 import { isObservableProp, observable } from "mobx";
+import { describe, expect, it } from "vitest";
 import { ensureObservableProperty } from "../src/observableHelpers";
 
 describe("ensureObservableProperty", () => {

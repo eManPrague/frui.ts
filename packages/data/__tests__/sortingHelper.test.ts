@@ -1,3 +1,4 @@
+import { describe, expect, it } from "vitest";
 import { SortingDirection } from "../src/sortingDirection";
 import { addSort, setSort } from "../src/sortingHelper";
 import type { IPagingFilter } from "../src/types";

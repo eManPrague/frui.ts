@@ -1,4 +1,5 @@
-import { mock } from "jest-mock-extended";
+import { describe, expect, it } from "vitest";
+import { mock } from "vitest-mock-extended";
 import type { ScreenNavigator } from "../../src/navigation/types";
 import UrlRouterBase from "../../src/router/urlRouterBase";
 

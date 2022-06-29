@@ -1,4 +1,5 @@
 import { computed, isObservableProp, observable, ObservableMap } from "mobx";
+import { describe, expect, it } from "vitest";
 import { BindingComponent } from "../src/binding/bindingComponent";
 import type { IBindingProps } from "../src/binding/bindingProps";
 

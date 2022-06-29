@@ -1,4 +1,5 @@
-import { mock } from "jest-mock-extended";
+import { describe, expect, it } from "vitest";
+import { mock } from "vitest-mock-extended";
 import type { IApiConnector } from "../src";
 import { appendUrl, RestRequestBuilder } from "../src";
 

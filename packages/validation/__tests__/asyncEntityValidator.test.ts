@@ -1,5 +1,6 @@
 import { ManualPromise } from "@frui.ts/helpers";
 import { observable } from "mobx";
+import { beforeAll, describe, expect, it } from "vitest";
 import AsyncEntityValidator from "../src/asyncEntityValidator";
 import configuration, { ValidationLoading } from "../src/configuration";
 import type { ValidationResult } from "../src/types";

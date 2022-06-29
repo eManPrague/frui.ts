@@ -1,5 +1,3 @@
-import * as jest from "jest-mock";
-window.jest = jest;
 window.global = window;
 
 export const parameters = {

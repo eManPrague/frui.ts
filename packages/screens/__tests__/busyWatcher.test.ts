@@ -1,5 +1,6 @@
-import BusyWatcher from "../src/busyWatcher";
 import { ManualPromise } from "@frui.ts/helpers";
+import { describe, expect, it, test } from "vitest";
+import BusyWatcher from "../src/busyWatcher";
 
 describe("BusyWatcher", () => {
   test("new busyWatcher is not busy", () => {

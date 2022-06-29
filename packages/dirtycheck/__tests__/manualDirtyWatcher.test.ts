@@ -1,3 +1,4 @@
+import { describe, expect, test } from "vitest";
 import ManualDirtyWatcher from "../src/manualDirtyWatcher";
 import { testCoreDirtyWatcherFunctions } from "./testHelpers";
 

@@ -1,3 +1,4 @@
+import { describe, expect, it } from "vitest";
 import { appendContentTypeHeader, jsonContentType } from "../src/fetchApiConnector";
 
 describe("fetchApiConnector", () => {

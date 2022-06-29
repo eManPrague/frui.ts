@@ -1,4 +1,5 @@
 import { observable } from "mobx";
+import { beforeAll, describe, expect, it } from "vitest";
 import AutomaticEntityValidator from "../src/automaticEntityValidator";
 import configuration from "../src/configuration";
 import { expectInvalid, expectValid, testCoreValidatorFunctions } from "./testHelpers";

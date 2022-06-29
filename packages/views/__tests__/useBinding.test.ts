@@ -1,4 +1,5 @@
 import { isObservableProp, observable, ObservableMap } from "mobx";
+import { describe, expect, it } from "vitest";
 import { getValue } from "../src/binding/useBinding";
 
 describe("getValue", () => {

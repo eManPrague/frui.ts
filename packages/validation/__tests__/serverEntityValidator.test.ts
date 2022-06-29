@@ -1,4 +1,5 @@
 import { autorun, observable } from "mobx";
+import { describe, expect, it, test } from "vitest";
 import ServerEntityValidator from "../src/serverEntityValidator";
 import type { ValidationResult } from "../src/types";
 import { expectInvalid, expectValid, testCoreValidatorFunctions } from "./testHelpers";

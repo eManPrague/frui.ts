@@ -1,3 +1,4 @@
+import { describe, expect, it } from "vitest";
 import AggregateEntityValidator from "../src/aggregateEntityValidator";
 import ManualEntityValidator from "../src/manualEntityValidator";
 import { testCoreValidatorFunctions } from "./testHelpers";

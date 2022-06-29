@@ -1,4 +1,5 @@
 import type { BindingProperty } from "@frui.ts/helpers";
+import { test } from "vitest";
 import type { IBindingProps } from "../src/binding/bindingProps";
 import { getValue, setValue, useBinding } from "../src/binding/useBinding";
 
