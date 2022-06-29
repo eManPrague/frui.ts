@@ -22,6 +22,10 @@ export type ValidationConfig =
       filter?: string; // regex matched against the rule param
     };
 
+export interface IPathConfig {
+  [key: string]: string | RegExp;
+}
+
 export interface IConfig {
   api: string;
   observable?: ObservableConfig;
@@ -29,7 +33,8 @@ export interface IConfig {
   dates?: "native" | "date-fns";
   validations?: Record<string, ValidationConfig>;
 
-  entitiesPath: string;
+  entitiesPath: string | IPathConfig;
+  defaultEntitiesPath?: string;
   repositoriesPath: string;
 
   validation?: boolean;

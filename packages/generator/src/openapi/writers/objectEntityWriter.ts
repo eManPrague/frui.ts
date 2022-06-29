@@ -2,6 +2,7 @@ import camelCase from "lodash/camelCase";
 import uniq from "lodash/uniq";
 import { Directory, SourceFile } from "ts-morph";
 import GeneratorBase from "../../generatorBase";
+import { getRelativePath } from "../../helpers";
 import ObservableFormatter from "../formatters/observableFormatter";
 import AliasEntity from "../models/aliasEntity";
 import EntityProperty from "../models/entityProperty";
@@ -10,11 +11,12 @@ import ObjectEntity from "../models/objectEntity";
 import Restriction from "../models/restriction";
 import TypeReference from "../models/typeReference";
 import { IConfig, ValidationConfig } from "../types";
+import { getPath } from "../utils";
 
 export default class ObjectEntityWriter {
   constructor(
     private parentDirectory: Directory,
-    private config: Partial<IConfig>,
+    private config: IConfig,
     private templates: Record<"objectEntityContent" | "objectEntityFile", Handlebars.TemplateDelegate>
   ) {}
 
@@ -47,24 +49,51 @@ export default class ObjectEntityWriter {
 
   private createFile(fileName: string, definition: ObjectEntity, baseClass: ObjectEntity | undefined) {
     const decoratorImports = this.getPropertyDecoratorsImports(definition.properties);
-    const entitiesToImport = definition.properties.filter(x => x.type.isImportRequired).map(x => x.type.getTypeName());
-
+    const entitiesToImport: Array<EntityProperty | ObjectEntity> = definition.properties.filter(x => x.type.isImportRequired);
     if (baseClass) {
-      entitiesToImport.push(baseClass.name);
+      entitiesToImport.push(baseClass);
     }
 
-    const entityImports = uniq(entitiesToImport)
-      .sort()
-      .map(x => `import ${x} from "./${camelCase(x)}";`);
+    const entitiesImports = entitiesToImport.sort().map(x => {
+      let name;
+      if (x instanceof EntityProperty) {
+        name = x.type.getTypeName() ?? x.name;
+      } else {
+        name = x.name;
+      }
+      const path = this.getImportPath(x, definition);
+
+      return `import ${name} from "${path}/${camelCase(name)}";`;
+    });
 
     const result = this.templates.objectEntityFile({
-      imports: [...decoratorImports, ...entityImports],
+      imports: [...decoratorImports, ...uniq(entitiesImports)],
       content: () => this.getEntityContent(definition, baseClass),
       entity: definition,
       baseClass,
     });
 
     return this.parentDirectory.createSourceFile(fileName, result, { overwrite: true });
+  }
+
+  getImportPath(targetEntity: EntityProperty | ObjectEntity, sourceEntity: ObjectEntity) {
+    let targetEntityName;
+    if (targetEntity instanceof EntityProperty) {
+      targetEntityName = targetEntity.type.getTypeName() ?? targetEntity.name;
+    } else {
+      targetEntityName = targetEntity.name;
+    }
+
+    const targetPath = getPath(this.config.entitiesPath, targetEntityName, this.config.defaultEntitiesPath);
+    const sourcePath = getPath(this.config.entitiesPath, sourceEntity.name, this.config.defaultEntitiesPath);
+
+    const path = getRelativePath(sourcePath, targetPath);
+
+    if (path.endsWith("/")) {
+      return path.slice(0, path.length - 1);
+    }
+
+    return path;
   }
 
   getPropertyDecoratorsImports(properties: EntityProperty[]) {

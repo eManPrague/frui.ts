@@ -1,9 +1,10 @@
+import { SingleBar } from "cli-progress";
 import fs from "fs";
 import Handlebars from "handlebars";
 import { camelCase, groupBy } from "lodash";
 import path from "path";
 import { Project } from "ts-morph";
-import { getRelativePath, pascalCase } from "../helpers";
+import { pascalCase } from "../helpers";
 import { createProgressBar } from "../progressBar";
 import Endpoint from "./models/endpoint";
 import Enum from "./models/enum";
@@ -12,6 +13,7 @@ import ObjectEntity from "./models/objectEntity";
 import TypeReference from "./models/typeReference";
 import UnionEntity from "./models/unionEntity";
 import { IConfig, IGeneratorParams } from "./types";
+import { patternMath } from "./utils";
 import EnumWriter from "./writers/enumWriter";
 import ObjectEntityWriter from "./writers/objectEntityWriter";
 import RepositoryWriter from "./writers/repositoryWriter";
@@ -42,6 +44,42 @@ export default class FileGenerator {
     const saveSteps = Math.ceil(items.length * 0.1 + 1);
     progress.start(1 + items.length + saveSteps, 0);
 
+    Handlebars.registerPartial("generatedEntityHeader", await this.readTemplate("generatedEntityHeader"));
+
+    const entitiesPath = this.config.entitiesPath;
+    const groups = groupBy(items, item => {
+      const name = item.getTypeName() ?? "";
+
+      if (typeof entitiesPath === "object") {
+        for (const path in entitiesPath) {
+          if (entitiesPath.hasOwnProperty(path)) {
+            const pattern = entitiesPath[path];
+            const include = patternMath(pattern, name);
+
+            if (include) {
+              return path;
+            }
+          }
+        }
+        return this.config.defaultEntitiesPath;
+      } else {
+        return entitiesPath;
+      }
+    });
+
+    progress.increment(1);
+
+    for (const path in groups) {
+      await this.generateEntityGroup(groups[path], path, progress);
+    }
+
+    await this.project.save();
+    progress.increment(saveSteps);
+
+    progress.stop();
+  }
+
+  async generateEntityGroup(items: TypeReference[], path: string, progress: SingleBar) {
     const templates = {
       enumEntity: await this.readTemplate("enumEntity"),
       enumEntityFile: await this.readTemplate("enumEntityFile"),
@@ -52,16 +90,12 @@ export default class FileGenerator {
       unionEntity: await this.readTemplate("unionEntity"),
       unionEntityFile: await this.readTemplate("unionEntityFile"),
     };
+    const directory = this.project.createDirectory(path);
 
-    Handlebars.registerPartial("generatedEntityHeader", await this.readTemplate("generatedEntityHeader"));
-
-    const directory = this.project.createDirectory(this.config.entitiesPath);
     const enumWriter =
       this.config.enums === "enum" ? new EnumWriter(directory, templates) : new StringLiteralWriter(directory, templates);
     const objectWriter = new ObjectEntityWriter(directory, this.config, templates);
     const unionWriter = new UnionEntityWriter(directory, templates);
-
-    progress.increment(1);
 
     for (const { type } of items) {
       if (type instanceof Enum) {
@@ -78,11 +112,6 @@ export default class FileGenerator {
 
       progress.increment();
     }
-
-    await this.project.save();
-    progress.increment(saveSteps);
-
-    progress.stop();
   }
 
   async generateRepositories(endpoints: Endpoint[]) {
@@ -102,13 +131,7 @@ export default class FileGenerator {
     };
 
     const directory = this.project.createDirectory(this.config.repositoriesPath);
-    const writer = new RepositoryWriter(
-      directory,
-      {
-        entitiesRelativePath: getRelativePath(this.config.repositoriesPath, this.config.entitiesPath),
-      },
-      templates
-    );
+    const writer = new RepositoryWriter(directory, this.config, templates);
 
     progress.increment(1);
 
