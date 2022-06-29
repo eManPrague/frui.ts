@@ -9,15 +9,25 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v2
-      - uses: actions/setup-node@v1
+
+      - name: Cache
+        uses: actions/cache@v3.0.2
         with:
-          node-version: 14
-          registry-url: https://registry.npmjs.org/
+          path: node_modules
+          key: ${{ runner.os }}-yarn-${{ hashFiles('**/yarn.lock') }}
+          restore-keys: ${{ runner.os }}-yarn-
+
+      - name: Use Node.js 16.x
+        uses: actions/setup-node@v3
+        with:
+          node-version: 16.x
+
       - uses: little-core-labs/get-git-tag@v3.0.1
         id: tagName
         with:
           tagRegex: "v(.*)"
           tagRegexGroup: 1
+
       - run: yarn install
       - run: yarn run lerna bootstrap
       - run: yarn run build
