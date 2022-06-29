@@ -1,4 +1,5 @@
-import { PropertyName } from "@frui.ts/helpers";
+// eslint-disable-next-line @typescript-eslint/consistent-type-imports
+import type { PropertyName } from "@frui.ts/helpers";
 import { action, observable } from "mobx";
 import DirtyWatcherBase, { emptyResults } from "./dirtyWatcherBase";
 

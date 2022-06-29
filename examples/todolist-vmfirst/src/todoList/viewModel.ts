@@ -1,5 +1,5 @@
 import { NavigationContext, ScreenBase, SimpleScreenNavigator } from "@frui.ts/screens";
-import { HasLifecycleEvents } from "@frui.ts/screens/dist/screens/hasLifecycleHandlers";
+import type { HasLifecycleEvents } from "@frui.ts/screens/dist/screens/hasLifecycleHandlers";
 import { action, computed, observable } from "mobx";
 import { v4 as uuid } from "uuid";
 import TodoItem from "../models/todoItem";

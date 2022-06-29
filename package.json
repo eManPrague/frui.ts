@@ -32,28 +32,28 @@
   },
   "scripts": {
     "setversion": "lerna version -y --no-push --no-git-tag-version",
-    "publish:storybook": "yarn --cwd stories run publish",
+    "publish:storybook": "yarn --cwd stories run build-storybook",
     "publish:docs": "typedoc packages --out dist/docs --hideGenerator --exclude '**/node_modules' --ignoreCompilerErrors",
     "publish": "rimraf dist && yarn run publish:storybook",
     "cleanbuild": "lerna run clean && lerna run build",
     "build": "lerna run build",
     "test": "vitest",
     "storybook": "yarn --cwd stories storybook",
-    "lint": "eslint \"./{packages,stories}/**/*.{ts,tsx}\" --cache",
-    "validate": "yarn run lint && yarn run cleanbuild && yarn run test && yarn run publish"
+    "lint": "eslint \"./{packages,stories,examples}/**/*.{ts,tsx}\" --cache",
+    "validate": "yarn run cleanbuild && yarn run test --run && yarn run lint && yarn run publish"
   },
   "devDependencies": {
     "@emanprague/eslint-config": "^3.0.0",
-    "@testing-library/react": "^12.1.4",
-    "eslint": "^8.12.0",
+    "@testing-library/react": "12",
+    "eslint": "^8.18.0",
     "happy-dom": "^5.3.4",
     "lerna": "^4.0.0",
     "lerna-update-wizard": "^1.1.2",
     "mobx": "5",
-    "prettier": "^2.6.1",
+    "prettier": "^2.7.1",
     "rimraf": "^3.0.2",
-    "typedoc": "^0.22.13",
-    "vite": "^2.8.0",
+    "typedoc": "^0.23.2",
+    "vite": "^2.9.13",
     "vitest": "^0.16.0",
     "vitest-mock-extended": "^0.1.9"
   }

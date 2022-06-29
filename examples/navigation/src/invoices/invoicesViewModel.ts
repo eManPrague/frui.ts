@@ -1,4 +1,6 @@
-import { NavigationContext, ScreenBase, SimpleScreenNavigator } from "@frui.ts/screens";
+// eslint-disable-next-line @typescript-eslint/consistent-type-imports
+import type { NavigationContext } from "@frui.ts/screens";
+import { ScreenBase, SimpleScreenNavigator } from "@frui.ts/screens";
 import type { Location } from "history";
 import { action, computed, observable } from "mobx";
 import type { Invoice } from "./data";

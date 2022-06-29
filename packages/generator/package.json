@@ -37,21 +37,21 @@
     "postbuild": "cd dist && mkdir openapi && cd .. && ncp src/openapi/templates dist/openapi/templates"
   },
   "dependencies": {
-    "@apidevtools/swagger-parser": "^10.0.3",
-    "cli-progress": "^3.9.1",
-    "commander": "^9.1.0",
+    "@apidevtools/swagger-parser": "^10.1.0",
+    "cli-progress": "^3.11.2",
+    "commander": "^9.3.0",
     "handlebars": "^4.7.7",
     "lodash": "^4.17.21",
-    "openapi-types": "^10.0.0",
-    "ts-morph": "^14.0.0"
+    "openapi-types": "^12.0.0",
+    "ts-morph": "^15.1.0"
   },
   "devDependencies": {
-    "@types/cli-progress": "^3.9.2",
-    "@types/lodash": "4.14.180",
+    "@types/cli-progress": "^3.11.0",
+    "@types/lodash": "4.14.182",
     "@types/node": "16.11.26",
     "ncp": "^2.0.0",
-    "nodemon": "2.0.15",
+    "nodemon": "2.0.18",
     "rimraf": "^3.0.2",
-    "ts-node": "^10.4.0"
+    "ts-node": "^10.8.1"
   }
 }

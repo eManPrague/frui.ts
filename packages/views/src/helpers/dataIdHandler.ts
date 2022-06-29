@@ -10,4 +10,4 @@ function dataIdHandler(handler: (id: number) => any) {
   };
 }
 
-export default memoize(dataIdHandler);
+export default memoize(dataIdHandler) as typeof dataIdHandler;

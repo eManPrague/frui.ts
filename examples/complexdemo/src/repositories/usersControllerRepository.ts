@@ -1,6 +1,6 @@
 import RepositoryBase from "../data/repositoryBase";
-import UserDto from "../entities/userDto";
 import User from "../entities/user";
+import type UserDto from "../entities/userDto";
 
 export default class UsersControllerRepository extends RepositoryBase {
   /** Registration */

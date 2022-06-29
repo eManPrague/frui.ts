@@ -1,5 +1,5 @@
 import RepositoryBase from "../data/repositoryBase";
-import SessionDto from "../entities/sessionDto";
+import type SessionDto from "../entities/sessionDto";
 import User from "../entities/user";
 
 export default class SessionRepository extends RepositoryBase {

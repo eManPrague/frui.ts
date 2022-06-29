@@ -202,7 +202,7 @@ export default abstract class LifecycleScreenNavigatorBase<
     const listeners = this.eventHub?.getListeners(event);
     if (listeners) {
       for (const listener of listeners) {
-        // eslint-disable-next-line @typescript-eslint/no-unsafe-argument
+        // eslint-disable-next-line @typescript-eslint/no-unsafe-argument,@typescript-eslint/no-unnecessary-condition
         const result = await listener?.(context as any);
         if (result === false) {
           return false;
@@ -226,7 +226,7 @@ export default abstract class LifecycleScreenNavigatorBase<
 
     const listeners = this.eventHub?.getListeners(event);
     if (listeners?.length) {
-      // eslint-disable-next-line @typescript-eslint/no-unsafe-argument
+      // eslint-disable-next-line @typescript-eslint/no-unsafe-argument,@typescript-eslint/no-unnecessary-condition
       await Promise.all([screenFunctionPromise, ...listeners.map(x => x?.(context as any))]);
     } else {
       await screenFunctionPromise;

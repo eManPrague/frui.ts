@@ -1,8 +1,10 @@
-import { PropertyName } from "@frui.ts/helpers";
+// eslint-disable-next-line @typescript-eslint/consistent-type-imports
+import type { PropertyName } from "@frui.ts/helpers";
 import { action, observable } from "mobx";
 import DefaultConfiguration from "./configuration";
 import EntityValidatorBase, { emptyResults } from "./entityValidatorBase";
-import { ValidationResult } from "./types";
+// eslint-disable-next-line @typescript-eslint/consistent-type-imports
+import type { ValidationResult } from "./types";
 
 export interface ManualEntityValidatorConfiguration {
   resultMiddleware?: (result: ValidationResult) => ValidationResult;

@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest";
-import dataIdHandler from "../src/helpers/dataIdHandler";
+import dataIdHandlerImpl from "../src/helpers/dataIdHandler";
 
 const testEvent = {
   currentTarget: {
@@ -14,15 +14,15 @@ describe("dataIdHandler", () => {
       handledId = id;
     };
 
-    const wrappedHandler = dataIdHandler(innerHandler);
+    const wrappedHandler = dataIdHandlerImpl(innerHandler);
     wrappedHandler.call(undefined, testEvent);
     expect(handledId).toBe(42);
   });
   it("memoizes the function creation so that it is memory-safe to call 'dataIdHandler(handler)' from React component", () => {
     const innerHandler = (_id: number) => true;
 
-    const wrappedHandler1 = dataIdHandler(innerHandler);
-    const wrappedHandler2 = dataIdHandler(innerHandler);
+    const wrappedHandler1 = dataIdHandlerImpl(innerHandler);
+    const wrappedHandler2 = dataIdHandlerImpl(innerHandler);
 
     expect(wrappedHandler1).toBe(wrappedHandler2);
   });

@@ -2,8 +2,8 @@ import type { PropertyName } from "@frui.ts/helpers";
 import { computed, isArrayLike, observable } from "mobx";
 import type { ValidationResponse } from "./automaticValidatorTypes";
 import { ValidationLoading } from "./configuration";
-import type { EntityValidator, ValidationResult } from "./types";
-import { AggregatedValidationResult } from "./types";
+// eslint-disable-next-line @typescript-eslint/consistent-type-imports
+import type { AggregatedValidationResult, EntityValidator, ValidationResult } from "./types";
 
 const emptyResults: never[] = [];
 Object.freeze(emptyResults);

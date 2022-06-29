@@ -1,5 +1,5 @@
-import type { PagedQueryResult } from "@frui.ts/data";
-import { IPagingInfo } from "@frui.ts/data";
+// eslint-disable-next-line @typescript-eslint/consistent-type-imports
+import type { IPagingInfo, PagedQueryResult } from "@frui.ts/data";
 import { observable } from "mobx";
 
 export default abstract class DataListBase<T> implements IPagingInfo {

@@ -1,5 +1,5 @@
-import type { PagedQueryResult } from "@frui.ts/data";
-import { IPagingFilter } from "@frui.ts/data";
+// eslint-disable-next-line @typescript-eslint/consistent-type-imports
+import type { IPagingFilter, PagedQueryResult } from "@frui.ts/data";
 import { attachDirtyWatcher, AutomaticDirtyWatcher } from "@frui.ts/dirtycheck";
 import type { Awaitable } from "@frui.ts/helpers";
 import { bound } from "@frui.ts/helpers";

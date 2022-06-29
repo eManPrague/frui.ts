@@ -1,7 +1,7 @@
 import RepositoryBase from "../data/repositoryBase";
-import CategoryControllerListQuery from "../entities/categoryControllerListQuery";
 import Category from "../entities/category";
-import CategoryDto from "../entities/categoryDto";
+import type CategoryControllerListQuery from "../entities/categoryControllerListQuery";
+import type CategoryDto from "../entities/categoryDto";
 
 export default class CategoryRepository extends RepositoryBase {
   /** List of categories */

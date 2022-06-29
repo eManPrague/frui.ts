@@ -12,6 +12,7 @@ module.exports = {
   rules: {
     "@typescript-eslint/unbound-method": "off", // we use @bound attribute
     "@typescript-eslint/explicit-module-boundary-types": "off",
+    "@typescript-eslint/consistent-type-exports": "warn",
     "@typescript-eslint/no-misused-promises": [
       "error",
       {

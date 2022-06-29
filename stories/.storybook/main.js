@@ -5,8 +5,9 @@ module.exports = {
   addons: ["@storybook/addon-links", "@storybook/addon-essentials", "@storybook/addon-interactions"],
   framework: "@storybook/react",
   core: {
-    builder: "storybook-builder-vite",
+    builder: "@storybook/builder-vite",
   },
+
   async viteFinal(config, { configType }) {
     config.plugins = [
       ...config.plugins.filter(plugin => {

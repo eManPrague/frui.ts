@@ -1,9 +1,11 @@
-import { PropertyName } from "@frui.ts/helpers";
+// eslint-disable-next-line @typescript-eslint/consistent-type-imports
+import type { PropertyName } from "@frui.ts/helpers";
 import { action, get, observable } from "mobx";
 import { emptyResults } from "./entityValidatorBase";
 import type { ManualEntityValidatorConfiguration } from "./manualEntityValidator";
 import ManualEntityValidator from "./manualEntityValidator";
-import { ValidationResult } from "./types";
+// eslint-disable-next-line @typescript-eslint/consistent-type-imports
+import type { ValidationResult } from "./types";
 
 export default class ServerEntityValidator<TEntity = any> extends ManualEntityValidator<TEntity> {
   private _validatedValues = observable.map<string, unknown>(undefined, { deep: false });

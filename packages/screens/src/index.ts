@@ -1,5 +1,5 @@
 export * from "./models/findChildResult";
-export * from "./models/navigationContext";
+export type { ClosingNavigationContext, NavigationContext } from "./models/navigationContext";
 export * from "./models/pathElements";
 export { default as ScreenBase, getNavigator } from "./screens/screenBase";
 

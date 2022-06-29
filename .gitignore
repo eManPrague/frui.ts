@@ -6,6 +6,7 @@ dist/
 /out-tsc
 demo/dist
 packages/*/dist
+stories/storybook-static
 
 # Runtime data
 pids

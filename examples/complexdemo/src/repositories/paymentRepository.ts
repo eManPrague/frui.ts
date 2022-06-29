@@ -1,7 +1,7 @@
 import RepositoryBase from "../data/repositoryBase";
-import PaymentControllerListQuery from "../entities/paymentControllerListQuery";
+import type PaymentControllerListQuery from "../entities/paymentControllerListQuery";
 import Payment from "../entities/payment";
-import PaymentDto from "../entities/paymentDto";
+import type PaymentDto from "../entities/paymentDto";
 
 export default class PaymentRepository extends RepositoryBase {
   /** List of payments */
