@@ -47,7 +47,7 @@
     "@testing-library/react": "12",
     "eslint": "^8.18.0",
     "happy-dom": "^5.3.4",
-    "lerna": "^4.0.0",
+    "lerna": "^5.1.6",
     "lerna-update-wizard": "^1.1.2",
     "mobx": "5",
     "prettier": "^2.7.1",
