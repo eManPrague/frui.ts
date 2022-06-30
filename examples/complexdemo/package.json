@@ -1,8 +1,6 @@
 {
   "name": "@frui.ts/complexdemo",
-  "publishConfig": {
-    "access": "public"
-  },
+  "private": true,
   "license": "MIT",
   "version": "999.0.0",
   "scripts": {
