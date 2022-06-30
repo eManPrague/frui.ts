@@ -21,6 +21,7 @@ jobs:
         uses: actions/setup-node@v3
         with:
           node-version: 16.x
+          registry-url: https://registry.npmjs.org/
 
       - uses: little-core-labs/get-git-tag@v3.0.1
         id: tagName
@@ -33,6 +34,6 @@ jobs:
       - run: yarn run build
       - run: yarn test
       - run: yarn run lint
-      - run: yarn run lerna publish ${{ steps.tagName.outputs.tag }} --yes --no-git-tag-version --no-push
+      - run: yarn run lerna publish ${{ steps.tagName.outputs.tag }} --yes --no-git-tag-version --no-push --no-verify-access
         env:
           NODE_AUTH_TOKEN: ${{secrets.npm_token}}
