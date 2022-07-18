@@ -1,6 +1,6 @@
 import type { PropertyName } from "@frui.ts/helpers";
-import { isMap, isSet } from "@frui.ts/helpers";
-import { get, isArrayLike, observable } from "mobx";
+import { isArrayLike, isMap, isSet } from "@frui.ts/helpers";
+import { get, observable } from "mobx";
 import { getDirtyWatcher } from ".";
 import DirtyWatcherBase from "./dirtyWatcherBase";
 import { attachDirtyWatcher } from "./utils";

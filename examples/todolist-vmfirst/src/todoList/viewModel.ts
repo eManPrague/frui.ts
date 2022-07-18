@@ -1,6 +1,6 @@
 import { NavigationContext, ScreenBase, SimpleScreenNavigator } from "@frui.ts/screens";
 import type { HasLifecycleEvents } from "@frui.ts/screens/dist/screens/hasLifecycleHandlers";
-import { action, computed, observable } from "mobx";
+import { action, computed, observable, makeObservable } from "mobx";
 import { v4 as uuid } from "uuid";
 import TodoItem from "../models/todoItem";
 
@@ -34,6 +34,8 @@ export default class TodoListViewModel extends ScreenBase implements HasLifecycl
 
   constructor() {
     super();
+
+    makeObservable(this);
 
     this.navigator = new SimpleScreenNavigator(this, "");
     this.setNewItem();

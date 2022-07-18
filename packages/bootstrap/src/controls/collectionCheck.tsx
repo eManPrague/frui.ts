@@ -1,8 +1,8 @@
 import type { BindingProperty, BindingTarget } from "@frui.ts/helpers";
-import { isSet } from "@frui.ts/helpers";
+import { isArrayLike, isSet } from "@frui.ts/helpers";
 import type { IBindingProps } from "@frui.ts/views";
 import { getValue, omitBindingProps } from "@frui.ts/views";
-import { action, isArrayLike } from "mobx";
+import { action } from "mobx";
 import { observer } from "mobx-react-lite";
 import React from "react";
 import type { FormCheckProps } from "react-bootstrap";

@@ -1,7 +1,7 @@
 // eslint-disable-next-line @typescript-eslint/consistent-type-imports
 import type { NavigationContext } from "@frui.ts/screens";
 import { ScreenBase, SimpleScreenNavigator } from "@frui.ts/screens";
-import { action, observable } from "mobx";
+import { action, observable, makeObservable } from "mobx";
 import type { Invoice } from "./data";
 import { invoices } from "./data";
 
@@ -14,6 +14,7 @@ export default class InvoiceDetailViewModel extends ScreenBase<SimpleScreenNavig
 
   constructor() {
     super();
+    makeObservable(this);
     this.navigator = new SimpleScreenNavigator<NavigationParams>(this);
   }
 

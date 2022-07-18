@@ -14,7 +14,7 @@ const singleChildView: React.FunctionComponent<{ vm: SingleChildViewModel }> = o
       </a>
     ))}
     <Observer>{() => <View vm={vm.navigator.activeChild} />}</Observer>
-    <Observer>{() => <span>{vm.navigator.activeChild}</span>}</Observer>
+    <Observer>{() => <span>{vm.navigator.activeChild?.name}</span>}</Observer>
   </div>
 ));
 registerView(singleChildView, SingleChildViewModel);

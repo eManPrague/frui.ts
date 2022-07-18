@@ -1,4 +1,4 @@
-import { computed, observable } from "mobx";
+import { computed, observable, makeObservable } from "mobx";
 import type { PropertyName } from "@frui.ts/helpers";
 import type { EntityDirtyWatcher } from "./types";
 
@@ -19,6 +19,7 @@ export default abstract class DirtyWatcherBase<TEntity = unknown> implements Ent
   }
 
   constructor(isVisible = true) {
+    makeObservable(this);
     this.isVisible = isVisible;
   }
 

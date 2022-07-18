@@ -1,5 +1,5 @@
 import type { Awaitable } from "@frui.ts/helpers";
-import { computed, observable, runInAction } from "mobx";
+import { computed, makeObservable, observable, runInAction } from "mobx";
 import type { FindChildResult } from "../../models/findChildResult";
 import { isChildFoundResult } from "../../models/findChildResult";
 import type { ClosingNavigationContext, NavigationContext } from "../../models/navigationContext";
@@ -7,6 +7,7 @@ import type { PathElement } from "../../models/pathElements";
 import type ScreenBase from "../../screens/screenBase";
 import { getNavigator } from "../../screens/screenBase";
 import LifecycleScreenNavigatorBase from "../lifecycleScreenNavigatorBase";
+import type ScreenLifecycleEventHub from "../screenLifecycleEventHub";
 import type { LifecycleScreenNavigator, ScreenNavigator } from "../types";
 
 export type FindNavigationChildHandler<
@@ -26,6 +27,12 @@ export default class ActiveChildConductor<
   TLocation = unknown
 > extends LifecycleScreenNavigatorBase<TNavigationParams, TScreen, TLocation> {
   @observable.ref private activeChildValue?: TChild = undefined;
+
+  constructor(screen?: TScreen, navigationName?: string, navigationPrefix?: string, eventHub?: ScreenLifecycleEventHub<TScreen>) {
+    super(screen, navigationName, navigationPrefix, eventHub);
+
+    makeObservable(this);
+  }
 
   @computed get activeChild() {
     return this.activeChildValue;

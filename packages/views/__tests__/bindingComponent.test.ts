@@ -1,4 +1,4 @@
-import { computed, isObservableProp, observable, ObservableMap } from "mobx";
+import { computed, isObservableProp, observable, ObservableMap, makeObservable } from "mobx";
 import { describe, expect, it } from "vitest";
 import { BindingComponent } from "../src/binding/bindingComponent";
 import type { IBindingProps } from "../src/binding/bindingProps";
@@ -9,6 +9,10 @@ type Entity = { firstName?: string; lastName?: string };
 
 class ComplexEntity {
   fullNameValue: string;
+
+  constructor() {
+    makeObservable(this);
+  }
 
   @computed
   get fullName() {

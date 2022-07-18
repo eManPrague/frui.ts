@@ -2,9 +2,9 @@
 import type { IPagingFilter, PagedQueryResult } from "@frui.ts/data";
 import { attachDirtyWatcher, AutomaticDirtyWatcher } from "@frui.ts/dirtycheck";
 import type { Awaitable } from "@frui.ts/helpers";
-import { bound } from "@frui.ts/helpers";
+import { bound, isArrayLike } from "@frui.ts/helpers";
 import { validate } from "@frui.ts/validation";
-import { action, isArrayLike, observable, runInAction } from "mobx";
+import { action, makeObservable, observable, runInAction } from "mobx";
 import DataListBase from "./dataListBase";
 
 export default class FilteredList<
@@ -48,6 +48,7 @@ export default class FilteredList<
     })
   ) {
     super();
+    makeObservable(this);
     this.pagingFilterValue = defaultPagingFilter(undefined);
   }
 

@@ -1,4 +1,4 @@
-import { observable } from "mobx";
+import { observable, makeObservable } from "mobx";
 
 // This entity has been generated, do not change its content, your changes might get lost. You CAN modify the rest of the file.
 export default class PaymentTypeDto {
@@ -14,4 +14,8 @@ export default class PaymentTypeDto {
     name: { required: true },
     coefficient: { required: true, number: true },
   };
+
+  constructor() {
+    makeObservable(this);
+  }
 }

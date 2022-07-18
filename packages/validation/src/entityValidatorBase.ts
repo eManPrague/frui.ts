@@ -1,5 +1,6 @@
 import type { PropertyName } from "@frui.ts/helpers";
-import { computed, isArrayLike, observable } from "mobx";
+import { isArrayLike } from "@frui.ts/helpers";
+import { computed, makeObservable, observable } from "mobx";
 import type { ValidationResponse } from "./automaticValidatorTypes";
 import { ValidationLoading } from "./configuration";
 // eslint-disable-next-line @typescript-eslint/consistent-type-imports
@@ -24,6 +25,7 @@ export default abstract class EntityValidatorBase<TEntity = unknown> implements 
   }
 
   constructor(isVisible = false) {
+    makeObservable(this);
     this.isVisible = isVisible;
   }
 

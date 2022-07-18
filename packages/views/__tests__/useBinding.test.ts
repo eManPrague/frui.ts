@@ -1,4 +1,4 @@
-import { isObservableProp, observable, ObservableMap } from "mobx";
+import { isObservable, isObservableProp, observable, ObservableMap } from "mobx";
 import { describe, expect, it } from "vitest";
 import { getValue } from "../src/binding/useBinding";
 
@@ -39,6 +39,7 @@ describe("getValue", () => {
     const value = getValue(target, "foo");
     expect(value).toBe(99);
 
+    expect(isObservable(target)).toBe(true);
     expect(isObservableProp(target, "foo")).toBe(true);
   });
 });

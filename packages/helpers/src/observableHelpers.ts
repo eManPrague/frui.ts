@@ -1,4 +1,4 @@
-import { extendObservable, isObservable, set } from "mobx";
+import { isObservable, makeAutoObservable, set } from "mobx";
 import type { BindingTarget } from "./types";
 
 /**
@@ -10,11 +10,12 @@ import type { BindingTarget } from "./types";
  */
 export function ensureObservableProperty<K, V>(target: Map<K, V>, property: K, value: V): void;
 export function ensureObservableProperty(target: BindingTarget, property: string, value: any): void;
-export function ensureObservableProperty(target: any, property: any, value: any) {
+export function ensureObservableProperty<T extends object>(target: T, property: keyof T, value: any) {
   if (!isObservable(target)) {
-    extendObservable(target, {});
+    // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
+    target[property] = value;
+    makeAutoObservable(target);
+  } else {
+    set(target, property, value);
   }
-
-  // eslint-disable-next-line @typescript-eslint/no-unsafe-argument
-  set(target, property, value);
 }

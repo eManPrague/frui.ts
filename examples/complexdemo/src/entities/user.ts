@@ -1,4 +1,4 @@
-import { observable } from "mobx";
+import { observable, makeObservable } from "mobx";
 import { Type } from "class-transformer";
 
 // This entity has been generated, do not change its content, your changes might get lost. You CAN modify the rest of the file.
@@ -31,4 +31,8 @@ export default class User {
     updatedAt: { format: "date-time", required: true, date: true },
     role: { required: true, number: true },
   };
+
+  constructor() {
+    makeObservable(this);
+  }
 }

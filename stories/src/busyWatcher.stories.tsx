@@ -1,5 +1,5 @@
 import { BusyWatcher, watchBusy } from "@frui.ts/screens";
-import { action } from "mobx";
+import { action, makeObservable } from "mobx";
 import { storiesOf } from "@storybook/react";
 import { Observer } from "mobx-react-lite";
 import React from "react";
@@ -15,6 +15,10 @@ class DebugBusyWatcher extends BusyWatcher {
 
 class TestViewModel {
   busyWatcher = new DebugBusyWatcher();
+
+  constructor() {
+    makeObservable(this);
+  }
 
   @action.bound
   @watchBusy

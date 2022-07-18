@@ -1,11 +1,12 @@
 import { ScreenBase, SimpleScreenNavigator } from "@frui.ts/screens";
-import { action, observable } from "mobx";
+import { action, observable, makeObservable } from "mobx";
 
 export default class CustomersViewModel extends ScreenBase {
   @observable message = "Empty";
 
   constructor() {
     super();
+    makeObservable(this);
     this.navigator = new SimpleScreenNavigator(this);
   }
 

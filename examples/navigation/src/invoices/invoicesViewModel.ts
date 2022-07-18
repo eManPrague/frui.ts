@@ -2,7 +2,7 @@
 import type { NavigationContext } from "@frui.ts/screens";
 import { ScreenBase, SimpleScreenNavigator } from "@frui.ts/screens";
 import type { Location } from "history";
-import { action, computed, observable } from "mobx";
+import { action, computed, observable, makeObservable } from "mobx";
 import type { Invoice } from "./data";
 import { invoices } from "./data";
 
@@ -17,6 +17,7 @@ export default class InvoicesViewModel extends ScreenBase {
 
   constructor() {
     super();
+    makeObservable(this);
     this.navigator = new SimpleScreenNavigator(this);
   }
 

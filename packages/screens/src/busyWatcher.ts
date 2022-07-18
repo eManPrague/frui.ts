@@ -1,5 +1,5 @@
 import type { Awaitable } from "@frui.ts/helpers";
-import { action, computed, ObservableMap } from "mobx";
+import { action, computed, ObservableMap, makeObservable } from "mobx";
 
 export type BusyWatcherKey = string | symbol;
 
@@ -10,6 +10,10 @@ export interface IBusyWatcher {
 
 export default class BusyWatcher implements IBusyWatcher {
   protected busyCounter = new ObservableMap<BusyWatcherKey, number>();
+
+  constructor() {
+    makeObservable(this);
+  }
 
   @computed get isBusy() {
     return this.busyCounter.size > 0;

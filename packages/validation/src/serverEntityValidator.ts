@@ -1,10 +1,8 @@
-// eslint-disable-next-line @typescript-eslint/consistent-type-imports
 import type { PropertyName } from "@frui.ts/helpers";
-import { action, get, observable } from "mobx";
+import { action, get, makeObservable, observable } from "mobx";
 import { emptyResults } from "./entityValidatorBase";
 import type { ManualEntityValidatorConfiguration } from "./manualEntityValidator";
 import ManualEntityValidator from "./manualEntityValidator";
-// eslint-disable-next-line @typescript-eslint/consistent-type-imports
 import type { ValidationResult } from "./types";
 
 export default class ServerEntityValidator<TEntity = any> extends ManualEntityValidator<TEntity> {
@@ -12,6 +10,7 @@ export default class ServerEntityValidator<TEntity = any> extends ManualEntityVa
 
   constructor(private target: TEntity, configuration?: ManualEntityValidatorConfiguration) {
     super(true, configuration);
+    makeObservable(this);
   }
 
   *getAllResults(): Iterable<[PropertyName<TEntity>, ValidationResult[]]> {
@@ -49,7 +48,6 @@ export default class ServerEntityValidator<TEntity = any> extends ManualEntityVa
     }
   }
 
-  @action
   setResult(propertyName: PropertyName<TEntity>, result: ValidationResult) {
     this._validatedValues.set(propertyName, get(this.target, propertyName));
     return super.setResult(propertyName, result);

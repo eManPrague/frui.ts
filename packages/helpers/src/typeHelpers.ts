@@ -1,4 +1,8 @@
-import { isObservableMap, isObservableSet } from "mobx";
+import { isObservableArray, isObservableMap, isObservableSet } from "mobx";
+
+export function isArrayLike<T = any>(item: any): item is T[] {
+  return Array.isArray(item) || isObservableArray(item);
+}
 
 export function isSet<T = any>(item: any): item is Set<T> {
   return !!item && (item instanceof Set || isObservableSet(item));

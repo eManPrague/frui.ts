@@ -1,4 +1,4 @@
-import { observable } from "mobx";
+import { observable, makeObservable } from "mobx";
 import { Type } from "class-transformer";
 import { Expose } from "class-transformer";
 
@@ -52,4 +52,8 @@ export default class Category {
     createdAt: { format: "date-time", required: true, date: true },
     updatedAt: { format: "date-time", required: true, date: true },
   };
+
+  constructor() {
+    makeObservable(this);
+  }
 }

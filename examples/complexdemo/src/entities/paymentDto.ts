@@ -1,4 +1,4 @@
-import { observable } from "mobx";
+import { observable, makeObservable } from "mobx";
 import { Expose } from "class-transformer";
 
 // This entity has been generated, do not change its content, your changes might get lost. You CAN modify the rest of the file.
@@ -29,4 +29,8 @@ export default class PaymentDto {
     paidAt: { required: true },
     price: { required: true, number: true },
   };
+
+  constructor() {
+    makeObservable(this);
+  }
 }

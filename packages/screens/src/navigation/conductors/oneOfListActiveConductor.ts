@@ -1,5 +1,5 @@
 import type { IArrayWillChange, IArrayWillSplice } from "mobx";
-import { observable } from "mobx";
+import { intercept, observable } from "mobx";
 import type { FindChildResult } from "../../models/findChildResult";
 import type { NavigationContext } from "../../models/navigationContext";
 import { getNavigator } from "../../screens/screenBase";
@@ -22,7 +22,7 @@ export default class OneOfListActiveConductor<
     super(screen, navigationName, navigationPrefix, eventHub);
 
     const children = observable.array<TChild>([], { deep: false });
-    children.intercept(this.handleChildrenChanged);
+    intercept(children, this.handleChildrenChanged);
     this.children = children;
   }
 

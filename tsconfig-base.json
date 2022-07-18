@@ -1,7 +1,7 @@
 {
   "compilerOptions": {
     "target": "ESNext",
-    "useDefineForClassFields": false, // target:ESNext/es2022 + useDefineForClassFields:false breaks mobx
+    "useDefineForClassFields": true,
     "module": "ESNext",
     "lib": ["ESNext", "DOM"],
     "moduleResolution": "Node",

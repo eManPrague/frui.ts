@@ -1,5 +1,5 @@
 import type { BindingProperty, BindingTarget } from "@frui.ts/helpers";
-import { action } from "mobx";
+import { action, makeObservable } from "mobx";
 import React from "react";
 import type { ExcludeBindingProps, IBindingProps } from "./bindingProps";
 import { omitBindingProps } from "./bindingProps";
@@ -23,6 +23,11 @@ export abstract class BindingComponent<
   TTarget extends BindingTarget,
   TProps extends IBindingProps<TTarget>
 > extends React.Component<TProps> {
+  constructor(props: TProps) {
+    super(props);
+    makeObservable(this);
+  }
+
   /**
    * Returns `props` excluding properties required for binding.
    *

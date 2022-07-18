@@ -1,6 +1,6 @@
 // eslint-disable-next-line @typescript-eslint/consistent-type-imports
 import type { PropertyName } from "@frui.ts/helpers";
-import { action, observable } from "mobx";
+import { action, observable, makeObservable } from "mobx";
 import DefaultConfiguration from "./configuration";
 import EntityValidatorBase, { emptyResults } from "./entityValidatorBase";
 // eslint-disable-next-line @typescript-eslint/consistent-type-imports
@@ -15,6 +15,7 @@ export default class ManualEntityValidator<TEntity = any> extends EntityValidato
 
   constructor(isVisible = false, protected configuration: ManualEntityValidatorConfiguration = DefaultConfiguration) {
     super(isVisible);
+    makeObservable(this);
   }
 
   getAllResults(): Iterable<[PropertyName<TEntity>, ValidationResult[]]> {

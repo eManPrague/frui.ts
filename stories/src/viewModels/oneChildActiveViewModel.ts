@@ -1,5 +1,5 @@
 import { OneOfListActiveConductor, ScreenBase } from "@frui.ts/screens";
-import { action } from "mobx";
+import { action, makeObservable } from "mobx";
 import ChildViewModel from "./childViewModel";
 import type { IChildScreen } from "./types";
 
@@ -13,6 +13,7 @@ export default class OneChildActiveViewModel
 
   constructor() {
     super();
+    makeObservable(this);
     this.navigator = new OneOfListActiveConductor<ChildViewModel>(this);
     this.navigator.navigationName = "one";
     this.navigator.preserveActiveChild = true;

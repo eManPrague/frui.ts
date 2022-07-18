@@ -49,7 +49,7 @@
     "happy-dom": "^5.3.4",
     "lerna": "^5.1.6",
     "lerna-update-wizard": "^1.1.2",
-    "mobx": "5",
+    "mobx": "6",
     "prettier": "^2.7.1",
     "rimraf": "^3.0.2",
     "typedoc": "^0.23.2",

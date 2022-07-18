@@ -1,14 +1,19 @@
 // eslint-disable-next-line @typescript-eslint/consistent-type-imports
 import type { PropertyName } from "@frui.ts/helpers";
-import { action, observable } from "mobx";
+import { action, observable, makeObservable } from "mobx";
 import DirtyWatcherBase, { emptyResults } from "./dirtyWatcherBase";
 
 export default class ManualDirtyWatcher<TEntity = any> extends DirtyWatcherBase<TEntity> {
   protected _dirtyProperties = observable.set<PropertyName<TEntity>>();
 
+  constructor(isVisible = true) {
+    super(isVisible);
+
+    makeObservable(this);
+  }
+
   checkDirty(): boolean;
-  checkDirty(propertyName: PropertyName<TEntity>): boolean;
-  checkDirty(propertyName?: any): boolean {
+  checkDirty(propertyName?: PropertyName<TEntity>): boolean {
     if (!this.isEnabled) {
       return false;
     }

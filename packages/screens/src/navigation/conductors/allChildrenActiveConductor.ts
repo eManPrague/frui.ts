@@ -1,5 +1,5 @@
 import type { IArrayWillChange, IArrayWillSplice } from "mobx";
-import { observable } from "mobx";
+import { intercept, observable } from "mobx";
 import { getNavigator } from "../../screens/screenBase";
 import LifecycleScreenNavigatorBase from "../lifecycleScreenNavigatorBase";
 import type ScreenLifecycleEventHub from "../screenLifecycleEventHub";
@@ -16,7 +16,7 @@ export default class AllChildrenActiveConductor<
     super(screen, navigationName, navigationPrefix, eventHub);
 
     const children = observable.array<TChild>([], { deep: false });
-    children.intercept(this.handleChildrenChanged);
+    intercept(children, this.handleChildrenChanged);
     this.children = children;
   }
 

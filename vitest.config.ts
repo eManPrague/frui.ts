@@ -7,7 +7,7 @@ export default defineConfig({
   esbuild: {
     tsconfigRaw: {
       compilerOptions: {
-        useDefineForClassFields: false,
+        useDefineForClassFields: true,
       },
     },
   },

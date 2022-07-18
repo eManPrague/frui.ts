@@ -23,8 +23,8 @@
     "@frui.ts/screens": "^999.0.0",
     "@frui.ts/validation": "^999.0.0",
     "@frui.ts/views": "^999.0.0",
-    "mobx": "5",
-    "mobx-react-lite": "^2.2.2",
+    "mobx": "6",
+    "mobx-react-lite": "3",
     "react": "^17.0.2"
   },
   "scripts": {

@@ -1,4 +1,5 @@
-import { get, isArrayLike } from "mobx";
+import { get } from "mobx";
+import { isArrayLike } from "@frui.ts/helpers";
 import type { PathElement } from "../models/pathElements";
 import type UrlRouterBase from "../router/urlRouterBase";
 import type ScreenBase from "../screens/screenBase";

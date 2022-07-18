@@ -1,4 +1,4 @@
-import { action, observable } from "mobx";
+import { action, observable, makeObservable } from "mobx";
 export default class ManualPromise<T = unknown> {
   promise: Promise<T>;
 
@@ -8,6 +8,7 @@ export default class ManualPromise<T = unknown> {
   private rejectCallback: (reason: any) => void;
 
   constructor() {
+    makeObservable(this);
     this.promise = new Promise<T>((resolve, reject) => {
       this.resolveCallback = resolve;
       this.rejectCallback = reject;

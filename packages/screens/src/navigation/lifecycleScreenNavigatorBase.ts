@@ -1,4 +1,4 @@
-import { computed, observable, runInAction } from "mobx";
+import { computed, observable, runInAction, makeObservable } from "mobx";
 import type { ClosingNavigationContext, NavigationContext } from "../models/navigationContext";
 import type { PathElement } from "../models/pathElements";
 import type { HasLifecycleEvents, RequiredLifecycleEvents } from "../screens/hasLifecycleHandlers";
@@ -34,6 +34,7 @@ export default abstract class LifecycleScreenNavigatorBase<
   parent: ScreenNavigator | undefined = undefined;
 
   constructor(screen?: TScreen, navigationName?: string, navigationPrefix?: string, eventHub?: ScreenLifecycleEventHub<TScreen>) {
+    makeObservable(this);
     this.screenValue = screen;
     this._navigationNameValue = navigationName;
     this.eventHub = eventHub ?? screen?.events;

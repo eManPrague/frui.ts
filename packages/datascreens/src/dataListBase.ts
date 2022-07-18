@@ -1,10 +1,14 @@
 // eslint-disable-next-line @typescript-eslint/consistent-type-imports
 import type { IPagingInfo, PagedQueryResult } from "@frui.ts/data";
-import { observable } from "mobx";
+import { observable, makeObservable } from "mobx";
 
 export default abstract class DataListBase<T> implements IPagingInfo {
   @observable.shallow
   private itemsValue?: T[];
+
+  constructor() {
+    makeObservable(this);
+  }
 
   get items() {
     return this.itemsValue;
