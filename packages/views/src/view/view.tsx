@@ -8,6 +8,7 @@ interface ViewProps {
   vm?: unknown;
   context?: string;
   useLifecycle?: boolean;
+  children?: React.ReactNode;
 }
 
 const PureView: React.FunctionComponent<ViewProps> = props => {

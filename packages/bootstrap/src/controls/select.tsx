@@ -42,7 +42,7 @@ export class Select<TTarget extends BindingTarget, TItem> extends ValidationCont
     const options = items.map(x => (
       // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
       <option key={x[keyProperty] as any} value={x[keyProperty] as any}>
-        {textProperty ? x[textProperty] : x}
+        {(textProperty ? x[textProperty] : x) as any}
       </option>
     ));
     return (

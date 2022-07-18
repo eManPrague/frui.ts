@@ -31,7 +31,7 @@ function DataListRowImpl<TItem, TContext>({ item, columns, context }: DataListRo
         .filter(x => x.responsiveVisible !== false)
         .map((column, i) => {
           const key = column.property ?? i;
-          const value = column.property ? item[column.property] : undefined;
+          const value = column.property ? (item[column.property] as unknown as string) : undefined;
           const hasHeader = column.responsiveTitle !== false;
 
           return (

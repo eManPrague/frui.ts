@@ -11,6 +11,7 @@ export interface ErrorBoundaryProps {
   /** Called if resetError() is called from the fallback render props function  */
   onReset?(error: Error | null, errorInfo: React.ErrorInfo | null): void;
   fallback?: React.ReactNode | FallbackRender;
+  children?: React.ReactNode;
 }
 
 interface ErrorBoundaryState {
@@ -48,9 +49,7 @@ export default class ErrorBoundary extends React.PureComponent<ErrorBoundaryProp
       const { error, errorInfo } = this.state;
       const { fallback } = this.props;
       const element: React.ReactNode =
-        typeof fallback === "function"
-          ? (fallback({ error, errorInfo, resetError: this.resetErrorBoundary }) as React.ReactNode)
-          : fallback;
+        typeof fallback === "function" ? fallback({ error, errorInfo, resetError: this.resetErrorBoundary }) : fallback;
 
       if (element) {
         return element;
