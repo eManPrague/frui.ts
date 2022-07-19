@@ -8,6 +8,8 @@ This framework is designed to support both small and large applications with SOL
 
 You can read our [business overview](OVERVIEW.md) or jump to the [documentation](#quick-documentation-links).
 
+> ## Please note that this is legacy documentation for v0.x versions. Check the master branch for the latest information.
+
 # Quick documentation links
 
 - [Guidelines](GUIDELINES.md)
