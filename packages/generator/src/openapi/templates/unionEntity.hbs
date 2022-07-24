@@ -1,1 +1,11 @@
-type {{pascalCase name}} = {{#each subEntities}}{{this}}{{#unless @last}} | {{/unless}}{{/each}};
+{{#*inline "type"~}}
+{{#if hasTypeImport}}{{ typeName }}{{else}}z.{{ typeName }}(){{/if}}
+{{~/inline~}}
+
+function build{{name}}() {
+  return z.union([
+  {{#each subEntities}}
+    {{> type}},
+  {{/each}}
+  ]);
+}

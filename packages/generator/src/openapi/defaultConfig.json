@@ -34,6 +34,7 @@
     "enumEntityFile": "@enumEntityFile.hbs",
     "objectEntityContent": "@objectEntityContent.hbs",
     "objectEntityFile": "@objectEntityFile.hbs",
+    "entityImport": "@entityImport.hbs",
     "generatedEntityHeader": "@generatedEntityHeader.hbs",
     "repositoryAction": "@repositoryAction.hbs",
     "repositoryFile": "@repositoryFile.hbs",

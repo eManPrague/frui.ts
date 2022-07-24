@@ -30,6 +30,9 @@ export default class FileGenerator {
       rawText: (x: string) => x,
       and: (...args) => Array.prototype.every.call(args, Boolean),
       or: (...args) => Array.prototype.slice.call(args, 0, -1).some(Boolean),
+      eq: (a: unknown, b: unknown) => a == b,
+      ne: (a: unknown, b: unknown) => a != b,
+      coalesce: (...args) => Array.prototype.find.call(args, x => !!x) as string,
     });
   }
 
@@ -47,6 +50,7 @@ export default class FileGenerator {
       enumEntityFile: await this.readTemplate("enumEntityFile"),
       objectEntityContent: await this.readTemplate("objectEntityContent"),
       objectEntityFile: await this.readTemplate("objectEntityFile"),
+      entityImport: await this.readTemplate("entityImport"),
       stringLiteralEntity: await this.readTemplate("stringLiteralEntity"),
       stringLiteralEntityFile: await this.readTemplate("stringLiteralEntityFile"),
       unionEntity: await this.readTemplate("unionEntity"),
@@ -67,8 +71,8 @@ export default class FileGenerator {
       if (type instanceof Enum) {
         enumWriter.write(type);
       } else if (type instanceof InheritedEntity) {
-        const baseEntity = type.baseEntities.map(x => x.type).filter(x => x instanceof ObjectEntity)[0] as ObjectEntity;
-        objectWriter.write(type, baseEntity);
+        const baseEntities = type.baseEntities.map(x => x.type).filter((x): x is ObjectEntity => x instanceof ObjectEntity);
+        objectWriter.write(type, baseEntities);
       } else if (type instanceof ObjectEntity) {
         objectWriter.write(type);
       } else if (type instanceof UnionEntity) {
@@ -131,11 +135,18 @@ export default class FileGenerator {
       return Handlebars.compile<TContext>(`// missing template ${name}`);
     }
 
-    const fullPath = filePath.startsWith("@")
-      ? path.resolve(__dirname, filePath.replace("@", "./openapi/templates/"))
-      : path.resolve(process.cwd(), filePath);
-
+    const fullPath = FileGenerator.getFullPath(filePath);
     const file = await fs.promises.readFile(fullPath);
     return Handlebars.compile<TContext>(file.toString());
+  }
+
+  private static getFullPath(filePath: string) {
+    if (filePath.startsWith("@")) {
+      // use built-in template
+      const templatesRoot = __filename.endsWith(".ts") ? "./templates/" : "./openapi/templates/";
+      return path.resolve(__dirname, filePath.replace("@", templatesRoot));
+    } else {
+      return path.resolve(process.cwd(), filePath);
+    }
   }
 }

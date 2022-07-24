@@ -7,123 +7,91 @@ import type EntityProperty from "../models/entityProperty";
 import Enum from "../models/enum";
 import type ObjectEntity from "../models/objectEntity";
 import Restriction from "../models/restriction";
-import type TypeReference from "../models/typeReference";
 import type { IConfig, ValidationRuleConfig } from "../types";
 
 export default class ObjectEntityWriter {
   constructor(
     private parentDirectory: Directory,
     private config: Partial<IConfig>,
-    private templates: Record<"objectEntityContent" | "objectEntityFile", Handlebars.TemplateDelegate>
+    private templates: Record<"objectEntityContent" | "objectEntityFile" | "entityImport", Handlebars.TemplateDelegate>
   ) {}
 
-  write(definition: ObjectEntity, baseClass?: ObjectEntity) {
+  write(definition: ObjectEntity, baseClasses?: ObjectEntity[]) {
     const fileName = `${camelCase(definition.name)}.ts`;
     if (!GeneratorBase.canOverwiteFile(this.parentDirectory, fileName)) {
       return undefined;
     }
 
     const file = this.parentDirectory.getSourceFile(fileName);
-    return file ? this.updateFile(file, definition, baseClass) : this.createFile(fileName, definition, baseClass);
+    return file ? this.updateFile(file, definition, baseClasses) : this.createFile(fileName, definition, baseClasses);
   }
 
-  private updateFile(file: SourceFile, definition: ObjectEntity, baseClass: ObjectEntity | undefined) {
+  private updateFile(file: SourceFile, definition: ObjectEntity, baseClasses: ObjectEntity[] | undefined) {
     const currentClass = file.getClass(definition.name);
     if (currentClass) {
       currentClass.removeText();
       currentClass.insertText(currentClass.getEnd() - 1, writer => {
         writer.newLineIfLastNot();
-        writer.write(this.getEntityContent(definition, baseClass));
+        writer.write(this.getEntityContent(definition, baseClasses));
       });
 
+      const baseClass = baseClasses?.[0];
       if (baseClass) {
         currentClass.setExtends(baseClass.name);
       }
+
+      return file;
+    }
+
+    const currentBuildFunction = file.getFunction(`build${definition.name}`);
+    if (currentBuildFunction) {
+      currentBuildFunction.removeText();
+      currentBuildFunction.insertText(currentBuildFunction.getEnd() - 1, writer => {
+        writer.newLineIfLastNot();
+        writer.write(this.getEntityContent(definition, baseClasses));
+      });
     }
 
     return file;
   }
 
-  private createFile(fileName: string, definition: ObjectEntity, baseClass: ObjectEntity | undefined) {
-    const decoratorImports = this.getPropertyDecoratorsImports(definition.properties);
+  private createFile(fileName: string, definition: ObjectEntity, baseClasses: ObjectEntity[] | undefined) {
     const entitiesToImport = definition.properties.filter(x => x.type.isImportRequired).map(x => x.type.getTypeName());
 
-    if (baseClass) {
-      entitiesToImport.push(baseClass.name);
-    }
+    baseClasses?.forEach(x => entitiesToImport.push(x.name));
 
     const entityImports = uniq(entitiesToImport)
       .sort()
-      .map(x => `import ${x} from "./${camelCase(x)}";`);
+      .map(x =>
+        this.templates.entityImport({
+          entity: x,
+          filePath: `./${camelCase(x)}`,
+        })
+      );
 
     const result = this.templates.objectEntityFile({
-      imports: [...decoratorImports, ...entityImports],
-      content: () => this.getEntityContent(definition, baseClass),
+      imports: entityImports,
+      content: () => this.getEntityContent(definition, baseClasses),
       entity: definition,
-      baseClass,
+      baseClasses,
     });
 
     return this.parentDirectory.createSourceFile(fileName, result, { overwrite: true });
   }
 
-  getPropertyDecoratorsImports(properties: EntityProperty[]) {
-    const result = new Set<string>();
-
-    if (properties.some(p => p.tags?.get(ObservableFormatter.OBSERVABLE))) {
-      result.add(`import { observable } from "mobx";`);
-    }
-
-    if (this.config.conversion !== false) {
-      for (const property of properties) {
-        for (const importStatement of this.getPropertyTypeConversionImports(property.type)) {
-          result.add(importStatement);
-        }
-      }
-
-      if (properties.some(p => p.externalName)) {
-        result.add(`import { Expose } from "class-transformer";`);
-      }
-    }
-
-    return result;
-  }
-
-  getPropertyTypeConversionImports(reference: TypeReference): string[] {
-    if (reference.type instanceof AliasEntity) {
-      return this.getPropertyTypeConversionImports(reference.type.referencedEntity);
-    }
-
-    const result: string[] = [];
-
-    if (reference.type instanceof Enum) {
-      return result;
-    }
-
-    if (typeof reference.type === "object") {
-      result.push(`import { Type } from "class-transformer";`);
-    }
-
-    if (reference.type === "Date") {
-      if (this.config.dates === "date-fns") {
-        result.push(`import { Transform } from "class-transformer";`, `import formatISO from "date-fns/formatISO";`);
-      } else {
-        result.push(`import { Type } from "class-transformer";`);
-      }
-    }
-
-    return result;
-  }
-
-  private getEntityContent(definition: ObjectEntity, baseClass: ObjectEntity | undefined) {
+  private getEntityContent(definition: ObjectEntity, baseClasses: ObjectEntity[] | undefined) {
     const context = {
       entity: definition,
-      baseClass,
+      baseClasses,
       properties: definition.properties.map(p => {
         const nullable = p.restrictions?.get(Restriction.nullable);
         return {
           name: p.name,
           externalName: this.config.conversion !== false && p.externalName,
           type: p.type.getTypeDeclaration() || "UNKNOWN",
+          typeName: p.type.getTypeName(),
+          isArray: p.type.isArray,
+          hasTypeImport: p.type.isImportRequired,
           description: p.description,
           example: p.example,
           isObservable: p.tags?.get(ObservableFormatter.OBSERVABLE) as boolean,
@@ -132,10 +100,11 @@ export default class ObjectEntityWriter {
           nullable,
           required: nullable !== true && p.restrictions?.has(Restriction.required),
           validations: this.getPropertyValidations(p),
+          rawValidations: this.getRawPropertyValidations(p),
         };
       }),
       validationEntity: this.config.validation !== false && hasValidation(definition) && {},
-      useBaseClassValidation: baseClass && hasValidation(baseClass),
+      useBaseClassValidation: !!baseClasses?.some(x => hasValidation(x)),
     };
     return this.templates.objectEntityContent(context);
   }
@@ -182,6 +151,18 @@ export default class ObjectEntityWriter {
       });
 
       return definitions;
+    }
+
+    return undefined;
+  }
+
+  private getRawPropertyValidations(property: EntityProperty) {
+    if (property.validations) {
+      const validations = Array.from(property.validations.entries())
+        .filter(x => !!x[1])
+        .map(x => [Restriction[x[0]], x[1]]);
+
+      return Object.fromEntries(validations) as Record<string, unknown>;
     }
 
     return undefined;

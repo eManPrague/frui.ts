@@ -1,1 +1,7 @@
-type {{pascalCase name}} = {{#each items}}"{{this}}"{{#unless @last}} | {{/unless}}{{/each}};
+function build{{name}}() {
+  return z.enum([
+  {{#each items}}
+    "{{this}}",
+  {{/each}}
+  ]);
+}
