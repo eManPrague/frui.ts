@@ -44,6 +44,7 @@ export interface IConfig {
 
   endpointUrlPrefix?: string;
   templates: Record<string, string>;
+  templatesFolder?: string;
 }
 
 export interface IApiParserConfig {

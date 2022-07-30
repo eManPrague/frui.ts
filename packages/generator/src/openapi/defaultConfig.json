@@ -29,6 +29,7 @@
     }
   },
   "endpointUrlPrefix": "/api/",
+  "templatesFolder": "class-transformer",
   "templates": {
     "enumEntity": "@enumEntity.hbs",
     "enumEntityFile": "@enumEntityFile.hbs",

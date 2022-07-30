@@ -1,0 +1,13 @@
+import RepositoryBase from "./repositoryBase";
+{{#each imports}}
+{{{this}}}
+{{/each}}
+
+export default class {{repositoryName}} extends RepositoryBase {
+  {{#each actions}}
+{{{this}}}
+  {{#unless @last}}
+
+  {{/unless}}
+  {{/each}}
+}

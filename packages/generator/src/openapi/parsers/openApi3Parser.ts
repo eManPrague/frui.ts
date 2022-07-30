@@ -303,7 +303,8 @@ export default class OpenApi3Parser implements ApiModel {
       }
 
       const contentType = Object.keys(input.content)[0];
-      const schemaObject = input.content[contentType].schema;
+      // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
+      const schemaObject = input.content[contentType]?.schema;
       const typeReference = schemaObject && this.parseSchemaObject(fallbackName, schemaObject);
       return typeReference ? { contentType, typeReference } : undefined;
     }

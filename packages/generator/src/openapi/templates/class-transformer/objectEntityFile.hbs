@@ -1,0 +1,11 @@
+{{#each imports}}
+{{{this}}}
+{{/each}}
+import { Expose, Transform, Type } from "class-transformer";
+import formatISO from "date-fns/formatISO";
+import { observable } from "mobx";
+
+{{> generatedEntityHeader}}
+export default class {{entity.name}}{{#if baseClass}} extends {{baseClass.name}}{{/if}} {
+{{{content}}}
+{{~rawText "}" }}

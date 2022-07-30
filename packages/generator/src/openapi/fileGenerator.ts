@@ -135,16 +135,17 @@ export default class FileGenerator {
       return Handlebars.compile<TContext>(`// missing template ${name}`);
     }
 
-    const fullPath = FileGenerator.getFullPath(filePath);
+    const fullPath = this.getFullPath(filePath);
     const file = await fs.promises.readFile(fullPath);
     return Handlebars.compile<TContext>(file.toString());
   }
 
-  private static getFullPath(filePath: string) {
+  private getFullPath(filePath: string) {
     if (filePath.startsWith("@")) {
       // use built-in template
-      const templatesRoot = __filename.endsWith(".ts") ? "./templates/" : "./openapi/templates/";
-      return path.resolve(__dirname, filePath.replace("@", templatesRoot));
+      const templatesRoot = __filename.endsWith(".ts") ? "./templates/" : "./openapi/templates/"; // fix for local debugging
+      const templatesFolder = path.join(templatesRoot, this.config.templatesFolder ?? ".", "/");
+      return path.resolve(__dirname, filePath.replace("@", templatesFolder));
     } else {
       return path.resolve(process.cwd(), filePath);
     }
