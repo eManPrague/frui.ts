@@ -4,7 +4,6 @@
   "entitiesPath": "src/entities",
   "repositoriesPath": "src/repositories",
 
-  "validation": true,
   "conversion": true,
 
   "observable": {
@@ -43,5 +42,6 @@
     "stringLiteralEntityFile": "@stringLiteralEntityFile.hbs",
     "unionEntity": "@unionEntity.hbs",
     "unionEntityFile": "@unionEntityFile.hbs"
-  }
+  },
+  "optionalAsNullable": false
 }

@@ -39,12 +39,14 @@ export interface IConfig {
   entitiesPath: string;
   repositoriesPath: string;
 
-  validation?: boolean;
   conversion?: boolean;
 
   endpointUrlPrefix?: string;
   templates: Record<string, string>;
   templatesFolder?: string;
+
+  aliases?: Record<string, string>;
+  optionalAsNullable?: boolean;
 }
 
 export interface IApiParserConfig {

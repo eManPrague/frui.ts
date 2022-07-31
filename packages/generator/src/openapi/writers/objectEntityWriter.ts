@@ -99,11 +99,12 @@ export default class ObjectEntityWriter {
           readonly: p.restrictions?.has(Restriction.readOnly),
           nullable,
           required: nullable !== true && p.restrictions?.has(Restriction.required),
+          format: p.restrictions?.get(Restriction.format),
           validations: this.getPropertyValidations(p),
           rawValidations: this.getRawPropertyValidations(p),
         };
       }),
-      validationEntity: this.config.validation !== false && hasValidation(definition) && {},
+      validationEntity: this.config.validations !== false && hasValidation(definition) && {},
       useBaseClassValidation: !!baseClasses?.some(x => hasValidation(x)),
     };
     return this.templates.objectEntityContent(context);

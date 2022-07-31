@@ -5,6 +5,8 @@ import ObjectEntity from "../models/objectEntity";
 import type TypeReference from "../models/typeReference";
 
 export default class NameFormatter {
+  constructor(private aliases?: Record<string, string>) {}
+
   formatNames(item: TypeReference) {
     if (item.type instanceof ObjectEntity) {
       this.formatEntity(item.type);
@@ -15,6 +17,11 @@ export default class NameFormatter {
 
   formatEntity(entity: ObjectEntity) {
     fixName(pascalCase, entity);
+
+    const aliasedName = this.aliases?.[entity.name];
+    if (aliasedName) {
+      entity.name = aliasedName;
+    }
 
     for (const property of entity.properties) {
       fixName(camelCase, property);

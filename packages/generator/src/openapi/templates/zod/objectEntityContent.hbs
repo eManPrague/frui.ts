@@ -25,6 +25,10 @@ z.preprocess(arg => (typeof arg == "string" || arg instanceof Date ? new Date(ar
 
   .max({{rawValidations.maxLength}})
     {{~/if}}
+    {{#if (eq format "email")}}
+
+  .email()
+    {{~/if}}
   {{~/if}}
 {{~/inline~}}
 
