@@ -1,31 +1,45 @@
+import type { LocationGenerics } from "@frui.ts/views";
+import { buildRoutes, RouteView } from "@frui.ts/views";
+import { ReactLocation, Router } from "@tanstack/react-location";
 import React from "react";
-import ReactDOM from "react-dom";
-import { BrowserRouter, Route, Routes } from "react-router-dom";
-import App from "./App";
-import Customers from "./customers/Customers";
+import { createRoot } from "react-dom/client";
+import CustomersViewModel from "./customers/customersViewModel";
+import HomeViewModel from "./home/homeViewModel";
 import "./index.css";
 import InvoiceDetailViewModel from "./invoices/invoiceDetailViewModel";
 import InvoicesViewModel from "./invoices/invoicesViewModel";
-import "./views";
-import { viewModel } from "@frui.ts/views";
+import "./viewsRegistry";
 
-ReactDOM.render(
+const location = new ReactLocation<LocationGenerics>();
+
+const routes = buildRoutes([
+  {
+    path: "/",
+    vmFactory: () => new HomeViewModel(),
+    children: [
+      {
+        path: "invoices",
+        vmFactory: () => new InvoicesViewModel(),
+        children: [
+          {
+            path: ":id",
+            vmFactory: () => new InvoiceDetailViewModel(),
+          },
+          { element: "invoices list" },
+        ],
+      },
+      {
+        path: "customers",
+        vmFactory: () => new CustomersViewModel(),
+      },
+    ],
+  },
+]);
+
+const container = document.getElementById("root");
+const root = createRoot(container!);
+root.render(
   <React.StrictMode>
-    <BrowserRouter>
-      <Routes>
-        <Route path="/" element={<App />}>
-          {/* This route is registered as view-first, using the `createViewFirst` helper */}
-          <Route path="customers" element={<Customers />} />
-
-          {/* This route is registered as view-model-first, using automatic Frui.ts view localization. */}
-          <Route path="invoices" {...viewModel(InvoicesViewModel)}>
-            <Route index element={<p>Select invoice</p>} />
-            <Route path="detail/:invoiceId" {...viewModel(InvoiceDetailViewModel)} />
-          </Route>
-          <Route path="*" element={<p>404 not found</p>} />
-        </Route>
-      </Routes>
-    </BrowserRouter>
-  </React.StrictMode>,
-  document.getElementById("root")
+    <Router location={location} routes={routes} defaultElement={<RouteView />} />
+  </React.StrictMode>
 );

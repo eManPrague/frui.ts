@@ -1,4 +1,4 @@
-import { BusyWatcher, watchBusy } from "@frui.ts/screens";
+import { BusyWatcher, watchBusy } from "@frui.ts/helpers";
 import { action, makeObservable } from "mobx";
 import { storiesOf } from "@storybook/react";
 import { Observer } from "mobx-react-lite";

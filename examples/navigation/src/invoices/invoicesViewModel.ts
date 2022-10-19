@@ -1,41 +1,15 @@
-// eslint-disable-next-line @typescript-eslint/consistent-type-imports
-import type { NavigationContext } from "@frui.ts/screens";
-import { ScreenBase, SimpleScreenNavigator } from "@frui.ts/screens";
-import type { Location } from "history";
-import { action, computed, observable, makeObservable } from "mobx";
-import type { Invoice } from "./data";
-import { invoices } from "./data";
+import type { IViewModel, RouteMatch } from "@frui.ts/views";
 
-export default class InvoicesViewModel extends ScreenBase {
-  @observable.shallow invoices?: Invoice[] = undefined;
-
-  @observable filter = "";
-
-  @computed get visibleInvoices() {
-    return this.filter ? this.invoices?.filter(x => x.name.includes(this.filter)) : this.invoices;
+export default class InvoicesViewModel implements IViewModel {
+  onInitialize(routeMatch: RouteMatch) {
+    console.log("invoices on initialize", routeMatch);
   }
 
-  constructor() {
-    super();
-    makeObservable(this);
-    this.navigator = new SimpleScreenNavigator(this);
+  onActivate(routeMatch: RouteMatch) {
+    console.log("invoices on activate", routeMatch);
   }
 
-  @action
-  onInitialize() {
-    this.invoices = invoices.slice();
-  }
-
-  @action
-  onNavigate(context: NavigationContext) {
-    // this shows how to handle query parameters
-    const location = context.location as Location;
-    if (location.search) {
-      const search = new URLSearchParams(location.search);
-      const filterValue = search.get("filter");
-      this.filter = filterValue ?? "";
-    } else {
-      this.filter = "";
-    }
+  onDeactivate(routeMatch: RouteMatch) {
+    console.log("invoices on deactivate", routeMatch);
   }
 }

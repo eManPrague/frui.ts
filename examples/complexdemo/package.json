@@ -21,7 +21,6 @@
     "@frui.ts/dirtycheck": "^999.0.0",
     "@frui.ts/generator": "^999.0.0",
     "@frui.ts/helpers": "^999.0.0",
-    "@frui.ts/screens": "^999.0.0",
     "@frui.ts/validation": "^999.0.0",
     "@frui.ts/views": "^999.0.0",
     "class-transformer": "^0.5.1",

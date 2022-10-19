@@ -14,7 +14,7 @@ export default defineConfig({
     }),
   ],
   optimizeDeps: {
-    include: ["@frui.ts/views"],
+    // include: ["@frui.ts/views"],
   },
   build: {
     commonjsOptions: {

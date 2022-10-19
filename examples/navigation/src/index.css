@@ -11,3 +11,17 @@ code {
   font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New',
     monospace;
 }
+
+header nav {
+  float: left;
+  padding-right: 2em;
+  min-height: 100vh;
+}
+
+button {
+  font-size: calc(10px + 2vmin);
+}
+
+a {
+  color: cadetblue;
+}

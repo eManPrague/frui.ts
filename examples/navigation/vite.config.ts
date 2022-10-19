@@ -14,11 +14,11 @@ export default defineConfig({
     }),
   ],
   optimizeDeps: {
-    include: ["@frui.ts/screens", "@frui.ts/views"],
+    include: ["@frui.ts/views"],
   },
   build: {
     commonjsOptions: {
-      include: [/packages\/screens/, /node_modules/],
+      include: [/packages\/views/, /node_modules/],
     },
   },
 });

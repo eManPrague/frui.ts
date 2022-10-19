@@ -1,33 +1,17 @@
-import { ScreenBase, SimpleScreenNavigator } from "@frui.ts/screens";
-import { action, observable, makeObservable } from "mobx";
+import { makeObservable, observable, runInAction } from "mobx";
+import type { IViewModel, SearchType } from "@frui.ts/views";
 
-export default class CustomersViewModel extends ScreenBase {
-  @observable message = "Empty";
+export default class CustomersViewModel implements IViewModel {
+  @observable
+  search?: string;
 
   constructor() {
-    super();
     makeObservable(this);
-    this.navigator = new SimpleScreenNavigator(this);
   }
 
-  @action.bound
-  updateText() {
-    this.message = new Date().toISOString();
-  }
-
-  @action
-  onInitialize() {
-    this.message = "Initialized";
-  }
-
-  @action
-  onActivate() {
-    this.message = "Activated";
-  }
-
-  @action
-  onDeactivate() {
-    this.message = "Deactivated";
-    console.log("Deactivated");
+  onNavigate(search: SearchType) {
+    runInAction(() => {
+      this.search = search.name as string;
+    });
   }
 }

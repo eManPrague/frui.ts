@@ -45,11 +45,9 @@
   },
   "dependencies": {
     "@frui.ts/helpers": "^999.0.0",
-    "@frui.ts/screens": "^999.0.0",
-    "history": "^5.3.0",
+    "@tanstack/react-location": "^3.7.4",
     "inversify": "^6.0.1",
-    "lodash-es": "^4.17.21",
-    "react-router": "^6.3.0"
+    "lodash-es": "^4.17.21"
   },
   "peerDependencies": {
     "mobx": "6",

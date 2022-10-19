@@ -26,6 +26,7 @@
     "statusBar.foreground": "#e7e7e7",
     "statusBarItem.hoverBackground": "#2b1761",
     "statusBarItem.remoteBackground": "#190d38",
-    "statusBarItem.remoteForeground": "#e7e7e7"
+    "statusBarItem.remoteForeground": "#e7e7e7",
+    "commandCenter.border": "#e7e7e799"
   }
 }

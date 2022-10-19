@@ -1,5 +1,5 @@
 {
-  "name": "@frui.ts/example-navigation",
+  "name": "@frui.ts/example-todolist",
   "private": true,
   "license": "MIT",
   "version": "999.0.0",
@@ -9,18 +9,23 @@
     "preview": "vite preview"
   },
   "dependencies": {
+    "@frui.ts/htmlcontrols": "^999.0.0",
     "@frui.ts/views": "^999.0.0",
     "@tanstack/react-location": "^3.7.4",
     "mobx": "6",
     "mobx-react-lite": "3",
     "react": "^18.2.0",
-    "react-dom": "^18.2.0"
+    "react-dom": "^18.2.0",
+    "todomvc-app-css": "^2.4.2",
+    "todomvc-common": "^1.0.5",
+    "uuid": "^9.0.0"
   },
   "devDependencies": {
     "@babel/plugin-proposal-class-properties": "^7.18.6",
     "@babel/plugin-proposal-decorators": "^7.18.9",
     "@types/react": "^18.0.15",
     "@types/react-dom": "^18.0.6",
+    "@types/uuid": "^8.3.4",
     "@vitejs/plugin-react": "^2.0.0",
     "typescript": "^4.7.4",
     "vite": "^3.0.2"

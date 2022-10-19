@@ -42,7 +42,7 @@
     "@frui.ts/data": "^999.0.0",
     "@frui.ts/dirtycheck": "^999.0.0",
     "@frui.ts/helpers": "^999.0.0",
-    "@frui.ts/screens": "^999.0.0",
+    "@frui.ts/views": "^999.0.0",
     "@frui.ts/validation": "^999.0.0"
   },
   "peerDependencies": {

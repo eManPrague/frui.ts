@@ -1,13 +1,12 @@
 import type { Awaitable } from "@frui.ts/helpers";
-import { BusyWatcher, ScreenBase } from "@frui.ts/screens";
-import { action, observable, makeObservable } from "mobx";
+import { BusyWatcher } from "@frui.ts/helpers";
+import { action, makeObservable, observable } from "mobx";
 
-export default abstract class DetailViewModel<TEntity> extends ScreenBase {
+export default abstract class DetailViewModel<TEntity> {
   busyWatcher = new BusyWatcher();
   @observable item: TEntity;
 
   constructor() {
-    super();
     makeObservable(this);
   }
 

@@ -1,18 +1,16 @@
 import React from "react";
 import type { ErrorBoundaryProps } from "../errorBoundary";
 import ErrorBoundary from "../errorBoundary";
-import useScreenLifecycle from "./useScreenLifecycle";
 import { getView, tryGetView } from "./viewLocator";
 
 interface ViewProps {
   vm?: unknown;
   context?: string;
-  useLifecycle?: boolean;
   children?: React.ReactNode;
 }
 
 const PureView: React.FunctionComponent<ViewProps> = props => {
-  const { vm, children, context, useLifecycle } = props;
+  const { vm, children, context } = props;
 
   if (!vm) {
     return <React.Fragment>{children}</React.Fragment>;
@@ -23,10 +21,6 @@ const PureView: React.FunctionComponent<ViewProps> = props => {
 
   if (!FoundView) {
     return <React.Fragment>{children}</React.Fragment>;
-  }
-
-  if (useLifecycle) {
-    useScreenLifecycle(vm);
   }
 
   return <FoundView vm={vm} />;

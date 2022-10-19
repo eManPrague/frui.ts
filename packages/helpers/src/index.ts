@@ -1,4 +1,6 @@
 export { default as bound } from "./bound";
+export { default as BusyWatcher, watchBusy } from "./busyWatcher";
+export type { BusyWatcherKey, IBusyWatcher } from "./busyWatcher";
 export { default as combineClassNames } from "./combineClassNames";
 export { default as createMap } from "./createMap";
 export * from "./disposable";
