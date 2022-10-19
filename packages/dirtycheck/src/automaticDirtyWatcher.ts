@@ -11,7 +11,7 @@ export interface AutomaticDirtyWatcherParams<TEntity> {
   excludedProperties?: PropertyName<TEntity>[];
 }
 
-export default class AutomaticDirtyWatcher<TEntity = any> extends DirtyWatcherBase<TEntity> {
+export default class AutomaticDirtyWatcher<TEntity extends object = any> extends DirtyWatcherBase<TEntity> {
   private _includedProperties?: PropertyName<TEntity>[];
   private _excludedProperties?: PropertyName<TEntity>[];
 
@@ -99,7 +99,7 @@ export default class AutomaticDirtyWatcher<TEntity = any> extends DirtyWatcherBa
   }
 }
 
-function defineArrayDirtyWatchProperty<TEntity>(
+function defineArrayDirtyWatchProperty<TEntity extends object>(
   resultsObject: Partial<Record<PropertyName<TEntity>, boolean>>,
   originalValue: unknown[],
   propertyName: PropertyName<TEntity>,
@@ -135,7 +135,7 @@ function defineArrayDirtyWatchProperty<TEntity>(
   }
 }
 
-function defineSetDirtyCheckProperty<TEntity>(
+function defineSetDirtyCheckProperty<TEntity extends object>(
   resultsObject: Partial<Record<PropertyName<TEntity>, boolean>>,
   originalValue: Set<unknown>,
   propertyName: PropertyName<TEntity>,
@@ -159,7 +159,7 @@ function defineSetDirtyCheckProperty<TEntity>(
   });
 }
 
-function defineMapDirtyCheckProperty<TEntity>(
+function defineMapDirtyCheckProperty<TEntity extends object>(
   resultsObject: Partial<Record<PropertyName<TEntity>, boolean>>,
   originalValue: Map<unknown, unknown>,
   propertyName: PropertyName<TEntity>,
@@ -184,7 +184,7 @@ function defineMapDirtyCheckProperty<TEntity>(
   });
 }
 
-function defineObjectDirtyWatchProperty<TEntity>(
+function defineObjectDirtyWatchProperty<TEntity extends object>(
   resultsObject: Partial<Record<PropertyName<TEntity>, boolean>>,
   originalValue: unknown,
   propertyName: PropertyName<TEntity>,
@@ -205,13 +205,16 @@ function defineObjectDirtyWatchProperty<TEntity>(
   }
 }
 
-export function attachAutomaticDirtyWatcher<TEntity>(target: TEntity): AutomaticDirtyWatcher<TEntity>;
-export function attachAutomaticDirtyWatcher<TEntity>(target: TEntity, isVisible: boolean): AutomaticDirtyWatcher<TEntity>;
-export function attachAutomaticDirtyWatcher<TEntity>(
+export function attachAutomaticDirtyWatcher<TEntity extends object>(target: TEntity): AutomaticDirtyWatcher<TEntity>;
+export function attachAutomaticDirtyWatcher<TEntity extends object>(
+  target: TEntity,
+  isVisible: boolean
+): AutomaticDirtyWatcher<TEntity>;
+export function attachAutomaticDirtyWatcher<TEntity extends object>(
   target: TEntity,
   params: AutomaticDirtyWatcherParams<TEntity>
 ): AutomaticDirtyWatcher<TEntity>;
-export function attachAutomaticDirtyWatcher<TEntity>(
+export function attachAutomaticDirtyWatcher<TEntity extends object>(
   target: TEntity,
   params?: AutomaticDirtyWatcherParams<TEntity> | boolean
 ): AutomaticDirtyWatcher<TEntity> {

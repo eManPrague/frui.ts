@@ -39,18 +39,18 @@
   "dependencies": {
     "@apidevtools/swagger-parser": "^10.1.0",
     "cli-progress": "^3.11.2",
-    "commander": "^9.4.0",
+    "commander": "^9.4.1",
     "handlebars": "^4.7.7",
     "lodash": "^4.17.21",
-    "openapi-types": "^12.0.0",
-    "ts-morph": "^15.1.0"
+    "openapi-types": "^12.0.2",
+    "ts-morph": "^16.0.0"
   },
   "devDependencies": {
     "@types/cli-progress": "^3.11.0",
-    "@types/lodash": "4.14.182",
-    "@types/node": "18.0.6",
+    "@types/lodash": "4.14.186",
+    "@types/node": "18.11.2",
     "ncp": "^2.0.0",
-    "nodemon": "2.0.19",
+    "nodemon": "2.0.20",
     "rimraf": "^3.0.2",
     "ts-node": "^10.9.1"
   }

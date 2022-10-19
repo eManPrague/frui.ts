@@ -43,18 +43,19 @@
     "validate": "yarn run cleanbuild && yarn run test --run && yarn run lint && yarn run publish"
   },
   "devDependencies": {
-    "@emanprague/eslint-config": "^3.0.0",
-    "@testing-library/react": "13.3.0",
-    "eslint": "^8.20.0",
-    "happy-dom": "^6.0.4",
-    "lerna": "^5.1.8",
+    "@emanprague/eslint-config": "^3.1.0",
+    "@testing-library/react": "13.4.0",
+    "cross-env": "^7.0.3",
+    "eslint": "^8.25.0",
+    "happy-dom": "^7.6.0",
+    "lerna": "^6.0.1",
     "lerna-update-wizard": "^1.1.2",
-    "mobx": "6",
+    "mobx": "6.6.2",
     "prettier": "^2.7.1",
     "rimraf": "^3.0.2",
-    "typedoc": "^0.23.8",
-    "vite": "^3.0.2",
-    "vitest": "^0.18.1",
-    "vitest-mock-extended": "^0.1.10"
+    "typedoc": "^0.23.17",
+    "vite": "^3.1.8",
+    "vitest": "^0.24.3",
+    "vitest-mock-extended": "^1.0.2"
   }
 }

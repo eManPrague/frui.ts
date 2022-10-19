@@ -48,6 +48,7 @@ function responsiveTableHeaders<TItem, TContext>(props: React.PropsWithChildren<
   return (
     <>
       <style
+        // eslint-disable-next-line react/no-unknown-property
         scoped
         dangerouslySetInnerHTML={{
           __html: getStyleWithHeaders(props.id, columnHeaders),

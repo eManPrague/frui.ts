@@ -21,7 +21,10 @@ interface AsyncEntityValidatorConfiguration {
   resultMiddleware?: (result: ValidationResult) => ValidationResult;
 }
 
-export default class AsyncEntityValidator<TEntity = any> extends EntityValidatorBase<TEntity> implements IDisposable {
+export default class AsyncEntityValidator<TEntity extends object = any>
+  extends EntityValidatorBase<TEntity>
+  implements IDisposable
+{
   protected readonly validationResults = observable.map<
     PropertyName<TEntity>,
     Map<string, ValidationResult | ValidationResult[]>
@@ -215,7 +218,7 @@ function* flatMapValues<T>(map: Map<unknown, T[] | T>): Iterable<T> {
   }
 }
 
-export function attachAsyncValidator<TEntity>(
+export function attachAsyncValidator<TEntity extends object>(
   target: TEntity,
   validationRules: EntityValidationRules<TEntity>,
   isVisible = false

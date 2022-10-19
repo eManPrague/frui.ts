@@ -1,5 +1,5 @@
 import { action, computed, makeObservable, ObservableMap } from "mobx";
-import { Awaitable } from "./types";
+import type { Awaitable } from "./types";
 
 export type BusyWatcherKey = string | symbol;
 

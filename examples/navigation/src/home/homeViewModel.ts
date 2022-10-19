@@ -1,5 +1,5 @@
+import type { IViewModel } from "@frui.ts/views";
 import { action, makeObservable, observable } from "mobx";
-import { IViewModel } from "@frui.ts/views";
 
 export default class HomeViewModel implements IViewModel {
   text = "foo";

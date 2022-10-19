@@ -5,14 +5,14 @@
   "author": "Augustin Šulc <sulc.gusta@gmail.com>",
   "license": "MIT",
   "devDependencies": {
-    "@babel/core": "^7.18.9",
+    "@babel/core": "^7.19.6",
     "@rollup/pluginutils": "^4.2.1",
-    "@storybook/addon-actions": "^6.5.9",
-    "@storybook/addon-essentials": "^6.5.9",
-    "@storybook/addon-interactions": "^6.5.9",
-    "@storybook/addon-links": "^6.5.9",
-    "@storybook/builder-vite": "^0.2.0",
-    "@storybook/react": "^6.5.9",
+    "@storybook/addon-actions": "^6.5.12",
+    "@storybook/addon-essentials": "^6.5.12",
+    "@storybook/addon-interactions": "^6.5.12",
+    "@storybook/addon-links": "^6.5.12",
+    "@storybook/builder-vite": "^0.2.4",
+    "@storybook/react": "^6.5.12",
     "@storybook/testing-library": "^0.0.13",
     "babel-loader": "^8.2.5"
   },
@@ -23,12 +23,12 @@
     "@frui.ts/htmlcontrols": "^999.0.0",
     "@frui.ts/validation": "^999.0.0",
     "@frui.ts/views": "^999.0.0",
-    "mobx": "6",
+    "mobx": "6.6.2",
     "mobx-react-lite": "3",
     "react": "^18.2.0"
   },
   "scripts": {
-    "storybook": "start-storybook -p 6006",
-    "build-storybook": "build-storybook"
+    "storybook": "cross-env NODE_OPTIONS=--openssl-legacy-provider start-storybook -p 6006",
+    "build-storybook": "cross-env NODE_OPTIONS=--openssl-legacy-provider build-storybook"
   }
 }

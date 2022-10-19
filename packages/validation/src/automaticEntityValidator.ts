@@ -11,7 +11,7 @@ interface AutomaticEntityValidatorConfiguration {
   resultMiddleware?: (result: ValidationResult) => ValidationResult;
 }
 
-export default class AutomaticEntityValidator<TEntity = any> extends EntityValidatorBase<TEntity> {
+export default class AutomaticEntityValidator<TEntity extends object = any> extends EntityValidatorBase<TEntity> {
   readonly sourceValidationRules: EntityValidationRules<TEntity>;
   private _results: Readonly<Partial<Record<PropertyName<TEntity>, ValidationResult[]>>>;
   private _validatedProperties: PropertyName<TEntity>[] = [];
@@ -63,7 +63,7 @@ export default class AutomaticEntityValidator<TEntity = any> extends EntityValid
   }
 }
 
-export function buildAggregatedErrorGetter<TEntity>(
+export function buildAggregatedErrorGetter<TEntity extends object>(
   entity: TEntity,
   propertyName: PropertyName<TEntity>,
   rules: Record<string, unknown>,
@@ -94,7 +94,7 @@ export function buildAggregatedErrorGetter<TEntity>(
   };
 }
 
-export function attachAutomaticValidator<TEntity>(
+export function attachAutomaticValidator<TEntity extends object>(
   target: TEntity,
   validationRules: EntityValidationRules<TEntity>,
   isVisible = false

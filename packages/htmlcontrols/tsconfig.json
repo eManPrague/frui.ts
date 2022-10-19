@@ -2,7 +2,8 @@
   "extends": "../../tsconfig-base.json",
   "compilerOptions": {
     "outDir": "./dist",
-    "jsx": "react"
+    "jsx": "react",
+    "skipLibCheck": true // TODO: workaround for tanstack/router, remove when updated or this resolved: https://github.com/TanStack/router/issues/322
   },
   "include": ["./src"]
 }

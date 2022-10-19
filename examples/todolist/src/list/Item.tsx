@@ -2,7 +2,7 @@ import { Checkbox, Textbox } from "@frui.ts/htmlcontrols";
 import { observer } from "mobx-react-lite";
 import React from "react";
 import { onEnterHandler } from "../helpers";
-import type TodoItem from "../models/todoItem";
+import { type TodoItem } from "../models/todoItem";
 import type TodoListViewModel from "./todoListViewModel";
 
 export const Item: React.FunctionComponent<{ vm: TodoListViewModel; item: TodoItem }> = observer(({ vm, item }) => {

@@ -34,6 +34,6 @@ export function mapToEntity<TSource, TTarget>(
   return plainToClass(targetType, plain, options);
 }
 
-export function initObject<T>(target: T, properties: Partial<T>): T {
+export function initObject<T extends object>(target: T, properties: Partial<T>): T {
   return Object.assign(target, properties);
 }

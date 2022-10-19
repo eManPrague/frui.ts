@@ -6,7 +6,8 @@ import { Observer } from "mobx-react-lite";
 import React from "react";
 import type { CommonInputProps } from "./commonInputProps";
 
-type TProps<TTarget, TOtherProps> = ExcludeBindingProps<CommonInputProps & TOtherProps> & IBindingProps<TTarget>;
+type TProps<TTarget extends BindingTarget, TOtherProps> = ExcludeBindingProps<CommonInputProps & TOtherProps> &
+  IBindingProps<TTarget>;
 
 export abstract class ValidationControlBase<TTarget extends BindingTarget, TOtherProps = unknown> extends BindingComponent<
   TTarget,

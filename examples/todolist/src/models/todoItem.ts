@@ -1,4 +1,4 @@
-export default interface TodoItem {
+export interface TodoItem {
   id: string;
   title: string;
   completed: boolean;

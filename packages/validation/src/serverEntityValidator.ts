@@ -5,7 +5,7 @@ import type { ManualEntityValidatorConfiguration } from "./manualEntityValidator
 import ManualEntityValidator from "./manualEntityValidator";
 import type { ValidationResult } from "./types";
 
-export default class ServerEntityValidator<TEntity = any> extends ManualEntityValidator<TEntity> {
+export default class ServerEntityValidator<TEntity extends object = any> extends ManualEntityValidator<TEntity> {
   private _validatedValues = observable.map<string, unknown>(undefined, { deep: false });
 
   constructor(private target: TEntity, configuration?: ManualEntityValidatorConfiguration) {

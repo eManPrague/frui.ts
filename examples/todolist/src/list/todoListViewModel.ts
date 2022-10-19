@@ -1,7 +1,8 @@
-import type { IViewModel, RouteMatch } from "@frui.ts/views";
+import type { IViewModel } from "@frui.ts/views";
+import { type RouteMatch } from "@frui.ts/views";
 import { action, computed, makeObservable, observable } from "mobx";
 import { v4 as uuid } from "uuid";
-import type TodoItem from "../models/todoItem";
+import { type TodoItem } from "../models/todoItem";
 
 type FilterType = "all" | "completed" | "active";
 
