@@ -19,7 +19,14 @@ export default class EnumWriter {
   }
 
   private updateFile(file: SourceFile, definition: Enum) {
-    const currentEnum = file.getEnumOrThrow(definition.name);
+    const currentEnum = file.getFunction(`build${definition.name}`) ?? file.getEnum(definition.name);
+    if (!currentEnum) {
+      throw new Error(
+        `Could not find node to replace (enum ${definition.name}, or function build${
+          definition.name
+        }) in file ${file.getFilePath()}`
+      );
+    }
     currentEnum.replaceWithText(this.getEnumContent(definition));
 
     return file;

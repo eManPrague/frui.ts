@@ -1,0 +1,7 @@
+function build{{name}}() {
+  return z.enum([
+  {{#each items}}
+    "{{this}}",
+  {{/each}}
+  ]);
+}

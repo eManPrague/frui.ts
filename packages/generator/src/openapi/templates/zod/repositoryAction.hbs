@@ -1,0 +1,43 @@
+{{#*inline "get"}}
+  return this.callApi(api => api.path(`{{{path}}}`)
+  {{~#if isResponseArray~}}
+  .getEntities({{responseType}}{{#if action.queryParam}}, query{{/if}})
+  {{~else~}}
+  .getEntity({{responseType}}{{#if action.queryParam}}, query{{/if}})
+  {{~/if~}}
+  );
+{{/inline}}
+{{#*inline "post"}}
+  // TODO {{action.method}} {{path}}
+  return this.callApi(api => api.path(`{{{path}}}`).postEntity(payload{{#if response}}, {{responseTypeDeclaration}}{{/if}}));
+{{/inline}}
+{{#*inline "put"}}
+  // TODO {{action.method}} {{path}}
+  return this.callApi(api => api.path(`{{{path}}}`).putEntity(payload{{#if response}}, {{responseTypeDeclaration}}{{/if}}));
+{{/inline}}
+{{#*inline "patch"}}
+  // TODO {{action.method}} {{path}}
+  return this.callApi(api => api.path(`{{{path}}}`).patchEntity(payload{{#if response}}, {{responseTypeDeclaration}}{{/if}}));
+{{/inline}}
+{{#*inline "delete"}}
+  // TODO {{action.method}} {{path}}
+  return this.callApi(api => api.path(`{{{path}}}`).delete({{#if action.requestBody}}payload{{/if}}));
+{{/inline}}
+{{#*inline "option"}}
+  // TODO {{action.method}} {{path}}
+{{/inline}}
+{{#*inline "head"}}
+  // TODO {{action.method}} {{path}}
+{{/inline}}
+{{#*inline "trace"}}
+  // TODO {{action.method}} {{path}}
+{{/inline}}
+{{#if action.description}}
+  /** {{action.description}} */
+{{/if}}
+  {{camelCase action.name}}({{#each parameters}}{{{this}}}{{#unless @last}}, {{/unless}}{{/each}}) {
+  {{> (lookup action "method")}}
+  {{#each responses}}
+    // HTTP {{statusCode}}: {{returnType}}{{#unless returnType}}EMPTY{{/unless}}
+  {{/each}}
+  }

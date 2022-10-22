@@ -1,0 +1,7 @@
+import z from "zod";
+
+{{> generatedEntityHeader}}
+{{{content}}}
+
+export const {{pascalCase enum.name}} = build{{enum.name}}();
+export type {{pascalCase enum.name}} = z.infer<typeof {{pascalCase enum.name}}>;

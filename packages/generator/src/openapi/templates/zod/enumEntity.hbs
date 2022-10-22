@@ -1,0 +1,5 @@
+enum {{pascalCase name}} {
+  {{#each items}}
+  {{pascalCase this}} = "{{this}}",
+  {{/each}}
+}

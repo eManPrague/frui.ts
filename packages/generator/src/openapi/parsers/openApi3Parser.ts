@@ -44,12 +44,10 @@ export default class OpenApi3Parser implements ApiModel {
 
     switch (definition.type) {
       case "array": {
-        const itemName = `${name}Item`;
-        const innerType = this.parseSchemaObject(itemName, definition.items);
-
-        const arrayName = `${name}Array`;
-        const aliasType = new AliasEntity(arrayName, innerType, true);
-        return this.setTypeReference(arrayName, aliasType);
+        const fallbackName = `${name}Item`;
+        const innerType = this.parseSchemaObject(fallbackName, definition.items);
+        const aliasType = new AliasEntity(name, innerType, true);
+        return this.setTypeReference(name, aliasType);
       }
 
       case "object":
@@ -194,6 +192,7 @@ export default class OpenApi3Parser implements ApiModel {
   }
 
   private setTypeReference(name: string, type: TypeReference["type"]) {
+    // TODO set name on the type as well?
     const existingReference = this.types.get(name);
     if (existingReference) {
       existingReference.type = existingReference.type ?? type;
@@ -304,7 +303,8 @@ export default class OpenApi3Parser implements ApiModel {
       }
 
       const contentType = Object.keys(input.content)[0];
-      const schemaObject = input.content[contentType].schema;
+      // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
+      const schemaObject = input.content[contentType]?.schema;
       const typeReference = schemaObject && this.parseSchemaObject(fallbackName, schemaObject);
       return typeReference ? { contentType, typeReference } : undefined;
     }

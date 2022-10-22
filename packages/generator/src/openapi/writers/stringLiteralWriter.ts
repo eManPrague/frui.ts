@@ -20,7 +20,15 @@ export default class StringLiteralWriter {
   }
 
   private updateFile(file: SourceFile, definition: Enum) {
-    const currentEnum = file.getTypeAliasOrThrow(definition.name);
+    const currentEnum = file.getFunction(`build${definition.name}`) ?? file.getTypeAlias(definition.name);
+    if (!currentEnum) {
+      throw new Error(
+        `Could not find node to replace (type ${definition.name}, or function build${
+          definition.name
+        }) in file ${file.getFilePath()}`
+      );
+    }
+
     currentEnum.replaceWithText(this.getEnumContent(definition));
 
     return file;

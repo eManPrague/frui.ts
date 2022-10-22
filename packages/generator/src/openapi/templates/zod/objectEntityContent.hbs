@@ -1,0 +1,77 @@
+{{#*inline "type"~}}
+{{#if hasTypeImport}}{{ typeName }}{{else}}
+{{#if (eq typeName "Date")}}
+z.preprocess(arg => (typeof arg == "string" || arg instanceof Date ? new Date(arg) : undefined), z.date())
+{{~else}}z.{{ typeName }}(){{/if}}
+{{~/if}}
+{{/inline~}}
+
+{{#*inline "validation"}}
+  {{#with (lookup rawValidations "number") }}
+
+  /* is number */
+  {{~/with}}
+  {{#if (eq typeName "string") }}
+    {{#if rawValidations.minLength}}
+
+  .min({{rawValidations.minLength}})
+    {{~else}}
+      {{#if required}}
+
+  .min(1)
+      {{~/if}}
+    {{~/if}}
+    {{#if rawValidations.maxLength}}
+
+  .max({{rawValidations.maxLength}})
+    {{~/if}}
+    {{#if (eq format "email")}}
+
+  .email()
+    {{~/if}}
+  {{~/if}}
+{{~/inline~}}
+
+{{#*inline "property"}}
+{{#if example}}
+/**
+ * @example
+ * {{{example}}}
+ */
+{{/if}}
+{{name}}:
+
+{{~#if isArray}}
+ z.array({{> type}})
+{{else}}
+ {{> type}}
+{{/if}}
+
+{{~> validation~}}
+{{#unless required}}
+
+  .optional()
+{{~/unless}}
+{{#if nullable}}
+
+  .nullable()
+{{~/if}}
+{{#if description}}
+
+  .describe("{{description}}")
+{{~/if}}
+,
+{{/inline}}
+  return z
+    .object({
+      {{#each properties}}
+      {{> property}}
+      {{#unless @last}}
+
+      {{/unless}}
+      {{/each}}
+    })
+    {{#each baseClasses}}
+    .merge({{name}})
+    {{/each}}
+    .describe("{{entity.name}}");

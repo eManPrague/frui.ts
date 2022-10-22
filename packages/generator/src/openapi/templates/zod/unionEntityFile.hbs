@@ -1,0 +1,10 @@
+{{#each imports}}
+{{{this}}}
+{{/each}}
+import z from "zod";
+
+{{> generatedEntityHeader}}
+{{{content}}}
+
+export const {{pascalCase entity.name}} = build{{entity.name}}();
+export type {{pascalCase entity.name}} = z.infer<typeof {{pascalCase entity.name}}>;
