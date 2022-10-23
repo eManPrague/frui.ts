@@ -51,4 +51,5 @@ export interface IConfig {
 
 export interface IApiParserConfig {
   endpointUrlPrefix?: string;
+  bundleReferences?: boolean;
 }

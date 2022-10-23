@@ -12,7 +12,8 @@ export default class ModelProcessor {
     const progress = createProgressBar("Analysing");
     progress.start(2, 0);
 
-    const api = await SwaggerParser.parse(apiPath);
+    const api = parserConfig?.bundleReferences ? await SwaggerParser.bundle(apiPath) : await SwaggerParser.parse(apiPath);
+
     progress.increment();
 
     const model = this.parseModel(api, parserConfig);

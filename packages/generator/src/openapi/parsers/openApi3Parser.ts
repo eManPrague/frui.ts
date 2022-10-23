@@ -219,7 +219,7 @@ export default class OpenApi3Parser implements ApiModel {
 
   private parseEndpoint({ path, method, action }: { path: string; method: string; action: OpenAPIV3.OperationObject }) {
     path = this.config?.endpointUrlPrefix ? path.replace(this.config.endpointUrlPrefix, "") : path;
-    const name = action.operationId ?? camelCase(method + "-" + path.replace(/\{\D*?\}/, "")); // the dash makes sure first path word starts with upper case
+    const name = action.operationId ?? camelCase(method + "-" + path.replace(/\{(\D*?)\}/, "By-$1")); // the dash makes sure first path word starts with upper case
 
     const endpoint = new Endpoint(name);
     endpoint.path = path;
