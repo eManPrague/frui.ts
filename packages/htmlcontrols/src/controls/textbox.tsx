@@ -1,25 +1,20 @@
-import type { BindingProperty, BindingTarget } from "@frui.ts/helpers";
-import type { IBindingProps } from "@frui.ts/views";
-import { useBinding } from "@frui.ts/views";
+import type { BindingTarget, TypedBindingProperty } from "@frui.ts/helpers";
+import type { WithBindingProps } from "@frui.ts/views";
+import { omitBindingProps, useBinding } from "@frui.ts/views";
 import { observer } from "mobx-react-lite";
+import type { ComponentPropsWithoutRef } from "react";
 import React from "react";
 
-type TextboxProps<TTarget extends BindingTarget, TProperty extends BindingProperty<TTarget>> = IBindingProps<
-  TTarget,
-  TProperty,
-  string
-> &
-  React.InputHTMLAttributes<HTMLInputElement>;
+function textbox<
+  TRestriction extends string,
+  TTarget extends BindingTarget,
+  TProperty extends TypedBindingProperty<TTarget, TRestriction>
+>(props: WithBindingProps<ComponentPropsWithoutRef<"input">, TRestriction, TTarget, TProperty>) {
+  const [value, setValue] = useBinding<TRestriction, TTarget, TProperty>(props);
+  const handleValueChanged = (e: React.ChangeEvent<HTMLInputElement>) => setValue(e.target.value as TRestriction);
 
-function textbox<TTarget extends BindingTarget, TProperty extends BindingProperty<TTarget>>(
-  props: TextboxProps<TTarget, TProperty>
-) {
-  const { target, property, onValueChanged, ...restProps } = props;
-  const [value, setValue] = useBinding(props);
-  const handleValueChanged = (e: React.ChangeEvent<HTMLInputElement>) => setValue(e.target.value);
-
-  return <input type="text" {...restProps} value={value || ""} onChange={handleValueChanged} />;
+  return <input type="text" {...omitBindingProps(props)} value={value || ""} onChange={handleValueChanged} />;
 }
 
-const Textbox = observer(textbox as any) as typeof textbox;
+const Textbox = observer(textbox);
 export default Textbox;

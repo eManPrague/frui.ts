@@ -3,7 +3,6 @@ export * from "./binding/bindingProps";
 export * from "./binding/useBinding";
 export { default as assignDefaultProps } from "./helpers/assignDefaultProps";
 export { default as createDataIdHandler } from "./helpers/dataIdHandler";
-export * from "./helpers/fieldHelpers";
 export { default as createMemoizedHandler } from "./helpers/memoizedDataHandler";
 export { default as preventDefault } from "./helpers/preventDefault";
 export * from "./router/router";

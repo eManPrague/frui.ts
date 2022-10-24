@@ -1,4 +1,4 @@
-import { Check, Input } from "@frui.ts/bootstrap";
+import { Check, Input } from "../fields";
 import type { EntityValidationRules, ValidationResult } from "@frui.ts/validation";
 import { AutomaticEntityValidator, Configuration } from "@frui.ts/validation";
 import { storiesOf } from "@storybook/react";

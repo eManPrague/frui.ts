@@ -7,7 +7,7 @@ export default class ViewsAnalyzer {
     project.getSourceFiles(viewFilesPattern).forEach(file => {
       const isViewRegistration = file
         .getImportDeclarations()
-        .some(i => i.getNamedImports().some(n => n.getName() === "registerView"));
+        .some(i => i.getNamedImports().some(n => n.getName() === "registerView" || n.getName() === "registerViewComponent"));
 
       if (isViewRegistration) {
         viewFiles.push(file);

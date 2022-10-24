@@ -17,7 +17,6 @@
     "babel-loader": "^8.2.5"
   },
   "dependencies": {
-    "@frui.ts/bootstrap": "^999.0.0",
     "@frui.ts/dirtycheck": "^999.0.0",
     "@frui.ts/helpers": "^999.0.0",
     "@frui.ts/htmlcontrols": "^999.0.0",

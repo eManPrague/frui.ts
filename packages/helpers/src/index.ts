@@ -9,5 +9,6 @@ export { default as groupBy } from "./groupBy";
 export { default as ManualPromise } from "./manualPromise";
 export * from "./nameof";
 export * from "./observableHelpers";
+export * from "./path";
 export * from "./typeHelpers";
 export * from "./types";

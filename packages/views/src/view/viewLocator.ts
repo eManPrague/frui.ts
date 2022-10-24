@@ -1,5 +1,5 @@
 import type { ComponentType } from "react";
-import type { constructor } from "../types";
+import type { Constructor } from "@frui.ts/helpers";
 
 type viewComponent<TViewModel> = ComponentType<{ vm: TViewModel }>;
 type ContextDictionary = Partial<Record<string, viewComponent<any>>>;
@@ -7,11 +7,11 @@ type ContextDictionary = Partial<Record<string, viewComponent<any>>>;
 const DEFAULT_CONTEXT = "default";
 
 // viewsRegistry is singleton
-const viewsRegistry = new Map<constructor<unknown>, ContextDictionary>();
+const viewsRegistry = new Map<Constructor<unknown>, ContextDictionary>();
 
 export function registerView<TViewModel>(
   view: viewComponent<TViewModel>,
-  viewModelConstructor: constructor<TViewModel>,
+  viewModelConstructor: Constructor<TViewModel>,
   context = DEFAULT_CONTEXT
 ): viewComponent<TViewModel> {
   const currentViewModelViews = viewsRegistry.get(viewModelConstructor);
@@ -25,7 +25,7 @@ export function registerView<TViewModel>(
 
 // todo memoize
 export function getView<TViewModel = unknown>(
-  viewModelConstructor: constructor<TViewModel>,
+  viewModelConstructor: Constructor<TViewModel>,
   context = DEFAULT_CONTEXT
 ): viewComponent<TViewModel> {
   const currentViewModelViews = viewsRegistry.get(viewModelConstructor);
@@ -43,7 +43,7 @@ export function getView<TViewModel = unknown>(
 }
 
 export function tryGetView<TViewModel = unknown>(
-  viewModelConstructor: constructor<TViewModel>,
+  viewModelConstructor: Constructor<TViewModel>,
   context = DEFAULT_CONTEXT
 ): viewComponent<TViewModel> | null {
   const currentViewModelViews = viewsRegistry.get(viewModelConstructor);

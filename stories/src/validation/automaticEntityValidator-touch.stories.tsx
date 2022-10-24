@@ -1,11 +1,11 @@
-import "./style.css";
-import { Check, Input } from "@frui.ts/bootstrap";
 import type { EntityValidationRules, ValidationResult } from "@frui.ts/validation";
 import { AutomaticEntityValidator, Configuration } from "@frui.ts/validation";
 import { storiesOf } from "@storybook/react";
 import { action, observable } from "mobx";
 import { Observer } from "mobx-react-lite";
 import React from "react";
+import { Check, Input } from "../fields";
+import "./style.css";
 import ValidationErrors from "./validationErrors";
 import ValidityIndicator from "./validityIndicator";
 

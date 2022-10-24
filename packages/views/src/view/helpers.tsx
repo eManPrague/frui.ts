@@ -1,5 +1,6 @@
 import { observer } from "mobx-react-lite";
-import type { constructor, ViewComponent } from "../types";
+import type { Constructor } from "@frui.ts/helpers";
+import type { ViewComponent } from "../types";
 import { registerView } from "./viewLocator";
 
 /**
@@ -16,16 +17,16 @@ export function createViewComponent<TViewModel>(
 }
 
 export function registerViewComponent<TViewModel>(
-  viewModelConstructor: constructor<TViewModel>,
+  viewModelConstructor: Constructor<TViewModel>,
   render: (vm: TViewModel) => React.ReactElement | null
 ): ViewComponent<TViewModel>;
 export function registerViewComponent<TViewModel>(
-  viewModelConstructor: constructor<TViewModel>,
+  viewModelConstructor: Constructor<TViewModel>,
   context: string,
   render: (vm: TViewModel) => React.ReactElement | null
 ): ViewComponent<TViewModel>;
 export function registerViewComponent<TViewModel>(
-  viewModelConstructor: constructor<TViewModel>,
+  viewModelConstructor: Constructor<TViewModel>,
   second: string | ((vm: TViewModel) => React.ReactElement | null),
   render2?: (vm: TViewModel) => React.ReactElement | null
 ): ViewComponent<TViewModel> {
@@ -35,7 +36,7 @@ export function registerViewComponent<TViewModel>(
 }
 
 function registerViewComponentImpl<TViewModel>(
-  viewModelConstructor: constructor<TViewModel>,
+  viewModelConstructor: Constructor<TViewModel>,
   context: string | undefined,
   render: (vm: TViewModel) => React.ReactElement | null
 ): ViewComponent<TViewModel> {

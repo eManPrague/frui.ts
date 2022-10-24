@@ -1,11 +1,11 @@
-import { computed, isObservableProp, observable, ObservableMap, makeObservable } from "mobx";
+import type { BindingTarget, TypedBindingProperty } from "@frui.ts/helpers";
+import { computed, isObservableProp, makeObservable, observable, ObservableMap } from "mobx";
 import { describe, expect, it } from "vitest";
 import { BindingComponent } from "../src/binding/bindingComponent";
-import type { IBindingProps } from "../src/binding/bindingProps";
 
-type TestControlProps<TTarget> = IBindingProps<TTarget> & { otherText?: string; otherValue?: any };
+type TestControlProps = { otherText?: string; otherValue?: any };
 
-type Entity = { firstName?: string; lastName?: string };
+type Entity = { firstName: string; lastName?: string; age?: number };
 
 class ComplexEntity {
   fullNameValue: string;
@@ -24,7 +24,11 @@ class ComplexEntity {
   }
 }
 
-class TestControl<TTarget> extends BindingComponent<TTarget, TestControlProps<TTarget>> {
+class TestControl<
+  TRestriction extends string | undefined,
+  TTarget extends BindingTarget,
+  TProperty extends TypedBindingProperty<TTarget, TRestriction>
+> extends BindingComponent<TestControlProps, TRestriction, TTarget, TProperty> {
   readValue() {
     return this.value;
   }
@@ -41,9 +45,9 @@ class TestControl<TTarget> extends BindingComponent<TTarget, TestControlProps<TT
 describe("BindingComponent", () => {
   describe("BindingComponent.value", () => {
     it("reads target property value", () => {
-      const entity = observable({
+      const entity: Entity = observable({
         firstName: "John",
-      }) as Entity;
+      });
 
       const control = new TestControl({ target: entity, property: "firstName" });
 
@@ -52,9 +56,9 @@ describe("BindingComponent", () => {
     });
 
     it("reads target property value from a non-observable entity", () => {
-      const entity = {
+      const entity: Entity = {
         firstName: "John",
-      } as Entity;
+      };
 
       const control = new TestControl({ target: entity, property: "firstName" });
 
@@ -63,9 +67,9 @@ describe("BindingComponent", () => {
     });
 
     it("reads undefined target property value", () => {
-      const entity = observable({
+      const entity: Entity = observable({
         firstName: "John",
-      }) as Entity;
+      });
 
       const control = new TestControl({ target: entity, property: "lastName" });
 
@@ -78,6 +82,7 @@ describe("BindingComponent", () => {
         firstName: "John",
       });
 
+      // TODO
       const control = new TestControl({ target, property: "firstName" });
 
       const result = control.readValue();
@@ -96,9 +101,9 @@ describe("BindingComponent", () => {
 
   describe("BindingComponent.setValue()", () => {
     it("sets existing value", () => {
-      const entity = observable({
+      const entity: Entity = observable({
         firstName: "John",
-      }) as Entity;
+      });
 
       const control = new TestControl({ target: entity, property: "firstName" });
       control.writeValue("Peter");
@@ -107,9 +112,9 @@ describe("BindingComponent", () => {
     });
 
     it("creates a new property if needed", () => {
-      const entity = observable({
+      const entity: Entity = observable({
         firstName: "John",
-      }) as Entity;
+      });
 
       const control = new TestControl({ target: entity, property: "lastName" });
       control.writeValue("Doe");
@@ -119,9 +124,9 @@ describe("BindingComponent", () => {
     });
 
     it("sets value on non-observable", () => {
-      const entity = {
+      const entity: Entity = {
         firstName: "John",
-      } as Entity;
+      };
 
       const control = new TestControl({ target: entity, property: "firstName" });
       control.writeValue("Peter");
@@ -134,6 +139,7 @@ describe("BindingComponent", () => {
         firstName: "John",
       });
 
+      // TODO
       const control = new TestControl({ target: target, property: "firstName" });
       control.writeValue("Peter");
 
@@ -152,22 +158,23 @@ describe("BindingComponent", () => {
 
   describe("BindingComponent.inheritedProps", () => {
     it("returns props without keys used by BindingComponent", () => {
-      const entity = observable({
+      const entity: Entity = observable({
         firstName: "John",
-      }) as Entity;
+      });
 
       const control = new TestControl({
         target: entity,
         property: "lastName",
-        onValueChanged: () => 1,
+        onValueChanged: value => value?.substring(0, 1),
         otherText: "test",
         otherValue: { id: 1 },
       });
 
-      const inheritedProps = control.getInheritedProps() as TestControlProps<Entity>;
-      expect(inheritedProps.target).toBeUndefined();
-      expect(inheritedProps.property).toBeUndefined();
-      expect(inheritedProps.onValueChanged).toBeUndefined();
+      const inheritedProps = control.getInheritedProps();
+
+      expect("target" in inheritedProps).toBeFalsy();
+      expect("property" in inheritedProps).toBeFalsy();
+      expect("onValueChanged" in inheritedProps).toBeFalsy();
 
       expect(inheritedProps.otherText).toBe("test");
       expect(inheritedProps.otherValue.id).toBe(1);

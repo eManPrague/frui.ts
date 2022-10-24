@@ -1,29 +1,13 @@
-/* eslint-disable @typescript-eslint/no-unsafe-return */
-import type { BindingProperty, BindingTarget, PropertyName, PropertyType } from "@frui.ts/helpers";
+import type { BindingTarget, PropertyType, TypedBindingProperty } from "@frui.ts/helpers";
 import { ensureObservableProperty, isMap } from "@frui.ts/helpers";
 import { action, get, isObservable, isObservableMap, isObservableProp } from "mobx";
 import type { IBindingProps } from "./bindingProps";
 
-export function getValue<TTarget, TProperty extends PropertyName<TTarget>>(
-  target: TTarget | undefined,
-  property: TProperty | undefined,
-  ensureObservable?: boolean
-): TTarget[TProperty];
-export function getValue<TKey, TValue, TTarget extends Map<TKey, TValue>>(
-  target: TTarget | undefined,
-  key: TKey | undefined
-): TValue | undefined;
-export function getValue<TTarget extends BindingTarget, TProperty extends BindingProperty<TTarget>>(
-  target: TTarget | undefined,
-  property: TProperty | undefined,
-  ensureObservable?: boolean
-): PropertyType<TTarget, TProperty> | undefined;
-
-export function getValue<TTarget extends BindingTarget, TProperty extends BindingProperty<TTarget>>(
-  target: TTarget | undefined,
-  property: TProperty | undefined,
-  ensureObservable = true
-): PropertyType<TTarget, TProperty> | undefined {
+export function getValue<
+  TValueRestriction,
+  TTarget extends BindingTarget,
+  TProperty extends TypedBindingProperty<TTarget, TValueRestriction>
+>(target: TTarget | undefined, property: TProperty | undefined, ensureObservable = true): TValueRestriction {
   if (!target) {
     throw new Error("'target' prop has not been set");
   }
@@ -32,62 +16,50 @@ export function getValue<TTarget extends BindingTarget, TProperty extends Bindin
   }
 
   if (isObservableMap(target)) {
+    // eslint-disable-next-line @typescript-eslint/no-unsafe-return
     return target.get(property);
   }
-  const propertyName = property as PropertyName<TTarget> & string;
 
-  if (!isObservable(target) || !isObservableProp(target, propertyName)) {
+  if (!isObservable(target) || !isObservableProp(target, property)) {
     if (isMap<TProperty, PropertyType<TTarget, TProperty>>(target)) {
-      return target.get(property);
+      // eslint-disable-next-line @typescript-eslint/no-unsafe-return, @typescript-eslint/no-non-null-assertion
+      return target.get(property)!;
     } else {
-      const value = target[property];
+      const value = target[property as keyof TTarget];
       if (ensureObservable) {
-        action(ensureObservableProperty)(target, propertyName, value);
+        action(ensureObservableProperty)(target, property, value);
       } else {
-        return value;
+        // eslint-disable-next-line @typescript-eslint/no-unsafe-return
+        return value as any;
       }
     }
   }
 
-  return get(target, propertyName);
+  // eslint-disable-next-line @typescript-eslint/no-unsafe-return
+  return get(target, property);
 }
 
-export function setValue<TTarget, TProperty extends PropertyName<TTarget>>(
-  target: TTarget | undefined,
-  property: TProperty | undefined,
-  value: TTarget[TProperty]
-): void;
-export function setValue<TKey, TValue, TTarget extends Map<TKey, TValue>>(
-  target: TTarget | undefined,
-  key: TKey | undefined,
-  value: TValue
-): void;
-export function setValue<TTarget extends BindingTarget, TProperty extends BindingProperty<TTarget>>(
-  target: TTarget | undefined,
-  property: TProperty | undefined,
-  value: PropertyType<TTarget, TProperty>
-): void;
-
-export function setValue<TTarget extends BindingTarget, TProperty extends BindingProperty<TTarget>>(
-  target: TTarget | undefined,
-  property: TProperty | undefined,
-  value: PropertyType<TTarget, TProperty>
-) {
+export function setValue<
+  TValueRestriction,
+  TTarget extends BindingTarget,
+  TProperty extends TypedBindingProperty<TTarget, TValueRestriction>
+>(target: TTarget | undefined, property: TProperty | undefined, value: PropertyType<TTarget, TProperty>) {
   if (target && property) {
-    action(ensureObservableProperty)(target, property as PropertyName<TTarget>, value);
+    action(ensureObservableProperty)(target, property, value);
   }
 }
 
 export function useBinding<
+  TValueRestriction,
   TTarget extends BindingTarget,
-  TProperty extends BindingProperty<TTarget> = BindingProperty<TTarget>,
-  TValue = PropertyType<TTarget, TProperty>
->(props: IBindingProps<TTarget, TProperty, TValue>) {
-  const value = getValue(props.target, props.property) as TValue;
-  const setter = (value: TValue) => {
-    setValue(props.target, props.property, value);
+  TProperty extends TypedBindingProperty<TTarget, TValueRestriction>
+>(props: IBindingProps<TValueRestriction, TTarget, TProperty>) {
+  const value = getValue<TValueRestriction, TTarget, TProperty>(props.target, props.property);
+  const setter = (value: TValueRestriction) => {
+    const typedValue = value as PropertyType<TTarget, TProperty>;
+    setValue<TValueRestriction, TTarget, TProperty>(props.target, props.property, typedValue);
     if (props.target && props.property) {
-      props.onValueChanged?.(value, props.property, props.target);
+      props.onValueChanged?.(typedValue, props.property, props.target);
     }
   };
   return [value, setter] as const;

@@ -1,10 +1,11 @@
 import React from "react";
+import type { Constructor } from "@frui.ts/helpers";
 import type { ErrorBoundaryProps } from "../errorBoundary";
 import ErrorBoundary from "../errorBoundary";
 import { getView, tryGetView } from "./viewLocator";
 
 interface ViewProps {
-  vm?: unknown;
+  vm?: object;
   context?: string;
   children?: React.ReactNode;
 }
@@ -16,7 +17,7 @@ const PureView: React.FunctionComponent<ViewProps> = props => {
     return <React.Fragment>{children}</React.Fragment>;
   }
 
-  const vmConstructor = (vm as Record<string, any>).constructor;
+  const vmConstructor = vm.constructor as Constructor<unknown>;
   const FoundView = children === undefined ? getView(vmConstructor, context) : tryGetView(vmConstructor, context);
 
   if (!FoundView) {

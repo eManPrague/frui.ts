@@ -11,9 +11,9 @@ const observableTarget = observable({
 });
 
 const MyComponent = observer(() => {
-  const [name, setName] = useBinding({ target: observableTarget, property: "name" } as const);
+  const [name, setName] = useBinding({ target: observableTarget, property: "name" });
 
-  return <input value={name} onChange={e => setName(e.target.value)} />;
+  return <input value={name as string} onChange={e => setName(e.target.value)} />;
 });
 
 storiesOf("useBinding", module).add("Simple", () => {

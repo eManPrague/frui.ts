@@ -14,7 +14,6 @@
   },
   "dependencies": {
     "@frui.ts/apiclient": "^999.0.0",
-    "@frui.ts/bootstrap": "^999.0.0",
     "@frui.ts/data": "^999.0.0",
     "@frui.ts/datascreens": "^999.0.0",
     "@frui.ts/dataviews": "^999.0.0",

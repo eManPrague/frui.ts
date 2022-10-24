@@ -1,13 +1,14 @@
-import type { BindingTarget } from "@frui.ts/helpers";
+import type { BindingTarget, TypedBindingProperty } from "@frui.ts/helpers";
 import { bound } from "@frui.ts/helpers";
-import type { IBindingProps } from "@frui.ts/views";
 import { BindingComponent } from "@frui.ts/views";
 import { Observer } from "mobx-react-lite";
 import React from "react";
 
-type CheckboxProps<TTarget extends BindingTarget> = IBindingProps<TTarget> & React.InputHTMLAttributes<HTMLInputElement>;
-
-export class Checkbox<TTarget extends BindingTarget> extends BindingComponent<TTarget, CheckboxProps<TTarget>> {
+export class Checkbox<
+  TRestriction extends boolean | undefined,
+  TTarget extends BindingTarget,
+  TProperty extends TypedBindingProperty<TTarget, TRestriction>
+> extends BindingComponent<React.ComponentPropsWithoutRef<"input">, TRestriction, TTarget, TProperty> {
   render() {
     return (
       <Observer>
@@ -18,6 +19,6 @@ export class Checkbox<TTarget extends BindingTarget> extends BindingComponent<TT
 
   @bound
   protected handleValueChanged(e: React.ChangeEvent<HTMLInputElement>) {
-    this.setValue(e.target.checked);
+    this.setValue(e.target.checked as TRestriction);
   }
 }

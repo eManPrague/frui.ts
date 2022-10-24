@@ -1,8 +1,8 @@
-import { Check, Input } from "@frui.ts/bootstrap";
 import { ManualEntityValidator } from "@frui.ts/validation";
 import { storiesOf } from "@storybook/react";
 import { observable } from "mobx";
 import React from "react";
+import { Check, Input } from "../fields";
 import ValidationErrors from "./validationErrors";
 import ValidityIndicator from "./validityIndicator";
 

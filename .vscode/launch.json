@@ -15,9 +15,9 @@
       "type": "node",
       "request": "launch",
       "name": "Debug generator",
-      "cwd": "C:\\_Projects\\pudplus-fe",
+      "cwd": "C:\\_Projects\\tuito\\frontend",
       "runtimeArgs": ["-r", "${workspaceFolder}/node_modules/ts-node/register/transpile-only"],
-      "args": ["${workspaceFolder}/packages/generator/src/index.ts", "views", "-cgenerator.views.json"],
+      "args": ["${workspaceFolder}/packages/generator/src/index.ts", "openapi", "-cgenerator-openapi-propertyinsurance.json"],
       "env": {
         "TS_NODE_PROJECT": "${workspaceFolder}/packages/generator/tsconfig.json"
       }

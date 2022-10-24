@@ -1,7 +1,7 @@
-import type { BindingProperty, BindingTarget } from "@frui.ts/helpers";
+import type { BindingTarget, PropertyType, TypedBindingProperty } from "@frui.ts/helpers";
 import { action, makeObservable } from "mobx";
 import React from "react";
-import type { ExcludeBindingProps, IBindingProps } from "./bindingProps";
+import type { WithBindingProps } from "./bindingProps";
 import { omitBindingProps } from "./bindingProps";
 import { getValue, setValue } from "./useBinding";
 
@@ -16,14 +16,18 @@ import { getValue, setValue } from "./useBinding";
  *
  * @see [[TextBox]] for example
  *
+ * @typeparam TProps Type of the additonal props
+ * @typeparam TBindingTypeRestriction Type of the bound value
  * @typeparam TTarget Type of the targete entity for binding
- * @typeparam TProps Type of the props. Should implement [[IBindingProps]] with information required for binding.
+ * @typeparam TProperty Bound property name
  */
 export abstract class BindingComponent<
+  TProps,
+  TBindingTypeRestriction,
   TTarget extends BindingTarget,
-  TProps extends IBindingProps<TTarget>
-> extends React.Component<TProps> {
-  constructor(props: TProps) {
+  TProperty extends TypedBindingProperty<TTarget, TBindingTypeRestriction>
+> extends React.Component<WithBindingProps<TProps, TBindingTypeRestriction, TTarget, TProperty>> {
+  constructor(props: WithBindingProps<TProps, TBindingTypeRestriction, TTarget, TProperty>) {
     super(props);
     makeObservable(this);
   }
@@ -38,7 +42,7 @@ export abstract class BindingComponent<
    * }
    * ```
    */
-  protected get inheritedProps(): Partial<ExcludeBindingProps<TProps>> {
+  protected get inheritedProps() {
     return omitBindingProps(this.props);
   }
 
@@ -49,16 +53,16 @@ export abstract class BindingComponent<
       return undefined;
     }
 
-    return getValue(this.props.target as TTarget, this.props.property);
+    return getValue<TBindingTypeRestriction, TTarget, TProperty>(this.props.target, this.props.property);
   }
 
   /** Sets the provided value to the bound property  */
   @action.bound
-  protected setValue(value: any) {
+  protected setValue(value: TBindingTypeRestriction) {
     const { target, property, onValueChanged } = this.props;
-    // eslint-disable-next-line @typescript-eslint/no-unsafe-argument
-    setValue(target as TTarget, property, value);
-    // eslint-disable-next-line @typescript-eslint/no-unsafe-argument
-    onValueChanged?.(value, property as BindingProperty<TTarget>, target as TTarget);
+
+    const typedValue = value as PropertyType<TTarget, TProperty>;
+    setValue<TBindingTypeRestriction, TTarget, TProperty>(target, property, typedValue);
+    onValueChanged?.(typedValue, property as TProperty, target as TTarget);
   }
 }

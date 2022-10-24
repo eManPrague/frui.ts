@@ -1,26 +1,21 @@
-import type { BindingProperty, BindingTarget } from "@frui.ts/helpers";
+import type { BindingTarget, TypedBindingProperty } from "@frui.ts/helpers";
 import { isSet } from "@frui.ts/helpers";
-import type { IBindingProps } from "@frui.ts/views";
+import type { WithBindingProps } from "@frui.ts/views";
 import { getValue, omitBindingProps } from "@frui.ts/views";
 import { action } from "mobx";
 import { observer } from "mobx-react-lite";
+import type { ComponentPropsWithoutRef } from "react";
 import React from "react";
 
-type SetOrArrayInnerType<TTarget, TProperty extends keyof TTarget> = TTarget[TProperty] extends Set<infer TSetValue>
-  ? TSetValue
-  : TTarget[TProperty] extends Array<infer TArrayValue>
-  ? TArrayValue
-  : never;
+type CollectionCheckboxProps<TItem> = { value: TItem };
 
-export interface CollectionCheckboxProps<TTarget extends BindingTarget, TProperty extends BindingProperty<TTarget>>
-  extends IBindingProps<TTarget, TProperty> {
-  value: TProperty extends keyof TTarget ? SetOrArrayInnerType<TTarget, TProperty> : any;
-}
-
-function useCollection<TTarget extends BindingTarget, TProperty extends BindingProperty<TTarget>>(
-  props: CollectionCheckboxProps<TTarget, TProperty>
-): [boolean, () => void] {
-  const collection = getValue(props.target, props.property) as unknown;
+function useCollection<
+  TItem,
+  TRestriction extends TItem[] | Set<TItem> | undefined,
+  TTarget extends BindingTarget,
+  TProperty extends TypedBindingProperty<TTarget, TRestriction>
+>(props: WithBindingProps<CollectionCheckboxProps<TItem>, TRestriction, TTarget, TProperty>): [boolean, () => void] {
+  const collection = getValue<TRestriction, TTarget, TProperty>(props.target, props.property);
 
   if (!collection) {
     throw new Error("The target value must be an array or a Set");
@@ -33,29 +28,30 @@ function useCollection<TTarget extends BindingTarget, TProperty extends BindingP
     const toggle = () => (collection.has(key) ? collection.delete(key) : collection.add(key));
     return [checked, action(toggle)];
   } else {
-    const array = collection as typeof key[];
-    const checked = array.includes(key);
+    const checked = collection.includes(key);
     const toggle = () => {
-      const index = array.indexOf(key);
+      const index = collection.indexOf(key);
       if (index >= 0) {
-        array.splice(index, 1);
+        collection.splice(index, 1);
       } else {
-        array.push(key);
+        collection.push(key);
       }
     };
     return [checked, action(toggle)];
   }
 }
 
-function collectionCheckbox<TTarget extends BindingTarget, TProperty extends BindingProperty<TTarget>>(
-  props: CollectionCheckboxProps<TTarget, TProperty>
-) {
-  const [checked, toggle] = useCollection(props);
+function collectionCheckbox<
+  TItem,
+  TRestriction extends TItem[] | Set<TItem> | undefined,
+  TTarget extends BindingTarget,
+  TProperty extends TypedBindingProperty<TTarget, TRestriction>
+>(props: WithBindingProps<CollectionCheckboxProps<TItem> & ComponentPropsWithoutRef<"input">, TRestriction, TTarget, TProperty>) {
+  const [checked, toggle] = useCollection<TItem, TRestriction, TTarget, TProperty>(props);
 
   const { value, ...restProps } = omitBindingProps(props);
   return <input {...restProps} type="checkbox" checked={!!checked} onChange={toggle} />;
 }
 
-const CollectionCheckbox = observer(collectionCheckbox as any) as typeof collectionCheckbox;
-
+const CollectionCheckbox = observer(collectionCheckbox);
 export default CollectionCheckbox;

@@ -1,1 +1,1 @@
-export const nameof = <T>(name: Extract<keyof T, string>): string => name;
+export const nameof = <T>(name: Extract<keyof T, string>) => name;
