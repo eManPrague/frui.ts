@@ -34,13 +34,13 @@
     "setversion": "lerna version -y --no-push --no-git-tag-version",
     "publish:storybook": "yarn --cwd stories run build-storybook",
     "publish:docs": "typedoc packages --out dist/docs --hideGenerator --exclude '**/node_modules' --ignoreCompilerErrors",
-    "publish": "rimraf dist && yarn run publish:storybook",
+    "publish:all": "rimraf dist && yarn run publish:storybook",
     "cleanbuild": "lerna run clean && lerna run build",
     "build": "lerna run build",
     "test": "vitest",
     "storybook": "yarn --cwd stories storybook",
     "lint": "eslint \"./{packages,stories,examples}/**/*.{ts,tsx}\" --cache",
-    "validate": "yarn run cleanbuild && yarn run test --run && yarn run lint && yarn run publish"
+    "validate": "yarn run cleanbuild && yarn run test --run && yarn run lint && yarn run publish:all"
   },
   "devDependencies": {
     "@emanprague/eslint-config": "^3.1.0",
