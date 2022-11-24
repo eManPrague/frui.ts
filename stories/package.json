@@ -5,7 +5,7 @@
   "author": "Augustin Šulc <sulc.gusta@gmail.com>",
   "license": "MIT",
   "devDependencies": {
-    "@babel/core": "^7.19.6",
+    "@babel/core": "^7.20.2",
     "@rollup/pluginutils": "^4.2.1",
     "@storybook/addon-actions": "^6.5.12",
     "@storybook/addon-essentials": "^6.5.12",
@@ -22,7 +22,7 @@
     "@frui.ts/htmlcontrols": "^999.0.0",
     "@frui.ts/validation": "^999.0.0",
     "@frui.ts/views": "^999.0.0",
-    "mobx": "6.6.2",
+    "mobx": "6.7.0",
     "mobx-react-lite": "3",
     "react": "^18.2.0"
   },

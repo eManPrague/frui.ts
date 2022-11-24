@@ -43,12 +43,12 @@
     "handlebars": "^4.7.7",
     "lodash": "^4.17.21",
     "openapi-types": "^12.0.2",
-    "ts-morph": "^16.0.0"
+    "ts-morph": "^17.0.1"
   },
   "devDependencies": {
     "@types/cli-progress": "^3.11.0",
-    "@types/lodash": "4.14.186",
-    "@types/node": "18.11.2",
+    "@types/lodash": "4.14.190",
+    "@types/node": "18.11.9",
     "ncp": "^2.0.0",
     "nodemon": "2.0.20",
     "rimraf": "^3.0.2",

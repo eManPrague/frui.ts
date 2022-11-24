@@ -24,6 +24,6 @@ export interface AsyncValidationFunction<TValue = unknown, TParameters = any, TE
   debounceTimeout?: number;
 }
 
-export type EntityValidationRules<TEntity, TPropertyRules extends Record<string, unknown> = Record<string, unknown>> = Partial<
+export type EntityValidationRules<TEntity, TPropertyRules extends Record<string, unknown> = Record<string, any>> = Partial<
   Record<PropertyName<TEntity>, Partial<TPropertyRules>>
 >;
