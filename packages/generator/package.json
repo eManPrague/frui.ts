@@ -34,8 +34,7 @@
     "start-openapi": "ts-node src/index.ts openapi -o temp/apitest",
     "clean": "rimraf dist",
     "build": "tsc && vite build",
-    "fix-bin-entrypoint": "shx echo \"#!/usr/bin/env node\" > ./dist/tmp.js && shx cat ./dist/generator.umd.js >> ./dist/tmp.js && shx mv ./dist/tmp.js ./dist/generator.umd.js",
-    "postbuild": "yarn run fix-bin-entrypoint && shx mkdir dist/openapi && shx cp -r src/openapi/templates dist/openapi"
+    "postbuild": "shx mkdir dist/openapi && shx cp -r src/openapi/templates dist/openapi"
   },
   "dependencies": {
     "@apidevtools/swagger-parser": "^10.1.0",
@@ -53,6 +52,7 @@
     "nodemon": "2.0.20",
     "rimraf": "^3.0.2",
     "shx": "^0.3.4",
-    "ts-node": "^10.9.1"
+    "ts-node": "^10.9.1",
+    "vite-plugin-banner": "^0.6.1"
   }
 }

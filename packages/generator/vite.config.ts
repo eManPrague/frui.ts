@@ -1,8 +1,13 @@
 import path from "path";
 import { defineConfig } from "vite";
 import packageFile from "./package.json";
-
+import banner from "vite-plugin-banner";
 export default defineConfig({
+  plugins: [
+    banner(
+      `#!/usr/bin/env node\n/* Frui.ts generator */`
+    ),
+  ],
   build: {
     lib: {
       formats: ["umd"],
