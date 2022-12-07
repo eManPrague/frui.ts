@@ -6,6 +6,7 @@ import type ApiModel from "../models/apiModel";
 import type Endpoint from "../models/endpoint";
 import EntityProperty from "../models/entityProperty";
 import Enum from "../models/enum";
+import ExternalEntity from "../models/externalEntity";
 import InheritedEntity from "../models/inheritedEntity";
 import ObjectEntity from "../models/objectEntity";
 import Restriction from "../models/restriction";
@@ -86,7 +87,11 @@ export default class OpenApi2Parser implements ApiModel {
 
   private parseReferenceObject(definition: OpenAPIV2.ReferenceObject) {
     const name = getReferencedEntityName(definition.$ref);
-    return this.setTypeReference(name, undefined);
+    const type = isLocalReference(definition.$ref)
+      ? undefined // it will be set later when the referenced entity is parsed
+      : new ExternalEntity(name, definition.$ref); // just link the entity by name
+
+    return this.setTypeReference(name, type);
   }
 
   private parseEnum(name: string, definition: IJsonSchema) {
@@ -204,6 +209,13 @@ export default class OpenApi2Parser implements ApiModel {
   }
 }
 
+const REFERENCE_START = "#/definitions/";
+
 function getReferencedEntityName(ref: string) {
-  return ref.replace("#/definitions/", "");
+  const index = ref.indexOf(REFERENCE_START, 0);
+  return index >= 0 ? ref.substring(index + REFERENCE_START.length) : ref;
+}
+
+function isLocalReference(ref: string) {
+  return ref.startsWith(REFERENCE_START);
 }

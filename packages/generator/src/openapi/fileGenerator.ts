@@ -79,6 +79,7 @@ export default class FileGenerator {
         unionWriter.write(type);
       }
       // we can ignore AliasEntity because it is inlined
+      // we can ignore ExternalEntity because it is external
 
       progress.increment();
     }

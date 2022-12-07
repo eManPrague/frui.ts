@@ -24,6 +24,7 @@ program
       config: options.config,
       debug: options.debug,
     };
+    console.log("Processing ", params.config);
 
     if (options.decorators) {
       params.decorators = { output: options.decoratorsOutput };
@@ -52,6 +53,7 @@ program
       output: options.output,
       debug: options.debug,
     };
+    console.log("Processing ", params.config);
 
     const GeneratorType = await import("./views");
     const generator = new GeneratorType.default(params);
@@ -72,6 +74,7 @@ program
       config: options.config,
       debug: options.debug,
     };
+    console.log("Processing ", params.config);
 
     const GeneratorType = await import("./openapi");
     const generator = new GeneratorType.default(params);
