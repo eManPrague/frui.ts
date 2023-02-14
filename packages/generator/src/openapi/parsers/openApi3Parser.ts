@@ -37,6 +37,8 @@ export default class OpenApi3Parser implements ApiModel {
   }
 
   parseSchemaObject(name: string, definition: OpenAPIV3.SchemaObject | OpenAPIV3.ReferenceObject): TypeReference {
+    console.debug("Parsing object", name);
+
     if (isV3ReferenceObject(definition)) {
       return this.parseReferenceObject(definition);
     } else if (definition.enum) {
@@ -223,6 +225,8 @@ export default class OpenApi3Parser implements ApiModel {
   }
 
   private parseEndpoint({ path, method, action }: { path: string; method: string; action: OpenAPIV3.OperationObject }) {
+    console.debug("Parsing endpoint", method, path);
+
     path = this.config?.endpointUrlPrefix ? path.replace(this.config.endpointUrlPrefix, "") : path;
     const name = action.operationId ?? camelCase(method + "-" + path.replace(/\{(\D*?)\}/, "By-$1")); // the dash makes sure first path word starts with upper case
 
@@ -257,10 +261,12 @@ export default class OpenApi3Parser implements ApiModel {
     }
 
     endpoint.responses = {};
-    Object.entries(action.responses).forEach(([code, response]) => {
-      const responseBodyType = this.getResponseBodyType(`${name}Response${code}`, response);
-      (endpoint.responses as Record<string, unknown>)[code] = responseBodyType;
-    });
+    if (action.responses as unknown) {
+      Object.entries(action.responses).forEach(([code, response]) => {
+        const responseBodyType = this.getResponseBodyType(`${name}Response${code}`, response);
+        (endpoint.responses as Record<string, unknown>)[code] = responseBodyType;
+      });
+    }
 
     return endpoint;
   }
