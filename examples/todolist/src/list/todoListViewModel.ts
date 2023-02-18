@@ -1,12 +1,11 @@
-import type { IViewModel } from "@frui.ts/views";
-import { type RouteMatch } from "@frui.ts/views";
-import { action, computed, makeObservable, observable } from "mobx";
+import type { IViewModel, NavigationContext } from "@frui.ts/views";
+import { action, computed, makeObservable, observable, runInAction } from "mobx";
 import { v4 as uuid } from "uuid";
 import { type TodoItem } from "../models/todoItem";
 
 type FilterType = "all" | "completed" | "active";
-
-export default class TodoListViewModel implements IViewModel {
+type ParamsScheme = Record<"filter", string>;
+export default class TodoListViewModel implements IViewModel<ParamsScheme> {
   name = "TODO List";
   @observable list: TodoItem[] = [];
   @observable newItem!: TodoItem;
@@ -38,12 +37,24 @@ export default class TodoListViewModel implements IViewModel {
   }
 
   onInitialize() {
+    console.log("initializing");
     this.setNewItem();
   }
 
-  @action onNavigate(routeMatch: RouteMatch) {
-    console.log("navigate", routeMatch.params, routeMatch.pathname, routeMatch);
-    // TODO set filter
+  onDeactivate(context: NavigationContext<ParamsScheme, unknown>) {
+    console.log("deactivating", context);
+  }
+
+  onNavigate(routeMatch: NavigationContext<ParamsScheme>) {
+    switch (routeMatch.params.filter) {
+      case "completed":
+      case "active":
+        runInAction(() => (this.filter = routeMatch.params.filter as FilterType));
+        break;
+      default:
+        runInAction(() => (this.filter = "all"));
+        break;
+    }
   }
 
   @action private setNewItem() {

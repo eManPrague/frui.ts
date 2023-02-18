@@ -1,15 +1,15 @@
-import type { IViewModel, RouteMatch } from "@frui.ts/views";
+import type { IViewModel, NavigationContext } from "@frui.ts/views";
 
 export default class InvoicesViewModel implements IViewModel {
-  onInitialize(routeMatch: RouteMatch) {
-    console.log("invoices on initialize", routeMatch);
+  onInitialize(context: NavigationContext) {
+    console.log("invoices on initialize", context);
   }
 
-  onActivate(routeMatch: RouteMatch) {
-    console.log("invoices on activate", routeMatch);
+  onActivate(context: NavigationContext) {
+    console.log("invoices on activate", context);
   }
 
-  onDeactivate(routeMatch: RouteMatch) {
-    console.log("invoices on deactivate", routeMatch);
+  onDeactivate(context: NavigationContext) {
+    console.log("invoices on deactivate", context);
   }
 }

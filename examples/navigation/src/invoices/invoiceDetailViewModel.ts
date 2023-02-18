@@ -1,7 +1,9 @@
+import type { IViewModel, NavigationContext } from "@frui.ts/views";
 import { makeObservable, observable, runInAction } from "mobx";
-import type { IViewModel, RouteMatch } from "@frui.ts/views";
 
-export default class InvoiceDetailViewModel implements IViewModel {
+type ParamsScheme = Record<"invoiceId", string>;
+
+export default class InvoiceDetailViewModel implements IViewModel<ParamsScheme> {
   @observable
   id = -1;
 
@@ -9,9 +11,9 @@ export default class InvoiceDetailViewModel implements IViewModel {
     makeObservable(this);
   }
 
-  onInitialize(routeMatch: RouteMatch) {
+  onNavigate({ params }: NavigationContext<ParamsScheme>) {
     runInAction(() => {
-      this.id = +routeMatch.params.id;
+      this.id = +params.invoiceId;
     });
   }
 }

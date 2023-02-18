@@ -1,7 +1,9 @@
+import type { IViewModel, NavigationContext, NoParams } from "@frui.ts/views";
 import { makeObservable, observable, runInAction } from "mobx";
-import type { IViewModel, SearchType } from "@frui.ts/views";
 
-export default class CustomersViewModel implements IViewModel {
+type SearchScheme = { name?: string };
+
+export default class CustomersViewModel implements IViewModel<NoParams, SearchScheme> {
   @observable
   search?: string;
 
@@ -9,9 +11,21 @@ export default class CustomersViewModel implements IViewModel {
     makeObservable(this);
   }
 
-  onNavigate(search: SearchType) {
+  onNavigate({ search }: NavigationContext<NoParams, SearchScheme>) {
+    console.log("customers navigate", search);
+
     runInAction(() => {
-      this.search = search.name as string;
+      this.search = search.name;
     });
+  }
+
+  onDeactivate(context: NavigationContext<NoParams, SearchScheme>) {
+    console.log("customers deactivate");
+  }
+
+  static validateSearch(search: Record<string, unknown>) {
+    return {
+      name: search.name as string | undefined,
+    };
   }
 }

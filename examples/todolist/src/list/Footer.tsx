@@ -1,5 +1,5 @@
 import { createViewComponent } from "@frui.ts/views";
-import { Link } from "@tanstack/react-location";
+import { Link } from "@tanstack/react-router";
 import React from "react";
 import { pluralize } from "../helpers";
 import type TodoListViewModel from "./todoListViewModel";
@@ -20,12 +20,12 @@ export const Footer = createViewComponent<TodoListViewModel>(vm => {
           </Link>
         </li>
         <li>
-          <Link to="/active" className={getFilterClass("active")}>
+          <Link to="/$filter" params={{ filter: "active" }} className={getFilterClass("active")}>
             Active
           </Link>
         </li>
         <li>
-          <Link to="/completed" className={getFilterClass("completed")}>
+          <Link to="/$filter" params={{ filter: "completed" }} className={getFilterClass("completed")}>
             Completed
           </Link>
         </li>
