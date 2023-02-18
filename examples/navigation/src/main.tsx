@@ -1,6 +1,5 @@
-import type { LocationGenerics } from "@frui.ts/views";
-import { buildRoutes, RouteView } from "@frui.ts/views";
-import { ReactLocation, Router } from "@tanstack/react-location";
+import { buildRootRoute, buildRoute } from "@frui.ts/views";
+import { ReactRouter, Route, RouterProvider } from "@tanstack/react-router";
 import React from "react";
 import { createRoot } from "react-dom/client";
 import CustomersViewModel from "./customers/customersViewModel";
@@ -10,37 +9,51 @@ import InvoiceDetailViewModel from "./invoices/invoiceDetailViewModel";
 import InvoicesViewModel from "./invoices/invoicesViewModel";
 import "./viewsRegistry";
 
-const location = new ReactLocation<LocationGenerics>();
+const homeRoute = buildRootRoute(() => new HomeViewModel(), {});
 
-const routes = buildRoutes([
-  {
-    path: "/",
-    vmFactory: () => new HomeViewModel(),
-    children: [
-      {
-        path: "invoices",
-        vmFactory: () => new InvoicesViewModel(),
-        children: [
-          {
-            path: ":id",
-            vmFactory: () => new InvoiceDetailViewModel(),
-          },
-          { element: "invoices list" },
-        ],
-      },
-      {
-        path: "customers",
-        vmFactory: () => new CustomersViewModel(),
-      },
-    ],
-  },
+const indexRoute = new Route({ getParentRoute: () => homeRoute, path: "/" });
+
+const invoicesRoute = buildRoute(() => new InvoicesViewModel(), {
+  getParentRoute: () => homeRoute,
+  path: "invoices",
+});
+
+const invoiceDetailRoute = buildRoute(() => new InvoiceDetailViewModel(), {
+  getParentRoute: () => invoicesRoute,
+  path: "$invoiceId",
+});
+
+const defaultInvoiceRoute = new Route({
+  getParentRoute: () => invoicesRoute,
+  path: "/",
+  component: () => <div>Invoices list</div>,
+});
+
+const customersRoute = buildRoute(() => new CustomersViewModel(), {
+  getParentRoute: () => homeRoute,
+  path: "customers",
+  validateSearch: CustomersViewModel.validateSearch,
+});
+
+const routeTree = homeRoute.addChildren([
+  indexRoute,
+  invoicesRoute.addChildren([invoiceDetailRoute, defaultInvoiceRoute]),
+  customersRoute,
 ]);
+
+const router = new ReactRouter({ routeTree });
+
+declare module "@tanstack/react-router" {
+  interface Register {
+    router: typeof router;
+  }
+}
 
 const container = document.getElementById("root");
 // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
 const root = createRoot(container!);
 root.render(
   <React.StrictMode>
-    <Router location={location} routes={routes} defaultElement={<RouteView />} />
+    <RouterProvider router={router} />
   </React.StrictMode>
 );

@@ -9,10 +9,12 @@ export function getValue<
   TProperty extends TypedBindingProperty<TTarget, TValueRestriction>
 >(target: TTarget | undefined, property: TProperty | undefined, ensureObservable = true): TValueRestriction {
   if (!target) {
-    throw new Error("'target' prop has not been set");
+    // eslint-disable-next-line @typescript-eslint/restrict-template-expressions
+    throw new Error(`Cannot read property '${property}', because target has not been set`);
   }
   if (property === undefined) {
-    throw new Error("'property' prop has not been set");
+    // eslint-disable-next-line @typescript-eslint/restrict-template-expressions
+    throw new Error(`'property' prop has not been set for target '${target}'`);
   }
 
   if (isObservableMap(target)) {

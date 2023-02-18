@@ -1,5 +1,5 @@
 import { registerViewComponent } from "@frui.ts/views";
-import { Outlet } from "@tanstack/react-location";
+import { Outlet } from "@tanstack/react-router";
 import React from "react";
 import InvoicesViewModel from "./invoicesViewModel";
 

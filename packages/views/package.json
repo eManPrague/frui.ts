@@ -45,7 +45,7 @@
   },
   "dependencies": {
     "@frui.ts/helpers": "^999.0.0",
-    "@tanstack/react-location": "^3.7.4",
+    "@tanstack/react-router": "^0.0.1-beta.82",
     "inversify": "^6.0.1",
     "lodash-es": "^4.17.21"
   },

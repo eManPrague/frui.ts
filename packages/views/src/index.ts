@@ -6,7 +6,6 @@ export { default as createDataIdHandler } from "./helpers/dataIdHandler";
 export { default as createMemoizedHandler } from "./helpers/memoizedDataHandler";
 export { default as preventDefault } from "./helpers/preventDefault";
 export * from "./router/router";
-export * from "./router/RouteView";
 export * from "./router/types";
 export * from "./types";
 export * from "./view/helpers";
