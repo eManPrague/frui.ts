@@ -33,6 +33,7 @@ export default class FileGenerator {
       eq: (a: unknown, b: unknown) => a == b,
       ne: (a: unknown, b: unknown) => a != b,
       coalesce: (...args) => Array.prototype.find.call(args, x => !!x) as string,
+      inline: (x: string) => (x ? x.replaceAll(/\r?\n/g, " ").trim() : ""),
     });
   }
 

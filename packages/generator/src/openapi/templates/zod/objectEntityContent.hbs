@@ -58,7 +58,7 @@ z.preprocess(arg => (typeof arg == "string" || arg instanceof Date ? new Date(ar
 {{~/if}}
 {{#if description}}
 
-  .describe("{{description}}")
+  .describe("{{inline description}}")
 {{~/if}}
 ,
 {{/inline}}

@@ -77,7 +77,7 @@ export default class OpenApi3Parser implements ApiModel {
         return this.setTypeReference(name, definition.type);
     }
 
-    if (definition.oneOf || definition.allOf) {
+    if (definition.oneOf || definition.anyOf || definition.allOf) {
       return this.parseObject(name, definition);
     }
 
@@ -103,6 +103,11 @@ export default class OpenApi3Parser implements ApiModel {
       return this.parseAllOfObject(name, definition);
     }
     if (definition.oneOf) {
+      return this.parseOneOfObject(name, definition);
+    }
+    if (definition.anyOf) {
+      // handle anyOf the same as oneOf
+      definition.oneOf = definition.anyOf;
       return this.parseOneOfObject(name, definition);
     }
 
