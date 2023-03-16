@@ -14,9 +14,9 @@ import type {
 } from "@tanstack/react-router";
 import { Outlet, RootRoute, Route } from "@tanstack/react-router";
 import React from "react";
+import { ViewModelLifecycleManager } from "../helpers/viewModelLifecycleManager";
 import View from "../view/view";
-import type { IViewModel, NoParams } from "./types";
-import { ViewModelLifecycleManager } from "./viewModelLifecycleManager";
+import type { IRouteViewModel, NavigationContext, NoParams } from "./types";
 
 function buildViewModelOptions<
   TParentRoute extends AnyRoute = AnyRoute,
@@ -41,9 +41,9 @@ function buildViewModelOptions<
   // TRouterContext extends AnyContext = AnyContext,
   // TChildren = unknown,
   // TRoutesInfo extends DefaultRoutesInfo = DefaultRoutesInfo,
-  TViewModel extends IViewModel<TAllParams, TFullSearchSchema> = IViewModel<TAllParams, TFullSearchSchema>
+  TViewModel extends IRouteViewModel<TAllParams, TFullSearchSchema> = IRouteViewModel<TAllParams, TFullSearchSchema>
 >(vmFactory: () => TViewModel) {
-  const vmManager = new ViewModelLifecycleManager<TAllParams, TFullSearchSchema, TViewModel>(vmFactory);
+  const vmManager = new ViewModelLifecycleManager<NavigationContext<TAllParams, TFullSearchSchema>, TViewModel>(vmFactory);
 
   // since the current router does not help here,
   // we need to manually handle situation when a route remains selected,
@@ -118,7 +118,7 @@ export function buildRoute<
   // TRouterContext extends AnyContext = AnyContext,
   // TChildren = unknown,
   // TRoutesInfo extends DefaultRoutesInfo = DefaultRoutesInfo,
-  TViewModel extends IViewModel<TAllParams, TFullSearchSchema> = IViewModel<TAllParams, TFullSearchSchema>
+  TViewModel extends IRouteViewModel<TAllParams, TFullSearchSchema> = IRouteViewModel<TAllParams, TFullSearchSchema>
 >(
   vmFactory: () => TViewModel,
   options: RouteOptions<
@@ -146,7 +146,7 @@ export function buildRootRoute<
   TSearchSchema extends AnySearchSchema = {},
   TContext extends RouteContext = RouteContext,
   TRouterContext extends RouterContext = RouterContext,
-  TViewModel extends IViewModel<NoParams, TSearchSchema> = IViewModel<NoParams, TSearchSchema>
+  TViewModel extends IRouteViewModel<NoParams, TSearchSchema> = IRouteViewModel<NoParams, TSearchSchema>
 >(
   vmFactory: () => TViewModel,
   options: Omit<

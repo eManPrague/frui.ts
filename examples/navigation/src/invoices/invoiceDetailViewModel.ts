@@ -1,9 +1,9 @@
-import type { IViewModel, NavigationContext } from "@frui.ts/views";
+import type { IRouteViewModel, NavigationContext } from "@frui.ts/views";
 import { makeObservable, observable, runInAction } from "mobx";
 
 type ParamsScheme = Record<"invoiceId", string>;
 
-export default class InvoiceDetailViewModel implements IViewModel<ParamsScheme> {
+export default class InvoiceDetailViewModel implements IRouteViewModel<ParamsScheme> {
   @observable
   id = -1;
 

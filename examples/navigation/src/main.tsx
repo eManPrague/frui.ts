@@ -7,6 +7,7 @@ import HomeViewModel from "./home/homeViewModel";
 import "./index.css";
 import InvoiceDetailViewModel from "./invoices/invoiceDetailViewModel";
 import InvoicesViewModel from "./invoices/invoicesViewModel";
+import { Settings } from "./settings/Settings";
 import "./viewsRegistry";
 
 const homeRoute = buildRootRoute(() => new HomeViewModel(), {});
@@ -35,10 +36,17 @@ const customersRoute = buildRoute(() => new CustomersViewModel(), {
   validateSearch: CustomersViewModel.validateSearch,
 });
 
+const settingsRoute = new Route({
+  getParentRoute: () => homeRoute,
+  path: "settings",
+  component: Settings,
+});
+
 const routeTree = homeRoute.addChildren([
   indexRoute,
   invoicesRoute.addChildren([invoiceDetailRoute, defaultInvoiceRoute]),
   customersRoute,
+  settingsRoute,
 ]);
 
 const router = new ReactRouter({ routeTree });

@@ -1,9 +1,9 @@
-import type { IViewModel, NavigationContext, NoParams } from "@frui.ts/views";
+import type { IRouteViewModel, NavigationContext, NoParams } from "@frui.ts/views";
 import { makeObservable, observable, runInAction } from "mobx";
 
 type SearchScheme = { name?: string };
 
-export default class CustomersViewModel implements IViewModel<NoParams, SearchScheme> {
+export default class CustomersViewModel implements IRouteViewModel<NoParams, SearchScheme> {
   @observable
   search?: string;
 

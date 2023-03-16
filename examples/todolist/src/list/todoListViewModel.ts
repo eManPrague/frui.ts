@@ -1,11 +1,11 @@
-import type { IViewModel, NavigationContext } from "@frui.ts/views";
+import type { IRouteViewModel, NavigationContext } from "@frui.ts/views";
 import { action, computed, makeObservable, observable, runInAction } from "mobx";
 import { v4 as uuid } from "uuid";
 import { type TodoItem } from "../models/todoItem";
 
 type FilterType = "all" | "completed" | "active";
 type ParamsScheme = Record<"filter", string>;
-export default class TodoListViewModel implements IViewModel<ParamsScheme> {
+export default class TodoListViewModel implements IRouteViewModel<ParamsScheme> {
   name = "TODO List";
   @observable list: TodoItem[] = [];
   @observable newItem!: TodoItem;

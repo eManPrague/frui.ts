@@ -1,6 +1,6 @@
-import type { IViewModel } from "@frui.ts/views";
+import type { IRouteViewModel } from "@frui.ts/views";
 import { action, makeObservable, observable } from "mobx";
-export default class HomeViewModel implements IViewModel {
+export default class HomeViewModel implements IRouteViewModel {
   text = "foo";
 
   @observable

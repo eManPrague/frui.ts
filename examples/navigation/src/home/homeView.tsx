@@ -51,6 +51,11 @@ export const HomeView = registerViewComponent(HomeViewModel, vm => {
                 </li>
               </ul>
             </li>
+            <li>
+              <Link to="/settings" {...linkProps}>
+                Settings
+              </Link>
+            </li>
           </ul>
         </nav>
       </header>

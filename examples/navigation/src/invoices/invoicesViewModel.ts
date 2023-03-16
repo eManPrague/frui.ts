@@ -1,6 +1,6 @@
-import type { IViewModel, NavigationContext } from "@frui.ts/views";
+import type { IRouteViewModel, NavigationContext } from "@frui.ts/views";
 
-export default class InvoicesViewModel implements IViewModel {
+export default class InvoicesViewModel implements IRouteViewModel {
   onInitialize(context: NavigationContext) {
     console.log("invoices on initialize", context);
   }
