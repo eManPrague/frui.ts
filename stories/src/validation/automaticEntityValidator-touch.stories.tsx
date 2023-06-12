@@ -1,6 +1,5 @@
 import type { EntityValidationRules, ValidationResult } from "@frui.ts/validation";
 import { AutomaticEntityValidator, Configuration } from "@frui.ts/validation";
-import { storiesOf } from "@storybook/react";
 import { action, observable } from "mobx";
 import { Observer } from "mobx-react-lite";
 import React from "react";
@@ -51,7 +50,11 @@ const onTouched = action(() => {
   validator.visibleProperties.add("name");
 });
 
-storiesOf("Validation", module).add("AutomaticEntityValidator - touch", () => (
+export default {
+  title: "Validation",
+};
+
+export const AutomaticEntityValidatorTouch = () => (
   <table>
     <thead>
       <tr>
@@ -96,4 +99,8 @@ storiesOf("Validation", module).add("AutomaticEntityValidator - touch", () => (
       </Observer>
     </tbody>
   </table>
-));
+);
+
+AutomaticEntityValidatorTouch.story = {
+  name: "AutomaticEntityValidator - touch",
+};

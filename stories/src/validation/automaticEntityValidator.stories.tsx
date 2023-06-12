@@ -1,6 +1,5 @@
 import type { EntityValidationRules, ValidationResult } from "@frui.ts/validation";
 import { AutomaticEntityValidator, Configuration } from "@frui.ts/validation";
-import { storiesOf } from "@storybook/react";
 import { action, observable } from "mobx";
 import { Observer } from "mobx-react-lite";
 import React from "react";
@@ -48,7 +47,11 @@ const increaseAge = action(() => {
   observableTarget.age++;
 });
 
-storiesOf("Validation", module).add("AutomaticEntityValidator", () => (
+export default {
+  title: "Validation",
+};
+
+export const _AutomaticEntityValidator = () => (
   <table>
     <thead>
       <tr>
@@ -82,4 +85,8 @@ storiesOf("Validation", module).add("AutomaticEntityValidator", () => (
       </Observer>
     </tbody>
   </table>
-));
+);
+
+_AutomaticEntityValidator.story = {
+  name: "AutomaticEntityValidator",
+};

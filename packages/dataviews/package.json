@@ -41,10 +41,10 @@
   "dependencies": {
     "@frui.ts/data": "^999.0.0",
     "@frui.ts/helpers": "^999.0.0",
-    "mobx-react-lite": "3"
+    "mobx-react-lite": "3.4.3"
   },
   "devDependencies": {
-    "@types/react": "^18.0.25",
+    "@types/react": "^18.2.11",
     "copyfiles": "^2.4.1"
   },
   "peerDependencies": {

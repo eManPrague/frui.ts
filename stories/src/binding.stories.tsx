@@ -1,5 +1,4 @@
 import { useBinding } from "@frui.ts/views";
-import { storiesOf } from "@storybook/react";
 import { action, observable } from "mobx";
 import { observer, Observer } from "mobx-react-lite";
 import React from "react";
@@ -16,7 +15,11 @@ const MyComponent = observer(() => {
   return <input value={name as string} onChange={e => setName(e.target.value)} />;
 });
 
-storiesOf("useBinding", module).add("Simple", () => {
+export default {
+  title: "useBinding",
+};
+
+export const Simple = () => {
   return (
     <>
       <MyComponent />
@@ -33,4 +36,4 @@ storiesOf("useBinding", module).add("Simple", () => {
       <button onClick={action(() => (observableTarget.name = "John"))}>Reset</button>
     </>
   );
-});
+};
