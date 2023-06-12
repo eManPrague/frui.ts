@@ -44,18 +44,18 @@
   },
   "devDependencies": {
     "@emanprague/eslint-config": "^3.2.1",
-    "@testing-library/react": "13.4.0",
+    "@testing-library/react": "14.0.0",
     "cross-env": "^7.0.3",
     "eslint": "^8.42.0",
-    "happy-dom": "^7.7.0",
+    "happy-dom": "^9.20.3",
     "lerna": "^6.0.3",
     "lerna-update-wizard": "^1.1.2",
     "mobx": "6.7.0",
     "prettier": "^2.8.8",
     "rimraf": "^3.0.2",
     "typedoc": "^0.23.21",
-    "vite": "^3.2.4",
-    "vitest": "^0.25.3",
-    "vitest-mock-extended": "^1.0.7"
+    "vite": "^4.3.9",
+    "vitest": "^0.32.0",
+    "vitest-mock-extended": "^1.1.3"
   }
 }

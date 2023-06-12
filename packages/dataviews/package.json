@@ -44,7 +44,7 @@
     "mobx-react-lite": "3"
   },
   "devDependencies": {
-    "@types/react": "^18.0.25",
+    "@types/react": "^18.2.11",
     "copyfiles": "^2.4.1"
   },
   "peerDependencies": {

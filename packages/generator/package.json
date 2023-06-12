@@ -53,6 +53,6 @@
     "rimraf": "^3.0.2",
     "shx": "^0.3.4",
     "ts-node": "^10.9.1",
-    "vite-plugin-banner": "^0.6.1"
+    "vite-plugin-banner": "^0.7.0"
   }
 }
