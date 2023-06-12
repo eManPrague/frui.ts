@@ -41,7 +41,7 @@
   "dependencies": {
     "@frui.ts/data": "^999.0.0",
     "@frui.ts/helpers": "^999.0.0",
-    "mobx-react-lite": "3"
+    "mobx-react-lite": "3.4.3"
   },
   "devDependencies": {
     "@types/react": "^18.2.11",

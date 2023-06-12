@@ -37,7 +37,7 @@
   },
   "dependencies": {
     "@frui.ts/helpers": "^999.0.0",
-    "qs": "^6.11.0"
+    "qs": "^6.11.2"
   },
   "devDependencies": {
     "@types/qs": "^6.9.7"

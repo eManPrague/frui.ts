@@ -44,7 +44,7 @@
   "dependencies": {
     "@frui.ts/helpers": "^999.0.0",
     "@frui.ts/views": "^999.0.0",
-    "mobx-react-lite": "3"
+    "mobx-react-lite": "3.4.3"
   },
   "peerDependencies": {
     "mobx": "6",

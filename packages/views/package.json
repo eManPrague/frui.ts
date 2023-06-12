@@ -39,8 +39,8 @@
     "build": "vite build && tsc --noEmit false --emitDeclarationOnly"
   },
   "devDependencies": {
-    "@types/lodash": "4.14.190",
-    "@types/lodash-es": "4.17.6",
+    "@types/lodash": "4.14.195",
+    "@types/lodash-es": "4.17.7",
     "@types/react": "^18.2.11"
   },
   "dependencies": {
