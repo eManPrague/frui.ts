@@ -12,7 +12,6 @@ stages:
 
 before_script:
   - yarn install
-  - yarn run lerna bootstrap
 
 test:
   stage: test

@@ -36,7 +36,6 @@ You need Node.js and Yarn installed locally and run
 
 ```
 yarn install
-yarn lerna bootstrap --force-local
 ```
 
 You can then check the environment with `yarn validate`, and if there are no errors, you should be good to go. You are now ready to contribute!
