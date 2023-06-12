@@ -1,8 +1,8 @@
 import { BusyWatcher, watchBusy } from "@frui.ts/helpers";
 import { action, makeObservable } from "mobx";
-import { storiesOf } from "@storybook/react";
 import { Observer } from "mobx-react-lite";
 import React from "react";
+import type { Meta } from "@storybook/react";
 
 class DebugBusyWatcher extends BusyWatcher {
   debug() {
@@ -41,41 +41,48 @@ class TestViewModel {
 
 const vm = new TestViewModel();
 
-storiesOf("BusyWatcher", module)
-  .addDecorator(story => <Observer>{() => story()}</Observer>)
-  .add("Screen lifecycle", () => (
-    <table>
-      <tr>
-        <th>Default</th>
-        <td>
-          <button onClick={vm.defaultAction}>Busy</button>
-        </td>
-        <td>{vm.busyWatcher.isBusy ? "BUSY" : ""}</td>
-      </tr>
-      <tr>
-        <th>Foo</th>
-        <td>
-          <button onClick={vm.fooAction}>Busy</button>
-        </td>
-        <td>{vm.busyWatcher.checkBusy("foo") ? "BUSY" : ""}</td>
-      </tr>
-      <tr>
-        <th>Bar</th>
-        <td>
-          <button onClick={vm.barAction}>Busy</button>
-        </td>
-        <td>{vm.busyWatcher.checkBusy("bar") ? "BUSY" : ""}</td>
-      </tr>
-      <tr>
-        <th>Debug</th>
-        <td colSpan={2}>
-          {vm.busyWatcher.debug().map(({ key, value }, i) => (
-            <React.Fragment key={typeof key !== "symbol" ? key : i}>
-              <strong>{key.toString()}:</strong>
-              <span>{value}</span>{" "}
-            </React.Fragment>
-          ))}
-        </td>
-      </tr>
-    </table>
-  ));
+export default {
+  title: "BusyWatcher",
+  decorators: [story => <Observer>{() => story()}</Observer>],
+} as Meta<typeof BusyWatcher>;
+
+export const ScreenLifecycle = () => (
+  <table>
+    <tr>
+      <th>Default</th>
+      <td>
+        <button onClick={vm.defaultAction}>Busy</button>
+      </td>
+      <td>{vm.busyWatcher.isBusy ? "BUSY" : ""}</td>
+    </tr>
+    <tr>
+      <th>Foo</th>
+      <td>
+        <button onClick={vm.fooAction}>Busy</button>
+      </td>
+      <td>{vm.busyWatcher.checkBusy("foo") ? "BUSY" : ""}</td>
+    </tr>
+    <tr>
+      <th>Bar</th>
+      <td>
+        <button onClick={vm.barAction}>Busy</button>
+      </td>
+      <td>{vm.busyWatcher.checkBusy("bar") ? "BUSY" : ""}</td>
+    </tr>
+    <tr>
+      <th>Debug</th>
+      <td colSpan={2}>
+        {vm.busyWatcher.debug().map(({ key, value }, i) => (
+          <React.Fragment key={typeof key !== "symbol" ? key : i}>
+            <strong>{key.toString()}:</strong>
+            <span>{value}</span>{" "}
+          </React.Fragment>
+        ))}
+      </td>
+    </tr>
+  </table>
+);
+
+ScreenLifecycle.story = {
+  name: "Screen lifecycle",
+};

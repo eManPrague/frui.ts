@@ -6,15 +6,15 @@
   "license": "MIT",
   "devDependencies": {
     "@babel/core": "^7.20.2",
-    "@rollup/pluginutils": "^4.2.1",
-    "@storybook/addon-actions": "^6.5.12",
-    "@storybook/addon-essentials": "^6.5.12",
-    "@storybook/addon-interactions": "^6.5.12",
-    "@storybook/addon-links": "^6.5.12",
-    "@storybook/builder-vite": "^0.2.4",
-    "@storybook/react": "^6.5.12",
-    "@storybook/testing-library": "^0.0.13",
-    "babel-loader": "^8.2.5"
+    "@storybook/addon-actions": "^7.0.20",
+    "@storybook/addon-essentials": "^7.0.20",
+    "@storybook/addon-interactions": "^7.0.20",
+    "@storybook/addon-links": "^7.0.20",
+    "@storybook/react": "^7.0.20",
+    "@storybook/react-vite": "7.0.20",
+    "@storybook/testing-library": "^0.1.0",
+    "react-dom": "^18.2.0",
+    "storybook": "7.0.20"
   },
   "dependencies": {
     "@frui.ts/dirtycheck": "^999.0.0",
@@ -27,7 +27,7 @@
     "react": "^18.2.0"
   },
   "scripts": {
-    "storybook": "cross-env NODE_OPTIONS=--openssl-legacy-provider start-storybook -p 6006",
-    "build-storybook": "cross-env NODE_OPTIONS=--openssl-legacy-provider build-storybook"
+    "storybook": "cross-env NODE_OPTIONS=--openssl-legacy-provider storybook dev -p 6006",
+    "build-storybook": "cross-env NODE_OPTIONS=--openssl-legacy-provider storybook build"
   }
 }

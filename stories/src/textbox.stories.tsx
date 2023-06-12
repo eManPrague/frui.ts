@@ -1,5 +1,4 @@
 import { action } from "@storybook/addon-actions";
-import { storiesOf } from "@storybook/react";
 import { observable, configure } from "mobx";
 import { Observer } from "mobx-react-lite";
 import { Textbox } from "@frui.ts/htmlcontrols";
@@ -33,16 +32,28 @@ const actionLogger = {
   onValueChanged: action("onValueChanged"),
 };
 
-storiesOf("HtmlTextBox", module)
-  .add("Bound to property", () => (
-    <div>
-      <Textbox target={observableTarget} property="name" {...actionLogger} />
-      {dumpTargetObject(observableTarget)}
-    </div>
-  ))
-  .add("Bound to non-observable", () => (
-    <div>
-      <Textbox target={nonObservableTarget} property="name" {...actionLogger} />
-      {dumpTargetObject(nonObservableTarget)}
-    </div>
-  ));
+export default {
+  title: "HtmlTextBox",
+};
+
+export const BoundToProperty = () => (
+  <div>
+    <Textbox target={observableTarget} property="name" {...actionLogger} />
+    {dumpTargetObject(observableTarget)}
+  </div>
+);
+
+BoundToProperty.story = {
+  name: "Bound to property",
+};
+
+export const BoundToNonObservable = () => (
+  <div>
+    <Textbox target={nonObservableTarget} property="name" {...actionLogger} />
+    {dumpTargetObject(nonObservableTarget)}
+  </div>
+);
+
+BoundToNonObservable.story = {
+  name: "Bound to non-observable",
+};

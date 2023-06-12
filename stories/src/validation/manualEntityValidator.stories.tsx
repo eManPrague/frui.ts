@@ -1,5 +1,4 @@
 import { ManualEntityValidator } from "@frui.ts/validation";
-import { storiesOf } from "@storybook/react";
 import { observable } from "mobx";
 import React from "react";
 import { Check, Input } from "../fields";
@@ -17,7 +16,11 @@ const addManualError = () => {
   validator.setResult("name", { code: "manual", isValid: false });
 };
 
-storiesOf("Validation", module).add("ManualEntityValidator", () => (
+export default {
+  title: "Validation",
+};
+
+export const _ManualEntityValidator = () => (
   <table>
     <thead>
       <tr>
@@ -45,4 +48,8 @@ storiesOf("Validation", module).add("ManualEntityValidator", () => (
       </tr>
     </tbody>
   </table>
-));
+);
+
+_ManualEntityValidator.story = {
+  name: "ManualEntityValidator",
+};
