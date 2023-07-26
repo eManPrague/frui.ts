@@ -4,7 +4,7 @@ import React from "react";
 import SettingsViewModel from "./settingsViewModel";
 
 export function Settings() {
-  const vm = useViewModel(() => new SettingsViewModel(), {}, []);
+  const { vm } = useViewModel(() => new SettingsViewModel(), {}, []);
 
   return (
     <p>
