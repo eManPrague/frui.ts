@@ -280,8 +280,7 @@ export default class OpenApi3Parser implements ApiModel {
     parentName: string,
     input: OpenAPIV3.ParameterObject & Required<Pick<OpenAPIV3.ParameterObject, "schema">>
   ) {
-    const type = this.parseSchemaObject(parentName, input.schema);
-    const parameter = new EntityProperty(cleanParameterName(input.name), type);
+    const parameter = this.parseEntityProperty(parentName, cleanParameterName(input.name), input.schema);
     parameter.description = input.description;
     if (input.required) {
       parameter.addRestriction(Restriction.required, true);
