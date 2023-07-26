@@ -4,17 +4,15 @@ import Configuration from "./configuration";
 import type { AggregatedValidationResult, EntityValidator } from "./types";
 
 export function attachValidator<TEntity>(target: TEntity, validator: EntityValidator<TEntity>) {
-  // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access
-  (target as any)[Configuration.validatorAttachedProperty] = validator;
+  (target as Record<symbol, EntityValidator<TEntity>>)[Configuration.validatorAttachedProperty] = validator;
 }
 
-export function getValidator<TEntity>(target: TEntity) {
+export function getValidator<TEntity>(target: TEntity): EntityValidator<TEntity> | undefined {
   if (!target) {
     return undefined;
   }
 
-  // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access
-  return (target as any)[Configuration.validatorAttachedProperty] as EntityValidator<TEntity> | undefined;
+  return (target as Record<symbol, EntityValidator<TEntity> | undefined>)[Configuration.validatorAttachedProperty];
 }
 
 /**

@@ -14,4 +14,6 @@ export interface IViewModel<TContext> {
   onNavigate?(context: TContext): Promise<unknown> | unknown;
   onSearchChanged?(context: TContext): Promise<unknown> | unknown;
   onDeactivate?(context: TContext): Promise<unknown> | unknown;
+
+  isVm?: true;
 }
