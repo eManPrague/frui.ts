@@ -10,7 +10,7 @@
   },
   "dependencies": {
     "@frui.ts/views": "^999.0.0",
-    "@tanstack/react-router": "^0.0.1-beta.82",
+    "@tanstack/react-router": "^0.0.1-beta.83",
     "mobx": "6.9.0",
     "mobx-react-lite": "3.4.3",
     "react": "^18.2.0",

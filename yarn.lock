@@ -2829,14 +2829,14 @@
     "@types/express" "^4.7.0"
     file-system-cache "^2.0.0"
 
-"@tanstack/react-router@^0.0.1-beta.82":
-  version "0.0.1-beta.82"
-  resolved "https://registry.yarnpkg.com/@tanstack/react-router/-/react-router-0.0.1-beta.82.tgz#4c1ff8cf55563ff03f0244fbdbd1ca2f1aacfbcb"
-  integrity sha512-Ghl7QqsgEVJc1GQNOtrU7sSShRBL81ov526tGFzGiTzhWnhV8zDABWSU+9k62XNufRLmrqbl2hr5QT5l8oFc6Q==
+"@tanstack/react-router@^0.0.1-beta.83":
+  version "0.0.1-beta.83"
+  resolved "https://registry.yarnpkg.com/@tanstack/react-router/-/react-router-0.0.1-beta.83.tgz#280fdcc77e755743d7709d1c823e044a3a7c4bc4"
+  integrity sha512-FcezDPKxXu7uP8tjTQpKBXkweiql053O7D3hRBg1kWuU3LyouHFGFALLr2xvWkue4WWSpa1mBzrINldYygDKLw==
   dependencies:
     "@babel/runtime" "^7.16.7"
     "@tanstack/react-store" "0.0.1-beta.81"
-    "@tanstack/router" "0.0.1-beta.82"
+    "@tanstack/router" "0.0.1-beta.83"
 
 "@tanstack/react-store@0.0.1-beta.81":
   version "0.0.1-beta.81"
@@ -2846,10 +2846,10 @@
     "@tanstack/store" "0.0.1-beta.81"
     use-sync-external-store "^1.2.0"
 
-"@tanstack/router@0.0.1-beta.82":
-  version "0.0.1-beta.82"
-  resolved "https://registry.yarnpkg.com/@tanstack/router/-/router-0.0.1-beta.82.tgz#b422092ef473c13fdeefa7e01b2f3149e176490d"
-  integrity sha512-fp5HW/xwO27QDcEK0DX3PwE2Qff1G4+DAm8AIICGFWDwj/kzp1tPlK1QH+FPW56QIt/pWlUqzjObBskouUmD6g==
+"@tanstack/router@0.0.1-beta.83":
+  version "0.0.1-beta.83"
+  resolved "https://registry.yarnpkg.com/@tanstack/router/-/router-0.0.1-beta.83.tgz#bdfe5fcdf9a641ba013d91ffc655779495f4bec9"
+  integrity sha512-cwkfyvgg7g60wbKZBRl1sbut+eYyE6bPc/Efz2ozFD//oV6qBUftoRm4PbN5cdPgrHjjLOFuOKW43EEUXM/exQ==
   dependencies:
     "@babel/runtime" "^7.16.7"
     "@tanstack/store" "0.0.1-beta.81"
