@@ -1,4 +1,4 @@
-import { camelCase } from "lodash";
+import { camelCase } from "lodash-es";
 import { pascalCase } from "../../helpers";
 import type NamedObject from "../models/namedObject";
 import ObjectEntity from "../models/objectEntity";

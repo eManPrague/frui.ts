@@ -1,4 +1,4 @@
-import { camelCase } from "lodash";
+import { camelCase } from "lodash-es";
 import type { ClassDeclaration, ImportDeclarationStructure, OptionalKind, SourceFile, Type } from "ts-morph";
 
 export function toSingleArray<T>(item: T | undefined) {

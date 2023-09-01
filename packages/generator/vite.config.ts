@@ -10,7 +10,7 @@ export default defineConfig({
   ],
   build: {
     lib: {
-      formats: ["umd"],
+      formats: ["es"],
       entry: path.resolve(__dirname, "src/index.ts"),
       name: "fruits-generator",
     },

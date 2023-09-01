@@ -21,18 +21,25 @@
   },
   "author": "Augustin Šulc <sulc.gusta@gmail.com>",
   "license": "MIT",
+  "type": "module",
   "files": [
     "dist"
   ],
-  "main": "./dist/fruits-dataviews.umd.js",
-  "module": "./dist/fruits-dataviews.es.js",
+  "main": "./dist/index.umd.js",
+  "module": "./dist/index.es.js",
+  "types": "./dist/index.d.ts",
   "exports": {
     ".": {
-      "import": "./dist/fruits-dataviews.es.js",
-      "require": "./dist/fruits-dataviews.umd.js"
+      "import": {
+        "default": "./dist/index.es.js",
+        "types": "./dist/index.d.ts"
+      },
+      "require": {
+        "default": "./dist/index.umd.js",
+        "types": "./dist/index.d.ts"
+      }
     }
   },
-  "types": "./dist/index.d.ts",
   "scripts": {
     "clean": "rimraf dist && rimraf styles",
     "build": "vite build && tsc --noEmit false --emitDeclarationOnly",
@@ -41,13 +48,13 @@
   "dependencies": {
     "@frui.ts/data": "^999.0.0",
     "@frui.ts/helpers": "^999.0.0",
-    "mobx-react-lite": "3.4.3"
+    "mobx-react-lite": "4.0.4"
   },
   "devDependencies": {
-    "@types/react": "^18.2.11",
+    "@types/react": "^18.2.21",
     "copyfiles": "^2.4.1"
   },
   "peerDependencies": {
-    "react": "^17.0.2"
+    "react": "18"
   }
 }

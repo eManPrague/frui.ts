@@ -6,7 +6,7 @@ export default defineConfig({
     lib: {
       entry: path.resolve(__dirname, "src/index.ts"),
       name: "fruits-data",
-      fileName: format => `fruits-data.${format}.js`,
+      fileName: format => `index.${format}.js`,
     },
     rollupOptions: {
       external: [],

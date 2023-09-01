@@ -1,5 +1,5 @@
 import fs from "fs";
-import { camelCase, upperFirst } from "lodash";
+import { camelCase, upperFirst } from "lodash-es";
 import path from "path";
 
 export function pascalCase(input: string) {

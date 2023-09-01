@@ -19,18 +19,25 @@
   },
   "author": "Augustin Šulc <sulc.gusta@gmail.com>",
   "license": "MIT",
+  "type": "module",
   "files": [
     "dist"
   ],
-  "main": "./dist/fruits-apiclient.umd.js",
-  "module": "./dist/fruits-apiclient.es.js",
+  "main": "./dist/index.umd.js",
+  "module": "./dist/index.es.js",
+  "types": "./dist/index.d.ts",
   "exports": {
     ".": {
-      "import": "./dist/fruits-apiclient.es.js",
-      "require": "./dist/fruits-apiclient.umd.js"
+      "import": {
+        "default": "./dist/index.es.js",
+        "types": "./dist/index.d.ts"
+      },
+      "require": {
+        "default": "./dist/index.umd.js",
+        "types": "./dist/index.d.ts"
+      }
     }
   },
-  "types": "./dist/index.d.ts",
   "scripts": {
     "clean": "rimraf dist",
     "build": "vite build && tsc --noEmit false --emitDeclarationOnly"
@@ -40,6 +47,6 @@
     "qs": "^6.11.2"
   },
   "devDependencies": {
-    "@types/qs": "^6.9.7"
+    "@types/qs": "^6.9.8"
   }
 }

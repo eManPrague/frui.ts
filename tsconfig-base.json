@@ -4,7 +4,7 @@
     "useDefineForClassFields": true,
     "module": "ESNext",
     "lib": ["ESNext", "DOM"],
-    "moduleResolution": "Node",
+    "moduleResolution": "bundler",
     "strict": true,
     "sourceMap": true,
     "resolveJsonModule": true,
@@ -23,6 +23,7 @@
     "downlevelIteration": true,
 
     "declaration": true,
-    "inlineSources": true
+    "inlineSources": true,
+    "skipLibCheck": true // fix for lodash - TS2428: All declarations of 'WeakMap' must have identical type parameters
   }
 }

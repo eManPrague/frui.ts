@@ -1,4 +1,4 @@
-﻿import { camelCase, uniq } from "lodash";
+﻿import { camelCase, uniq } from "lodash-es";
 import type { Directory, SourceFile } from "ts-morph";
 import GeneratorBase from "../../generatorBase";
 import ObservableFormatter from "../formatters/observableFormatter";

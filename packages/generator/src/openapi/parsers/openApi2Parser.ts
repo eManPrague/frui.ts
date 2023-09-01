@@ -1,4 +1,4 @@
-import { isArray } from "lodash";
+import { isArray } from "lodash-es";
 import type { IJsonSchema, OpenAPIV2 } from "openapi-types";
 import { pascalCase } from "../../helpers";
 import AliasEntity from "../models/aliasEntity";

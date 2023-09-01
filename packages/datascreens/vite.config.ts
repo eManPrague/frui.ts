@@ -7,7 +7,7 @@ export default defineConfig({
     lib: {
       entry: path.resolve(__dirname, "src/index.ts"),
       name: "fruits-datascreens",
-      fileName: format => `fruits-datascreens.${format}.js`,
+      fileName: format => `index.${format}.js`,
     },
     rollupOptions: {
       external: [...Object.keys(packageFile.dependencies), ...Object.keys(packageFile.peerDependencies)],

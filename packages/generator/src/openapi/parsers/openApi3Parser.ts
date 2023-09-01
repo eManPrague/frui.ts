@@ -1,4 +1,4 @@
-﻿import { camelCase } from "lodash";
+﻿import { camelCase } from "lodash-es";
 import type { OpenAPIV3 } from "openapi-types";
 import { pascalCase } from "../../helpers";
 import NameFormatter from "../formatters/nameFormatter";

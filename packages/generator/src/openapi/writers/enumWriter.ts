@@ -1,4 +1,4 @@
-﻿import { camelCase } from "lodash";
+﻿import { camelCase } from "lodash-es";
 import type { Directory, SourceFile } from "ts-morph";
 import GeneratorBase from "../../generatorBase";
 import type Enum from "../models/enum";

@@ -22,26 +22,32 @@
   },
   "author": "Augustin Šulc <sulc.gusta@gmail.com>",
   "license": "MIT",
+  "type": "module",
   "files": [
     "dist"
   ],
-  "main": "./dist/fruits-views.umd.js",
-  "module": "./dist/fruits-views.es.js",
+  "main": "./dist/index.umd.js",
+  "module": "./dist/index.es.js",
+  "types": "./dist/index.d.ts",
   "exports": {
     ".": {
-      "import": "./dist/fruits-views.es.js",
-      "require": "./dist/fruits-views.umd.js"
+      "import": {
+        "default": "./dist/index.es.js",
+        "types": "./dist/index.d.ts"
+      },
+      "require": {
+        "default": "./dist/index.umd.js",
+        "types": "./dist/index.d.ts"
+      }
     }
   },
-  "types": "./dist/index.d.ts",
   "scripts": {
     "clean": "rimraf dist",
     "build": "vite build && tsc --noEmit false --emitDeclarationOnly"
   },
   "devDependencies": {
-    "@types/lodash": "4.14.195",
-    "@types/lodash-es": "4.17.7",
-    "@types/react": "^18.2.11"
+    "@types/lodash-es": "4.17.9",
+    "@types/react": "^18.2.21"
   },
   "dependencies": {
     "@frui.ts/helpers": "^999.0.0",
@@ -52,8 +58,8 @@
   },
   "peerDependencies": {
     "mobx": "6",
-    "mobx-react-lite": "3",
-    "react": "^17.0.2",
-    "react-dom": "^17.0.2"
+    "mobx-react-lite": "4",
+    "react": "18",
+    "react-dom": "18"
   }
 }

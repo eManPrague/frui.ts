@@ -21,18 +21,25 @@
   },
   "author": "Augustin Šulc <sulc.gusta@gmail.com>",
   "license": "MIT",
+  "type": "module",
   "files": [
     "dist"
   ],
-  "main": "./dist/fruits-helpers.umd.js",
-  "module": "./dist/fruits-helpers.es.js",
+  "main": "./dist/index.umd.js",
+  "module": "./dist/index.es.js",
+  "types": "./dist/index.d.ts",
   "exports": {
     ".": {
-      "import": "./dist/fruits-helpers.es.js",
-      "require": "./dist/fruits-helpers.umd.js"
+      "import": {
+        "default": "./dist/index.es.js",
+        "types": "./dist/index.d.ts"
+      },
+      "require": {
+        "default": "./dist/index.umd.js",
+        "types": "./dist/index.d.ts"
+      }
     }
   },
-  "types": "./dist/index.d.ts",
   "directories": {
     "lib": "dist",
     "test": "__tests__"

@@ -7,7 +7,7 @@ export default defineConfig({
     lib: {
       entry: path.resolve(__dirname, "src/index.ts"),
       name: "fruits-apiclient",
-      fileName: format => `fruits-apiclient.${format}.js`,
+      fileName: format => `index.${format}.js`,
     },
     rollupOptions: {
       external: [...Object.keys(packageFile.dependencies)],

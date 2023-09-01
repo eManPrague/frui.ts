@@ -1,6 +1,6 @@
 ﻿import fs from "fs";
 import Handlebars from "handlebars";
-import { camelCase, groupBy } from "lodash";
+import { camelCase, groupBy } from "lodash-es";
 import path from "path";
 import type { Project } from "ts-morph";
 import { getRelativePath, pascalCase } from "../helpers";
