@@ -43,7 +43,7 @@
     "validate": "yarn run cleanbuild && yarn run test --run && yarn run lint && yarn run publish:all"
   },
   "devDependencies": {
-    "@emanprague/eslint-config": "^3.2.1",
+    "@emanprague/eslint-config": "^3.3.0",
     "@testing-library/react": "14.0.0",
     "cross-env": "^7.0.3",
     "eslint": "^8.48.0",
@@ -52,9 +52,10 @@
     "mobx": "6.10.2",
     "prettier": "^3.0.3",
     "rimraf": "^5.0.1",
-    "typedoc": "^0.24.8",
+    "rollup-plugin-preserve-directives": "0.2.0",
+    "typedoc": "^0.25.0",
     "vite": "^4.4.9",
     "vitest": "^0.34.3",
-    "vitest-mock-extended": "^1.2.0"
+    "vitest-mock-extended": "^1.2.1"
   }
 }

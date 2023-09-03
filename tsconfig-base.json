@@ -24,6 +24,6 @@
 
     "declaration": true,
     "inlineSources": true,
-    "skipLibCheck": true // fix for lodash - TS2428: All declarations of 'WeakMap' must have identical type parameters
+    "skipLibCheck": true // fix for lodash - TS2428: All declarations of 'WeakMap' must have identical type parameters. You can try to remove it from time to time.
   }
 }

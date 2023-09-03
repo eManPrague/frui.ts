@@ -49,8 +49,8 @@
   "devDependencies": {
     "@types/cli-progress": "^3.11.0",
     "@types/lodash-es": "4.17.9",
-    "@types/node": "20.5.7",
-    "nodemon": "2.0.22",
+    "@types/node": "20.5.9",
+    "nodemon": "3.0.1",
     "rimraf": "^5.0.1",
     "shx": "^0.3.4",
     "ts-node": "^10.9.1",

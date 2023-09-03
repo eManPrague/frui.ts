@@ -3,6 +3,7 @@ import Handlebars from "handlebars";
 import { camelCase, groupBy } from "lodash-es";
 import path from "path";
 import type { Project } from "ts-morph";
+import { fileURLToPath } from "url";
 import { getRelativePath, pascalCase } from "../helpers";
 import { createProgressBar } from "../progressBar";
 import type Endpoint from "./models/endpoint";
@@ -145,7 +146,7 @@ export default class FileGenerator {
   private getFullPath(filePath: string) {
     if (filePath.startsWith("@")) {
       // use built-in template
-      const templatesRoot = __filename.endsWith(".ts") ? "./templates/" : "./openapi/templates/"; // fix for local debugging
+      const templatesRoot = "./openapi/templates/";
       const templatesFolder = path.join(templatesRoot, this.config.templatesFolder ?? ".", "/");
       return path.resolve(__dirname, filePath.replace("@", templatesFolder));
     } else {
@@ -153,3 +154,6 @@ export default class FileGenerator {
     }
   }
 }
+
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);

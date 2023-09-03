@@ -5,6 +5,7 @@ import packageFile from "./package.json";
 export default defineConfig({
   build: {
     lib: {
+      formats: ["es"],
       entry: path.resolve(__dirname, "src/index.ts"),
       name: "fruits-validation",
       fileName: format => `index.${format}.js`,

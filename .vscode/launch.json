@@ -16,10 +16,10 @@
       "request": "launch",
       "name": "Debug generator",
       "cwd": "C:\\_Projects\\tuito\\frontend",
-      "runtimeArgs": ["-r", "${workspaceFolder}/node_modules/ts-node/register/transpile-only"],
-      "args": ["${workspaceFolder}/packages/generator/src/index.ts", "openapi", "-cgenerator-openapi-propertyinsurance.json"],
+      "preLaunchTask": "npm: build - packages/generator",
+      "args": ["${workspaceFolder}/packages/generator/dist/generator.js", "openapi", "-cgenerator-openapi-propertyinsurance.json"],
       "env": {
-        "TS_NODE_PROJECT": "${workspaceFolder}/packages/generator/tsconfig.json"
+        "DEBUG": "true"
       }
     },
     {

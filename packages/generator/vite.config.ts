@@ -15,7 +15,7 @@ export default defineConfig({
       name: "fruits-generator",
     },
     rollupOptions: {
-      external: ["path", "fs", ...Object.keys(packageFile.dependencies)],
+      external: ["path", "fs", "url", ...Object.keys(packageFile.dependencies)],
       output: {
         sourcemap: true,
         inlineDynamicImports: true,
