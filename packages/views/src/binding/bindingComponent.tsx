@@ -25,7 +25,7 @@ export abstract class BindingComponent<
   TProps,
   TBindingTypeRestriction,
   TTarget extends BindingTarget,
-  TProperty extends TypedBindingProperty<TTarget, TBindingTypeRestriction>
+  TProperty extends TypedBindingProperty<TTarget, TBindingTypeRestriction>,
 > extends React.Component<WithBindingProps<TProps, TBindingTypeRestriction, TTarget, TProperty>> {
   constructor(props: WithBindingProps<TProps, TBindingTypeRestriction, TTarget, TProperty>) {
     super(props);

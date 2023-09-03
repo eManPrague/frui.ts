@@ -7,7 +7,7 @@ import React from "react";
 function input<
   TRestriction extends string | undefined,
   TTarget extends BindingTarget,
-  TProperty extends TypedBindingProperty<TTarget, TRestriction>
+  TProperty extends TypedBindingProperty<TTarget, TRestriction>,
 >(props: WithBindingProps<{ label?: string }, TRestriction, TTarget, TProperty>) {
   const { label, ...rest } = props;
   return (

@@ -16,6 +16,7 @@ export interface ColumnRenderProps<TItem, TContext, TProperty extends PropertyKe
 
 export interface ValueRenderProps<TItem, TContext, TProperty extends PropertyKey<TItem>>
   extends ColumnRenderProps<TItem, TContext, TProperty> {
+  // eslint-disable-next-line @typescript-eslint/no-redundant-type-constituents
   value?: TItem[TProperty] | any; // if we remove any, TS is not able to infer type when multiple columns definitions are defined next to each other :-(
   item: TItem;
 }

@@ -19,7 +19,7 @@ interface MyProps {
 function numbersComponent<
   TRestriction extends number[],
   TTarget extends BindingTarget,
-  TProperty extends TypedBindingProperty<TTarget, TRestriction>
+  TProperty extends TypedBindingProperty<TTarget, TRestriction>,
 >(props: WithBindingProps<MyProps, TRestriction, TTarget, TProperty>) {
   if (props.property && props.target) {
     props.onValueChanged?.([99] as PropertyType<TTarget, TProperty>, props.property, props.target);
@@ -41,7 +41,7 @@ function numbersComponent<
 function textComponent<
   TRestriction extends string,
   TTarget extends BindingTarget,
-  TProperty extends TypedBindingProperty<TTarget, TRestriction>
+  TProperty extends TypedBindingProperty<TTarget, TRestriction>,
 >(props: WithBindingProps<MyProps, TRestriction, TTarget, TProperty>) {
   const [value, setValue] = useBinding<TRestriction, TTarget, TProperty>(props);
   setValue(value);
@@ -52,7 +52,7 @@ function textComponent<
 function nullableComponent<
   TRestriction extends string | undefined,
   TTarget extends BindingTarget,
-  TProperty extends TypedBindingProperty<TTarget, TRestriction>
+  TProperty extends TypedBindingProperty<TTarget, TRestriction>,
 >(props: WithBindingProps<MyProps, TRestriction, TTarget, TProperty>) {
   const [value, setValue] = useBinding<TRestriction, TTarget, TProperty>(props);
   setValue(value);
@@ -63,7 +63,7 @@ function nullableComponent<
 function parentComponent<
   TRestriction extends Parent[],
   TTarget extends BindingTarget,
-  TProperty extends TypedBindingProperty<TTarget, TRestriction>
+  TProperty extends TypedBindingProperty<TTarget, TRestriction>,
 >(props: WithBindingProps<MyProps, TRestriction, TTarget, TProperty>) {
   const [value, setValue] = useBinding<TRestriction, TTarget, TProperty>(props);
   setValue(value);
@@ -124,5 +124,4 @@ describe("BindingProps", () => {
   });
 });
 
-// eslint-disable-next-line @typescript-eslint/no-empty-function
 function sink<T>(_input: T) {}

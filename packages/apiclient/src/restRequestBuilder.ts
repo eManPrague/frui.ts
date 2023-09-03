@@ -42,7 +42,11 @@ export class RestRequestBuilder {
     return this.urlValue;
   }
 
-  constructor(protected apiConnector: IApiConnector, private baseUrl: string, protected params?: RequestInit) {
+  constructor(
+    protected apiConnector: IApiConnector,
+    private baseUrl: string,
+    protected params?: RequestInit
+  ) {
     this.reset();
   }
 
@@ -63,7 +67,6 @@ export class RestRequestBuilder {
   one(path: string, id?: any): this {
     this.urlValue += "/" + path;
     if (id !== undefined) {
-      // eslint-disable-next-line @typescript-eslint/restrict-template-expressions
       this.urlValue += `/${id}`;
     }
     return this;

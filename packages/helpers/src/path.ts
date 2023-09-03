@@ -112,7 +112,7 @@ export type FieldPathValue<TFieldValues extends FieldValues, TFieldPath extends 
  */
 export type FieldArrayPathValue<
   TFieldValues extends FieldValues,
-  TFieldArrayPath extends FieldArrayPath<TFieldValues>
+  TFieldArrayPath extends FieldArrayPath<TFieldValues>,
 > = PathValue<TFieldValues, TFieldArrayPath>;
 
 /**
@@ -127,7 +127,7 @@ export type FieldArrayPathValue<
  */
 export type FieldPathValues<
   TFieldValues extends FieldValues,
-  TPath extends FieldPath<TFieldValues>[] | readonly FieldPath<TFieldValues>[]
+  TPath extends FieldPath<TFieldValues>[] | readonly FieldPath<TFieldValues>[],
   // eslint-disable-next-line @typescript-eslint/ban-types
 > = {} & {
   [K in keyof TPath]: FieldPathValue<TFieldValues, TPath[K] & FieldPath<TFieldValues>>;

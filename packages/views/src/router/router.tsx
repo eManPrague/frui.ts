@@ -41,7 +41,7 @@ function buildViewModelOptions<
   // TRouterContext extends AnyContext = AnyContext,
   // TChildren = unknown,
   // TRoutesInfo extends DefaultRoutesInfo = DefaultRoutesInfo,
-  TViewModel extends IRouteViewModel<TAllParams, TFullSearchSchema> = IRouteViewModel<TAllParams, TFullSearchSchema>
+  TViewModel extends IRouteViewModel<TAllParams, TFullSearchSchema> = IRouteViewModel<TAllParams, TFullSearchSchema>,
 >(vmFactory: () => TViewModel) {
   const vmManager = new ViewModelLifecycleManager<NavigationContext<TAllParams, TFullSearchSchema>, TViewModel>(vmFactory);
 
@@ -118,7 +118,7 @@ export function buildRoute<
   // TRouterContext extends AnyContext = AnyContext,
   // TChildren = unknown,
   // TRoutesInfo extends DefaultRoutesInfo = DefaultRoutesInfo,
-  TViewModel extends IRouteViewModel<TAllParams, TFullSearchSchema> = IRouteViewModel<TAllParams, TFullSearchSchema>
+  TViewModel extends IRouteViewModel<TAllParams, TFullSearchSchema> = IRouteViewModel<TAllParams, TFullSearchSchema>,
 >(
   vmFactory: () => TViewModel,
   options: RouteOptions<
@@ -146,7 +146,7 @@ export function buildRootRoute<
   TSearchSchema extends AnySearchSchema = {},
   TContext extends RouteContext = RouteContext,
   TRouterContext extends RouterContext = RouterContext,
-  TViewModel extends IRouteViewModel<NoParams, TSearchSchema> = IRouteViewModel<NoParams, TSearchSchema>
+  TViewModel extends IRouteViewModel<NoParams, TSearchSchema> = IRouteViewModel<NoParams, TSearchSchema>,
 >(
   vmFactory: () => TViewModel,
   options: Omit<

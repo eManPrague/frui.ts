@@ -9,7 +9,10 @@ export default class EntityProperty extends NamedObject {
   validations?: Map<Restriction, unknown>;
   tags?: Map<symbol, any>;
 
-  constructor(name: string, public type: TypeReference) {
+  constructor(
+    name: string,
+    public type: TypeReference
+  ) {
     super(name);
   }
 

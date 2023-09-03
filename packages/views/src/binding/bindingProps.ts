@@ -12,7 +12,7 @@ import type { BindingTarget, PropertyType, TypedBindingProperty } from "@frui.ts
 export interface IBindingProps<
   TTypeRestriction,
   TTarget extends BindingTarget,
-  TProperty extends TypedBindingProperty<TTarget, TTypeRestriction>
+  TProperty extends TypedBindingProperty<TTarget, TTypeRestriction>,
 > {
   /** Target entity for the binding. The entity should be Mobx `observable`. */
   target?: TTarget;
@@ -36,7 +36,7 @@ export type WithBindingProps<
   T,
   TTypeRestriction,
   TTarget extends BindingTarget,
-  TProperty extends TypedBindingProperty<TTarget, any>
+  TProperty extends TypedBindingProperty<TTarget, any>,
 > = IBindingProps<TTypeRestriction, TTarget, TProperty> & Omit<T, keyof IBindingProps<TTypeRestriction, TTarget, TProperty>>;
 
 export function omitBindingProps<T>(props: T): ExcludeBindingProps<T> {

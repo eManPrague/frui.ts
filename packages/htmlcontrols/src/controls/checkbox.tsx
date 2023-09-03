@@ -7,7 +7,7 @@ import React from "react";
 export class Checkbox<
   TRestriction extends boolean | undefined,
   TTarget extends BindingTarget,
-  TProperty extends TypedBindingProperty<TTarget, TRestriction>
+  TProperty extends TypedBindingProperty<TTarget, TRestriction>,
 > extends BindingComponent<React.ComponentPropsWithoutRef<"input">, TRestriction, TTarget, TProperty> {
   render() {
     return (

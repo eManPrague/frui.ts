@@ -12,7 +12,7 @@ export interface DataRepeaterProps<
   THeadCell extends React.ElementType,
   TBodyWrapper extends React.ElementType,
   TItemWrapper extends React.ElementType,
-  TItemCell extends React.ElementType
+  TItemCell extends React.ElementType,
 > extends DataTablePropsBase<TItem, TContext> {
   wrapperType?: TWrapper;
   wrapperProps?: React.ComponentPropsWithoutRef<TWrapper>;
@@ -45,7 +45,7 @@ function dataRepeater<
   THeadCell extends React.ElementType,
   TBodyWrapper extends React.ElementType,
   TItemWrapper extends React.ElementType,
-  TItemCell extends React.ElementType
+  TItemCell extends React.ElementType,
 >(props: DataRepeaterProps<TItem, TContext, TWrapper, THeadWrapper, THeadCell, TBodyWrapper, TItemWrapper, TItemCell>) {
   const Wrapper = props.wrapperType ?? "table";
   const ItemWrapper = props.bodyWrapperType ?? "tbody";

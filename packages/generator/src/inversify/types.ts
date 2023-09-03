@@ -8,6 +8,7 @@ export interface IGeneratorParams extends BaseParams {
   registry?: { output: string };
 }
 
+// eslint-disable-next-line @typescript-eslint/no-redundant-type-constituents
 export type ServiceIdentifier = "$class" | "$interface" | string;
 export type LifeScope = "none" | "singleton" | "transient";
 

@@ -3,7 +3,10 @@ import NamedObject from "./namedObject";
 import type Restriction from "./restriction";
 
 export default class ObjectEntity extends NamedObject {
-  constructor(name: string, public properties: EntityProperty[]) {
+  constructor(
+    name: string,
+    public properties: EntityProperty[]
+  ) {
     super(name);
   }
 

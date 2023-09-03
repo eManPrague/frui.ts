@@ -8,7 +8,7 @@ import React from "react";
 function textbox<
   TRestriction extends string,
   TTarget extends BindingTarget,
-  TProperty extends TypedBindingProperty<TTarget, TRestriction>
+  TProperty extends TypedBindingProperty<TTarget, TRestriction>,
 >(props: WithBindingProps<ComponentPropsWithoutRef<"input">, TRestriction, TTarget, TProperty>) {
   const [value, setValue] = useBinding<TRestriction, TTarget, TProperty>(props);
   const handleValueChanged = (e: React.ChangeEvent<HTMLInputElement>) => setValue(e.target.value as TRestriction);

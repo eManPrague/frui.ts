@@ -9,7 +9,11 @@ export default class RegistrationsProcessor {
   private decorators: CodeBlock[];
   private registrations: CodeBlock[];
 
-  constructor(private decoratorsFile: SourceFile, private registrationFile: SourceFile, private factoryName: string) {}
+  constructor(
+    private decoratorsFile: SourceFile,
+    private registrationFile: SourceFile,
+    private factoryName: string
+  ) {}
 
   process(services: ServiceRegistration[]) {
     this.decorators = [];

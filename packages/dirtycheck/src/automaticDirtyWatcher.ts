@@ -18,7 +18,10 @@ export default class AutomaticDirtyWatcher<TEntity extends object = any> extends
   private _results: Readonly<Partial<Record<PropertyName<TEntity>, boolean>>>;
   private _watchedProperties: PropertyName<TEntity>[] = [];
 
-  constructor(private target: TEntity, params?: AutomaticDirtyWatcherParams<TEntity>) {
+  constructor(
+    private target: TEntity,
+    params?: AutomaticDirtyWatcherParams<TEntity>
+  ) {
     super(params?.isVisible);
 
     if (typeof params === "object") {
@@ -69,7 +72,6 @@ export default class AutomaticDirtyWatcher<TEntity extends object = any> extends
       const propertyName = name as PropertyName<TEntity>;
       if (
         (!this._includedProperties || this._includedProperties.includes(propertyName)) &&
-        // eslint-disable-next-line @typescript-eslint/prefer-optional-chain
         (!this._excludedProperties || !this._excludedProperties.includes(propertyName))
       ) {
         this._watchedProperties.push(propertyName);

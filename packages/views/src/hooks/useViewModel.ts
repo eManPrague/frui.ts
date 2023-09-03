@@ -24,9 +24,12 @@ export function useViewModel<TContext, TViewModel extends IViewModel<TContext>>(
     };
   }, []);
 
-  useEffect(() => {
-    void vmManager.current.navigate(currentContext.current);
-  }, dependencies ?? [context]);
+  useEffect(
+    () => {
+      void vmManager.current.navigate(currentContext.current);
+    },
+    dependencies ?? [context]
+  );
 
   return { vm: vmManager.current.instance, initialized };
 }

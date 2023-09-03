@@ -42,7 +42,11 @@ export default class AutomaticEntityValidator<TEntity extends object = any> exte
   }
 
   getResults(propertyName: PropertyName<TEntity>): ValidationResult[] {
-    return (this.isEnabled && (get(this._results, propertyName) as ValidationResult[] | undefined)) || emptyResults;
+    if (!this.isEnabled) {
+      return emptyResults;
+    }
+
+    return (get(this._results, propertyName) as ValidationResult[] | undefined) ?? emptyResults;
   }
 
   private buildObservableResults(target: TEntity, entityValidationRules: EntityValidationRules<TEntity>) {

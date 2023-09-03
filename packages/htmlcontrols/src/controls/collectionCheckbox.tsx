@@ -13,7 +13,7 @@ function useCollection<
   TItem,
   TRestriction extends TItem[] | Set<TItem> | undefined,
   TTarget extends BindingTarget,
-  TProperty extends TypedBindingProperty<TTarget, TRestriction>
+  TProperty extends TypedBindingProperty<TTarget, TRestriction>,
 >(props: WithBindingProps<CollectionCheckboxProps<TItem>, TRestriction, TTarget, TProperty>): [boolean, () => void] {
   const collection = getValue<TRestriction, TTarget, TProperty>(props.target, props.property);
 
@@ -45,7 +45,7 @@ function collectionCheckbox<
   TItem,
   TRestriction extends TItem[] | Set<TItem> | undefined,
   TTarget extends BindingTarget,
-  TProperty extends TypedBindingProperty<TTarget, TRestriction>
+  TProperty extends TypedBindingProperty<TTarget, TRestriction>,
 >(props: WithBindingProps<CollectionCheckboxProps<TItem> & ComponentPropsWithoutRef<"input">, TRestriction, TTarget, TProperty>) {
   const [checked, toggle] = useCollection<TItem, TRestriction, TTarget, TProperty>(props);
 

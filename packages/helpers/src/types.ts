@@ -26,5 +26,5 @@ export type ExtractTypeRestriction<T> = T extends TypedBindingProperty<any, infe
 
 export type PropertyType<
   TTarget extends BindingTarget,
-  TProperty extends TypedBindingProperty<TTarget, any>
+  TProperty extends TypedBindingProperty<TTarget, any>,
 > = TTarget extends Map<TProperty, infer TValue> ? TValue | undefined : TTarget[TProperty] & ExtractTypeRestriction<TProperty>;

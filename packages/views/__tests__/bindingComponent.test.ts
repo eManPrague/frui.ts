@@ -27,7 +27,7 @@ class ComplexEntity {
 class TestControl<
   TRestriction extends string | undefined,
   TTarget extends BindingTarget,
-  TProperty extends TypedBindingProperty<TTarget, TRestriction>
+  TProperty extends TypedBindingProperty<TTarget, TRestriction>,
 > extends BindingComponent<TestControlProps, TRestriction, TTarget, TProperty> {
   readValue() {
     return this.value;

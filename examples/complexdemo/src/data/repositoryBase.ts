@@ -7,7 +7,10 @@ import type DeserializingRequestBuilder from "./deserializingRequestBuilder";
 
 export default abstract class RepositoryBase {
   protected apiFactory: () => DeserializingRequestBuilder;
-  constructor(connector: BackendConnector, protected eventBus: EventBus) {
+  constructor(
+    connector: BackendConnector,
+    protected eventBus: EventBus
+  ) {
     this.apiFactory = connector.getRequestBuilder;
   }
 

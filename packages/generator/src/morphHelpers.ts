@@ -42,5 +42,5 @@ export function unwrapType(sourceType: Type) {
     }
   }
 
-  return symbol && (symbol.getValueDeclaration() || symbol.getDeclarations()[0]);
+  return symbol?.getValueDeclaration() ?? symbol?.getDeclarations()[0];
 }

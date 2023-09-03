@@ -20,7 +20,10 @@ export default class OpenApi3Parser implements ApiModel {
   types = new Map<string, TypeReference>();
   endpoints: Endpoint[];
 
-  constructor(private apiDocument: OpenAPIV3.Document, private config?: IApiParserConfig) {}
+  constructor(
+    private apiDocument: OpenAPIV3.Document,
+    private config?: IApiParserConfig
+  ) {}
 
   parse() {
     if (this.apiDocument.components?.schemas) {
@@ -115,7 +118,6 @@ export default class OpenApi3Parser implements ApiModel {
   }
 
   private parseAllOfObject(name: string, definition: OpenAPIV3.SchemaObject) {
-    // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
     const subTypes = definition.allOf!;
 
     const plainObjects = subTypes.filter(
@@ -134,15 +136,14 @@ export default class OpenApi3Parser implements ApiModel {
 
     const entity = new InheritedEntity(name, otherParents, properties);
 
-    plainObjects.forEach(object =>
-      object.required?.forEach(property => entity.addPropertyRestriction(property, Restriction.required, true))
+    plainObjects.forEach(
+      object => object.required?.forEach(property => entity.addPropertyRestriction(property, Restriction.required, true))
     );
 
     return this.setTypeReference(name, entity);
   }
 
   private parseOneOfObject(name: string, definition: OpenAPIV3.SchemaObject) {
-    // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
     const subTypes = definition.oneOf!;
     const innerTypes = subTypes.map((x, i) => this.parseSchemaObject(`${name}Option${i + 1}`, x));
 

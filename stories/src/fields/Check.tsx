@@ -7,7 +7,7 @@ import React from "react";
 function check<
   TRestriction extends boolean | undefined,
   TTarget extends BindingTarget,
-  TProperty extends TypedBindingProperty<TTarget, TRestriction>
+  TProperty extends TypedBindingProperty<TTarget, TRestriction>,
 >(props: WithBindingProps<{ id: string; label: string }, TRestriction, TTarget, TProperty>) {
   const { label, ...rest } = props;
   return (

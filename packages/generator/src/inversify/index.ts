@@ -92,7 +92,7 @@ export default class IversifyGenerator extends GeneratorBase<IGeneratorParams, I
           ({
             ...x,
             regexPattern: new RegExp(x.pattern),
-          } as ServiceRule)
+          }) as ServiceRule
       ) ?? []
     );
   }

@@ -9,7 +9,7 @@ import DataListBase from "./dataListBase";
 
 export default class FilteredList<
   TEntity,
-  TFilter extends Record<string, any> = Record<string, any>
+  TFilter extends Record<string, any> = Record<string, any>,
 > extends DataListBase<TEntity> {
   static defaultPageSize = 30;
 
@@ -40,7 +40,7 @@ export default class FilteredList<
 
   constructor(
     public onLoadData: (filter: TFilter, paging: IPagingFilter) => Awaitable<PagedQueryResult<TEntity> | void>,
-    private initFilter: () => TFilter = () => ({} as TFilter),
+    private initFilter: () => TFilter = () => ({}) as TFilter,
     private defaultPagingFilter: (previous?: Readonly<IPagingFilter>) => IPagingFilter = previous => ({
       limit: FilteredList.defaultPageSize,
       offset: 0,

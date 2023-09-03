@@ -8,7 +8,10 @@ import type { ValidationResult } from "./types";
 export default class ServerEntityValidator<TEntity extends object = any> extends ManualEntityValidator<TEntity> {
   private _validatedValues = observable.map<string, unknown>(undefined, { deep: false });
 
-  constructor(private target: TEntity, configuration?: ManualEntityValidatorConfiguration) {
+  constructor(
+    private target: TEntity,
+    configuration?: ManualEntityValidatorConfiguration
+  ) {
     super(true, configuration);
     makeObservable(this);
   }
@@ -27,7 +30,11 @@ export default class ServerEntityValidator<TEntity extends object = any> extends
   }
 
   getResults(propertyName: PropertyName<TEntity>): ValidationResult[] {
-    return (this.isEnabled && this.isPropertyValueSame(propertyName) && this.validationResults.get(propertyName)) || emptyResults;
+    if (!this.isEnabled || !this.isPropertyValueSame(propertyName)) {
+      return emptyResults;
+    }
+
+    return this.validationResults.get(propertyName) ?? emptyResults;
   }
 
   @action

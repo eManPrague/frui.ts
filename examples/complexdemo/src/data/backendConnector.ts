@@ -4,7 +4,10 @@ import DeserializingRequestBuilder from "./deserializingRequestBuilder";
 import { serializeEntity } from "./helpers";
 
 export default class BackendConnector {
-  constructor(private baseUrl: string, private apiKey: string) {}
+  constructor(
+    private baseUrl: string,
+    private apiKey: string
+  ) {}
 
   @bound
   getRequestBuilder() {

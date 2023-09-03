@@ -1,3 +1,4 @@
+import type { Awaitable } from "@frui.ts/helpers";
 import type React from "react";
 
 export interface ISelectItem {
@@ -9,11 +10,11 @@ export type ViewProps<TViewModel> = { vm: TViewModel };
 export type ViewComponent<TViewModel> = React.FunctionComponent<ViewProps<TViewModel>>;
 
 export interface IViewModel<TContext> {
-  onInitialize?(context: TContext): Promise<unknown> | unknown;
-  onActivate?(context: TContext): Promise<unknown> | unknown;
-  onNavigate?(context: TContext): Promise<unknown> | unknown;
-  onSearchChanged?(context: TContext): Promise<unknown> | unknown;
-  onDeactivate?(context: TContext): Promise<unknown> | unknown;
+  onInitialize?(context: TContext): Awaitable<unknown>;
+  onActivate?(context: TContext): Awaitable<unknown>;
+  onNavigate?(context: TContext): Awaitable<unknown>;
+  onSearchChanged?(context: TContext): Awaitable<unknown>;
+  onDeactivate?(context: TContext): Awaitable<unknown>;
 
   isVm?: true;
 }

@@ -86,7 +86,6 @@ describe("BusyWatcher", () => {
     it("clears busy when promise fails", async () => {
       const watcher = new BusyWatcher();
 
-      // eslint-disable-next-line @typescript-eslint/no-empty-function
       let handler = () => {};
       const promise = new Promise((_resolve, reject) => {
         handler = reject;

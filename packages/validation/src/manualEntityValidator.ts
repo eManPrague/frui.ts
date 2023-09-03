@@ -13,7 +13,10 @@ export interface ManualEntityValidatorConfiguration {
 export default class ManualEntityValidator<TEntity = any> extends EntityValidatorBase<TEntity> {
   protected readonly validationResults = observable.map<PropertyName<TEntity>, ValidationResult[]>();
 
-  constructor(isVisible = false, protected configuration: ManualEntityValidatorConfiguration = DefaultConfiguration) {
+  constructor(
+    isVisible = false,
+    protected configuration: ManualEntityValidatorConfiguration = DefaultConfiguration
+  ) {
     super(isVisible);
     makeObservable(this);
   }
@@ -23,7 +26,11 @@ export default class ManualEntityValidator<TEntity = any> extends EntityValidato
   }
 
   getResults(propertyName: PropertyName<TEntity>): Iterable<ValidationResult> {
-    return (this.isEnabled && this.validationResults.get(propertyName)) || emptyResults;
+    if (!this.isEnabled) {
+      return emptyResults;
+    }
+
+    return this.validationResults.get(propertyName) ?? emptyResults;
   }
 
   @action

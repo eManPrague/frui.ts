@@ -172,7 +172,7 @@ export default class AsyncEntityValidator<TEntity extends object = any>
 
         return [validatorName, debouncedValidation] as [
           validatorName: string,
-          results: (value: unknown, callback: AsyncValidationFunctionCallback) => ValidationResponse
+          results: (value: unknown, callback: AsyncValidationFunctionCallback) => ValidationResponse,
         ];
       } else {
         return undefined;
