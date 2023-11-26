@@ -39,7 +39,8 @@ export default class OpenApi3Parser implements ApiModel {
     this.parsePaths(this.apiDocument.paths);
   }
 
-  parseSchemaObject(name: string, definition: OpenAPIV3.SchemaObject | OpenAPIV3.ReferenceObject): TypeReference {
+  parseSchemaObject(name: string, intputDefinition: OpenAPIV3.SchemaObject | OpenAPIV3.ReferenceObject): TypeReference {
+    const definition = this.fixSchemaObject(intputDefinition);
     console.debug("Parsing object", name);
 
     if (isV3ReferenceObject(definition)) {
@@ -85,6 +86,60 @@ export default class OpenApi3Parser implements ApiModel {
     }
 
     throw new Error(`Could not parse object '${name}'`);
+  }
+
+  // eslint-disable-next-line sonarjs/cognitive-complexity
+  private fixSchemaObject(
+    definition: OpenAPIV3.SchemaObject | OpenAPIV3.ReferenceObject
+  ): OpenAPIV3.SchemaObject | OpenAPIV3.ReferenceObject {
+    if (isV3ReferenceObject(definition)) {
+      return definition;
+    }
+
+    if (isNullType(definition.type)) {
+      return { ...definition, type: "object", nullable: true };
+    }
+
+    if (definition.oneOf?.some(x => isNullObject(x))) {
+      definition.nullable = true;
+
+      const newOneOfs = definition.oneOf.filter(x => !isNullObject(x));
+      if (newOneOfs.length > 1) {
+        definition.oneOf = newOneOfs;
+      } else {
+        return { ...definition, ...newOneOfs[0] };
+      }
+    }
+
+    if (definition.anyOf?.some(x => isNullObject(x))) {
+      definition.nullable = true;
+
+      const newAnyOfs = definition.anyOf.filter(x => !isNullObject(x));
+      if (newAnyOfs.length > 1) {
+        definition.anyOf = newAnyOfs;
+      } else {
+        return { ...definition, ...newAnyOfs[0] };
+      }
+    }
+
+    if (Array.isArray(definition.type) && definition.type.length > 0) {
+      let types = definition.type as string[];
+
+      if (definition.type.includes("null")) {
+        definition.nullable = true;
+        types = types.filter(x => x !== "null"); // the current definition does not support arrays
+      }
+
+      if (types.length == 1) {
+        definition.type = types[0] as OpenAPIV3.NonArraySchemaObjectType;
+      } else {
+        return {
+          oneOf: types.map(x => ({ ...definition, type: x as OpenAPIV3.NonArraySchemaObjectType })),
+        };
+      }
+    }
+
+    return definition;
   }
 
   private parseReferenceObject(definition: OpenAPIV3.ReferenceObject) {
@@ -361,4 +416,12 @@ function cleanParameterName(name: string) {
   } else {
     return name;
   }
+}
+
+function isNullType(type: string | undefined) {
+  return type === "null";
+}
+
+function isNullObject(definition: OpenAPIV3.SchemaObject | OpenAPIV3.ReferenceObject) {
+  return !isV3ReferenceObject(definition) && isNullType(definition.type);
 }
