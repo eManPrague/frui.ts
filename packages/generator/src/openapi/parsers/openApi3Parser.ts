@@ -123,18 +123,17 @@ export default class OpenApi3Parser implements ApiModel {
     }
 
     if (Array.isArray(definition.type) && definition.type.length > 0) {
-      let types = definition.type as string[];
+      const concreteTypes = (definition.type as string[]).filter(x => !isNullType(x));
 
-      if (definition.type.includes("null")) {
+      if (concreteTypes.length !== definition.type.length) {
         definition.nullable = true;
-        types = types.filter(x => x !== "null"); // the current definition does not support arrays
       }
 
-      if (types.length == 1) {
-        definition.type = types[0] as OpenAPIV3.NonArraySchemaObjectType;
+      if (concreteTypes.length == 1) {
+        definition.type = concreteTypes[0] as OpenAPIV3.NonArraySchemaObjectType;
       } else {
         return {
-          oneOf: types.map(x => ({ ...definition, type: x as OpenAPIV3.NonArraySchemaObjectType })),
+          oneOf: concreteTypes.map(x => ({ ...definition, type: x as OpenAPIV3.NonArraySchemaObjectType })),
         };
       }
     }
@@ -418,8 +417,8 @@ function cleanParameterName(name: string) {
   }
 }
 
-function isNullType(type: string | undefined) {
-  return type === "null";
+function isNullType(type: string | string[] | undefined): boolean {
+  return type === "null" || (Array.isArray(type) && type.length === 1 && isNullType(type[0]));
 }
 
 function isNullObject(definition: OpenAPIV3.SchemaObject | OpenAPIV3.ReferenceObject) {
